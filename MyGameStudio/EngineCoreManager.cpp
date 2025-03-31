@@ -2,6 +2,14 @@
 
 Err EngineCoreManager::Startup()
 {
-	std::cout << "Initialized EngineCoreManager!" << std::endl;
+	Err testManagerErr = testManager_.Startup();
+	if (testManagerErr.Code() != 0)
+		std::cout << "Error: " << testManagerErr;
+
+	// Startup other systems
+
+	std::cout << "All systems ready!" << std::endl;
 	return error_const::SUCCESS;
 }
+
+TestManager EngineCoreManager::testManager_ = TestManager();

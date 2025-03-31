@@ -129,13 +129,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BaseManager.cpp" />
     <ClCompile Include="EngineCoreManager.cpp" />
     <ClCompile Include="Err.cpp" />
     <ClCompile Include="MyGameStudio.cpp" />
+    <ClCompile Include="TestManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BaseManager.h" />
     <ClInclude Include="EngineCoreManager.h" />
     <ClInclude Include="Err.h" />
+    <ClInclude Include="TestManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

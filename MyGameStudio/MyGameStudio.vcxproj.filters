@@ -24,12 +24,24 @@
     <ClCompile Include="Err.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TestManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EngineCoreManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Err.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TestManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,6 +1,12 @@
-#include <iostream>
+#include "EngineCoreManager.h"
+#include "Err.h"
 
 int main()
 {
-    std::cout << "Hello World!\n";
+	Err startup = EngineCoreManager::Startup();
+
+	if (startup.Code() != 0)
+	{
+		std::cout << "Error: " << startup;
+	}
 }

@@ -130,6 +130,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BaseManager.cpp" />
+    <ClCompile Include="HashTable.cpp" />
     <ClCompile Include="EngineCoreManager.cpp" />
     <ClCompile Include="Err.cpp" />
     <ClCompile Include="MyGameStudio.cpp" />
@@ -137,6 +138,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseManager.h" />
+    <ClInclude Include="HashTable.h" />
     <ClInclude Include="EngineCoreManager.h" />
     <ClInclude Include="Err.h" />
     <ClInclude Include="TestManager.h" />

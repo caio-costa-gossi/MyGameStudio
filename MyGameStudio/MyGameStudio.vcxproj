@@ -134,6 +134,7 @@
     <ClCompile Include="EngineCoreManager.cpp" />
     <ClCompile Include="Err.cpp" />
     <ClCompile Include="MyGameStudio.cpp" />
+    <ClCompile Include="StringId.cpp" />
     <ClCompile Include="TestManager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -141,6 +142,7 @@
     <ClInclude Include="HashTable.h" />
     <ClInclude Include="EngineCoreManager.h" />
     <ClInclude Include="Err.h" />
+    <ClInclude Include="StringId.h" />
     <ClInclude Include="TestManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -16,6 +16,9 @@
     <Filter Include="Containers">
       <UniqueIdentifier>{c5d6e494-b2fc-4157-b284-8261c8ff8f78}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Helpers">
+      <UniqueIdentifier>{6ce9d621-ff87-4ccb-b537-31a11443fdce}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MyGameStudio.cpp">
@@ -36,6 +39,9 @@
     <ClCompile Include="HashTable.cpp">
       <Filter>Containers</Filter>
     </ClCompile>
+    <ClCompile Include="StringId.cpp">
+      <Filter>Helpers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EngineCoreManager.h">
@@ -52,6 +58,9 @@
     </ClInclude>
     <ClInclude Include="HashTable.h">
       <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="StringId.h">
+      <Filter>Helpers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

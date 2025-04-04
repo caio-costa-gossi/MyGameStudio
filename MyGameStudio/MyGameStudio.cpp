@@ -1,6 +1,7 @@
 #include "EngineCoreManager.h"
 #include "Err.h"
 #include "HashTable.h"
+#include "StringId.h"
 
 int main()
 {
@@ -11,12 +12,5 @@ int main()
 		std::cout << "Error: " << startup;
 	}*/
 
-	auto myHashTable = containers::HashTable<std::string>();
-
-	myHashTable["key1"] = "Appasdasdsales";
-	myHashTable["key2"] = "Oranges";
-
-	std::string s = myHashTable["key2"];
-
-	std::cout << s;
+	std::cout << "Hello world!"_sid.stringText.data() << " " << "Hello world!"_sid.stringHash << std::endl;
 }

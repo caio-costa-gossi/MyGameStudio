@@ -1,3 +1,4 @@
+#include "CsvParser.h"
 #include "EngineCoreManager.h"
 #include "Err.h"
 #include "HashTable.h"
@@ -12,5 +13,8 @@ int main()
 		std::cout << "Error: " << startup;
 	}*/
 
-	std::cout << "Hello world!"_sid.stringText.data() << " " << "Hello world!"_sid.stringHash << std::endl;
+	CsvParser* parser = new CsvParser("D:\\Documents\\Programs\\MyGameStudio\\MyGameStudio\\MyGameStudio\\x64\\Debug\\test.csv", 3);
+
+	const char* result = parser->GetValue("pt-br", 2);
+	std::cout << parser->GetValue("pt-br", 2);
 }

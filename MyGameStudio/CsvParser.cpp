@@ -2,10 +2,11 @@
 
 #include <vector>
 #include <cstring>
+#include <iostream>
 
 CsvParser::CsvParser(const char* fileName, const uint16_t columnAmount): columnAmount_(columnAmount)
 {
-	data_ = std::unordered_map<const char*, std::vector<const char*>>();
+	data_ = std::unordered_map<const char*, std::vector<std::unique_ptr<char[]>>, CStrHash, CStrEqual>();
 
 	file_.open(fileName, std::ios_base::in);
 
@@ -30,36 +31,39 @@ CsvParser::CsvParser(const char* fileName, const uint16_t columnAmount): columnA
 	uint16_t rowAmount = 0;
 	while (file_.getline(buffer.data(), buffer.size()))
 	{
-		std::vector<const char*> valueList = DivideString(buffer.data());
-		InsertData(valueList);
+		std::vector<std::unique_ptr<char[]>> valueList = DivideString(buffer.data());
+		InsertData(std::move(valueList));
 		rowAmount++;
 	}
 }
 
-std::vector<const char*> CsvParser::DivideString(const char* string)
+std::vector<std::unique_ptr<char[]>> CsvParser::DivideString(const char* string)
 {
-	auto returnList = std::vector<const char*>();
+	auto returnList = std::vector<std::unique_ptr<char[]>>();
 
 	char* nextToken = nullptr;
-	char* editableString = nullptr;
+	auto editableString = std::unique_ptr<char[]>(new char[strlen(string) + 1]);
 
-	strncpy_s(editableString, sizeof(string), string, _TRUNCATE);
+	strncpy_s(editableString.get(), strlen(string) + 1, string, _TRUNCATE);
 
-	const char* token = strtok_s(editableString, ",", &nextToken);
+	const char* token = strtok_s(editableString.get(), ",", &nextToken);
 	while (token != nullptr)
 	{
-		returnList.push_back(token);
-		token = strtok_s(editableString, ",", &nextToken);
+		auto smartToken = std::make_unique<char[]>(strlen(token) + 1);
+		strncpy_s(smartToken.get(), strlen(token) + 1, token, _TRUNCATE);
+		returnList.push_back(std::move(smartToken));
+
+		token = strtok_s(nullptr, ",", &nextToken);
 	}
 
 	return returnList;
 }
 
-void CsvParser::InsertData(const std::vector<const char*>& list)
+void CsvParser::InsertData(std::vector<std::unique_ptr<char[]>> list)
 {
 	for (int i = 0; i < header_.size(); ++i)
 	{
-		data_[header_[i]].push_back(list[i]);
+		data_[header_[i].get()].push_back(std::move(list[i]));
 	}
 }
 
@@ -67,8 +71,14 @@ void CsvParser::InitMap()
 {
 	for (auto it = header_.begin(); it != header_.end(); ++it)
 	{
-		data_.insert({ *it, std::vector<const char*>() });
+		auto curString = (*it).get();
+		data_.insert({ (*it).get(), std::vector<std::unique_ptr<char[]>>()});
 	}
+}
+
+const char* CsvParser::GetValue(const char* column, const uint16_t row)
+{
+	return data_[column][row].get();
 }
 
 uint16_t CsvParser::ArrayIndexFrom2d(const uint16_t row, const uint16_t column) const

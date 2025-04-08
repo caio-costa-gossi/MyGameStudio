@@ -5,18 +5,21 @@
 #include "StringId.h"
 #include <windows.h>
 
+#include "LocalizationManager.h"
+
 int main()
 {
 	SetConsoleOutputCP(CP_UTF8);
 
-	/*Err startup = EngineCoreManager::Startup();
+	Err startup = EngineCoreManager::Startup();
 
 	if (startup.Code() != 0)
 	{
 		std::cout << "Error: " << startup;
-	}*/
+	}
 
-	CsvParser* parser = new CsvParser("D:\\Documents\\Programs\\MyGameStudio\\MyGameStudio\\MyGameStudio\\x64\\Debug\\test.csv", 3);
+	const char* string = LocalizationManager::GetLocalizedString("fala_3", "en-us");
 
-	std::cout << parser->GetValue("en-us", 0);
+	if (string != nullptr)
+		std::cout << string;
 }

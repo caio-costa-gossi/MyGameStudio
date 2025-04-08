@@ -22,4 +22,5 @@ namespace error_const
 {
 	const auto SUCCESS = Err("Success", 0);
 	const auto GENERIC_EXCEPTION = Err("Undefined error", 1);
+	const auto INVALID_FORMAT = Err("Format is invalid", 2);
 }

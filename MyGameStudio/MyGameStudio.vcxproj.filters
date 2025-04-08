@@ -45,6 +45,9 @@
     <ClCompile Include="CsvParser.cpp">
       <Filter>Helpers</Filter>
     </ClCompile>
+    <ClCompile Include="LocalizationManager.cpp">
+      <Filter>Helpers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EngineCoreManager.h">
@@ -66,6 +69,9 @@
       <Filter>Helpers</Filter>
     </ClInclude>
     <ClInclude Include="CsvParser.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalizationManager.h">
       <Filter>Helpers</Filter>
     </ClInclude>
   </ItemGroup>

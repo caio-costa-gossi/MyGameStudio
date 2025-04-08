@@ -4,7 +4,7 @@
 #include <cstring>
 #include <iostream>
 
-CsvParser::CsvParser(const char* fileName, const uint16_t columnAmount): columnAmount_(columnAmount)
+CsvParser::CsvParser(const char* fileName)
 {
 	data_ = std::unordered_map<const char*, std::vector<std::unique_ptr<char[]>>, CStrHash, CStrEqual>();
 
@@ -78,10 +78,18 @@ void CsvParser::InitMap()
 
 const char* CsvParser::GetValue(const char* column, const uint16_t row)
 {
+	if (row >= data_[column].size())
+		return nullptr;
+
 	return data_[column][row].get();
 }
 
-uint16_t CsvParser::ArrayIndexFrom2d(const uint16_t row, const uint16_t column) const
+std::vector<std::unique_ptr<char[]>>& CsvParser::GetHeaders()
 {
-	return columnAmount_ * row + column;
+	return header_;
+}
+
+std::vector<std::unique_ptr<char[]>>& CsvParser::GetColumn(const char* column)
+{
+	return data_[column];
 }

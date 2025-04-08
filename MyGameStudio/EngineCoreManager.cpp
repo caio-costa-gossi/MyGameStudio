@@ -1,15 +1,13 @@
 #include "EngineCoreManager.h"
+#include "LocalizationManager.h"
 
 Err EngineCoreManager::Startup()
 {
-	Err testManagerErr = testManager_.Startup();
-	if (testManagerErr.Code() != 0)
-		std::cout << "Error: " << testManagerErr;
-
-	// Startup other systems
+	// Subsystem startup
+	Err err = LocalizationManager::Startup("D:\\Documents\\Programs\\MyGameStudio\\MyGameStudio\\MyGameStudio\\x64\\Debug\\test.csv", "string_id");
+	if (err.Code() != 0)
+		std::cout << "Error! " << err.Message();
 
 	std::cout << "All systems ready!" << std::endl;
 	return error_const::SUCCESS;
 }
-
-TestManager EngineCoreManager::testManager_ = TestManager();

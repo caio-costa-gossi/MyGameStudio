@@ -8,6 +8,6 @@ Err EngineCoreManager::Startup()
 	if (err.Code() != 0)
 		std::cout << "Error! " << err.Message();
 
-	std::cout << "All systems ready!" << std::endl;
+	std::cout << "All systems ready!\n\n";
 	return error_const::SUCCESS;
 }

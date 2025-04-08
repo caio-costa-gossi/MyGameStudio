@@ -18,7 +18,7 @@ int main()
 		std::cout << "Error: " << startup;
 	}
 
-	const char* string = LocalizationManager::GetLocalizedString("fala_3", "en-us");
+	const char* string = LocalizationManager::GetLocalizedString("fala_3", "fr-fr");
 
 	if (string != nullptr)
 		std::cout << string;

@@ -52,7 +52,7 @@ Err LocalizationManager::ValidateSpreadsheetFormat(CsvParser& parser)
 		if (std::strcmp((*it).get(), stringIdColumnName_) == 0)
 			stringIdPresent = true;
 		else
-			languageList_.push_back((*it).get());
+			languageList_.push_back(std::move(*it));
 	}
 
 	if (!stringIdPresent)
@@ -67,34 +67,26 @@ Err LocalizationManager::PopulateTable(CsvParser& parser)
 
 	for (uint16_t id = 0; id < stringIdList.size(); ++id)
 	{
-		auto languageIt = std::vector<const char*>::iterator();
+		std::unique_ptr<char[]>& pStringId = stringIdList[id];
+
+		auto languageIt = std::vector<std::unique_ptr<char[]>>::iterator();
 		for (languageIt = languageList_.begin(); languageIt != languageList_.end(); ++languageIt)
 		{
-			const char* stringId = stringIdList[id].get();
-			const char* languageName = *languageIt;
-			const char* stringValue = parser.GetValue(languageName, id).get();
-
-			auto pStringId = std::make_unique<char[]>(strlen(stringId) + 1);
-			auto pLanguageName = std::make_unique<char[]>(strlen(languageName) + 1);
-			auto pStringValue = std::make_unique<char[]>(strlen(stringValue) + 1);
-
-			strcpy_s(pStringId.get(), strlen(stringId) + 1, stringId);
-			strcpy_s(pLanguageName.get(), strlen(languageName) + 1, languageName);
-			strcpy_s(pStringValue.get(), strlen(stringValue) + 1, stringValue);
+			std::unique_ptr<char[]>& pLanguageName = *languageIt;
+			std::unique_ptr<char[]>& pStringValue = parser.GetValue(pLanguageName.get(), id);
 
 			translationTable_.insert({ std::make_pair(pStringId.get(), pLanguageName.get()), std::move(pStringValue) });
-
-			stringStorage_.push_back(std::move(pStringId));
-			stringStorage_.push_back(std::move(pLanguageName));
 		}
+
+		stringIdList_.push_back(std::move(stringIdList[id]));
 	}
 
 	return error_const::SUCCESS;
 }
 
 auto LocalizationManager::translationTable_ = std::unordered_map<std::pair<const char*, const char*>, std::unique_ptr<char[]>, CStringPairHash, CStringPairEqual>();
-auto LocalizationManager::languageList_ = std::vector<const char*>();
-auto LocalizationManager::stringStorage_ = std::vector<std::unique_ptr<char[]>>();
+auto LocalizationManager::languageList_ = std::vector<std::unique_ptr<char[]>>();
+auto LocalizationManager::stringIdList_ = std::vector<std::unique_ptr<char[]>>();
 
 const char* LocalizationManager::stringIdColumnName_ = "";
 enums::Language LocalizationManager::languageSet_ = enums::Language::en_us;

@@ -24,8 +24,8 @@ class LocalizationManager
 {
 private:
 	static std::unordered_map<std::pair<const char*, const char*>, std::unique_ptr<char[]>, CStringPairHash, CStringPairEqual> translationTable_;
-	static std::vector<const char*> languageList_;
-    static std::vector<std::unique_ptr<char[]>> stringStorage_;
+	static std::vector<std::unique_ptr<char[]>> languageList_;
+    static std::vector<std::unique_ptr<char[]>> stringIdList_;
 
 	static const char* stringIdColumnName_;
     static enums::Language languageSet_;

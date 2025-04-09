@@ -22,12 +22,13 @@ int main()
 		std::cout << "Error: " << startup;
 	}
 
-	const char* string = LocalizationManager::GetLocalizedString("eget");
+	const char* string = LocalizationManager::GetLocalizedString("fala_3");
 
 	if (string != nullptr)
 		std::cout << string << std::endl;
 
 	const auto endTime = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double> duration = endTime - beginTime;
+
 	std::cout << "Execution time: " << duration.count() << " seconds\n";
 }

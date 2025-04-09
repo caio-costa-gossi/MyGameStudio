@@ -1,5 +1,6 @@
 #include "CsvParser.h"
 
+#include <cassert>
 #include <vector>
 #include <cstring>
 #include <iostream>
@@ -76,12 +77,10 @@ void CsvParser::InitMap()
 	}
 }
 
-const char* CsvParser::GetValue(const char* column, const uint16_t row)
+std::unique_ptr<char[]>& CsvParser::GetValue(const char* column, const uint16_t row)
 {
-	if (row >= data_[column].size())
-		return nullptr;
-
-	return data_[column][row].get();
+	assert(row < data_[column].size());
+	return data_[column][row];
 }
 
 std::vector<std::unique_ptr<char[]>>& CsvParser::GetHeaders()

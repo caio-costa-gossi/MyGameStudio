@@ -72,7 +72,7 @@ Err LocalizationManager::PopulateTable(CsvParser& parser)
 		{
 			const char* stringId = stringIdList[id].get();
 			const char* languageName = *languageIt;
-			const char* stringValue = parser.GetValue(languageName, id);
+			const char* stringValue = parser.GetValue(languageName, id).get();
 
 			auto pStringId = std::make_unique<char[]>(strlen(stringId) + 1);
 			auto pLanguageName = std::make_unique<char[]>(strlen(languageName) + 1);

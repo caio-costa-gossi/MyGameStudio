@@ -30,7 +30,7 @@ public:
 	explicit CsvParser(const char* fileName);
 	~CsvParser() = default;
 
-	const char* GetValue(const char* column, uint16_t row);
+	std::unique_ptr<char[]>& GetValue(const char* column, uint16_t row);
 	std::vector<std::unique_ptr<char[]>>& GetHeaders();
 	std::vector<std::unique_ptr<char[]>>& GetColumn(const char* column);
 };

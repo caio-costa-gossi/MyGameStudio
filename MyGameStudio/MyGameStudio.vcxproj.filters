@@ -48,6 +48,9 @@
     <ClCompile Include="LocalizationManager.cpp">
       <Filter>Helpers</Filter>
     </ClCompile>
+    <ClCompile Include="Enums.cpp">
+      <Filter>Helpers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EngineCoreManager.h">
@@ -72,6 +75,9 @@
       <Filter>Helpers</Filter>
     </ClInclude>
     <ClInclude Include="LocalizationManager.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Enums.h">
       <Filter>Helpers</Filter>
     </ClInclude>
   </ItemGroup>

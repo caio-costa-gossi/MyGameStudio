@@ -19,9 +19,25 @@ Err LocalizationManager::Startup(const char* translationFilePath, const char* st
 	return error_const::SUCCESS;
 }
 
-const char* LocalizationManager::GetLocalizedString(const char* stringId, const char* languageName)
+const char* LocalizationManager::GetLocalizedStringInLanguage(const char* stringId, const char* languageName)
 {
 	return translationTable_[{stringId, languageName}].get();
+}
+
+const char* LocalizationManager::GetLocalizedString(const char* stringId)
+{
+	return translationTable_[{stringId, enums::LanguageToString(languageSet_)}].get();
+}
+
+enums::Language LocalizationManager::GetLanguageSet()
+{
+	return languageSet_;
+}
+
+Err LocalizationManager::SetLanguage(const enums::Language language)
+{
+	languageSet_ = language;
+	return error_const::SUCCESS;
 }
 
 Err LocalizationManager::ValidateSpreadsheetFormat(CsvParser& parser)
@@ -79,4 +95,6 @@ Err LocalizationManager::PopulateTable(CsvParser& parser)
 auto LocalizationManager::translationTable_ = std::unordered_map<std::pair<const char*, const char*>, std::unique_ptr<char[]>, CStringPairHash, CStringPairEqual>();
 auto LocalizationManager::languageList_ = std::vector<const char*>();
 auto LocalizationManager::stringStorage_ = std::vector<std::unique_ptr<char[]>>();
+
 const char* LocalizationManager::stringIdColumnName_ = "";
+enums::Language LocalizationManager::languageSet_ = enums::Language::en_us;

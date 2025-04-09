@@ -2,6 +2,7 @@
 #include <unordered_map>
 
 #include "CsvParser.h"
+#include "Enums.h"
 #include "Err.h"
 
 struct CStringPairHash {
@@ -27,11 +28,16 @@ private:
     static std::vector<std::unique_ptr<char[]>> stringStorage_;
 
 	static const char* stringIdColumnName_;
+    static enums::Language languageSet_;
 
 	static Err ValidateSpreadsheetFormat(CsvParser& parser);
 	static Err PopulateTable(CsvParser& parser);
 
 public:
 	static Err Startup(const char* translationFilePath, const char* stringIdColumnName);
-	static const char* GetLocalizedString(const char* stringId, const char* languageName);
+	static const char* GetLocalizedStringInLanguage(const char* stringId, const char* languageName);
+    static const char* GetLocalizedString(const char* stringId);
+
+	static enums::Language GetLanguageSet();
+    static Err SetLanguage(enums::Language language);
 };

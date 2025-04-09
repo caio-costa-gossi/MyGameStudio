@@ -10,6 +10,7 @@
 int main()
 {
 	SetConsoleOutputCP(CP_UTF8);
+	LocalizationManager::SetLanguage(enums::Language::pt_br);
 
 	Err startup = EngineCoreManager::Startup();
 
@@ -18,7 +19,7 @@ int main()
 		std::cout << "Error: " << startup;
 	}
 
-	const char* string = LocalizationManager::GetLocalizedString("fala_3", "fr-fr");
+	const char* string = LocalizationManager::GetLocalizedString("fala_3");
 
 	if (string != nullptr)
 		std::cout << string;

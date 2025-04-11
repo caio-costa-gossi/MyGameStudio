@@ -1,4 +1,5 @@
 #include "EngineCoreManager.h"
+#include <windows.h>
 #include "LocalizationManager.h"
 
 Err EngineCoreManager::Startup()
@@ -17,12 +18,21 @@ Err EngineCoreManager::Startup()
 	return error_const::SUCCESS;
 }
 
+Err EngineCoreManager::Config()
+{
+	SetConsoleOutputCP(CP_UTF8);
+	LocalizationManager::SetLanguage(enums::Language::pt_br);
+
+	return error_const::SUCCESS;
+}
+
 Err EngineCoreManager::Shutdown()
 {
 	// Finish time profiling
 	engineFinishTime_ = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double> duration = engineFinishTime_ - engineBeginTime_;
 
+	std::cout << "\nShutting down...\n";
 	std::cout << "Total time spent: " << duration.count() << " seconds.\n";
 
 	return error_const::SUCCESS;

@@ -1,18 +1,26 @@
+#include "ConfigReader.h"
 #include "EngineCoreManager.h"
 #include "Err.h"
-#include <windows.h>
-#include "LocalizationManager.h"
 
 int main()
 {
-	SetConsoleOutputCP(CP_UTF8);
-	LocalizationManager::SetLanguage(enums::Language::pt_br);
-
-	Err startup = EngineCoreManager::Startup();
-	if (startup.Code() != 0)
+	Err err = EngineCoreManager::Startup();
+	if (err.Code() != 0)
 	{
-		std::cout << "Error: " << startup;
+		std::cout << "Error: " << err;
 	}
 
-	EngineCoreManager::Shutdown();
+	err = EngineCoreManager::Config();
+	if (err.Code() != 0)
+	{
+		std::cout << "Error: " << err;
+	}
+
+	ConfigReader reader("D:\\Documents\\Programs\\MyGameStudio\\MyGameStudio\\MyGameStudio\\x64\\Debug\\config.ini");
+
+	err = EngineCoreManager::Shutdown();
+	if (err.Code() != 0)
+	{
+		std::cout << "Error: " << err;
+	}
 }

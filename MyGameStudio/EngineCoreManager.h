@@ -14,5 +14,6 @@ public:
 	EngineCoreManager() = delete;
 
 	static Err Startup();
+	static Err Config();
 	static Err Shutdown();
 };

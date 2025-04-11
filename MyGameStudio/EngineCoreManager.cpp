@@ -1,5 +1,7 @@
 #include "EngineCoreManager.h"
 #include <windows.h>
+
+#include "ConfigManager.h"
 #include "LocalizationManager.h"
 
 Err EngineCoreManager::Startup()
@@ -14,6 +16,10 @@ Err EngineCoreManager::Startup()
 	if (err.Code() != 0)
 		std::cout << "Error! " << err.Message();
 
+	err = ConfigManager::Startup("D:\\Documents\\Programs\\MyGameStudio\\MyGameStudio\\MyGameStudio\\x64\\Debug\\config.ini");
+	if (err.Code() != 0)
+		std::cout << "Error! " << err.Message();
+
 	std::cout << "All systems ready!\n\n";
 	return error_const::SUCCESS;
 }
@@ -21,7 +27,10 @@ Err EngineCoreManager::Startup()
 Err EngineCoreManager::Config()
 {
 	SetConsoleOutputCP(CP_UTF8);
-	LocalizationManager::SetLanguage(enums::Language::pt_br);
+
+	const char* userLanguage = ConfigManager::GetConfigForObject("user", "language");
+	if (userLanguage == nullptr) userLanguage = "en_us";
+	LocalizationManager::SetLanguage(enums::StringToLanguage(userLanguage));
 
 	return error_const::SUCCESS;
 }

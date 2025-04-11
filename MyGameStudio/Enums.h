@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <cstring>
 
 #define LANGUAGES X(en_us) X(pt_br) X(fr_fr)
 
@@ -22,5 +23,12 @@ namespace enums
 		default:
 			return "en_us";
 		}
+	}
+
+	inline Language StringToLanguage(const char* string)
+	{
+		#define X(name) if (std::strcmp(string,#name) == 0) return Language::name;
+		LANGUAGES
+		#undef X
 	}
 }

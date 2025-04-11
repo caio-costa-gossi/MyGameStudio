@@ -36,6 +36,8 @@ CsvParser::CsvParser(const char* fileName)
 		InsertData(std::move(valueList));
 		rowAmount++;
 	}
+
+	file_.close();
 }
 
 std::vector<std::unique_ptr<char[]>> CsvParser::DivideString(const char* string)

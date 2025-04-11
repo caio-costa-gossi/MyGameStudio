@@ -16,11 +16,10 @@ int main()
 		std::cout << "Error: " << err;
 	}
 
-	ConfigManager::Startup("D:\\Documents\\Programs\\MyGameStudio\\MyGameStudio\\MyGameStudio\\x64\\Debug\\config.ini");
 	ConfigManager::SetObject("general");
 	const char* string = ConfigManager::GetConfig("language");
 
-	std::cout << string;
+	std::cout << LocalizationManager::GetLocalizedString("fala_3");
 
 	err = EngineCoreManager::Shutdown();
 	if (err.Code() != 0)

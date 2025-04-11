@@ -43,6 +43,8 @@ Err ConfigReader::LoadConfig(const char* fileName)
 		}
 	}
 
+	file.close();
+
 	return error_const::SUCCESS;
 }
 

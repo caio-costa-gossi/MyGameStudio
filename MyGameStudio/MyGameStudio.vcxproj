@@ -130,6 +130,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BaseManager.cpp" />
+    <ClCompile Include="ConfigManager.cpp" />
     <ClCompile Include="ConfigReader.cpp" />
     <ClCompile Include="CsvParser.cpp" />
     <ClCompile Include="Enums.cpp" />
@@ -143,6 +144,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseManager.h" />
+    <ClInclude Include="ConfigManager.h" />
     <ClInclude Include="ConfigReader.h" />
     <ClInclude Include="CsvParser.h" />
     <ClInclude Include="Enums.h" />

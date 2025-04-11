@@ -19,6 +19,9 @@
     <Filter Include="Helpers">
       <UniqueIdentifier>{6ce9d621-ff87-4ccb-b537-31a11443fdce}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Managers">
+      <UniqueIdentifier>{08a67682-7b86-403c-a75c-4b2abd7d94b2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MyGameStudio.cpp">
@@ -54,6 +57,9 @@
     <ClCompile Include="ConfigReader.cpp">
       <Filter>Helpers</Filter>
     </ClCompile>
+    <ClCompile Include="ConfigManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EngineCoreManager.h">
@@ -85,6 +91,9 @@
     </ClInclude>
     <ClInclude Include="ConfigReader.h">
       <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="ConfigManager.h">
+      <Filter>Managers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

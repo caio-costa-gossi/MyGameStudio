@@ -1,4 +1,4 @@
-#include "ConfigReader.h"
+#include "ConfigManager.h"
 #include "EngineCoreManager.h"
 #include "Err.h"
 
@@ -16,7 +16,11 @@ int main()
 		std::cout << "Error: " << err;
 	}
 
-	ConfigReader reader("D:\\Documents\\Programs\\MyGameStudio\\MyGameStudio\\MyGameStudio\\x64\\Debug\\config.ini");
+	ConfigManager::Startup("D:\\Documents\\Programs\\MyGameStudio\\MyGameStudio\\MyGameStudio\\x64\\Debug\\config.ini");
+	ConfigManager::SetObject("general");
+	const char* string = ConfigManager::GetConfig("language");
+
+	std::cout << string;
 
 	err = EngineCoreManager::Shutdown();
 	if (err.Code() != 0)

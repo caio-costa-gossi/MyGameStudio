@@ -41,3 +41,13 @@ public:
 	static enums::Language GetLanguageSet();
     static Err SetLanguage(enums::Language language);
 };
+
+namespace string_const
+{
+    const auto G_STARTUP_MSG = "startup_msg";
+    const auto G_SYS_INIT = "sys_init";
+    const auto G_SYS_INIT_READY = "sys_init_ready";
+    const auto G_SYS_SHUTDOWN = "sys_shutdown";
+    const auto G_TOTAL_RUN_TIME = "total_run_time";
+    const auto G_LANG_SELECTED = "lang_selected";
+}

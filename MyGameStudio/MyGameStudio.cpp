@@ -19,7 +19,7 @@ int main()
 	ConfigManager::SetObject("general");
 	const char* string = ConfigManager::GetConfig("language");
 
-	std::cout << LocalizationManager::GetLocalizedString("fala_3");
+	//std::cout << LocalizationManager::GetLocalizedString("fala_3");
 
 	err = EngineCoreManager::Shutdown();
 	if (err.Code() != 0)

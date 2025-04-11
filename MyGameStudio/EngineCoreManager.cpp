@@ -12,7 +12,7 @@ Err EngineCoreManager::Startup()
 	std::cout << "Initializing systems...\n";
 
 	// Subsystem startup
-	Err err = LocalizationManager::Startup("D:\\Documents\\Programs\\MyGameStudio\\MyGameStudio\\MyGameStudio\\x64\\Debug\\test.csv", "string_id");
+	Err err = LocalizationManager::Startup("D:\\Documents\\Programs\\MyGameStudio\\MyGameStudio\\MyGameStudio\\x64\\Debug\\strings.csv", "string_id");
 	if (err.Code() != 0)
 		std::cout << "Error! " << err.Message();
 
@@ -26,11 +26,19 @@ Err EngineCoreManager::Startup()
 
 Err EngineCoreManager::Config()
 {
+	std::cout << "Configuring language...\n";
+
 	SetConsoleOutputCP(CP_UTF8);
 
 	const char* userLanguage = ConfigManager::GetConfigForObject("user", "language");
 	if (userLanguage == nullptr) userLanguage = "en_us";
 	LocalizationManager::SetLanguage(enums::StringToLanguage(userLanguage));
+
+	std::cout << LocalizationManager::GetLocalizedString(string_const::G_LANG_SELECTED) << userLanguage << "\n";
+
+	const char* sysVer = ConfigManager::GetConfigForObject("global", "version");
+	if (sysVer == nullptr) sysVer = "Not found";
+	std::cout << LocalizationManager::GetLocalizedString(string_const::G_STARTUP_MSG) << sysVer << "\n";
 
 	return error_const::SUCCESS;
 }
@@ -41,8 +49,8 @@ Err EngineCoreManager::Shutdown()
 	engineFinishTime_ = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double> duration = engineFinishTime_ - engineBeginTime_;
 
-	std::cout << "\nShutting down...\n";
-	std::cout << "Total time spent: " << duration.count() << " seconds.\n";
+	std::cout << "\n" << LocalizationManager::GetLocalizedString(string_const::G_SYS_SHUTDOWN) << "\n";
+	std::cout << LocalizationManager::GetLocalizedString(string_const::G_TOTAL_RUN_TIME) << duration.count() << "s.\n";
 
 	return error_const::SUCCESS;
 }

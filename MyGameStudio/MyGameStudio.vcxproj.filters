@@ -51,6 +51,9 @@
     <ClCompile Include="Enums.cpp">
       <Filter>Helpers</Filter>
     </ClCompile>
+    <ClCompile Include="ConfigReader.cpp">
+      <Filter>Helpers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EngineCoreManager.h">
@@ -78,6 +81,9 @@
       <Filter>Helpers</Filter>
     </ClInclude>
     <ClInclude Include="Enums.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="ConfigReader.h">
       <Filter>Helpers</Filter>
     </ClInclude>
   </ItemGroup>

@@ -16,10 +16,8 @@ int main()
 		std::cout << "Error: " << err;
 	}
 
-	ConfigManager::SetObject("general");
-	const char* string = ConfigManager::GetConfig("language");
-
-	//std::cout << LocalizationManager::GetLocalizedString("fala_3");
+	ConfigManager::SetObject("user");
+	std::cout << ConfigManager::GetConfig("language");
 
 	err = EngineCoreManager::Shutdown();
 	if (err.Code() != 0)

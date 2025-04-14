@@ -33,6 +33,8 @@ private:
 	static Err ValidateSpreadsheetFormat(CsvParser& parser);
 	static Err PopulateTable(CsvParser& parser);
 
+    static bool HasValue(std::vector<std::unique_ptr<char[]>>& vector, const char* value);
+
 public:
 	static Err Startup(const char* translationFilePath, const char* stringIdColumnName);
 	static const char* GetLocalizedStringInLanguage(const char* stringId, const char* languageName);

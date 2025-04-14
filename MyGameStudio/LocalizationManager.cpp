@@ -21,12 +21,22 @@ Err LocalizationManager::Startup(const char* translationFilePath, const char* st
 
 const char* LocalizationManager::GetLocalizedStringInLanguage(const char* stringId, const char* languageName)
 {
-	return translationTable_[{stringId, languageName}].get();
+	const char* string = translationTable_[{stringId, languageName}].get();
+
+	if (string != nullptr)
+		return string;
+
+	return "N/A";
 }
 
 const char* LocalizationManager::GetLocalizedString(const char* stringId)
 {
-	return translationTable_[{stringId, enums::LanguageToString(languageSet_)}].get();
+	const char* string = translationTable_[{stringId, enums::LanguageToString(languageSet_)}].get();
+
+	if (string != nullptr)
+		return string;
+
+	return "N/A";
 }
 
 enums::Language LocalizationManager::GetLanguageSet()
@@ -38,6 +48,19 @@ Err LocalizationManager::SetLanguage(const enums::Language language)
 {
 	languageSet_ = language;
 	return error_const::SUCCESS;
+}
+
+bool LocalizationManager::HasValue(std::vector<std::unique_ptr<char[]>>& vector, const char* value)
+{
+	auto it = std::vector<std::unique_ptr<char[]>>::iterator();
+
+	for (it = vector.begin(); it != vector.end(); ++it)
+	{
+		if (std::strcmp((*it).get(), value) == 0)
+			return true;
+	}
+
+	return false;
 }
 
 Err LocalizationManager::ValidateSpreadsheetFormat(CsvParser& parser)

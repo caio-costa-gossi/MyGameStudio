@@ -14,12 +14,22 @@ Err ConfigManager::SetObject(const char* object)
 
 const char* ConfigManager::GetConfig(const char* config)
 {
-	return reader_.GetConfig(currentObject_, config);
+	const char* string = reader_.GetConfig(currentObject_, config);
+
+	if (string != nullptr)
+		return string;
+
+	return "Config N/A";
 }
 
 const char* ConfigManager::GetConfigForObject(const char* object, const char* config)
 {
-	return reader_.GetConfig(object, config);
+	const char* string = reader_.GetConfig(object, config);
+
+	if (string != nullptr)
+		return string;
+
+	return "Config N/A";
 }
 
 const char* ConfigManager::currentObject_;

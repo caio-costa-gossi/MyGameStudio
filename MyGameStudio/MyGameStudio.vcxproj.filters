@@ -57,10 +57,10 @@
     <ClCompile Include="ConfigManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
-    <ClCompile Include="FileManager.cpp">
-      <Filter>Helpers</Filter>
-    </ClCompile>
     <ClCompile Include="LocalizationManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="FileManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
   </ItemGroup>
@@ -95,10 +95,10 @@
     <ClInclude Include="ConfigManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
-    <ClInclude Include="FileManager.h">
-      <Filter>Helpers</Filter>
-    </ClInclude>
     <ClInclude Include="LocalizationManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="FileManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
   </ItemGroup>

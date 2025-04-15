@@ -1,0 +1,7 @@
+string_id,pt_br,en_us,fr_fr
+startup_msg,MyGameStudio versão ,MyGameStudio version ,MyGameStudio version 
+sys_init,Inicializando sistemas...,Initializing systems...,Initialisation du système...
+sys_init_ready,Todos os sistemas prontos!,All systems ready!,Tous les systèmes sont prêts!
+sys_shutdown,Desligando...,Shutting down...,Arrêt du système...
+total_run_time,Tempo total de execução: ,Total execution time: ,Temps d'exécution total: 
+lang_selected,Linguagem selecionada: ,Language selected: ,Langue sélecionnée: 

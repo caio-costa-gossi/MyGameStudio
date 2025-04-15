@@ -12,11 +12,11 @@ Err EngineCoreManager::Startup()
 	std::cout << "Initializing systems...\n";
 
 	// Subsystem startup
-	Err err = LocalizationManager::Startup("D:\\Documents\\Programs\\MyGameStudio\\MyGameStudio\\MyGameStudio\\x64\\Debug\\strings.csv", "string_id");
+	Err err = LocalizationManager::Startup("strings.csv", "string_id");
 	if (err.Code() != 0)
 		std::cout << "Error! " << err.Message();
 
-	err = ConfigManager::Startup("D:\\Documents\\Programs\\MyGameStudio\\MyGameStudio\\MyGameStudio\\x64\\Debug\\config.ini");
+	err = ConfigManager::Startup("config.ini");
 	if (err.Code() != 0)
 		std::cout << "Error! " << err.Message();
 

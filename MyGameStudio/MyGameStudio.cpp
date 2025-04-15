@@ -1,3 +1,5 @@
+#include <windows.h>
+
 #include "ConfigManager.h"
 #include "EngineCoreManager.h"
 #include "Err.h"
@@ -15,9 +17,6 @@ int main()
 	{
 		std::cout << "Error: " << err;
 	}
-
-	ConfigManager::SetObject("user");
-	std::cout << ConfigManager::GetConfig("language");
 
 	err = EngineCoreManager::Shutdown();
 	if (err.Code() != 0)

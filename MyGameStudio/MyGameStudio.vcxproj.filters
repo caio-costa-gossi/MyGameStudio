@@ -48,9 +48,6 @@
     <ClCompile Include="CsvParser.cpp">
       <Filter>Helpers</Filter>
     </ClCompile>
-    <ClCompile Include="LocalizationManager.cpp">
-      <Filter>Helpers</Filter>
-    </ClCompile>
     <ClCompile Include="Enums.cpp">
       <Filter>Helpers</Filter>
     </ClCompile>
@@ -58,6 +55,12 @@
       <Filter>Helpers</Filter>
     </ClCompile>
     <ClCompile Include="ConfigManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="FileHelper.cpp">
+      <Filter>Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalizationManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
   </ItemGroup>
@@ -83,9 +86,6 @@
     <ClInclude Include="CsvParser.h">
       <Filter>Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="LocalizationManager.h">
-      <Filter>Helpers</Filter>
-    </ClInclude>
     <ClInclude Include="Enums.h">
       <Filter>Helpers</Filter>
     </ClInclude>
@@ -93,6 +93,12 @@
       <Filter>Helpers</Filter>
     </ClInclude>
     <ClInclude Include="ConfigManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="FileHelper.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalizationManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
   </ItemGroup>

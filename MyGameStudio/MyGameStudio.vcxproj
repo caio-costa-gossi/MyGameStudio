@@ -134,7 +134,7 @@
     <ClCompile Include="ConfigReader.cpp" />
     <ClCompile Include="CsvParser.cpp" />
     <ClCompile Include="Enums.cpp" />
-    <ClCompile Include="FileHelper.cpp" />
+    <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="HashTable.cpp" />
     <ClCompile Include="EngineCoreManager.cpp" />
     <ClCompile Include="Err.cpp" />
@@ -149,7 +149,7 @@
     <ClInclude Include="ConfigReader.h" />
     <ClInclude Include="CsvParser.h" />
     <ClInclude Include="Enums.h" />
-    <ClInclude Include="FileHelper.h" />
+    <ClInclude Include="FileManager.h" />
     <ClInclude Include="HashTable.h" />
     <ClInclude Include="EngineCoreManager.h" />
     <ClInclude Include="Err.h" />

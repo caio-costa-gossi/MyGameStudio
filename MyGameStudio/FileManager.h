@@ -21,7 +21,7 @@ struct FileioTask
 	}
 };
 
-class FileHelper
+class FileManager
 {
 private:
 	static std::priority_queue<FileioTask> gFileTaskQueue_;

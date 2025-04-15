@@ -57,7 +57,7 @@
     <ClCompile Include="ConfigManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
-    <ClCompile Include="FileHelper.cpp">
+    <ClCompile Include="FileManager.cpp">
       <Filter>Helpers</Filter>
     </ClCompile>
     <ClCompile Include="LocalizationManager.cpp">
@@ -95,7 +95,7 @@
     <ClInclude Include="ConfigManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
-    <ClInclude Include="FileHelper.h">
+    <ClInclude Include="FileManager.h">
       <Filter>Helpers</Filter>
     </ClInclude>
     <ClInclude Include="LocalizationManager.h">

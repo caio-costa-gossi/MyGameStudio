@@ -31,4 +31,12 @@ namespace enums
 		LANGUAGES
 		#undef X
 	}
+
+	enum class IoTaskState : uint8_t
+	{
+		pending,
+		started,
+		finished,
+		error
+	};
 }

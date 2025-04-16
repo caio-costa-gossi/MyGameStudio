@@ -1,1 +1,62 @@
 #include "FileManager.h"
+#include <fstream>
+
+Err FileManager::Startup()
+{
+	workerThreadRunning_ = true;
+	workerThread_ = std::thread(RunWorker);
+	return error_const::SUCCESS;
+}
+
+Err FileManager::Shutdown()
+{
+	workerThreadRunning_ = false;
+	workerThread_.join();
+	return error_const::SUCCESS;
+}
+
+FileIoTaskJanitor FileManager::ReadFileAsync(const uint8_t priority, const char* filePath, char** fileBuffer, size_t bufferSize)
+{
+	auto task = new FileIoTask(priority, filePath, fileBuffer, bufferSize);
+	fileTaskQueue_.push(task);
+	cv_.notify_all();
+	return FileIoTaskJanitor(task);
+}
+
+Err FileManager::RunWorker()
+{
+	while (workerThreadRunning_)
+	{
+		cv_.wait(lock_, [] { return !fileTaskQueue_.empty(); });
+
+		FileIoTask* nextTask = fileTaskQueue_.top();
+		if (nextTask != nullptr) RunTask(nextTask);
+		fileTaskQueue_.pop();
+	}
+
+	return error_const::SUCCESS;
+}
+
+Err FileManager::RunTask(FileIoTask* task)
+{
+	auto file = std::ifstream(task->FilePath, std::ios::in);
+
+	if (task->BufferSize > std::numeric_limits<std::streamsize>::max())
+	{
+		task->TaskState = enums::IoTaskState::error;
+		task->ErrorDescription = "Buffer size is too big";
+		return error_const::GENERIC_EXCEPTION;
+	}
+
+	file.read(*(task->StreamBuffer), static_cast<std::streamsize>(task->BufferSize));
+	task->TaskState = enums::IoTaskState::finished;
+
+	return error_const::SUCCESS;
+}
+
+
+auto FileManager::fileTaskQueue_ = std::priority_queue<FileIoTask*, std::vector<FileIoTask*>, FileIoTaskCompare>();
+auto FileManager::workerThreadRunning_ = false;
+std::condition_variable FileManager::cv_;
+auto FileManager::lock_ = std::unique_lock<std::mutex>();
+std::thread FileManager::workerThread_;

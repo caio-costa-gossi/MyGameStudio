@@ -14,8 +14,9 @@ struct FileIoTask
 	size_t BufferSize;
 	enums::IoTaskState TaskState = enums::IoTaskState::pending;
 	std::string ErrorDescription;
+	void (*Callback) (FileIoTask*);
 
-	FileIoTask(const uint8_t priority, const char* filePath, char** streamBuffer, size_t bufferSize) : Priority(priority), StreamBuffer(streamBuffer), BufferSize(bufferSize)
+	FileIoTask(const uint8_t priority, const char* filePath, char** streamBuffer, const size_t bufferSize, void(*callback)(FileIoTask*)) : Priority(priority), StreamBuffer(streamBuffer), BufferSize(bufferSize), Callback(callback)
 	{
 		strncpy_s(FilePath, 255, filePath, _TRUNCATE);
 	}
@@ -82,5 +83,5 @@ public:
 	static Err Startup();
 	static Err Shutdown();
 
-	static FileIoTaskJanitor ReadFileAsync(const uint8_t priority, const char* filePath, char** fileBuffer, size_t bufferSize);
+	static FileIoTaskJanitor ReadFileAsync(const uint8_t priority, const char* filePath, char** fileBuffer, size_t bufferSize, void(*callback)(FileIoTask*) = nullptr);
 };

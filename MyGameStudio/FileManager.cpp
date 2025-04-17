@@ -16,9 +16,9 @@ Err FileManager::Shutdown()
 	return error_const::SUCCESS;
 }
 
-FileIoTaskJanitor FileManager::ReadFileAsync(const uint8_t priority, const char* filePath, char** fileBuffer, size_t bufferSize)
+FileIoTaskJanitor FileManager::ReadFileAsync(const uint8_t priority, const char* filePath, char** fileBuffer, const size_t bufferSize, void(*callback)(FileIoTask*))
 {
-	auto task = new FileIoTask(priority, filePath, fileBuffer, bufferSize);
+	auto task = new FileIoTask(priority, filePath, fileBuffer, bufferSize, callback);
 	fileTaskQueue_.push(task);
 	cv_.notify_all();
 	return FileIoTaskJanitor(task);
@@ -56,6 +56,8 @@ Err FileManager::RunTask(FileIoTask* task)
 	}
 
 	file.read(*(task->StreamBuffer), static_cast<std::streamsize>(task->BufferSize));
+
+	if (task->Callback != nullptr) task->Callback(task);
 	task->TaskState = enums::IoTaskState::finished;
 
 	return error_const::SUCCESS;

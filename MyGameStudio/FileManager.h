@@ -71,7 +71,7 @@ class FileManager
 private:
 	static std::priority_queue<FileIoTask*, std::vector<FileIoTask*>, FileIoTaskCompare> fileTaskQueue_;
 	static bool workerThreadRunning_;
-	static std::unique_lock<std::mutex> lock_;
+	static std::mutex mutex_;
 	static std::condition_variable cv_;
 	static std::thread workerThread_;
 

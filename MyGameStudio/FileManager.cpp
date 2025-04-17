@@ -11,6 +11,7 @@ Err FileManager::Startup()
 Err FileManager::Shutdown()
 {
 	workerThreadRunning_ = false;
+	cv_.notify_all();
 	workerThread_.join();
 	return error_const::SUCCESS;
 }
@@ -25,13 +26,19 @@ FileIoTaskJanitor FileManager::ReadFileAsync(const uint8_t priority, const char*
 
 Err FileManager::RunWorker()
 {
-	while (workerThreadRunning_)
+	while (workerThreadRunning_ || !fileTaskQueue_.empty())
 	{
-		cv_.wait(lock_, [] { return !fileTaskQueue_.empty(); });
+		std::unique_lock<std::mutex> lock(mutex_);
 
-		FileIoTask* nextTask = fileTaskQueue_.top();
-		if (nextTask != nullptr) RunTask(nextTask);
-		fileTaskQueue_.pop();
+		if (fileTaskQueue_.empty())
+			cv_.wait(lock, [] { return !fileTaskQueue_.empty() || !workerThreadRunning_; });
+
+		if (workerThreadRunning_ || !fileTaskQueue_.empty())
+		{
+			FileIoTask* nextTask = fileTaskQueue_.top();
+			if (nextTask != nullptr) RunTask(nextTask);
+			fileTaskQueue_.pop();
+		}
 	}
 
 	return error_const::SUCCESS;
@@ -57,6 +64,6 @@ Err FileManager::RunTask(FileIoTask* task)
 
 auto FileManager::fileTaskQueue_ = std::priority_queue<FileIoTask*, std::vector<FileIoTask*>, FileIoTaskCompare>();
 auto FileManager::workerThreadRunning_ = false;
+std::mutex FileManager::mutex_;
 std::condition_variable FileManager::cv_;
-auto FileManager::lock_ = std::unique_lock<std::mutex>();
 std::thread FileManager::workerThread_;

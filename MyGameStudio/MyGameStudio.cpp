@@ -1,15 +1,7 @@
-#include <windows.h>
-
-#include "ConfigManager.h"
+#include "CommandFactory.h"
+#include "ConsoleManager.h"
 #include "EngineCoreManager.h"
 #include "Err.h"
-#include "FileManager.h"
-
-void MyCallback(FileIoTask* caller)
-{
-	std::cout << "\n\nI'm in the callback!\n\n";
-	std::cout << *caller->StreamBuffer << std::endl;
-}
 
 int main()
 {
@@ -24,6 +16,8 @@ int main()
 	{
 		std::cout << "Error: " << err;
 	}
+
+	ConsoleManager::RunConsole();
 
 	err = EngineCoreManager::Shutdown();
 	if (err.Code() != 0)

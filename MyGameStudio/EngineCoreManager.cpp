@@ -2,6 +2,7 @@
 #include <windows.h>
 
 #include "ConfigManager.h"
+#include "ConsoleManager.h"
 #include "FileManager.h"
 #include "LocalizationManager.h"
 
@@ -22,6 +23,10 @@ Err EngineCoreManager::Startup()
 		std::cout << "Error! " << err.Message();
 
 	err = FileManager::Startup();
+	if (err.Code() != 0)
+		std::cout << "Error! " << err.Message();
+
+	err = ConsoleManager::Startup();
 	if (err.Code() != 0)
 		std::cout << "Error! " << err.Message();
 
@@ -58,6 +63,7 @@ Err EngineCoreManager::Shutdown()
 
 	// Shutdown systems
 	FileManager::Shutdown();
+	ConsoleManager::Shutdown();
 
 	std::cout << LocalizationManager::GetLocalizedString(string_const::G_TOTAL_RUN_TIME) << duration.count() << "s.\n";
 

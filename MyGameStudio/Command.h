@@ -3,6 +3,7 @@
 
 #include "ConsoleManager.h"
 #include "Err.h"
+#include "LocalizationManager.h"
 
 class Command
 {
@@ -28,7 +29,7 @@ class HelpCommand : public Command
 public:
 	Err ExecuteCommand(uint8_t argc, char** argn, char** argv) override
 	{
-		std::cout << "Showing help.";
+		std::cout << "\n" << LocalizationManager::GetLocalizedString(string_const::G_HELP_COMMAND) << "\n";
 		return error_const::SUCCESS;
 	}
 
@@ -40,7 +41,7 @@ class QuitCommand : public Command
 public:
 	Err ExecuteCommand(uint8_t argc, char** argn, char** argv) override
 	{
-		std::cout << "\nQuitting console...\n";
+		std::cout << "\n" << LocalizationManager::GetLocalizedString(string_const::G_QUIT_CONSOLE) << "\n";
 		ConsoleManager::StopConsole();
 		return error_const::SUCCESS;
 	}

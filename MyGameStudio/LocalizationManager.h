@@ -52,4 +52,6 @@ namespace string_const
     const auto G_SYS_SHUTDOWN = "sys_shutdown";
     const auto G_TOTAL_RUN_TIME = "total_run_time";
     const auto G_LANG_SELECTED = "lang_selected";
+    const auto G_HELP_COMMAND = "help_command";
+    const auto G_QUIT_CONSOLE = "quit_console";
 }

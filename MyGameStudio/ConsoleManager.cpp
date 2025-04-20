@@ -21,6 +21,8 @@ void ConsoleManager::RunConsole()
 	while (consoleRunning_)
 	{
 		ReceiveCommand();
+		LTrimCommand();
+		if (*usableCommand_ == '\0') continue;
 		ParseCommand();
 
 		CommandFactory::CreateCommand(mainCommand_).ExecuteCommand(argc_, argn_, argv_);
@@ -36,24 +38,11 @@ void ConsoleManager::AllocMem()
 {
 	argv_ = new char* [16];
 	argn_ = new char* [16];
-
-	for (uint8_t i = 0; i < 16; i++)
-	{
-		argv_[i] = new char[64];
-		argn_[i] = new char[64];
-	}
-
 	fullCommand_ = new char[2048];
 }
 
 void ConsoleManager::DeleteMem()
 {
-	for (uint8_t i = 0; i < 16; i++)
-	{
-		delete argv_[i];
-		delete argn_[i];
-	}
-
 	delete argv_;
 	delete argn_;
 	delete fullCommand_;
@@ -62,8 +51,17 @@ void ConsoleManager::DeleteMem()
 
 void ConsoleManager::ReceiveCommand()
 {
-	std::cout << "\n> ";
+	std::cout << "> ";
 	std::cin.getline(fullCommand_, 2048);
+}
+
+void ConsoleManager::LTrimCommand()
+{
+	usableCommand_ = fullCommand_;
+
+	while (*usableCommand_ && std::isspace(static_cast<unsigned char>(*usableCommand_))) {
+		++usableCommand_;
+	}
 }
 
 void ConsoleManager::ParseCommand()
@@ -71,7 +69,7 @@ void ConsoleManager::ParseCommand()
 	uint8_t argc = 0;
 
 	char* context = nullptr;
-	char* token = strtok_s(fullCommand_, " ", &context);
+	char* token = strtok_s(usableCommand_, " ", &context);
 
 	mainCommand_ = token;
 
@@ -102,6 +100,7 @@ void ConsoleManager::ParseCommand()
 bool ConsoleManager::consoleRunning_ = true;
 char* ConsoleManager::fullCommand_;
 char* ConsoleManager::mainCommand_;
+char* ConsoleManager::usableCommand_;
 char** ConsoleManager::argv_;
 char** ConsoleManager::argn_;
 uint8_t ConsoleManager::argc_;

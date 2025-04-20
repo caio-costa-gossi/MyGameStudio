@@ -7,6 +7,7 @@ private:
 	static bool consoleRunning_;
 
 	static char* fullCommand_;
+	static char* usableCommand_;
 	static char* mainCommand_;
 	static uint8_t argc_;
 	static char** argv_;
@@ -15,6 +16,7 @@ private:
 	static void AllocMem();
 	static void DeleteMem();
 	static void ReceiveCommand();
+	static void LTrimCommand();
 	static void ParseCommand();
 
 public:

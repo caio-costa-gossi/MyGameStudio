@@ -129,6 +129,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AsciiDrawer.cpp" />
     <ClCompile Include="BaseManager.cpp" />
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="CommandFactory.cpp" />
@@ -147,6 +148,7 @@
     <ClCompile Include="TestManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AsciiDrawer.h" />
     <ClInclude Include="BaseManager.h" />
     <ClInclude Include="Command.h" />
     <ClInclude Include="CommandFactory.h" />

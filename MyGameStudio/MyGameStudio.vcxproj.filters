@@ -75,6 +75,9 @@
     <ClCompile Include="CommandFactory.cpp">
       <Filter>Commands</Filter>
     </ClCompile>
+    <ClCompile Include="AsciiDrawer.cpp">
+      <Filter>Helpers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EngineCoreManager.h">
@@ -121,6 +124,9 @@
     </ClInclude>
     <ClInclude Include="CommandFactory.h">
       <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="AsciiDrawer.h">
+      <Filter>Helpers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

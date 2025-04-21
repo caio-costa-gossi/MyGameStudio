@@ -1,4 +1,7 @@
 #include "ConsoleManager.h"
+
+#include <chrono>
+
 #include "CommandFactory.h"
 
 Err ConsoleManager::Startup()
@@ -23,7 +26,6 @@ void ConsoleManager::RunConsole()
 		ReceiveCommand();
 		LTrimCommand();
 		if (*usableCommand_ == '\0') continue;
-		//ParseCommand();
 		ParseCommandAlternative();
 
 		CommandFactory::CreateCommand(mainCommand_).ExecuteCommand(argc_, argn_, argv_);

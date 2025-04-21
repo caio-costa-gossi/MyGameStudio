@@ -12,7 +12,7 @@ std::string AsciiDrawer::DrawBox(const uint8_t xSize, const char* text)
 
 	while (std::getline(textStream, textLine, '\n'))
 	{
-		textLine.resize(xSize * 2, ' ');
+		textLine = RightPadString(textLine, xSize * 2, " ");
 		returnString += "|" + textLine + "|\n";
 	}
 
@@ -22,7 +22,7 @@ std::string AsciiDrawer::DrawBox(const uint8_t xSize, const char* text)
 	return returnString;
 }
 
-std::string AsciiDrawer::MultiplyString(const std::string& string, const uint8_t factor)
+std::string AsciiDrawer::MultiplyString(const std::string& string, const uint16_t factor)
 {
 	std::string returnValue;
 
@@ -48,6 +48,33 @@ std::string AsciiDrawer::ParseEscape(const std::string& input)
 		else
 			returnString += input[i];
 	}
+
+	return returnString;
+}
+
+bool AsciiDrawer::IsLeadingUtf8Character(const unsigned char byte)
+{
+	return (byte & 0xC0) != 0x80;
+}
+
+uint16_t AsciiDrawer::CountUtf8Characters(const std::string& string)
+{
+	uint16_t charCount = 0;
+
+	for (const unsigned char& c : string)
+	{
+		if (IsLeadingUtf8Character(c)) charCount++;
+	}
+
+	return charCount;
+}
+
+std::string AsciiDrawer::RightPadString(const std::string& string, const uint16_t charAmount, const std::string& paddingChar)
+{
+	std::string returnString = string;
+
+	const uint16_t needToPad = charAmount - CountUtf8Characters(string);
+	returnString += MultiplyString(paddingChar, needToPad);
 
 	return returnString;
 }

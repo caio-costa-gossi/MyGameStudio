@@ -18,6 +18,9 @@ private:
 	static void ReceiveCommand();
 	static void LTrimCommand();
 	static void ParseCommand();
+	static void ParseCommandAlternative();
+
+	static void ReplaceWithTerminator(char* string, const uint16_t charCount);
 
 public:
 	static Err Startup();

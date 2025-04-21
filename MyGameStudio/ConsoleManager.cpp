@@ -23,7 +23,8 @@ void ConsoleManager::RunConsole()
 		ReceiveCommand();
 		LTrimCommand();
 		if (*usableCommand_ == '\0') continue;
-		ParseCommand();
+		//ParseCommand();
+		ParseCommandAlternative();
 
 		CommandFactory::CreateCommand(mainCommand_).ExecuteCommand(argc_, argn_, argv_);
 	}
@@ -95,6 +96,86 @@ void ConsoleManager::ParseCommand()
 	}
 
 	argc_ = argc - 1;
+}
+
+void ConsoleManager::ParseCommandAlternative()
+{
+	uint8_t argc = 0;
+
+	bool readingMainCommand = true;
+	bool readingArgs = false;
+	bool middleOfArg = false;
+	bool nameOfArg = false;
+	bool inQuotes = false;
+
+	mainCommand_ = usableCommand_;
+
+	// Deal with quoted command
+	if (*usableCommand_ == '"')
+	{
+		mainCommand_ = &usableCommand_[1];
+	}
+
+	for (uint16_t finder = 0; usableCommand_[finder] != '\0'; ++finder)
+	{
+		if (usableCommand_[finder] == '"')
+		{
+			inQuotes = !inQuotes;
+
+			// Deal with quoted arg value (the quote would be considered as part of argv otherwise)
+			if (readingArgs && !nameOfArg && inQuotes)
+			{
+				argv_[argc] = &usableCommand_[finder + 1];
+			}
+
+			continue;
+		}
+
+		if (usableCommand_[finder] == ' ' && !inQuotes && readingMainCommand)
+		{
+			readingMainCommand = false;
+			readingArgs = true;
+		}
+		else if (readingArgs && middleOfArg && usableCommand_[finder] == ' ' && !inQuotes)
+		{
+			argc++;
+			middleOfArg = false;
+		}
+		else if (readingArgs && !middleOfArg && usableCommand_[finder] != ' ' && usableCommand_[finder] != '"')
+		{
+			nameOfArg = true;
+			middleOfArg = true;
+			argn_[argc] = &usableCommand_[finder];
+		}
+		else if (readingArgs && nameOfArg && usableCommand_[finder] == '=' && !inQuotes)
+		{
+			nameOfArg = false;
+			argv_[argc] = &usableCommand_[finder + 1];
+		}
+	}
+
+	const uint16_t commandLen = std::strlen(usableCommand_);
+	ReplaceWithTerminator(usableCommand_, commandLen);
+
+	argc_ = argc;
+	if (middleOfArg) argc_++;
+}
+
+void ConsoleManager::ReplaceWithTerminator(char* string, const uint16_t charCount)
+{
+	bool inQuotes = false;
+
+	for (uint16_t i = 0; i < charCount; i++)
+	{
+		if (string[i] == '"')
+		{
+			inQuotes = !inQuotes;
+			string[i] = '\0';
+		}
+
+		if ((string[i] == ' ' || string[i] == '=') && !inQuotes)
+			string[i] = '\0';
+	}
 }
 
 bool ConsoleManager::consoleRunning_ = true;

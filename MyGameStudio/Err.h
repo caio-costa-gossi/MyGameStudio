@@ -24,4 +24,5 @@ namespace error_const
 	const auto GENERIC_EXCEPTION = Err("Undefined error", 1);
 	const auto INVALID_FORMAT = Err("Format is invalid", 2);
 	const auto SETTING_MISSING = Err("A configuration needed has not been set", 3);
+	const auto INVALID_PARAMETERS = Err("Invalid parameters", 4);
 }

@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <cstring>
 
-#define LANGUAGES X(en_us) X(pt_br) X(fr_fr)
+#define LANGUAGES X(en_us) X(pt_br) X(fr_fr) X(lang_not_found)
 
 namespace enums
 {
@@ -21,7 +21,7 @@ namespace enums
 		LANGUAGES
 		#undef X
 		default:
-			return "en_us";
+			return "N/A";
 		}
 	}
 
@@ -30,6 +30,7 @@ namespace enums
 		#define X(name) if (std::strcmp(string,#name) == 0) return Language::name;
 		LANGUAGES
 		#undef X
+		return Language::lang_not_found;
 	}
 
 	enum class IoTaskState : uint8_t

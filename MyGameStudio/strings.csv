@@ -7,3 +7,7 @@ total_run_time,Tempo total de execução: ,Total execution time: ,Temps d'exécu
 lang_selected,Linguagem selecionada: ,Language selected: ,Langue sélecionnée: 
 help_command,Ajuda:\nComandos disponíveis:\n - help: Ajuda em geral\n - quit: Sair do console,Help:\nCommands available:\n - help: General help\n - quit: Quit the console,Aide:\nCommandes disponibles:\n - help: Aide générale\n - quit: Quitter la console
 quit_console,Saindo do console...,Quitting console...,Quitter la console...
+language_changed,Linguagem modificada: ,Language modified: ,Langue modifiée: 
+language_not_found,Linguagem não encontrada: ,Language not found: ,Langue introuvable: 
+invalid_parameter,Parâmetros inválidos. Utilização correta:,Invalid parameters. Correct utilization:,Paramètres invalides. Utilisation correcte:
+use_chlang,"chlang lang={Linguagem desejada}","chlang lang={Desired language}","chlang lang={Langue desirée}"

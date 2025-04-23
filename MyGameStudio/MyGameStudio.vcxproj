@@ -105,6 +105,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PreprocessToFile>false</PreprocessToFile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -130,6 +131,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AsciiDrawer.cpp" />
+    <ClCompile Include="AssetDatabase.cpp" />
+    <ClCompile Include="Assets.cpp" />
     <ClCompile Include="BaseManager.cpp" />
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="CommandFactory.cpp" />
@@ -144,11 +147,15 @@
     <ClCompile Include="Err.cpp" />
     <ClCompile Include="LocalizationManager.cpp" />
     <ClCompile Include="MyGameStudio.cpp" />
+    <ClCompile Include="sqlite3.c" />
+    <ClCompile Include="SqliteDatabase.cpp" />
     <ClCompile Include="StringId.cpp" />
     <ClCompile Include="TestManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AsciiDrawer.h" />
+    <ClInclude Include="AssetDatabase.h" />
+    <ClInclude Include="Assets.h" />
     <ClInclude Include="BaseManager.h" />
     <ClInclude Include="Command.h" />
     <ClInclude Include="CommandFactory.h" />
@@ -162,6 +169,8 @@
     <ClInclude Include="EngineCoreManager.h" />
     <ClInclude Include="Err.h" />
     <ClInclude Include="LocalizationManager.h" />
+    <ClInclude Include="sqlite3.h" />
+    <ClInclude Include="SqliteDatabase.h" />
     <ClInclude Include="StringId.h" />
     <ClInclude Include="TestManager.h" />
   </ItemGroup>

@@ -25,6 +25,12 @@
     <Filter Include="Commands">
       <UniqueIdentifier>{c21b12f4-e524-4333-b9e1-8d169fc9edf1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Database">
+      <UniqueIdentifier>{400f7ffa-bc3f-4641-92b0-70f4b85928dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Asset Management">
+      <UniqueIdentifier>{eacbcc04-2c71-412e-810b-63a170df7172}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MyGameStudio.cpp">
@@ -78,6 +84,18 @@
     <ClCompile Include="AsciiDrawer.cpp">
       <Filter>Helpers</Filter>
     </ClCompile>
+    <ClCompile Include="sqlite3.c">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="SqliteDatabase.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="Assets.cpp">
+      <Filter>Asset Management</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetDatabase.cpp">
+      <Filter>Asset Management</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EngineCoreManager.h">
@@ -127,6 +145,18 @@
     </ClInclude>
     <ClInclude Include="AsciiDrawer.h">
       <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="sqlite3.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="SqliteDatabase.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="Assets.h">
+      <Filter>Asset Management</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetDatabase.h">
+      <Filter>Asset Management</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

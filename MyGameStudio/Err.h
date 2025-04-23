@@ -25,4 +25,6 @@ namespace error_const
 	const auto INVALID_FORMAT = Err("Format is invalid", 2);
 	const auto SETTING_MISSING = Err("A configuration needed has not been set", 3);
 	const auto INVALID_PARAMETERS = Err("Invalid parameters", 4);
+	const auto REDUNDANT_CALL = Err("This operation has already been done", 5);
+	const auto DB_CLOSED = Err("The operation cannot proceed, the database is closed", 6);
 }

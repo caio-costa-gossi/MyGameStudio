@@ -2,6 +2,7 @@
 #include "ConsoleManager.h"
 #include "EngineCoreManager.h"
 #include "Err.h"
+#include "SqliteDatabase.h"
 
 int main()
 {
@@ -17,7 +18,10 @@ int main()
 		std::cout << "Error: " << err;
 	}
 
-	ConsoleManager::RunConsole();
+	//ConsoleManager::RunConsole();
+
+	//SqliteDatabase db;
+	//db.OpenDb("Assets.db");
 
 	err = EngineCoreManager::Shutdown();
 	if (err.Code() != 0)

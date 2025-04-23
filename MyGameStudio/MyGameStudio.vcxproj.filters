@@ -90,7 +90,7 @@
     <ClCompile Include="SqliteDatabase.cpp">
       <Filter>Database</Filter>
     </ClCompile>
-    <ClCompile Include="Assets.cpp">
+    <ClCompile Include="Asset.cpp">
       <Filter>Asset Management</Filter>
     </ClCompile>
     <ClCompile Include="AssetDatabase.cpp">
@@ -152,7 +152,7 @@
     <ClInclude Include="SqliteDatabase.h">
       <Filter>Database</Filter>
     </ClInclude>
-    <ClInclude Include="Assets.h">
+    <ClInclude Include="Asset.h">
       <Filter>Asset Management</Filter>
     </ClInclude>
     <ClInclude Include="AssetDatabase.h">

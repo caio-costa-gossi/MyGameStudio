@@ -4,6 +4,26 @@
 
 #define LANGUAGES X(en_us) X(pt_br) X(fr_fr) X(lang_not_found)
 
+#define ASSET_TYPES \
+X(image) \
+X(material) \
+X(mesh3d) \
+X(skeleton) \
+X(light_map) \
+X(animation) \
+X(animation_state_machine) \
+X(audio) \
+X(audio_metadata) \
+X(font) \
+X(plaintext) \
+X(script) \
+X(level) \
+X(tile_set) \
+X(collider) \
+X(particle) \
+X(shader) \
+X(undefined)
+
 namespace enums
 {
 	enum class Language : uint8_t
@@ -43,65 +63,28 @@ namespace enums
 
 	enum class AssetType : uint8_t
 	{
-		image,
-		material,
-		mesh3d,
-		skeleton,
-		light_map,
-		animation,
-		animation_state_machine,
-		audio,
-		audio_metadata,
-		font,
-		plaintext,
-		script,
-		level,
-		tile_set,
-		collider,
-		particle,
-		shader
+		#define X(asset_type) asset_type,
+		ASSET_TYPES
+		#undef X
 	};
 
 	inline const char* AssetTypeToString(const AssetType type)
 	{
 		switch (type)
 		{
-		case AssetType::image:
-			return "image";
-		case AssetType::material:
-			return "material";
-		case AssetType::mesh3d:
-			return "mesh3d";
-		case AssetType::skeleton:
-			return "skeleton";
-		case AssetType::light_map:
-			return "light_map";
-		case AssetType::animation:
-			return "animation";
-		case AssetType::animation_state_machine:
-			return "animation_state_machine";
-		case AssetType::audio:
-			return "audio";
-		case AssetType::audio_metadata:
-			return "audio_metadata";
-		case AssetType::font:
-			return "font";
-		case AssetType::plaintext:
-			return "plaintext";
-		case AssetType::script:
-			return "script";
-		case AssetType::level:
-			return "level";
-		case AssetType::tile_set:
-			return "tile_set";
-		case AssetType::collider:
-			return "collider";
-		case AssetType::particle:
-			return "particle";
-		case AssetType::shader:
-			return "shader";
+		#define X(asset_type) case AssetType::asset_type: return #asset_type;
+		ASSET_TYPES
+		#undef X
 		default:
 			return "undefined";
 		}
+	}
+
+	inline AssetType StringToAssetType(const char* string)
+	{
+		#define X(asset_type) if (std::strcmp(string,#asset_type) == 0) return AssetType::asset_type;
+		ASSET_TYPES
+		#undef X
+		return AssetType::undefined;
 	}
 }

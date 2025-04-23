@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "Assets.h"
+#include "Asset.h"
 #include "SqliteDatabase.h"
 
 class AssetDatabase
@@ -8,6 +8,8 @@ class AssetDatabase
 private:
 	static SqliteDatabase db_;
 	static const char* assetDbFilename_;
+	static const char* createAssetsTableQuery_;
+	static const char* createAssetDependenciesTableQuery_;
 
 	static Err CheckTables();
 

@@ -1,3 +1,4 @@
+#include "AssetDatabase.h"
 #include "CommandFactory.h"
 #include "ConsoleManager.h"
 #include "EngineCoreManager.h"
@@ -20,8 +21,8 @@ int main()
 
 	//ConsoleManager::RunConsole();
 
-	//SqliteDatabase db;
-	//db.OpenDb("Assets.db");
+	AssetDatabase::Startup();
+	AssetDatabase::Shutdown();
 
 	err = EngineCoreManager::Shutdown();
 	if (err.Code() != 0)

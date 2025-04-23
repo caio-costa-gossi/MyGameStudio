@@ -17,6 +17,7 @@ public:
 	Err OpenDb(const char* filename);
 	Err CloseDb();
 	Err ExecuteNonQuery(const char* sqlStatement) const;
+	bool IsDbOpen() const;
 
 	template<typename T>
 	std::vector<T> ExecuteQuery(const char* sqlStatement) const
@@ -25,6 +26,13 @@ public:
 			"Error: class T must have a T::FromStmt(sqlite3_stmt*) method.");
 
 		std::vector<T> results;
+
+		if (!isDbOpen_)
+		{
+			std::cout << "Error! Database is closed!";
+			return results;
+		}
+		
 		results.reserve(256);
 
 		sqlite3_stmt* stmt = nullptr;
@@ -42,6 +50,4 @@ public:
 
 		return results;
 	}
-
-	bool IsDbOpen() const;
 };

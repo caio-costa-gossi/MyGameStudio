@@ -1,6 +1,7 @@
 #include "EngineCoreManager.h"
 #include <windows.h>
 
+#include "AssetDatabase.h"
 #include "ConfigManager.h"
 #include "ConsoleManager.h"
 #include "FileManager.h"
@@ -15,21 +16,26 @@ Err EngineCoreManager::Startup()
 
 	// Subsystem startup
 	Err err = LocalizationManager::Startup("strings.csv", "string_id");
-	if (err.Code() != 0)
-		std::cout << "Error! " << err.Message();
+	if (err.Code())
+		std::cout << "Error! " << err.Message() << "\n";
 
 	err = ConfigManager::Startup("config.ini");
-	if (err.Code() != 0)
-		std::cout << "Error! " << err.Message();
+	if (err.Code())
+		std::cout << "Error! " << err.Message() << "\n";
 
 	err = FileManager::Startup();
-	if (err.Code() != 0)
-		std::cout << "Error! " << err.Message();
+	if (err.Code())
+		std::cout << "Error! " << err.Message() << "\n";
 
 	err = ConsoleManager::Startup();
-	if (err.Code() != 0)
-		std::cout << "Error! " << err.Message();
+	if (err.Code())
+		std::cout << "Error! " << err.Message() << "\n";
 
+	err = AssetDatabase::Startup();
+	if (err.Code())
+		std::cout << "Error! " << err.Message() << "\n";
+
+	// All systems initialized
 	std::cout << "All systems ready!\n\n";
 	return error_const::SUCCESS;
 }
@@ -64,6 +70,7 @@ Err EngineCoreManager::Shutdown()
 	// Shutdown systems
 	FileManager::Shutdown();
 	ConsoleManager::Shutdown();
+	AssetDatabase::Shutdown();
 
 	std::cout << LocalizationManager::GetLocalizedString(string_const::G_TOTAL_RUN_TIME) << duration.count() << "s.\n";
 

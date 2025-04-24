@@ -49,7 +49,7 @@ struct Asset
 		return a;
 	}
 
-	void AddDependencies(std::vector<AssetDependency> dependencies)
+	void AddDependencies(const std::vector<AssetDependency>& dependencies)
 	{
 		DependsOnAssets.reserve(64);
 

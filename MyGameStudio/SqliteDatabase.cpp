@@ -37,6 +37,18 @@ Err SqliteDatabase::ExecuteNonQuery(const char* sqlStatement) const
 	return error_const::SUCCESS;
 }
 
+int64_t SqliteDatabase::ExecuteInsert(const char* insertStatement) const
+{
+	if (!isDbOpen_)
+		return -1;
+
+	char* errorMsg;
+	if (sqlite3_exec(database_, insertStatement, nullptr, nullptr, &errorMsg))
+		return -1;
+
+	return sqlite3_last_insert_rowid(database_);
+}
+
 bool SqliteDatabase::IsDbOpen() const
 {
 	return isDbOpen_;

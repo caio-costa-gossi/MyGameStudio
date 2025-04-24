@@ -30,50 +30,116 @@ Err AssetDatabase::Shutdown()
 
 std::vector<Asset> AssetDatabase::GetAssets()
 {
-	return db_.ExecuteQuery<Asset>("SELECT * FROM Assets;");
+	std::vector<Asset> assets = db_.ExecuteQuery<Asset>("SELECT * FROM Assets;");
+
+	for (auto it = assets.begin(); it != assets.end(); ++it)
+	{
+		std::string queryDependencies("SELECT * FROM AssetDependencies WHERE AssetId = " + std::to_string(it->Id));
+		std::vector<AssetDependency> dependencies = db_.ExecuteQuery<AssetDependency>(queryDependencies.c_str());
+
+		if (!dependencies.empty())
+			it->AddDependencies(dependencies);
+	}
+
+	return assets;
+}
+
+Asset AssetDatabase::GetAsset(const uint32_t assetId, const bool addDependencies)
+{
+	auto asset = db_.ExecuteQuerySingle<Asset>(std::string("SELECT * FROM Assets WHERE Id = " + std::to_string(assetId)).c_str());
+
+	if (addDependencies)
+	{
+		std::vector<AssetDependency> dependencies = db_.ExecuteQuery<AssetDependency>(std::string("SELECT * FROM AssetDependencies WHERE AssetId = " + std::to_string(assetId)).c_str());
+		if (!dependencies.empty())
+			asset.AddDependencies(dependencies);
+	}
+
+	return asset;
 }
 
 Err AssetDatabase::RegisterAsset(const Asset& asset)
 {
-	const std::string sqlStatement("INSERT INTO Assets VALUES (" + 
-		std::to_string(asset.Id) + "," + 
-		asset.Name + "," +
-		asset.Extension + "," +
-		enums::AssetTypeToString(asset.Type) + "," +
-		asset.SourceLocation + "," +
-		asset.AssetLocation + "," +
-		asset.LastModifiedDate + "," +
+	const std::string sqlStatement("INSERT INTO Assets (Name, Extension, Type, SourceLocation, AssetLocation, LastModifiedDate, CheckModifications) VALUES ('" + 
+		asset.Name + "','" +
+		asset.Extension + "','" +
+		enums::AssetTypeToString(asset.Type) + "','" +
+		asset.SourceLocation + "','" +
+		asset.AssetLocation + "','" +
+		asset.LastModifiedDate + "'," +
 		std::to_string(asset.CheckModifications) + ");"
 	);
 
-	Err error = db_.ExecuteNonQuery(sqlStatement.c_str());
+	const int64_t newAssetId64 = db_.ExecuteInsert(sqlStatement.c_str());
+	if (newAssetId64 > INT32_MAX || newAssetId64 < INT32_MIN)
+		return error_const::INTEGER_OUT_OF_BOUNDS;
 
+	const int32_t newAssetId = static_cast<int32_t>(newAssetId64);
+	if (newAssetId < 0)
+	{
+		std::cout << "Error registering asset!\n";
+		return Err("Asset could not be registered", 10);
+	}
+
+	Err error = RegisterAssetDependencies(asset.DependsOnAssets, newAssetId);
 	if (error.Code())
 	{
-		std::cout << "Error registering asset!";
+		std::cout << "Error registering asset dependencies!\n";
 		return error;
 	}
 
 	return error_const::SUCCESS;
 }
 
-Err AssetDatabase::ModifyAsset(const Asset& asset)
+Err AssetDatabase::UpdateAsset(const Asset& asset)
 {
-	const std::string sqlStatement("UPDATE Assets SET Name = " + 
+	const std::string sqlStatement("UPDATE Assets SET Name = '" + 
 		asset.Name +
-		",Extension = " + asset.Extension +
-		",Type = " + enums::AssetTypeToString(asset.Type) +
-		",SourceLocation = " + asset.SourceLocation +
-		",AssetLocation = " + asset.AssetLocation +	
-		",LastModifiedDate = " + asset.LastModifiedDate +
-		",CheckModifications = " + std::to_string(asset.CheckModifications) +
+		"',Extension = '" + asset.Extension +
+		"',Type = '" + enums::AssetTypeToString(asset.Type) +
+		"',SourceLocation = '" + asset.SourceLocation +
+		"',AssetLocation = '" + asset.AssetLocation +	
+		"',LastModifiedDate = '" + asset.LastModifiedDate +
+		"',CheckModifications = " + std::to_string(asset.CheckModifications) +
 		" WHERE Id = " + std::to_string(asset.Id));
 
 	Err error = db_.ExecuteNonQuery(sqlStatement.c_str());
-
 	if (error.Code())
 	{
-		std::cout << "Error updating asset!";
+		std::cout << "Error updating asset!\n";
+		return error;
+	}
+
+	error = DeleteAssetDependencies(asset.Id);
+	if (error.Code())
+	{
+		std::cout << "Error deleting asset dependencies before updating!\n";
+		return error;
+	}
+
+	error = RegisterAssetDependencies(asset.DependsOnAssets, asset.Id);
+	if (error.Code())
+	{
+		std::cout << "Error re-registering asset dependencies on update!\n";
+		return error;
+	}
+
+	return error_const::SUCCESS;
+}
+
+Err AssetDatabase::DeleteAsset(const uint32_t assetId)
+{
+	Err error = db_.ExecuteNonQuery(std::string("DELETE FROM Assets WHERE Id = " + std::to_string(assetId)).c_str());
+	if (error.Code())
+	{
+		std::cout << "Error deleting asset!\n";
+		return error;
+	}
+
+	error = DeleteAssetDependencies(assetId);
+	if (error.Code())
+	{
+		std::cout << "Error deleting dependencies!\n";
 		return error;
 	}
 
@@ -83,7 +149,6 @@ Err AssetDatabase::ModifyAsset(const Asset& asset)
 Err AssetDatabase::CheckTables()
 {
 	Err error = db_.ExecuteNonQuery(createAssetsTableQuery_);
-
 	if (error.Code())
 	{
 		std::cout << "Error checking/creating Asset table!\n";
@@ -91,7 +156,6 @@ Err AssetDatabase::CheckTables()
 	}
 
 	error = db_.ExecuteNonQuery(createAssetDependenciesTableQuery_);
-
 	if (error.Code())
 	{
 		std::cout << "Error checking/creating AssetDependencies table!\n";
@@ -101,14 +165,38 @@ Err AssetDatabase::CheckTables()
 	return error_const::SUCCESS;
 }
 
+Err AssetDatabase::DeleteAssetDependencies(uint32_t assetId)
+{
+	Err error = db_.ExecuteNonQuery(std::string("DELETE FROM AssetDependencies WHERE AssetId = " + std::to_string(assetId)).c_str());
+	if (error.Code()) return error;
+
+	return error_const::SUCCESS;
+}
+
+Err AssetDatabase::RegisterAssetDependencies(const std::vector<uint32_t>& dependencies, uint32_t assetId)
+{
+	if (dependencies.empty())
+		return error_const::SUCCESS;
+
+	for (auto it = dependencies.begin(); it != dependencies.end(); ++it)
+	{
+		Err error = db_.ExecuteNonQuery(std::string("INSERT INTO AssetDependencies VALUES (" + std::to_string(assetId) + "," + std::to_string(*it) + ");").c_str());
+		if (error.Code())
+			std::cout << "Error registering asset dependency!\n";
+	}
+
+	return error_const::SUCCESS;
+}
+
+
 SqliteDatabase AssetDatabase::db_;
 auto AssetDatabase::assetDbFilename_ = "Assets.db";
 
 auto AssetDatabase::createAssetsTableQuery_ = 
 "CREATE TABLE IF NOT EXISTS Assets "
-"(Id INTEGER PRIMARY KEY, Name TEXT NOT NULL, Extension TEXT NOT NULL, "
+"(Id INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL, Extension TEXT NOT NULL, "
 "Type TEXT, SourceLocation TEXT, AssetLocation TEXT, LastModifiedDate TEXT, CheckModifications INTEGER);";
 
 auto AssetDatabase::createAssetDependenciesTableQuery_ = 
 "CREATE TABLE IF NOT EXISTS AssetDependencies "
-"(AssetId INTEGER, DependsOn INTEGER);";
+"(AssetId INTEGER, DependsOn INTEGER, PRIMARY KEY(AssetId, DependsOn));";

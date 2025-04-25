@@ -146,6 +146,25 @@ Err AssetDatabase::DeleteAsset(const uint32_t assetId)
 	return error_const::SUCCESS;
 }
 
+Err AssetDatabase::ClearAllTables()
+{
+	Err error = db_.ExecuteNonQuery("DELETE FROM Assets;");
+	if (error.Code())
+	{
+		std::cout << "Error clearing Assets table!\n";
+		return error;
+	}
+
+	error = db_.ExecuteNonQuery("DELETE FROM AssetDependencies;");
+	if (error.Code())
+	{
+		std::cout << "Error clearing AssetDependencies table!\n";
+		return error;
+	}
+
+	return error_const::SUCCESS;
+}
+
 Err AssetDatabase::CheckTables()
 {
 	Err error = db_.ExecuteNonQuery(createAssetsTableQuery_);

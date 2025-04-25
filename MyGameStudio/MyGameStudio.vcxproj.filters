@@ -96,6 +96,9 @@
     <ClCompile Include="AssetDatabase.cpp">
       <Filter>Asset Management</Filter>
     </ClCompile>
+    <ClCompile Include="AssetPipeline.cpp">
+      <Filter>Asset Management</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EngineCoreManager.h">
@@ -156,6 +159,9 @@
       <Filter>Asset Management</Filter>
     </ClInclude>
     <ClInclude Include="AssetDatabase.h">
+      <Filter>Asset Management</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetPipeline.h">
       <Filter>Asset Management</Filter>
     </ClInclude>
   </ItemGroup>

@@ -24,4 +24,6 @@ public:
 	static Err RegisterAsset(const Asset& asset);
 	static Err UpdateAsset(const Asset& asset);
 	static Err DeleteAsset(uint32_t assetId);
+
+	static Err ClearAllTables();
 };

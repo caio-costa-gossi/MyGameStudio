@@ -1,14 +1,16 @@
 #include "AssetDatabase.h"
 
+#include "ConsoleManager.h"
+
 Err AssetDatabase::Startup()
 {
-	std::cout << "Opening asset database...\n";
+	ConsoleManager::Print("Opening asset database...\n", enums::ConsoleMessageType::info);
 	Err error = db_.OpenDb(assetDbFilename_);
 
 	if (error.Code())
 		return error;
 
-	std::cout << "Checking/validating database tables...\n";
+	ConsoleManager::Print("Checking/validating database tables...\n", enums::ConsoleMessageType::info);
 	error = CheckTables();
 
 	if (error.Code())
@@ -19,7 +21,7 @@ Err AssetDatabase::Startup()
 
 Err AssetDatabase::Shutdown()
 {
-	std::cout << "Closing asset database...\n";
+	ConsoleManager::Print("Closing asset database...\n", enums::ConsoleMessageType::info);
 	Err error = db_.CloseDb();
 
 	if (error.Code())
@@ -77,14 +79,14 @@ Err AssetDatabase::RegisterAsset(const Asset& asset)
 	const int32_t newAssetId = static_cast<int32_t>(newAssetId64);
 	if (newAssetId < 0)
 	{
-		std::cout << "Error registering asset!\n";
+		ConsoleManager::Print("Error registering asset!\n", enums::ConsoleMessageType::error);
 		return Err("Asset could not be registered", 10);
 	}
 
 	Err error = RegisterAssetDependencies(asset.DependsOnAssets, newAssetId);
 	if (error.Code())
 	{
-		std::cout << "Error registering asset dependencies!\n";
+		ConsoleManager::Print("Error registering asset dependencies!\n", enums::ConsoleMessageType::error);
 		return error;
 	}
 
@@ -106,21 +108,21 @@ Err AssetDatabase::UpdateAsset(const Asset& asset)
 	Err error = db_.ExecuteNonQuery(sqlStatement.c_str());
 	if (error.Code())
 	{
-		std::cout << "Error updating asset!\n";
+		ConsoleManager::Print("Error updating asset!\n", enums::ConsoleMessageType::error);
 		return error;
 	}
 
 	error = DeleteAssetDependencies(asset.Id);
 	if (error.Code())
 	{
-		std::cout << "Error deleting asset dependencies before updating!\n";
+		ConsoleManager::Print("Error deleting asset dependencies before updating!\n", enums::ConsoleMessageType::error);
 		return error;
 	}
 
 	error = RegisterAssetDependencies(asset.DependsOnAssets, asset.Id);
 	if (error.Code())
 	{
-		std::cout << "Error re-registering asset dependencies on update!\n";
+		ConsoleManager::Print("Error re-registering asset dependencies on update!\n", enums::ConsoleMessageType::error);
 		return error;
 	}
 
@@ -132,14 +134,14 @@ Err AssetDatabase::DeleteAsset(const uint32_t assetId)
 	Err error = db_.ExecuteNonQuery(std::string("DELETE FROM Assets WHERE Id = " + std::to_string(assetId)).c_str());
 	if (error.Code())
 	{
-		std::cout << "Error deleting asset!\n";
+		ConsoleManager::Print("Error deleting asset!\n", enums::ConsoleMessageType::error);
 		return error;
 	}
 
 	error = DeleteAssetDependencies(assetId);
 	if (error.Code())
 	{
-		std::cout << "Error deleting dependencies!\n";
+		ConsoleManager::Print("Error deleting dependencies!\n", enums::ConsoleMessageType::error);
 		return error;
 	}
 
@@ -151,14 +153,14 @@ Err AssetDatabase::ClearAllTables()
 	Err error = db_.ExecuteNonQuery("DELETE FROM Assets;");
 	if (error.Code())
 	{
-		std::cout << "Error clearing Assets table!\n";
+		ConsoleManager::Print("Error clearing Assets table!\n", enums::ConsoleMessageType::error);
 		return error;
 	}
 
 	error = db_.ExecuteNonQuery("DELETE FROM AssetDependencies;");
 	if (error.Code())
 	{
-		std::cout << "Error clearing AssetDependencies table!\n";
+		ConsoleManager::Print("Error clearing AssetDependencies table!\n", enums::ConsoleMessageType::error);
 		return error;
 	}
 
@@ -170,14 +172,14 @@ Err AssetDatabase::CheckTables()
 	Err error = db_.ExecuteNonQuery(createAssetsTableQuery_);
 	if (error.Code())
 	{
-		std::cout << "Error checking/creating Asset table!\n";
+		ConsoleManager::Print("Error checking/creating Asset table!\n", enums::ConsoleMessageType::error);
 		return error;
 	}
 
 	error = db_.ExecuteNonQuery(createAssetDependenciesTableQuery_);
 	if (error.Code())
 	{
-		std::cout << "Error checking/creating AssetDependencies table!\n";
+		ConsoleManager::Print("Error checking/creating AssetDependencies table!\n", enums::ConsoleMessageType::error);
 		return error;
 	}
 
@@ -201,7 +203,7 @@ Err AssetDatabase::RegisterAssetDependencies(const std::vector<uint32_t>& depend
 	{
 		Err error = db_.ExecuteNonQuery(std::string("INSERT INTO AssetDependencies VALUES (" + std::to_string(assetId) + "," + std::to_string(*it) + ");").c_str());
 		if (error.Code())
-			std::cout << "Error registering asset dependency!\n";
+			ConsoleManager::Print("Error registering asset dependency!\n", enums::ConsoleMessageType::error);
 	}
 
 	return error_const::SUCCESS;

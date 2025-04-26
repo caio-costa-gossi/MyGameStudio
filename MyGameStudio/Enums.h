@@ -26,32 +26,14 @@ X(undefined)
 
 namespace enums
 {
+	// Enums
+
 	enum class Language : uint8_t
 	{
 		#define X(name) name,
 		LANGUAGES
 		#undef X
 	};
-
-	inline const char* LanguageToString(Language language)
-	{
-		switch (language)
-		{
-		#define X(name) case Language::name: return #name; break;
-		LANGUAGES
-		#undef X
-		default:
-			return "N/A";
-		}
-	}
-
-	inline Language StringToLanguage(const char* string)
-	{
-		#define X(name) if (std::strcmp(string,#name) == 0) return Language::name;
-		LANGUAGES
-		#undef X
-		return Language::lang_not_found;
-	}
 
 	enum class IoTaskState : uint8_t
 	{
@@ -67,6 +49,36 @@ namespace enums
 		ASSET_TYPES
 		#undef X
 	};
+
+	enum class ConsoleMessageType : uint8_t
+	{
+		info,
+		warning,
+		error,
+		critical_error
+	};
+
+	// Functions
+
+	inline const char* LanguageToString(Language language)
+	{
+		switch (language)
+		{
+			#define X(name) case Language::name: return #name; break;
+			LANGUAGES
+			#undef X
+		default:
+			return "N/A";
+		}
+	}
+
+	inline Language StringToLanguage(const char* string)
+	{
+		#define X(name) if (std::strcmp(string,#name) == 0) return Language::name;
+		LANGUAGES
+		#undef X
+		return Language::lang_not_found;
+	}
 
 	inline const char* AssetTypeToString(const AssetType type)
 	{

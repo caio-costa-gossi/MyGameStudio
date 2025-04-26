@@ -1,9 +1,14 @@
 #pragma once
+#include <windows.h>
+
+#include "Enums.h"
 #include "Err.h"
 
 class ConsoleManager
 {
 private:
+	static HANDLE hWinConsole_;
+
 	static bool consoleRunning_;
 
 	static char* fullCommand_;
@@ -27,4 +32,6 @@ public:
 	static Err Shutdown();
 	static void RunConsole();
 	static void StopConsole();
+
+	static void Print(const std::string& message, enums::ConsoleMessageType type);
 };

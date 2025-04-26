@@ -12,37 +12,37 @@ Err EngineCoreManager::Startup()
 	// Start time profiling
 	engineBeginTime_ = std::chrono::high_resolution_clock::now();
 
-	std::cout << "Initializing systems...\n";
+	ConsoleManager::Print("Initializing systems...", enums::ConsoleMessageType::info);
 
 	// Subsystem startup
 	Err err = LocalizationManager::Startup("strings.csv", "string_id");
 	if (err.Code())
-		std::cout << "Error! " << err.Message() << "\n";
+		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
 
 	err = ConfigManager::Startup("config.ini");
 	if (err.Code())
-		std::cout << "Error! " << err.Message() << "\n";
+		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
 
 	err = FileManager::Startup();
 	if (err.Code())
-		std::cout << "Error! " << err.Message() << "\n";
+		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
 
 	err = ConsoleManager::Startup();
 	if (err.Code())
-		std::cout << "Error! " << err.Message() << "\n";
+		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
 
 	err = AssetDatabase::Startup();
 	if (err.Code())
-		std::cout << "Error! " << err.Message() << "\n";
+		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
 
 	// All systems initialized
-	std::cout << "All systems ready!\n\n";
+	ConsoleManager::Print("All systems ready!\n", enums::ConsoleMessageType::info);
 	return error_const::SUCCESS;
 }
 
 Err EngineCoreManager::Config()
 {
-	std::cout << "Configuring language...\n";
+	ConsoleManager::Print("Configuring language...", enums::ConsoleMessageType::info);
 
 	SetConsoleOutputCP(CP_UTF8);
 
@@ -50,11 +50,11 @@ Err EngineCoreManager::Config()
 	if (userLanguage == nullptr) userLanguage = "en_us";
 	LocalizationManager::SetLanguage(enums::StringToLanguage(userLanguage));
 
-	std::cout << LocalizationManager::GetLocalizedString(string_const::G_LANG_SELECTED) << userLanguage << "\n";
+	ConsoleManager::Print(LocalizationManager::GetLocalizedString(string_const::G_LANG_SELECTED) + std::string(userLanguage), enums::ConsoleMessageType::info);
 
 	const char* sysVer = ConfigManager::GetConfigForObject("global", "version");
 	if (sysVer == nullptr) sysVer = "Not found";
-	std::cout << LocalizationManager::GetLocalizedString(string_const::G_STARTUP_MSG) << sysVer << "\n";
+	ConsoleManager::Print(LocalizationManager::GetLocalizedString(string_const::G_STARTUP_MSG) + std::string(sysVer), enums::ConsoleMessageType::info);
 
 	return error_const::SUCCESS;
 }
@@ -65,14 +65,14 @@ Err EngineCoreManager::Shutdown()
 	engineFinishTime_ = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double> duration = engineFinishTime_ - engineBeginTime_;
 
-	std::cout << "\n" << LocalizationManager::GetLocalizedString(string_const::G_SYS_SHUTDOWN) << "\n";
+	ConsoleManager::Print(LocalizationManager::GetLocalizedString(string_const::G_SYS_SHUTDOWN), enums::ConsoleMessageType::info);
 
 	// Shutdown systems
 	FileManager::Shutdown();
 	ConsoleManager::Shutdown();
 	AssetDatabase::Shutdown();
 
-	std::cout << LocalizationManager::GetLocalizedString(string_const::G_TOTAL_RUN_TIME) << duration.count() << "s.\n";
+	ConsoleManager::Print(LocalizationManager::GetLocalizedString(string_const::G_TOTAL_RUN_TIME) + std::to_string(duration.count()) + std::string("s.\n"), enums::ConsoleMessageType::info);
 
 	return error_const::SUCCESS;
 }

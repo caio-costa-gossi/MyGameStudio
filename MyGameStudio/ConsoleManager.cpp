@@ -1,4 +1,7 @@
 #include "ConsoleManager.h"
+
+#include <windows.h>
+
 #include "CommandFactory.h"
 
 Err ConsoleManager::Startup()
@@ -14,7 +17,6 @@ Err ConsoleManager::Shutdown()
 	DeleteMem();
 	return error_const::SUCCESS;
 }
-
 
 void ConsoleManager::RunConsole()
 {
@@ -32,6 +34,38 @@ void ConsoleManager::RunConsole()
 void ConsoleManager::StopConsole()
 {
 	consoleRunning_ = false;
+}
+
+void ConsoleManager::Print(const std::string& message, const enums::ConsoleMessageType type)
+{
+	switch (type)
+	{
+	case enums::ConsoleMessageType::info:
+		SetConsoleTextAttribute(hWinConsole_, FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+		std::cout << "[INFO] ";
+		SetConsoleTextAttribute(hWinConsole_, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+		break;
+
+	case enums::ConsoleMessageType::warning:
+		SetConsoleTextAttribute(hWinConsole_, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+		std::cout << "[WARNING] ";
+		SetConsoleTextAttribute(hWinConsole_, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+		break;
+
+	case enums::ConsoleMessageType::error:
+		SetConsoleTextAttribute(hWinConsole_, FOREGROUND_RED | FOREGROUND_INTENSITY);
+		std::cout << "[ERROR] ";
+		SetConsoleTextAttribute(hWinConsole_, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+		break;
+
+	case enums::ConsoleMessageType::critical_error:
+		SetConsoleTextAttribute(hWinConsole_, FOREGROUND_RED | FOREGROUND_INTENSITY);
+		std::cout << "[CRITICAL ERROR] ";
+		SetConsoleTextAttribute(hWinConsole_, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+		break;
+	}
+
+	std::cout << message << "\n";
 }
 
 void ConsoleManager::AllocMem()
@@ -176,6 +210,9 @@ void ConsoleManager::ReplaceWithTerminator(char* string, const uint16_t charCoun
 			string[i] = '\0';
 	}
 }
+
+
+HANDLE ConsoleManager::hWinConsole_ = GetStdHandle(STD_OUTPUT_HANDLE);
 
 bool ConsoleManager::consoleRunning_ = true;
 char* ConsoleManager::fullCommand_;

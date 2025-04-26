@@ -28,4 +28,6 @@ namespace error_const
 	const auto REDUNDANT_CALL = Err("This operation has already been done", 5);
 	const auto DB_CLOSED = Err("The operation cannot proceed, the database is closed", 6);
 	const auto INTEGER_OUT_OF_BOUNDS = Err("Integer is out of bounds", 7);
+
+	constexpr auto ZIP_ERROR_CODE = 11;
 }

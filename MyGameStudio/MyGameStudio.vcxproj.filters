@@ -99,6 +99,9 @@
     <ClCompile Include="AssetPipeline.cpp">
       <Filter>Asset Management</Filter>
     </ClCompile>
+    <ClCompile Include="ZipFile.cpp">
+      <Filter>Helpers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EngineCoreManager.h">
@@ -163,6 +166,9 @@
     </ClInclude>
     <ClInclude Include="AssetPipeline.h">
       <Filter>Asset Management</Filter>
+    </ClInclude>
+    <ClInclude Include="ZipFile.h">
+      <Filter>Helpers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

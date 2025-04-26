@@ -1,12 +1,6 @@
-#include <cassert>
-
-#include "AssetDatabase.h"
-#include "CommandFactory.h"
 #include "ConsoleManager.h"
 #include "EngineCoreManager.h"
 #include "Err.h"
-#include "SqliteDatabase.h"
-#include <zlib.h>
 
 int main()
 {
@@ -22,7 +16,7 @@ int main()
 		std::cout << "Error: " << err;
 	}
 
-	//ConsoleManager::RunConsole();
+	ConsoleManager::RunConsole();
 
 	err = EngineCoreManager::Shutdown();
 	if (err.Code() != 0)

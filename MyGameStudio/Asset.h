@@ -29,7 +29,8 @@ struct Asset
 	enums::AssetType Type;
 	uint64_t Size;
 	std::string SourceLocation;
-	std::string AssetLocation;
+	std::string ZipLocation;
+	std::string LocationInZip;
 	std::string LastModifiedDate;
 	bool CheckModifications = false;
 	std::vector<uint32_t> DependsOnAssets;
@@ -44,9 +45,10 @@ struct Asset
 		a.Type = enums::StringToAssetType(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3)));
 		a.Size = sqlite3_column_int64(stmt, 4);
 		a.SourceLocation = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 5)));
-		a.AssetLocation = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 6)));
-		a.LastModifiedDate = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 7)));
-		a.CheckModifications = sqlite3_column_int(stmt, 8);
+		a.ZipLocation = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 6)));
+		a.LocationInZip = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 7)));
+		a.LastModifiedDate = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 8)));
+		a.CheckModifications = sqlite3_column_int(stmt, 9);
 
 		return a;
 	}

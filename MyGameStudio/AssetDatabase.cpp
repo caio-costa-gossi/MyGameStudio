@@ -68,7 +68,8 @@ Err AssetDatabase::RegisterAsset(const Asset& asset)
 		enums::AssetTypeToString(asset.Type) + "'," +
 		std::to_string(asset.Size) + ",'" +
 		asset.SourceLocation + "','" +
-		asset.AssetLocation + "','" +
+		asset.ZipLocation + "','" +
+		asset.LocationInZip + "','" +
 		asset.LastModifiedDate + "'," +
 		std::to_string(asset.CheckModifications) + ");"
 	);
@@ -102,7 +103,8 @@ Err AssetDatabase::UpdateAsset(const Asset& asset)
 		"',Type = '" + enums::AssetTypeToString(asset.Type) +
 		"',Size = " + std::to_string(asset.Size) +
 		",SourceLocation = '" + asset.SourceLocation +
-		"',AssetLocation = '" + asset.AssetLocation +	
+		"',ZipLocation = '" + asset.ZipLocation +
+		"',LocationInZip = '" + asset.LocationInZip +
 		"',LastModifiedDate = '" + asset.LastModifiedDate +
 		"',CheckModifications = " + std::to_string(asset.CheckModifications) +
 		" WHERE Id = " + std::to_string(asset.Id));
@@ -218,7 +220,7 @@ auto AssetDatabase::assetDbFilename_ = "Assets.db";
 auto AssetDatabase::createAssetsTableQuery_ = 
 "CREATE TABLE IF NOT EXISTS Assets "
 "(Id INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL, Extension TEXT NOT NULL, "
-"Type TEXT, Size INTEGER, SourceLocation TEXT, AssetLocation TEXT, LastModifiedDate TEXT, CheckModifications INTEGER);";
+"Type TEXT, Size INTEGER, SourceLocation TEXT, ZipLocation TEXT, LocationInZip TEXT, LastModifiedDate TEXT, CheckModifications INTEGER);";
 
 auto AssetDatabase::createAssetDependenciesTableQuery_ = 
 "CREATE TABLE IF NOT EXISTS AssetDependencies "

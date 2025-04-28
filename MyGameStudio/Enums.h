@@ -14,6 +14,7 @@ X(animation) \
 X(animation_state_machine) \
 X(audio) \
 X(audio_metadata) \
+X(video) \
 X(font) \
 X(plaintext) \
 X(script) \

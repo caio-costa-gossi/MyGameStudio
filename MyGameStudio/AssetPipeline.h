@@ -4,8 +4,12 @@
 
 class AssetPipeline
 {
-private:
-	static Asset GetAssetMetadata();
+public:
+	static int64_t LoadFile(const char* filepath, uint8_t* fileBuffer, uint64_t bufferSize);
+	static enums::AssetType GetAssetType(const uint8_t* fileBuffer, uint64_t bufferSize);
+	static Asset GetAssetMetadata(const char* filepath, uint8_t* fileBuffer, uint64_t bufferSize);
+	static std::string GetFileName(const std::string& filepath);
+	static std::string GetFileExtension(const std::string& filename);
 
 public:
 	static Err ImportAsset(const char* filepath);

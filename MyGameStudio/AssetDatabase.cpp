@@ -62,10 +62,11 @@ Asset AssetDatabase::GetAsset(const uint32_t assetId, const bool addDependencies
 
 Err AssetDatabase::RegisterAsset(const Asset& asset)
 {
-	const std::string sqlStatement("INSERT INTO Assets (Name, Extension, Type, SourceLocation, AssetLocation, LastModifiedDate, CheckModifications) VALUES ('" + 
+	const std::string sqlStatement("INSERT INTO Assets (Name, Extension, Type, Size, SourceLocation, AssetLocation, LastModifiedDate, CheckModifications) VALUES ('" + 
 		asset.Name + "','" +
 		asset.Extension + "','" +
-		enums::AssetTypeToString(asset.Type) + "','" +
+		enums::AssetTypeToString(asset.Type) + "'," +
+		std::to_string(asset.Size) + ",'" +
 		asset.SourceLocation + "','" +
 		asset.AssetLocation + "','" +
 		asset.LastModifiedDate + "'," +
@@ -99,7 +100,8 @@ Err AssetDatabase::UpdateAsset(const Asset& asset)
 		asset.Name +
 		"',Extension = '" + asset.Extension +
 		"',Type = '" + enums::AssetTypeToString(asset.Type) +
-		"',SourceLocation = '" + asset.SourceLocation +
+		"',Size = " + std::to_string(asset.Size) +
+		",SourceLocation = '" + asset.SourceLocation +
 		"',AssetLocation = '" + asset.AssetLocation +	
 		"',LastModifiedDate = '" + asset.LastModifiedDate +
 		"',CheckModifications = " + std::to_string(asset.CheckModifications) +
@@ -216,7 +218,7 @@ auto AssetDatabase::assetDbFilename_ = "Assets.db";
 auto AssetDatabase::createAssetsTableQuery_ = 
 "CREATE TABLE IF NOT EXISTS Assets "
 "(Id INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL, Extension TEXT NOT NULL, "
-"Type TEXT, SourceLocation TEXT, AssetLocation TEXT, LastModifiedDate TEXT, CheckModifications INTEGER);";
+"Type TEXT, Size INTEGER, SourceLocation TEXT, AssetLocation TEXT, LastModifiedDate TEXT, CheckModifications INTEGER);";
 
 auto AssetDatabase::createAssetDependenciesTableQuery_ = 
 "CREATE TABLE IF NOT EXISTS AssetDependencies "

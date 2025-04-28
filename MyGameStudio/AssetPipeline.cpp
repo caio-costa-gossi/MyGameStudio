@@ -1,10 +1,29 @@
 #include "AssetPipeline.h"
 #include <fstream>
 
+#include "AssetDatabase.h"
+#include "ZipFile.h"
+
 Err AssetPipeline::ImportAsset(const char* filepath)
 {
-	/*const auto fileBuffer = std::make_unique<uint8_t[]>(10);
-	Asset newAsset = GetAssetMetadata()*/
+	// Allocate memory for metadata
+	const auto metadataFileBuffer = std::make_unique<uint8_t[]>(10);
+
+	// Load file and get metadata
+	Asset newAsset = GetAssetMetadata(filepath, metadataFileBuffer.get(), 10);
+
+	// Allocate memory for full file
+	const auto fileBuffer = std::make_unique<uint8_t[]>(newAsset.Size);
+
+	// Process file
+
+	// Save result to .zip
+	const std::string zipPath = "assets/myPackage.zip";
+	SaveFileToZip(zipPath.c_str(), newAsset.Name.c_str(), fileBuffer.get(), newAsset.Size);
+
+	// Register details in database
+	newAsset.AssetLocation = zipPath + newAsset.Name;
+	AssetDatabase::RegisterAsset(newAsset);
 
 	return error_const::SUCCESS;
 }
@@ -43,6 +62,21 @@ Asset AssetPipeline::GetAssetMetadata(const char* filepath, uint8_t* fileBuffer,
 	asset.Type = GetAssetType(fileBuffer, bufferSize);
 
 	return asset;
+}
+
+Err AssetPipeline::SaveFileToZip(const char* zipPath, const char* pathInsideZip, const uint8_t* fileBuffer, uint64_t bufferSize)
+{
+	const ZipFile zip(zipPath);
+
+	if (!zip.IsValid())
+		return error_const::GENERIC_EXCEPTION;
+
+	Err err = zip.AddFile(fileBuffer, bufferSize, pathInsideZip);
+
+	if (err.Code())
+		return err;
+
+	return error_const::SUCCESS;
 }
 
 std::string AssetPipeline::GetFileName(const std::string& filepath)

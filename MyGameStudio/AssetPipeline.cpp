@@ -12,17 +12,17 @@ Err AssetPipeline::ImportAsset(const char* filepath)
 	// Load file and get metadata
 	Asset newAsset = GetAssetMetadata(filepath, metadataFileBuffer.get(), 10);
 
-	// Allocate memory for full file
-	const auto fileBuffer = std::make_unique<uint8_t[]>(newAsset.Size);
-
-	// Process file
+	// Load full file and process
+	const auto resultBuffer = std::make_unique<uint8_t[]>(newAsset.Size);
+	ProcessAsset(filepath, newAsset, resultBuffer.get());
 
 	// Save result to .zip
 	const std::string zipPath = "assets/myPackage.zip";
-	SaveFileToZip(zipPath.c_str(), newAsset.Name.c_str(), fileBuffer.get(), newAsset.Size);
+	SaveFileToZip(zipPath.c_str(), newAsset.Name.c_str(), resultBuffer.get(), newAsset.Size);
 
 	// Register details in database
-	newAsset.AssetLocation = zipPath + newAsset.Name;
+	newAsset.ZipLocation = zipPath;
+	newAsset.LocationInZip = newAsset.Name;
 	AssetDatabase::RegisterAsset(newAsset);
 
 	return error_const::SUCCESS;
@@ -76,6 +76,11 @@ Err AssetPipeline::SaveFileToZip(const char* zipPath, const char* pathInsideZip,
 	if (err.Code())
 		return err;
 
+	return error_const::SUCCESS;
+}
+
+Err AssetPipeline::ProcessAsset(const char* filepath, const Asset& assetMetadata, uint8_t* resultBuffer)
+{
 	return error_const::SUCCESS;
 }
 

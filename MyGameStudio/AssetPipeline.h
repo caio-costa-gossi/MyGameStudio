@@ -8,6 +8,7 @@ public:
 	static int64_t LoadFile(const char* filepath, uint8_t* fileBuffer, uint64_t bufferSize);
 	static Asset GetAssetMetadata(const char* filepath, uint8_t* fileBuffer, uint64_t bufferSize);
 	static Err SaveFileToZip(const char* zipPath, const char* pathInsideZip, const uint8_t* fileBuffer, uint64_t bufferSize);
+	static Err ProcessAsset(const char* filepath, const Asset& assetMetadata, uint8_t* resultBuffer);
 
 	static enums::AssetType GetAssetType(const uint8_t* fileBuffer, uint64_t bufferSize);
 	static std::string GetFileName(const std::string& filepath);

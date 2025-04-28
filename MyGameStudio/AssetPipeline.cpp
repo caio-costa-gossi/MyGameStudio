@@ -81,6 +81,8 @@ Err AssetPipeline::SaveFileToZip(const char* zipPath, const char* pathInsideZip,
 
 Err AssetPipeline::ProcessAsset(const char* filepath, const Asset& assetMetadata, uint8_t* resultBuffer)
 {
+	LoadFile(filepath, resultBuffer, assetMetadata.Size);
+
 	return error_const::SUCCESS;
 }
 

@@ -1,3 +1,4 @@
+#include "AssetDatabase.h"
 #include "AssetPipeline.h"
 #include "ConsoleManager.h"
 #include "EngineCoreManager.h"
@@ -18,9 +19,7 @@ int main()
 	}
 
 	//ConsoleManager::RunConsole();
-	uint8_t* buffer = new uint8_t[128];
-	AssetPipeline::GetAssetMetadata("assets/test.txt", buffer, 128);
-	delete[] buffer;
+	AssetPipeline::ImportAsset("assets/test.png");
 
 	err = EngineCoreManager::Shutdown();
 	if (err.Code() != 0)

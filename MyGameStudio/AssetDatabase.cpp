@@ -62,7 +62,7 @@ Asset AssetDatabase::GetAsset(const uint32_t assetId, const bool addDependencies
 
 Err AssetDatabase::RegisterAsset(const Asset& asset)
 {
-	const std::string sqlStatement("INSERT INTO Assets (Name, Extension, Type, Size, SourceLocation, AssetLocation, LastModifiedDate, CheckModifications) VALUES ('" + 
+	const std::string sqlStatement("INSERT INTO Assets (Name, Extension, Type, Size, SourceLocation, ZipLocation, LocationInZip, LastModifiedDate, CheckModifications) VALUES ('" + 
 		asset.Name + "','" +
 		asset.Extension + "','" +
 		enums::AssetTypeToString(asset.Type) + "'," +

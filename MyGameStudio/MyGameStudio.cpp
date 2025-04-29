@@ -3,6 +3,7 @@
 #include "ConsoleManager.h"
 #include "EngineCoreManager.h"
 #include "Err.h"
+#include "ImageProcessor.h"
 
 int main()
 {
@@ -19,7 +20,7 @@ int main()
 	}
 
 	//ConsoleManager::RunConsole();
-	AssetPipeline::ImportAsset("assets/test.png");
+	//AssetPipeline::ImportAsset("assets/test.png");
 
 	err = EngineCoreManager::Shutdown();
 	if (err.Code() != 0)

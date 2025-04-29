@@ -11,7 +11,7 @@ Err AssetPipeline::ImportAsset(const char* filepath)
 	Asset newAsset = GetAssetMetadata(filepath);
 
 	// Load full file and process
-	const auto resultBuffer = ProcessAsset(filepath, newAsset);
+	const uint8_t* resultBuffer = ProcessAsset(newAsset);
 
 	// Save result to .zip
 	const std::string zipPath = "assets/myPackage.zip";
@@ -22,6 +22,8 @@ Err AssetPipeline::ImportAsset(const char* filepath)
 	newAsset.LocationInZip = newAsset.Name;
 	AssetDatabase::RegisterAsset(newAsset);
 
+	// Delete result buffer and return
+	delete[] resultBuffer;
 	return error_const::SUCCESS;
 }
 
@@ -54,7 +56,11 @@ Asset AssetPipeline::GetAssetMetadata(const char* filepath)
 	int64_t fileSize = LoadFile(filepath, metadataFileBuffer.get(), 10);
 
 	if (fileSize < 0)
+	{
+		asset.Size = 0;
+		asset.Type = enums::AssetType::undefined;
 		return asset;
+	}
 
 	asset.Size = fileSize;
 	asset.Type = GetAssetType(metadataFileBuffer.get(), 10);
@@ -77,13 +83,13 @@ Err AssetPipeline::SaveFileToZip(const char* zipPath, const char* pathInsideZip,
 	return error_const::SUCCESS;
 }
 
-uint8_t* AssetPipeline::ProcessAsset(const char* filepath, const Asset& assetMetadata)
+uint8_t* AssetPipeline::ProcessAsset(const Asset& assetMetadata)
 {
-	const auto fileBuffer = std::make_unique<uint8_t[]>(assetMetadata.Size);
-	LoadFile(filepath, fileBuffer.get(), assetMetadata.Size);
+	//const auto fileBuffer = std::make_unique<uint8_t[]>(assetMetadata.Size);
+	//LoadFile(filepath, fileBuffer.get(), assetMetadata.Size);
 
 	ImageProcessor processor;
-	return processor.ProcessImage(assetMetadata, fileBuffer.get());
+	return processor.ProcessImage(assetMetadata);
 }
 
 std::string AssetPipeline::GetFileName(const std::string& filepath)

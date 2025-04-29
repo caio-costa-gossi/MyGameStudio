@@ -2,23 +2,20 @@
 #include <fstream>
 
 #include "AssetDatabase.h"
+#include "ImageProcessor.h"
 #include "ZipFile.h"
 
 Err AssetPipeline::ImportAsset(const char* filepath)
 {
-	// Allocate memory for metadata
-	const auto metadataFileBuffer = std::make_unique<uint8_t[]>(10);
-
 	// Load file and get metadata
-	Asset newAsset = GetAssetMetadata(filepath, metadataFileBuffer.get(), 10);
+	Asset newAsset = GetAssetMetadata(filepath);
 
 	// Load full file and process
-	const auto resultBuffer = std::make_unique<uint8_t[]>(newAsset.Size);
-	ProcessAsset(filepath, newAsset, resultBuffer.get());
+	const auto resultBuffer = ProcessAsset(filepath, newAsset);
 
 	// Save result to .zip
 	const std::string zipPath = "assets/myPackage.zip";
-	SaveFileToZip(zipPath.c_str(), newAsset.Name.c_str(), resultBuffer.get(), newAsset.Size);
+	SaveFileToZip(zipPath.c_str(), newAsset.Name.c_str(), resultBuffer, newAsset.Size);
 
 	// Register details in database
 	newAsset.ZipLocation = zipPath;
@@ -44,22 +41,23 @@ int64_t AssetPipeline::LoadFile(const char* filepath, uint8_t* fileBuffer, uint6
 	return fileSize;
 }
 
-Asset AssetPipeline::GetAssetMetadata(const char* filepath, uint8_t* fileBuffer, uint64_t bufferSize)
+Asset AssetPipeline::GetAssetMetadata(const char* filepath)
 {
 	Asset asset;
+	const auto metadataFileBuffer = std::make_unique<uint8_t[]>(10);
 
 	asset.Id = 0;
 	asset.SourceLocation = filepath;
 	asset.Name = GetFileName(filepath);
 	asset.Extension = GetFileExtension(asset.Name);
 
-	int64_t fileSize = LoadFile(filepath, fileBuffer, bufferSize);
+	int64_t fileSize = LoadFile(filepath, metadataFileBuffer.get(), 10);
 
 	if (fileSize < 0)
 		return asset;
 
 	asset.Size = fileSize;
-	asset.Type = GetAssetType(fileBuffer, bufferSize);
+	asset.Type = GetAssetType(metadataFileBuffer.get(), 10);
 
 	return asset;
 }
@@ -79,11 +77,13 @@ Err AssetPipeline::SaveFileToZip(const char* zipPath, const char* pathInsideZip,
 	return error_const::SUCCESS;
 }
 
-Err AssetPipeline::ProcessAsset(const char* filepath, const Asset& assetMetadata, uint8_t* resultBuffer)
+uint8_t* AssetPipeline::ProcessAsset(const char* filepath, const Asset& assetMetadata)
 {
-	LoadFile(filepath, resultBuffer, assetMetadata.Size);
+	const auto fileBuffer = std::make_unique<uint8_t[]>(assetMetadata.Size);
+	LoadFile(filepath, fileBuffer.get(), assetMetadata.Size);
 
-	return error_const::SUCCESS;
+	ImageProcessor processor;
+	return processor.ProcessImage(assetMetadata, fileBuffer.get());
 }
 
 std::string AssetPipeline::GetFileName(const std::string& filepath)

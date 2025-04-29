@@ -164,6 +164,7 @@
     <ClCompile Include="HashTable.cpp" />
     <ClCompile Include="EngineCoreManager.cpp" />
     <ClCompile Include="Err.cpp" />
+    <ClCompile Include="ImageProcessor.cpp" />
     <ClCompile Include="LocalizationManager.cpp" />
     <ClCompile Include="MyGameStudio.cpp" />
     <ClCompile Include="sqlite3.c" />
@@ -189,6 +190,7 @@
     <ClInclude Include="HashTable.h" />
     <ClInclude Include="EngineCoreManager.h" />
     <ClInclude Include="Err.h" />
+    <ClInclude Include="ImageProcessor.h" />
     <ClInclude Include="LocalizationManager.h" />
     <ClInclude Include="sqlite3.h" />
     <ClInclude Include="SqliteDatabase.h" />

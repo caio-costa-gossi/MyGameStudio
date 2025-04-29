@@ -220,7 +220,7 @@ auto AssetDatabase::assetDbFilename_ = "Assets.db";
 auto AssetDatabase::createAssetsTableQuery_ = 
 "CREATE TABLE IF NOT EXISTS Assets "
 "(Id INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL, Extension TEXT NOT NULL, "
-"Type TEXT, Size INTEGER, SourceLocation TEXT, ZipLocation TEXT, LocationInZip TEXT, LastModifiedDate TEXT, CheckModifications INTEGER);";
+"Type TEXT, Size INTEGER, SourceLocation TEXT UNIQUE, ZipLocation TEXT, LocationInZip TEXT, LastModifiedDate TEXT, CheckModifications INTEGER);";
 
 auto AssetDatabase::createAssetDependenciesTableQuery_ = 
 "CREATE TABLE IF NOT EXISTS AssetDependencies "

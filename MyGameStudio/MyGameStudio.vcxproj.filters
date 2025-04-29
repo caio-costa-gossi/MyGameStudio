@@ -105,6 +105,9 @@
     <ClCompile Include="ImageProcessor.cpp">
       <Filter>Asset Management</Filter>
     </ClCompile>
+    <ClCompile Include="SystemPathHelper.cpp">
+      <Filter>Helpers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EngineCoreManager.h">
@@ -175,6 +178,9 @@
     </ClInclude>
     <ClInclude Include="ImageProcessor.h">
       <Filter>Asset Management</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemPathHelper.h">
+      <Filter>Helpers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

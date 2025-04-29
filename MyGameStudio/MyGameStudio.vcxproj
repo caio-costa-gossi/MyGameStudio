@@ -170,6 +170,7 @@
     <ClCompile Include="sqlite3.c" />
     <ClCompile Include="SqliteDatabase.cpp" />
     <ClCompile Include="StringId.cpp" />
+    <ClCompile Include="SystemPathHelper.cpp" />
     <ClCompile Include="TestManager.cpp" />
     <ClCompile Include="ZipFile.cpp" />
   </ItemGroup>
@@ -195,6 +196,7 @@
     <ClInclude Include="sqlite3.h" />
     <ClInclude Include="SqliteDatabase.h" />
     <ClInclude Include="StringId.h" />
+    <ClInclude Include="SystemPathHelper.h" />
     <ClInclude Include="TestManager.h" />
     <ClInclude Include="ZipFile.h" />
   </ItemGroup>

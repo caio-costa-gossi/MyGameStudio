@@ -4,6 +4,7 @@
 #include "EngineCoreManager.h"
 #include "Err.h"
 #include "ImageProcessor.h"
+#include "SystemPathHelper.h"
 
 int main()
 {

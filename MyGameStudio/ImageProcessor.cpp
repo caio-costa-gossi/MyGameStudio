@@ -33,15 +33,15 @@ uint8_t* ImageProcessor::ProcessImage(const Asset& metadata)
 
 	// Generate mipmaps and delete padded buffer
 	std::vector<Mipmap> mipmaps;
-	GenerateMipmaps(mipmaps, paddedX, paddedY, paddedBuffer);
+	/*GenerateMipmaps(mipmaps, paddedX, paddedY, paddedBuffer);
 	delete[] paddedBuffer;
 
 	// Compress mipmaps
 	std::vector<Mipmap> compressedMipmaps;
-	CompressMipmaps(mipmaps, compressedMipmaps);
+	CompressMipmaps(mipmaps, compressedMipmaps);*/
 
 	// Generate .tex file
-	uint8_t* finalProduct = GenerateTexFile();
+	uint8_t* finalProduct = new uint8_t[1]; // GenerateTexFile();
 
 	return finalProduct;
 }

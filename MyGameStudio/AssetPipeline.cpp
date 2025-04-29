@@ -3,6 +3,7 @@
 
 #include "AssetDatabase.h"
 #include "ImageProcessor.h"
+#include "SystemPathHelper.h"
 #include "ZipFile.h"
 
 Err AssetPipeline::ImportAsset(const char* filepath)
@@ -19,7 +20,6 @@ Err AssetPipeline::ImportAsset(const char* filepath)
 
 	// Register details in database
 	newAsset.ZipLocation = zipPath;
-	newAsset.LocationInZip = newAsset.Name;
 	AssetDatabase::RegisterAsset(newAsset);
 
 	// Delete result buffer and return
@@ -50,8 +50,8 @@ Asset AssetPipeline::GetAssetMetadata(const char* filepath)
 
 	asset.Id = 0;
 	asset.SourceLocation = filepath;
-	asset.Name = GetFileName(filepath);
-	asset.Extension = GetFileExtension(asset.Name);
+	asset.Name = SystemPathHelper::GetFileName(filepath);
+	asset.Extension = SystemPathHelper::GetFileExtension(asset.Name);
 
 	int64_t fileSize = LoadFile(filepath, metadataFileBuffer.get(), 10);
 
@@ -83,23 +83,14 @@ Err AssetPipeline::SaveFileToZip(const char* zipPath, const char* pathInsideZip,
 	return error_const::SUCCESS;
 }
 
-uint8_t* AssetPipeline::ProcessAsset(const Asset& assetMetadata)
+uint8_t* AssetPipeline::ProcessAsset(Asset& assetMetadata)
 {
 	//const auto fileBuffer = std::make_unique<uint8_t[]>(assetMetadata.Size);
 	//LoadFile(filepath, fileBuffer.get(), assetMetadata.Size);
 
+	assetMetadata.LocationInZip = SystemPathHelper::RemoveFileExtension(assetMetadata.Name) + ".tex";
 	ImageProcessor processor;
 	return processor.ProcessImage(assetMetadata);
-}
-
-std::string AssetPipeline::GetFileName(const std::string& filepath)
-{
-	return filepath.substr(filepath.find_last_of('/') + 1);
-}
-
-std::string AssetPipeline::GetFileExtension(const std::string& filename)
-{
-	return filename.substr(filename.find_last_of('.') + 1);
 }
 
 enums::AssetType AssetPipeline::GetAssetType(const uint8_t* fileBuffer, uint64_t bufferSize)

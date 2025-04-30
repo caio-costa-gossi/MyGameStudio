@@ -22,7 +22,7 @@ int main()
 	}
 
 	//ConsoleManager::RunConsole();
-	AssetPipeline::Test("assets/test.png");
+	AssetPipeline::Test("assets/test3.png");
 
 	err = EngineCoreManager::Shutdown();
 	if (err.Code() != 0)

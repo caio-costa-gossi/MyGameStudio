@@ -35,18 +35,18 @@ uint8_t* ImageProcessor::Downscale2X(const uint8_t* source, const uint64_t srcX,
 
 	const auto destBuffer = new uint8_t[destX * destY * 4];
 
-	for (uint64_t x = 0; x < destX; ++x)
+	for (uint64_t y = 0; y < destY; ++y)
 	{
-		for (uint64_t y = 0; y < destY; ++y)
+		for (uint64_t x = 0; x < destX; ++x)
 		{
-			const uint8_t* p1 = &source[(x*2 * srcY + y*2) * 4];
-			const uint8_t* p2 = &source[((x*2 + 1) * srcY + y*2) * 4];
-			const uint8_t* p3 = &source[(x*2 * srcY + (y*2 + 1)) * 4];
-			const uint8_t* p4 = &source[((x*2 + 1) * srcY + (y*2 + 1)) * 4];
+			const uint8_t* p1 = &source[(y*2 * srcX + x*2) * 4];
+			const uint8_t* p2 = &source[((y*2 + 1) * srcX + x*2) * 4];
+			const uint8_t* p3 = &source[(y*2 * srcX + (x*2 + 1)) * 4];
+			const uint8_t* p4 = &source[((y*2 + 1) * srcX + (x*2 + 1)) * 4];
 
 			for (int i = 0; i < 4; ++i)
 			{
-				destBuffer[(x * destY + y) * 4 + i] = 
+				destBuffer[(y * destX + x) * 4 + i] = 
 					(	static_cast<int>(p1[i]) + 
 						static_cast<int>(p2[i]) + 
 						static_cast<int>(p3[i]) + 

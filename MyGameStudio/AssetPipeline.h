@@ -14,4 +14,5 @@ public:
 
 public:
 	static Err ImportAsset(const char* filepath);
+	static void Test(const char* filepath);
 };

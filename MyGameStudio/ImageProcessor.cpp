@@ -39,14 +39,14 @@ uint8_t* ImageProcessor::Downscale2X(const uint8_t* source, const uint64_t srcX,
 	{
 		for (uint64_t y = 0; y < destY; ++y)
 		{
-			const uint8_t* p1 = &source[(x * srcY + y) * 4];
-			const uint8_t* p2 = &source[((x + 1) * srcY + y) * 4];
-			const uint8_t* p3 = &source[(x * srcY + (y + 1)) * 4];
-			const uint8_t* p4 = &source[((x + 1) * srcY + (y + 1)) * 4];
+			const uint8_t* p1 = &source[(x*2 * srcY + y*2) * 4];
+			const uint8_t* p2 = &source[((x*2 + 1) * srcY + y*2) * 4];
+			const uint8_t* p3 = &source[(x*2 * srcY + (y*2 + 1)) * 4];
+			const uint8_t* p4 = &source[((x*2 + 1) * srcY + (y*2 + 1)) * 4];
 
 			for (int i = 0; i < 4; ++i)
 			{
-				destBuffer[x * destY + y + i] = 
+				destBuffer[(x * destY + y) * 4 + i] = 
 					(	static_cast<int>(p1[i]) + 
 						static_cast<int>(p2[i]) + 
 						static_cast<int>(p3[i]) + 
@@ -63,8 +63,9 @@ void ImageProcessor::GenerateMipmaps(std::vector<Mipmap>& mipmaps, uint64_t padd
 	mipmaps.reserve(8);
 
 	Mipmap lvl0(0, paddedX, paddedY, paddedX * paddedY * 4ULL);
+	lvl0.Data = new uint8_t[paddedX * paddedY * 4];
 	memcpy_s(lvl0.Data, lvl0.DataSize, paddedBuffer, paddedX * paddedY * 4);
-	mipmaps.emplace_back(lvl0);
+	mipmaps.emplace_back(std::move(lvl0));
 
 	uint8_t curLvl = 1;
 
@@ -75,7 +76,7 @@ void ImageProcessor::GenerateMipmaps(std::vector<Mipmap>& mipmaps, uint64_t padd
 
 		Mipmap nextLvl(curLvl, paddedX, paddedY, paddedX * paddedY * 4ULL);
 		nextLvl.Data = Downscale2X(mipmaps.back().Data, paddedX * 2, paddedY * 2);
-		mipmaps.emplace_back(nextLvl);
+		mipmaps.emplace_back(std::move(nextLvl));
 
 		curLvl++;
 	}
@@ -87,11 +88,11 @@ void ImageProcessor::CompressMipmaps(const std::vector<Mipmap>& mipmaps, std::ve
 	{
 		Mipmap compressed(m.Level, m.XSize, m.YSize, squish::GetStorageRequirements(m.XSize, m.YSize, squish::kDxt5), true);
 		squish::CompressImage(m.Data, m.XSize, m.YSize, compressed.Data, squish::kDxt5);
-		compressedMipmaps.emplace_back(compressed);
+		compressedMipmaps.emplace_back(std::move(compressed));
 	}
 }
 
-uint8_t* ImageProcessor::GenerateTexFile(const std::vector<Mipmap>& compressedMipmaps, const uint64_t originalX, const uint64_t originalY)
+uint8_t* ImageProcessor::GenerateTexFile(const std::vector<Mipmap>& compressedMipmaps, const uint64_t originalX, const uint64_t originalY, uint64_t& resultSize)
 {
 	uint64_t totalTexSize = 0;
 	const uint64_t mipmapCount = compressedMipmaps.size();
@@ -101,7 +102,8 @@ uint8_t* ImageProcessor::GenerateTexFile(const std::vector<Mipmap>& compressedMi
 		totalTexSize += m.DataSize + 3 * sizeof(uint64_t);
 	}
 
-	DataStream stream(totalTexSize + 24);
+	resultSize = totalTexSize + 24;
+	DataStream stream(resultSize);
 	stream.Write(&originalX, sizeof(uint64_t));
 	stream.Write(&originalY, sizeof(uint64_t));
 	stream.Write(&mipmapCount, sizeof(uint64_t));
@@ -135,9 +137,6 @@ uint8_t* ImageProcessor::ProcessImage(const Asset& metadata, uint64_t& resultSiz
 
 	stbi_image_free(rgba8);
 
-	resultSize = paddedX * paddedY * 4;
-	return paddedBuffer;
-
 	// Generate mipmaps and delete padded buffer
 	std::vector<Mipmap> mipmaps;
 	GenerateMipmaps(mipmaps, paddedX, paddedY, paddedBuffer);
@@ -148,8 +147,39 @@ uint8_t* ImageProcessor::ProcessImage(const Asset& metadata, uint64_t& resultSiz
 	CompressMipmaps(mipmaps, compressedMipmaps);
 
 	// Generate .tex file
-	uint8_t* finalProduct = GenerateTexFile(compressedMipmaps, paddedX, paddedY);
+	uint8_t* finalProduct = GenerateTexFile(compressedMipmaps, paddedX, paddedY, resultSize);
 	return finalProduct;
+}
+
+std::vector<Mipmap> ImageProcessor::ProcessImageTest(const Asset& metadata, uint64_t& resultSize)
+{
+	int x, y, channels;
+
+	// Load image file in RGBA8
+	uint8_t* rgba8 = DecompressImageRgba8(metadata.SourceLocation.c_str(), &x, &y, &channels);
+
+	// Pad image file and delete original buffer
+	const uint64_t paddedX = NextPoT(x);
+	const uint64_t paddedY = NextPoT(y);
+	uint8_t* paddedBuffer = PadRaw(rgba8, x, y, paddedX, paddedY);
+
+	stbi_image_free(rgba8);
+
+	// Generate mipmaps and delete padded buffer
+	std::vector<Mipmap> mipmaps;
+	GenerateMipmaps(mipmaps, paddedX, paddedY, paddedBuffer);
+	delete[] paddedBuffer;
+
+	return mipmaps;
+
+	// Compress mipmaps
+	std::vector<Mipmap> compressedMipmaps;
+	CompressMipmaps(mipmaps, compressedMipmaps);
+
+	return compressedMipmaps;
+
+	// Generate .tex file
+	uint8_t* finalProduct = GenerateTexFile(compressedMipmaps, paddedX, paddedY, resultSize);
 }
 
 uint64_t ImageProcessor::NextPoT(uint64_t x)

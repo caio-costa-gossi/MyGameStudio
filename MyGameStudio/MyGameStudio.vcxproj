@@ -159,6 +159,7 @@
     <ClCompile Include="ConfigReader.cpp" />
     <ClCompile Include="ConsoleManager.cpp" />
     <ClCompile Include="CsvParser.cpp" />
+    <ClCompile Include="DataStream.cpp" />
     <ClCompile Include="Enums.cpp" />
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="HashTable.cpp" />
@@ -186,6 +187,7 @@
     <ClInclude Include="ConfigReader.h" />
     <ClInclude Include="ConsoleManager.h" />
     <ClInclude Include="CsvParser.h" />
+    <ClInclude Include="DataStream.h" />
     <ClInclude Include="Enums.h" />
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="HashTable.h" />

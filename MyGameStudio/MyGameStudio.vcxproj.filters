@@ -108,6 +108,9 @@
     <ClCompile Include="SystemPathHelper.cpp">
       <Filter>Helpers</Filter>
     </ClCompile>
+    <ClCompile Include="DataStream.cpp">
+      <Filter>Containers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EngineCoreManager.h">
@@ -181,6 +184,9 @@
     </ClInclude>
     <ClInclude Include="SystemPathHelper.h">
       <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="DataStream.h">
+      <Filter>Containers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

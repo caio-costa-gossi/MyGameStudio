@@ -29,6 +29,7 @@ namespace error_const
 	const auto DB_CLOSED = Err("The operation cannot proceed, the database is closed", 6);
 	const auto INTEGER_OUT_OF_BOUNDS = Err("Integer is out of bounds", 7);
 	const auto PARAMETER_IS_NULL = Err("Parameter is null", 8);
+	const auto BUFFER_OVERFLOW = Err("Buffer overflow", 9);
 
 	constexpr auto ZIP_ERROR_CODE = 11;
 }

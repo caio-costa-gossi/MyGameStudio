@@ -17,15 +17,23 @@ struct DataStream
 		if (initToZero) memset(Data, 0, dataSize);
 	}
 
-	void Write(const uint8_t* source, const uint64_t size)
+	Err Write(const uint8_t* source, const uint64_t size)
 	{
+		if (DataPointer >= DataSize) return error_const::BUFFER_OVERFLOW;
+
 		memcpy_s(&Data[DataPointer], size, source, size);
 		DataPointer += size;
+
+		return error_const::SUCCESS;
 	}
 
-	void Write(const void* source, const uint64_t size)
+	Err Write(const void* source, const uint64_t size)
 	{
+		if (DataPointer >= DataSize) return error_const::BUFFER_OVERFLOW;
+
 		memcpy_s(&Data[DataPointer], size, source, size);
 		DataPointer += size;
+
+		return error_const::SUCCESS;
 	}
 };

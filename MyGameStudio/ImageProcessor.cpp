@@ -4,6 +4,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
+#include "ConsoleManager.h"
 #include "DataStream.h"
 
 uint8_t* ImageProcessor::DecompressImageRgba8(const char* filepath, int* x, int* y, int* channels)
@@ -77,19 +78,27 @@ void ImageProcessor::CompressMipmaps(const std::vector<Mipmap>& mipmaps, std::ve
 uint8_t* ImageProcessor::GenerateTexFile(const std::vector<Mipmap>& compressedMipmaps, const uint64_t originalX, const uint64_t originalY)
 {
 	uint64_t totalTexSize = 0;
+	const uint64_t mipmapCount = compressedMipmaps.size();
 
 	for (const Mipmap& m : compressedMipmaps)
 	{
-		totalTexSize += m.DataSize;
+		totalTexSize += m.DataSize + 3 * sizeof(uint64_t);
 	}
 
-	DataStream stream(totalTexSize + 17);
+	DataStream stream(totalTexSize + 24);
 	stream.Write(&originalX, sizeof(uint64_t));
 	stream.Write(&originalY, sizeof(uint64_t));
+	stream.Write(&mipmapCount, sizeof(uint64_t));
 
 	for (const Mipmap& m : compressedMipmaps)
 	{
-		stream.Write(m.Data, m.DataSize);
+		stream.Write(&m.XSize, sizeof(uint64_t));
+		stream.Write(&m.YSize, sizeof(uint64_t));
+		stream.Write(&m.DataSize, sizeof(uint64_t));
+		Err error = stream.Write(m.Data, m.DataSize);
+
+		if (error.Code())
+			ConsoleManager::Print("Error writing .tex file! " + error.Message(), enums::ConsoleMessageType::error);
 	}
 
 	return stream.Data;

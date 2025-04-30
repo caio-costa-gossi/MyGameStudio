@@ -4,6 +4,8 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
+#include "DataStream.h"
+
 uint8_t* ImageProcessor::DecompressImageRgba8(const char* filepath, int* x, int* y, int* channels)
 {
 	return stbi_load(filepath, x, y, channels, 4);
@@ -72,9 +74,25 @@ void ImageProcessor::CompressMipmaps(const std::vector<Mipmap>& mipmaps, std::ve
 	}
 }
 
-uint8_t* ImageProcessor::GenerateTexFile(const std::vector<Mipmap>& compressedMipmaps)
+uint8_t* ImageProcessor::GenerateTexFile(const std::vector<Mipmap>& compressedMipmaps, const uint64_t originalX, const uint64_t originalY)
 {
+	uint64_t totalTexSize = 0;
 
+	for (const Mipmap& m : compressedMipmaps)
+	{
+		totalTexSize += m.DataSize;
+	}
+
+	DataStream stream(totalTexSize + 17);
+	stream.Write(&originalX, sizeof(uint64_t));
+	stream.Write(&originalY, sizeof(uint64_t));
+
+	for (const Mipmap& m : compressedMipmaps)
+	{
+		stream.Write(m.Data, m.DataSize);
+	}
+
+	return stream.Data;
 }
 
 uint8_t* ImageProcessor::ProcessImage(const Asset& metadata)
@@ -105,8 +123,7 @@ uint8_t* ImageProcessor::ProcessImage(const Asset& metadata)
 	CompressMipmaps(mipmaps, compressedMipmaps);
 
 	// Generate .tex file
-	uint8_t* finalProduct = GenerateTexFile(compressedMipmaps);
-
+	uint8_t* finalProduct = GenerateTexFile(compressedMipmaps, paddedX, paddedY);
 	return finalProduct;
 }
 

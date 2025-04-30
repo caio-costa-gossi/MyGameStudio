@@ -30,9 +30,10 @@ public:
 	static uint8_t* GenerateTexFile(const std::vector<Mipmap>& compressedMipmaps, uint64_t originalX, uint64_t originalY);
 
 	static uint64_t NextPoT(uint64_t x);
+	static uint8_t* PadRaw(const uint8_t* src, uint64_t srcX, uint64_t srcY, uint64_t destX, uint64_t destY);
 	static uint8_t* Downscale2X(const uint8_t* source, uint64_t srcX, uint64_t srcY);
 
 public:
 
-	static uint8_t* ProcessImage(const Asset& metadata);
+	static uint8_t* ProcessImage(const Asset& metadata, uint64_t& resultSize);
 };

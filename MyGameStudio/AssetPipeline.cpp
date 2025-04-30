@@ -1,6 +1,5 @@
 #include "AssetPipeline.h"
 #include <fstream>
-
 #include "AssetDatabase.h"
 #include "ImageProcessor.h"
 #include "SystemPathHelper.h"
@@ -12,14 +11,18 @@ Err AssetPipeline::ImportAsset(const char* filepath)
 	Asset newAsset = GetAssetMetadata(filepath);
 
 	// Load full file and process
-	const uint8_t* resultBuffer = ProcessAsset(newAsset);
+	uint64_t resultSize;
+	const uint8_t* resultBuffer = ProcessAsset(newAsset, resultSize);
+
+	if (resultBuffer == nullptr)
+		return error_const::GENERIC_EXCEPTION;
 
 	// Save result to .zip
-	const std::string zipPath = "assets/myPackage.zip";
-	SaveFileToZip(zipPath.c_str(), newAsset.Name.c_str(), resultBuffer, newAsset.Size);
+	const std::string zipPath = "assets/test.zip";
+	newAsset.ZipLocation = zipPath;
+	SaveFileToZip(newAsset.ZipLocation.c_str(), newAsset.LocationInZip.c_str(), resultBuffer, resultSize);
 
 	// Register details in database
-	newAsset.ZipLocation = zipPath;
 	AssetDatabase::RegisterAsset(newAsset);
 
 	// Delete result buffer and return
@@ -83,14 +86,13 @@ Err AssetPipeline::SaveFileToZip(const char* zipPath, const char* pathInsideZip,
 	return error_const::SUCCESS;
 }
 
-uint8_t* AssetPipeline::ProcessAsset(Asset& assetMetadata)
+uint8_t* AssetPipeline::ProcessAsset(Asset& assetMetadata, uint64_t& resultSize)
 {
 	//const auto fileBuffer = std::make_unique<uint8_t[]>(assetMetadata.Size);
 	//LoadFile(filepath, fileBuffer.get(), assetMetadata.Size);
 
 	assetMetadata.LocationInZip = SystemPathHelper::RemoveFileExtension(assetMetadata.Name) + ".tex";
-	ImageProcessor processor;
-	return processor.ProcessImage(assetMetadata);
+	return ImageProcessor::ProcessImage(assetMetadata, resultSize);
 }
 
 enums::AssetType AssetPipeline::GetAssetType(const uint8_t* fileBuffer, uint64_t bufferSize)

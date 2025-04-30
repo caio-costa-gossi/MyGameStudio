@@ -12,6 +12,22 @@ uint8_t* ImageProcessor::DecompressImageRgba8(const char* filepath, int* x, int*
 	return stbi_load(filepath, x, y, channels, 4);
 }
 
+uint8_t* ImageProcessor::PadRaw(const uint8_t* src, const uint64_t srcX, const uint64_t srcY, const uint64_t destX, const uint64_t destY)
+{
+	uint8_t* paddedBuffer = new uint8_t[destX * destY * 4];
+	memset(paddedBuffer, 0, destX * destY * 4);
+
+	for (uint64_t y = 0; y < srcY; ++y)
+	{
+		for (uint64_t x = 0; x < srcX; ++x)
+		{
+			memcpy_s(&paddedBuffer[(y * destX + x) * 4], 4, &src[(y * srcX + x) * 4], 4);
+		}
+	}
+
+	return paddedBuffer;
+}	
+
 uint8_t* ImageProcessor::Downscale2X(const uint8_t* source, const uint64_t srcX, const uint64_t srcY)
 {
 	const uint64_t destX = srcX >> 1ULL;
@@ -104,7 +120,7 @@ uint8_t* ImageProcessor::GenerateTexFile(const std::vector<Mipmap>& compressedMi
 	return stream.Data;
 }
 
-uint8_t* ImageProcessor::ProcessImage(const Asset& metadata)
+uint8_t* ImageProcessor::ProcessImage(const Asset& metadata, uint64_t& resultSize)
 {
 	int x, y, channels;
 
@@ -115,12 +131,12 @@ uint8_t* ImageProcessor::ProcessImage(const Asset& metadata)
 	// Pad image file and delete original buffer
 	const uint64_t paddedX = NextPoT(x);
 	const uint64_t paddedY = NextPoT(y);
-
-	uint8_t* paddedBuffer = new uint8_t[paddedX * paddedY * 4];
-	memset(paddedBuffer, 0, paddedX * paddedY * 4);
-	memcpy_s(paddedBuffer, paddedX * paddedY * 4, rgba8, metadata.Size);
+	uint8_t* paddedBuffer = PadRaw(rgba8, x, y, paddedX, paddedY);
 
 	stbi_image_free(rgba8);
+
+	resultSize = paddedX * paddedY * 4;
+	return paddedBuffer;
 
 	// Generate mipmaps and delete padded buffer
 	std::vector<Mipmap> mipmaps;

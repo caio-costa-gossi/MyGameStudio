@@ -1,6 +1,7 @@
 #include "AssetDatabase.h"
 #include "AssetPipeline.h"
 #include "ConsoleManager.h"
+#include "DataStream.h"
 #include "EngineCoreManager.h"
 #include "Err.h"
 #include "ImageProcessor.h"
@@ -21,7 +22,11 @@ int main()
 	}
 
 	//ConsoleManager::RunConsole();
-	//AssetPipeline::ImportAsset("assets/test.png");
+	err = AssetPipeline::ImportAsset("assets/test.png");
+	if (err.Code() != 0)
+	{
+		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
+	}
 
 	err = EngineCoreManager::Shutdown();
 	if (err.Code() != 0)

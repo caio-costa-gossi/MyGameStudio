@@ -7,6 +7,7 @@
 #include "ConsoleManager.h"
 #include "DataStream.h"
 #include "DdsHeader.h"
+#include "LocalizationManager.h"
 
 uint8_t* ImageProcessor::DecompressImageRgba8(const char* filepath, int* x, int* y, int* channels)
 {
@@ -125,10 +126,12 @@ uint8_t* ImageProcessor::ProcessImage(const Asset& metadata, uint64_t& resultSiz
 	int x, y, channels;
 
 	// Load image file in RGBA8
+	ConsoleManager::Print(std::string(LocalizationManager::GetLocalizedString(string_const::G_ASSET_IMPORT)) + "0%", enums::ConsoleMessageType::info);
 	uint8_t* rgba8 = DecompressImageRgba8(metadata.SourceLocation.c_str(), &x, &y, &channels);
 	if (rgba8 == nullptr) return nullptr;
 
 	// Pad image file and delete original buffer
+	ConsoleManager::Print(std::string(LocalizationManager::GetLocalizedString(string_const::G_ASSET_IMPORT)) + "20%", enums::ConsoleMessageType::info);
 	const uint64_t paddedX = NextPoT(x);
 	const uint64_t paddedY = NextPoT(y);
 	uint8_t* paddedBuffer = PadRaw(rgba8, x, y, paddedX, paddedY);
@@ -136,16 +139,21 @@ uint8_t* ImageProcessor::ProcessImage(const Asset& metadata, uint64_t& resultSiz
 	stbi_image_free(rgba8);
 
 	// Generate mipmaps and delete padded buffer
+	ConsoleManager::Print(std::string(LocalizationManager::GetLocalizedString(string_const::G_ASSET_IMPORT)) + "50%", enums::ConsoleMessageType::info);
 	std::vector<Mipmap> mipmaps;
 	GenerateMipmaps(mipmaps, paddedX, paddedY, paddedBuffer);
 	delete[] paddedBuffer;
 
 	// Compress mipmaps
+	ConsoleManager::Print(std::string(LocalizationManager::GetLocalizedString(string_const::G_ASSET_IMPORT)) + "60%", enums::ConsoleMessageType::info);
 	std::vector<Mipmap> compressedMipmaps;
 	CompressMipmaps(mipmaps, compressedMipmaps);
 
 	// Generate .tex file
+	ConsoleManager::Print(std::string(LocalizationManager::GetLocalizedString(string_const::G_ASSET_IMPORT)) + "80%", enums::ConsoleMessageType::info);
 	uint8_t* finalProduct = GenerateDdsFile(compressedMipmaps, paddedX, paddedY, resultSize);
+
+	ConsoleManager::Print(std::string(LocalizationManager::GetLocalizedString(string_const::G_ASSET_IMPORT)) + "100%", enums::ConsoleMessageType::info);
 	return finalProduct;
 }
 

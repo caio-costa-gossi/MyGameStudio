@@ -11,3 +11,4 @@ language_changed,Linguagem modificada: ,Language modified: ,Langue modifiée:
 language_not_found,Linguagem não encontrada: ,Language not found: ,Langue introuvable: 
 invalid_parameter,Parâmetros inválidos. Utilização correta:,Invalid parameters. Correct utilization:,Paramètres invalides. Utilisation correcte:
 use_chlang,"chlang lang={Linguagem desejada}","chlang lang={Desired language}","chlang lang={Langue desirée}"
+asset_import,Importando recurso... ,Importing asset... ,Importation de la resource... 

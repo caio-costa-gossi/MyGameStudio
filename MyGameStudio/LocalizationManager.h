@@ -58,4 +58,5 @@ namespace string_const
     const auto G_LANGUAGE_NOT_FOUND = "language_not_found";
     const auto G_INVALID_PARAMETER = "invalid_parameter";
     const auto G_USE_CHLANG = "use_chlang";
+    const auto G_ASSET_IMPORT = "asset_import";
 }

@@ -188,6 +188,7 @@
     <ClInclude Include="ConsoleManager.h" />
     <ClInclude Include="CsvParser.h" />
     <ClInclude Include="DataStream.h" />
+    <ClInclude Include="DdsHeader.h" />
     <ClInclude Include="Enums.h" />
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="HashTable.h" />

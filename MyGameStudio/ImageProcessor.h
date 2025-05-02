@@ -46,7 +46,7 @@ public:
 	static uint8_t* DecompressImageRgba8(const char* filepath, int* x, int* y, int* channels);
 	static void GenerateMipmaps(std::vector<Mipmap>& mipmaps, uint64_t paddedX, uint64_t paddedY, uint8_t* paddedBuffer);
 	static void CompressMipmaps(const std::vector<Mipmap>& mipmaps, std::vector<Mipmap>& compressedMipmaps);
-	static uint8_t* GenerateTexFile(const std::vector<Mipmap>& compressedMipmaps, uint64_t originalX, uint64_t originalY, uint64_t& resultSize);
+	static uint8_t* GenerateDdsFile(const std::vector<Mipmap>& compressedMipmaps, uint64_t originalX, uint64_t originalY, uint64_t& resultSize);
 
 	static uint64_t NextPoT(uint64_t x);
 	static uint8_t* PadRaw(const uint8_t* src, uint64_t srcX, uint64_t srcY, uint64_t destX, uint64_t destY);

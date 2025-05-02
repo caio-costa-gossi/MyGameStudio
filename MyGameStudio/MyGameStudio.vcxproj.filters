@@ -188,5 +188,8 @@
     <ClInclude Include="DataStream.h">
       <Filter>Containers</Filter>
     </ClInclude>
+    <ClInclude Include="DdsHeader.h">
+      <Filter>Asset Management</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

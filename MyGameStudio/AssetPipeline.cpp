@@ -107,7 +107,7 @@ uint8_t* AssetPipeline::ProcessAsset(Asset& assetMetadata, uint64_t& resultSize)
 	//const auto fileBuffer = std::make_unique<uint8_t[]>(assetMetadata.Size);
 	//LoadFile(filepath, fileBuffer.get(), assetMetadata.Size);
 
-	assetMetadata.LocationInZip = SystemPathHelper::RemoveFileExtension(assetMetadata.Name) + ".tex";
+	assetMetadata.LocationInZip = SystemPathHelper::RemoveFileExtension(assetMetadata.Name) + ".dds";
 	return ImageProcessor::ProcessImage(assetMetadata, resultSize);
 }
 

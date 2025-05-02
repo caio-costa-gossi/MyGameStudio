@@ -6,6 +6,7 @@
 
 #include "ConsoleManager.h"
 #include "DataStream.h"
+#include "DdsHeader.h"
 
 uint8_t* ImageProcessor::DecompressImageRgba8(const char* filepath, int* x, int* y, int* channels)
 {
@@ -92,31 +93,28 @@ void ImageProcessor::CompressMipmaps(const std::vector<Mipmap>& mipmaps, std::ve
 	}
 }
 
-uint8_t* ImageProcessor::GenerateTexFile(const std::vector<Mipmap>& compressedMipmaps, const uint64_t originalX, const uint64_t originalY, uint64_t& resultSize)
+uint8_t* ImageProcessor::GenerateDdsFile(const std::vector<Mipmap>& compressedMipmaps, const uint64_t originalX, const uint64_t originalY, uint64_t& resultSize)
 {
-	uint64_t totalTexSize = 0;
-	const uint64_t mipmapCount = compressedMipmaps.size();
+	uint32_t totalBinSize = 0;
+	const uint32_t mipmapCount = static_cast<uint32_t>(compressedMipmaps.size());
 
 	for (const Mipmap& m : compressedMipmaps)
 	{
-		totalTexSize += m.DataSize + 3 * sizeof(uint64_t);
+		totalBinSize += m.DataSize;
 	}
 
-	resultSize = totalTexSize + 24;
+	resultSize = sizeof(DdsHeader) + totalBinSize;
 	DataStream stream(resultSize);
-	stream.Write(&originalX, sizeof(uint64_t));
-	stream.Write(&originalY, sizeof(uint64_t));
-	stream.Write(&mipmapCount, sizeof(uint64_t));
+	const DdsHeader header(static_cast<uint32_t>(originalY), static_cast<uint32_t>(originalX), static_cast<uint32_t>(originalX * originalY), mipmapCount);
+
+	stream.Write(&header, sizeof(DdsHeader));
 
 	for (const Mipmap& m : compressedMipmaps)
 	{
-		stream.Write(&m.XSize, sizeof(uint64_t));
-		stream.Write(&m.YSize, sizeof(uint64_t));
-		stream.Write(&m.DataSize, sizeof(uint64_t));
 		Err error = stream.Write(m.Data, m.DataSize);
 
 		if (error.Code())
-			ConsoleManager::Print("Error writing .tex file! " + error.Message(), enums::ConsoleMessageType::error);
+			ConsoleManager::Print("Error writing .dds file! " + error.Message(), enums::ConsoleMessageType::error);
 	}
 
 	return stream.Data;
@@ -147,7 +145,7 @@ uint8_t* ImageProcessor::ProcessImage(const Asset& metadata, uint64_t& resultSiz
 	CompressMipmaps(mipmaps, compressedMipmaps);
 
 	// Generate .tex file
-	uint8_t* finalProduct = GenerateTexFile(compressedMipmaps, paddedX, paddedY, resultSize);
+	uint8_t* finalProduct = GenerateDdsFile(compressedMipmaps, paddedX, paddedY, resultSize);
 	return finalProduct;
 }
 
@@ -170,8 +168,6 @@ std::vector<Mipmap> ImageProcessor::ProcessImageTest(const Asset& metadata, uint
 	GenerateMipmaps(mipmaps, paddedX, paddedY, paddedBuffer);
 	delete[] paddedBuffer;
 
-	return mipmaps;
-
 	// Compress mipmaps
 	std::vector<Mipmap> compressedMipmaps;
 	CompressMipmaps(mipmaps, compressedMipmaps);
@@ -179,7 +175,7 @@ std::vector<Mipmap> ImageProcessor::ProcessImageTest(const Asset& metadata, uint
 	return compressedMipmaps;
 
 	// Generate .tex file
-	uint8_t* finalProduct = GenerateTexFile(compressedMipmaps, paddedX, paddedY, resultSize);
+	uint8_t* finalProduct = GenerateDdsFile(compressedMipmaps, paddedX, paddedY, resultSize);
 }
 
 uint64_t ImageProcessor::NextPoT(uint64_t x)

@@ -17,7 +17,7 @@ public:
 	Err OpenDb(const char* filename);
 	Err CloseDb();
 	Err ExecuteNonQuery(const char* sqlStatement) const;
-	int64_t ExecuteInsert(const char* insertStatement) const;
+	Err ExecuteInsert(const char* insertStatement, int64_t& rowId) const;
 
 	bool IsDbOpen() const;
 

@@ -32,4 +32,5 @@ namespace error_const
 	const auto BUFFER_OVERFLOW = Err("Buffer overflow", 9);
 
 	constexpr auto ZIP_ERROR_CODE = 11;
+	constexpr auto DB_ERROR_CODE = 10;
 }

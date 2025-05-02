@@ -32,21 +32,28 @@ Err SqliteDatabase::ExecuteNonQuery(const char* sqlStatement) const
 
 	char* errorMsg;
 	if (sqlite3_exec(database_, sqlStatement, nullptr, nullptr, &errorMsg))
-		return Err(errorMsg, 10);
+		return Err(errorMsg, error_const::DB_ERROR_CODE);
 
 	return error_const::SUCCESS;
 }
 
-int64_t SqliteDatabase::ExecuteInsert(const char* insertStatement) const
+Err SqliteDatabase::ExecuteInsert(const char* insertStatement, int64_t& rowId) const
 {
 	if (!isDbOpen_)
-		return -1;
+	{
+		rowId = -1;
+		return error_const::DB_CLOSED;
+	}
 
 	char* errorMsg;
 	if (sqlite3_exec(database_, insertStatement, nullptr, nullptr, &errorMsg))
-		return -1;
+	{
+		rowId = -1;
+		return Err(errorMsg, error_const::DB_ERROR_CODE);
+	}
 
-	return sqlite3_last_insert_rowid(database_);
+	rowId = sqlite3_last_insert_rowid(database_);
+	return error_const::SUCCESS;
 }
 
 bool SqliteDatabase::IsDbOpen() const

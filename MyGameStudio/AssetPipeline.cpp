@@ -23,7 +23,9 @@ Err AssetPipeline::ImportAsset(const char* filepath)
 	SaveFileToZip(newAsset.ZipLocation.c_str(), newAsset.LocationInZip.c_str(), resultBuffer, resultSize);
 
 	// Register details in database
-	AssetDatabase::RegisterAsset(newAsset);
+	Err error = AssetDatabase::RegisterAsset(newAsset);
+	if (error.Code())
+		return error;
 
 	// Delete result buffer and return
 	delete[] resultBuffer;
@@ -136,10 +138,10 @@ enums::AssetType AssetPipeline::GetAssetType(const uint8_t* fileBuffer, uint64_t
 		fileBuffer[7] == 0x0A)
 		return enums::AssetType::image;
 
-	if (fileBuffer[0] == 0x46 &&
-		fileBuffer[1] == 0x54 &&
-		fileBuffer[2] == 0x6C &&
-		fileBuffer[3] == 0x67)
+	if (fileBuffer[0] == 0x67 &&
+		fileBuffer[1] == 0x6C &&
+		fileBuffer[2] == 0x54 &&
+		fileBuffer[3] == 0x46)
 		return enums::AssetType::mesh3d;
 
 	return enums::AssetType::plaintext;

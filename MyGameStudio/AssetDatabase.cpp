@@ -75,21 +75,23 @@ Err AssetDatabase::RegisterAsset(const Asset& asset)
 		std::to_string(asset.CheckModifications) + ");"
 	);
 
-	const int64_t newAssetId64 = db_.ExecuteInsert(sqlStatement.c_str());
+	int64_t newAssetId64;
+	Err error = db_.ExecuteInsert(sqlStatement.c_str(), newAssetId64);
+	if (error.Code())
+	{
+		ConsoleManager::Print("Error registering asset!", enums::ConsoleMessageType::error);
+		return error;
+	}
+
 	if (newAssetId64 > INT32_MAX || newAssetId64 < INT32_MIN)
 		return error_const::INTEGER_OUT_OF_BOUNDS;
 
 	const int32_t newAssetId = static_cast<int32_t>(newAssetId64);
-	if (newAssetId < 0)
-	{
-		ConsoleManager::Print("Error registering asset!\n", enums::ConsoleMessageType::error);
-		return Err("Asset could not be registered", 10);
-	}
 
-	Err error = RegisterAssetDependencies(asset.DependsOnAssets, newAssetId);
+	error = RegisterAssetDependencies(asset.DependsOnAssets, newAssetId);
 	if (error.Code())
 	{
-		ConsoleManager::Print("Error registering asset dependencies!\n", enums::ConsoleMessageType::error);
+		ConsoleManager::Print("Error registering asset dependencies!", enums::ConsoleMessageType::error);
 		return error;
 	}
 

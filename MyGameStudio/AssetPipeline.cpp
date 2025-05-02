@@ -88,10 +88,22 @@ Err AssetPipeline::SaveFileToZip(const char* zipPath, const char* pathInsideZip,
 
 uint8_t* AssetPipeline::ProcessAsset(Asset& assetMetadata, uint64_t& resultSize)
 {
-	//const auto fileBuffer = std::make_unique<uint8_t[]>(assetMetadata.Size);
-	//LoadFile(filepath, fileBuffer.get(), assetMetadata.Size);
+	uint8_t* returnBuffer = nullptr;
 
-	uint8_t* returnBuffer = ImageProcessor::ProcessImage(assetMetadata, resultSize);
+	switch (assetMetadata.Type)
+	{
+	case enums::AssetType::image:
+		returnBuffer = ImageProcessor::ProcessImage(assetMetadata, resultSize);
+		break;
+	case enums::AssetType::mesh3d:
+		returnBuffer = new uint8_t[16];
+		resultSize = 16;
+		break;
+	default:
+		returnBuffer = new uint8_t[assetMetadata.SourceSize];
+		LoadFile(assetMetadata.SourceLocation.c_str(), returnBuffer, assetMetadata.SourceSize);
+		resultSize = assetMetadata.SourceSize;
+	}
 
 	assetMetadata.LocationInZip = SystemPathHelper::RemoveFileExtension(assetMetadata.Name) + GetTargetExtension(assetMetadata.Type);
 	assetMetadata.ProductSize = resultSize;
@@ -124,6 +136,12 @@ enums::AssetType AssetPipeline::GetAssetType(const uint8_t* fileBuffer, uint64_t
 		fileBuffer[7] == 0x0A)
 		return enums::AssetType::image;
 
+	if (fileBuffer[0] == 0x46 &&
+		fileBuffer[1] == 0x54 &&
+		fileBuffer[2] == 0x6C &&
+		fileBuffer[3] == 0x67)
+		return enums::AssetType::mesh3d;
+
 	return enums::AssetType::plaintext;
 }
 
@@ -137,6 +155,8 @@ std::string AssetPipeline::GetTargetExtension(const enums::AssetType type)
 		return ".mp3";
 	case enums::AssetType::video:
 		return ".mp4";
+	case enums::AssetType::mesh3d:
+		return ".glb";
 	case enums::AssetType::plaintext:
 		return "";
 	default:

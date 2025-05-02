@@ -22,7 +22,11 @@ int main()
 	}
 
 	//ConsoleManager::RunConsole();
-	AssetPipeline::ImportAsset("assets/test.png");
+	err = AssetPipeline::ImportAsset("assets/test.glb");
+	if (err.Code() != 0)
+	{
+		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
+	}
 
 	err = EngineCoreManager::Shutdown();
 	if (err.Code() != 0)

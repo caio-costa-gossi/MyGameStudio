@@ -149,35 +149,6 @@ uint8_t* ImageProcessor::ProcessImage(const Asset& metadata, uint64_t& resultSiz
 	return finalProduct;
 }
 
-std::vector<Mipmap> ImageProcessor::ProcessImageTest(const Asset& metadata, uint64_t& resultSize)
-{
-	int x, y, channels;
-
-	// Load image file in RGBA8
-	uint8_t* rgba8 = DecompressImageRgba8(metadata.SourceLocation.c_str(), &x, &y, &channels);
-
-	// Pad image file and delete original buffer
-	const uint64_t paddedX = NextPoT(x);
-	const uint64_t paddedY = NextPoT(y);
-	uint8_t* paddedBuffer = PadRaw(rgba8, x, y, paddedX, paddedY);
-
-	stbi_image_free(rgba8);
-
-	// Generate mipmaps and delete padded buffer
-	std::vector<Mipmap> mipmaps;
-	GenerateMipmaps(mipmaps, paddedX, paddedY, paddedBuffer);
-	delete[] paddedBuffer;
-
-	// Compress mipmaps
-	std::vector<Mipmap> compressedMipmaps;
-	CompressMipmaps(mipmaps, compressedMipmaps);
-
-	return compressedMipmaps;
-
-	// Generate .tex file
-	uint8_t* finalProduct = GenerateDdsFile(compressedMipmaps, paddedX, paddedY, resultSize);
-}
-
 uint64_t ImageProcessor::NextPoT(uint64_t x)
 {
 	if (x == 0) return 1;

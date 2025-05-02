@@ -42,7 +42,7 @@ struct Mipmap
 
 class ImageProcessor
 {
-public:
+private:
 	static uint8_t* DecompressImageRgba8(const char* filepath, int* x, int* y, int* channels);
 	static void GenerateMipmaps(std::vector<Mipmap>& mipmaps, uint64_t paddedX, uint64_t paddedY, uint8_t* paddedBuffer);
 	static void CompressMipmaps(const std::vector<Mipmap>& mipmaps, std::vector<Mipmap>& compressedMipmaps);
@@ -53,7 +53,5 @@ public:
 	static uint8_t* Downscale2X(const uint8_t* source, uint64_t srcX, uint64_t srcY);
 
 public:
-
 	static uint8_t* ProcessImage(const Asset& metadata, uint64_t& resultSize);
-	static std::vector<Mipmap> ProcessImageTest(const Asset& metadata, uint64_t& resultSize);
 };

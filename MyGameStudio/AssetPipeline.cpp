@@ -30,22 +30,6 @@ Err AssetPipeline::ImportAsset(const char* filepath)
 	return error_const::SUCCESS;
 }
 
-void AssetPipeline::Test(const char* filepath)
-{
-	// Load file and get metadata
-	Asset newAsset = GetAssetMetadata(filepath);
-
-	// Load full file and process
-	uint64_t resultSize;
-	const std::vector<Mipmap> results = ImageProcessor::ProcessImageTest(newAsset, resultSize);
-
-	for (const Mipmap& m : results)
-	{
-		SaveFileToZip("assets/test.zip", std::string("mipmap" + std::to_string(m.Level) + ".raw").c_str(), m.Data, m.DataSize);
-	}
-}
-
-
 int64_t AssetPipeline::LoadFile(const char* filepath, uint8_t* fileBuffer, uint64_t bufferSize)
 {
 	std::ifstream file(filepath, std::ios::binary);

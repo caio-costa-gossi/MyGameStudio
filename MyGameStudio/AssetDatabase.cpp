@@ -62,11 +62,12 @@ Asset AssetDatabase::GetAsset(const uint32_t assetId, const bool addDependencies
 
 Err AssetDatabase::RegisterAsset(const Asset& asset)
 {
-	const std::string sqlStatement("INSERT INTO Assets (Name, Extension, Type, Size, SourceLocation, ZipLocation, LocationInZip, LastModifiedDate, CheckModifications) VALUES ('" + 
+	const std::string sqlStatement("INSERT INTO Assets (Name, Extension, Type, SourceSize, ProductSize, SourceLocation, ZipLocation, LocationInZip, LastModifiedDate, CheckModifications) VALUES ('" + 
 		asset.Name + "','" +
 		asset.Extension + "','" +
 		enums::AssetTypeToString(asset.Type) + "'," +
-		std::to_string(asset.Size) + ",'" +
+		std::to_string(asset.SourceSize) + "," +
+		std::to_string(asset.ProductSize) + ",'" +
 		asset.SourceLocation + "','" +
 		asset.ZipLocation + "','" +
 		asset.LocationInZip + "','" +
@@ -101,7 +102,8 @@ Err AssetDatabase::UpdateAsset(const Asset& asset)
 		asset.Name +
 		"',Extension = '" + asset.Extension +
 		"',Type = '" + enums::AssetTypeToString(asset.Type) +
-		"',Size = " + std::to_string(asset.Size) +
+		"',SourceSize = " + std::to_string(asset.SourceSize) +
+		",ProductSize = " + std::to_string(asset.ProductSize) +
 		",SourceLocation = '" + asset.SourceLocation +
 		"',ZipLocation = '" + asset.ZipLocation +
 		"',LocationInZip = '" + asset.LocationInZip +
@@ -220,7 +222,7 @@ auto AssetDatabase::assetDbFilename_ = "Assets.db";
 auto AssetDatabase::createAssetsTableQuery_ = 
 "CREATE TABLE IF NOT EXISTS Assets "
 "(Id INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL, Extension TEXT NOT NULL, "
-"Type TEXT, Size INTEGER, SourceLocation TEXT UNIQUE, ZipLocation TEXT, LocationInZip TEXT, LastModifiedDate TEXT, CheckModifications INTEGER);";
+"Type TEXT, SourceSize INTEGER, ProductSize INTEGER, SourceLocation TEXT UNIQUE, ZipLocation TEXT, LocationInZip TEXT, LastModifiedDate TEXT, CheckModifications INTEGER);";
 
 auto AssetDatabase::createAssetDependenciesTableQuery_ = 
 "CREATE TABLE IF NOT EXISTS AssetDependencies "

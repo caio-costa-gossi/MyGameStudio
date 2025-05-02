@@ -11,6 +11,7 @@ public:
 	static uint8_t* ProcessAsset(Asset& assetMetadata, uint64_t& resultSize);
 
 	static enums::AssetType GetAssetType(const uint8_t* fileBuffer, uint64_t bufferSize);
+	static std::string GetTargetExtension(enums::AssetType type);
 
 public:
 	static Err ImportAsset(const char* filepath);

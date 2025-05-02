@@ -27,7 +27,8 @@ struct Asset
 	std::string Name;
 	std::string Extension;
 	enums::AssetType Type;
-	uint64_t Size;
+	uint64_t SourceSize;
+	uint64_t ProductSize;
 	std::string SourceLocation;
 	std::string ZipLocation;
 	std::string LocationInZip;
@@ -43,12 +44,13 @@ struct Asset
 		a.Name = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1)));
 		a.Extension = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2)));
 		a.Type = enums::StringToAssetType(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3)));
-		a.Size = sqlite3_column_int64(stmt, 4);
-		a.SourceLocation = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 5)));
-		a.ZipLocation = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 6)));
-		a.LocationInZip = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 7)));
-		a.LastModifiedDate = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 8)));
-		a.CheckModifications = sqlite3_column_int(stmt, 9);
+		a.SourceSize = sqlite3_column_int64(stmt, 4);
+		a.ProductSize = sqlite3_column_int64(stmt, 5);
+		a.SourceLocation = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 6)));
+		a.ZipLocation = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 7)));
+		a.LocationInZip = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 8)));
+		a.LastModifiedDate = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 9)));
+		a.CheckModifications = sqlite3_column_int(stmt, 10);
 
 		return a;
 	}

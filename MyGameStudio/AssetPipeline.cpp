@@ -60,12 +60,12 @@ Asset AssetPipeline::GetAssetMetadata(const char* filepath)
 
 	if (fileSize < 0)
 	{
-		asset.Size = 0;
+		asset.SourceSize = 0;
 		asset.Type = enums::AssetType::undefined;
 		return asset;
 	}
 
-	asset.Size = fileSize;
+	asset.SourceSize = fileSize;
 	asset.Type = GetAssetType(metadataFileBuffer.get(), 10);
 
 	return asset;
@@ -91,8 +91,12 @@ uint8_t* AssetPipeline::ProcessAsset(Asset& assetMetadata, uint64_t& resultSize)
 	//const auto fileBuffer = std::make_unique<uint8_t[]>(assetMetadata.Size);
 	//LoadFile(filepath, fileBuffer.get(), assetMetadata.Size);
 
-	assetMetadata.LocationInZip = SystemPathHelper::RemoveFileExtension(assetMetadata.Name) + ".dds";
-	return ImageProcessor::ProcessImage(assetMetadata, resultSize);
+	uint8_t* returnBuffer = ImageProcessor::ProcessImage(assetMetadata, resultSize);
+
+	assetMetadata.LocationInZip = SystemPathHelper::RemoveFileExtension(assetMetadata.Name) + GetTargetExtension(assetMetadata.Type);
+	assetMetadata.ProductSize = resultSize;
+
+	return returnBuffer;
 }
 
 enums::AssetType AssetPipeline::GetAssetType(const uint8_t* fileBuffer, uint64_t bufferSize)
@@ -121,4 +125,21 @@ enums::AssetType AssetPipeline::GetAssetType(const uint8_t* fileBuffer, uint64_t
 		return enums::AssetType::image;
 
 	return enums::AssetType::plaintext;
+}
+
+std::string AssetPipeline::GetTargetExtension(const enums::AssetType type)
+{
+	switch(type)
+	{
+	case enums::AssetType::image:
+		return ".dds";
+	case enums::AssetType::audio:
+		return ".mp3";
+	case enums::AssetType::video:
+		return ".mp4";
+	case enums::AssetType::plaintext:
+		return "";
+	default:
+		return "";
+	}
 }

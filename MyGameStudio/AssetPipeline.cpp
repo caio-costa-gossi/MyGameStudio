@@ -2,6 +2,7 @@
 #include <fstream>
 #include "AssetDatabase.h"
 #include "ImageProcessor.h"
+#include "MeshProcessor.h"
 #include "SystemPathHelper.h"
 #include "ZipFile.h"
 
@@ -98,8 +99,7 @@ uint8_t* AssetPipeline::ProcessAsset(Asset& assetMetadata, uint64_t& resultSize)
 		returnBuffer = ImageProcessor::ProcessImage(assetMetadata, resultSize);
 		break;
 	case enums::AssetType::mesh3d:
-		returnBuffer = new uint8_t[16];
-		resultSize = 16;
+		returnBuffer = MeshProcessor::ProcessMesh(assetMetadata, resultSize);
 		break;
 	default:
 		returnBuffer = new uint8_t[assetMetadata.SourceSize];

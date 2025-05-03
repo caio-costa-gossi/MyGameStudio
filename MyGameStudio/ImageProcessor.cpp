@@ -4,6 +4,9 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include <stb_image_write.h>
+
 #include "ConsoleManager.h"
 #include "DataStream.h"
 #include "DdsHeader.h"
@@ -64,7 +67,7 @@ void ImageProcessor::GenerateMipmaps(std::vector<Mipmap>& mipmaps, uint64_t padd
 {
 	mipmaps.reserve(8);
 
-	Mipmap lvl0(0, paddedX, paddedY, paddedX * paddedY * 4ULL);
+	Mipmap lvl0(0, paddedX, paddedY, static_cast<int>(paddedX * paddedY * 4ULL));
 	lvl0.Data = new uint8_t[paddedX * paddedY * 4];
 	memcpy_s(lvl0.Data, lvl0.DataSize, paddedBuffer, paddedX * paddedY * 4);
 	mipmaps.emplace_back(std::move(lvl0));
@@ -76,7 +79,7 @@ void ImageProcessor::GenerateMipmaps(std::vector<Mipmap>& mipmaps, uint64_t padd
 		paddedX = paddedX >> 1;
 		paddedY = paddedY >> 1;
 
-		Mipmap nextLvl(curLvl, paddedX, paddedY, paddedX * paddedY * 4ULL);
+		Mipmap nextLvl(curLvl, paddedX, paddedY, static_cast<int>(paddedX * paddedY * 4ULL));
 		nextLvl.Data = Downscale2X(mipmaps.back().Data, paddedX * 2, paddedY * 2);
 		mipmaps.emplace_back(std::move(nextLvl));
 
@@ -88,8 +91,8 @@ void ImageProcessor::CompressMipmaps(const std::vector<Mipmap>& mipmaps, std::ve
 {
 	for (const Mipmap& m : mipmaps)
 	{
-		Mipmap compressed(m.Level, m.XSize, m.YSize, squish::GetStorageRequirements(m.XSize, m.YSize, squish::kDxt5), true);
-		squish::CompressImage(m.Data, m.XSize, m.YSize, compressed.Data, squish::kDxt5);
+		Mipmap compressed(m.Level, m.XSize, m.YSize, squish::GetStorageRequirements(static_cast<int>(m.XSize), static_cast<int>(m.YSize), squish::kDxt5), true);
+		squish::CompressImage(m.Data, static_cast<int>(m.XSize), static_cast<int>(m.YSize), compressed.Data, squish::kDxt5);
 		compressedMipmaps.emplace_back(std::move(compressed));
 	}
 }

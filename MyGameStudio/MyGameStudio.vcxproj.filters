@@ -111,6 +111,9 @@
     <ClCompile Include="DataStream.cpp">
       <Filter>Containers</Filter>
     </ClCompile>
+    <ClCompile Include="MeshProcessor.cpp">
+      <Filter>Asset Management</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EngineCoreManager.h">
@@ -189,6 +192,9 @@
       <Filter>Containers</Filter>
     </ClInclude>
     <ClInclude Include="DdsHeader.h">
+      <Filter>Asset Management</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshProcessor.h">
       <Filter>Asset Management</Filter>
     </ClInclude>
   </ItemGroup>

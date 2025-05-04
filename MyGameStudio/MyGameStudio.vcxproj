@@ -162,6 +162,7 @@
     <ClCompile Include="DataStream.cpp" />
     <ClCompile Include="Enums.cpp" />
     <ClCompile Include="FileManager.cpp" />
+    <ClCompile Include="GltfModel.cpp" />
     <ClCompile Include="HashTable.cpp" />
     <ClCompile Include="EngineCoreManager.cpp" />
     <ClCompile Include="Err.cpp" />
@@ -192,6 +193,7 @@
     <ClInclude Include="DdsHeader.h" />
     <ClInclude Include="Enums.h" />
     <ClInclude Include="FileManager.h" />
+    <ClInclude Include="GltfModel.h" />
     <ClInclude Include="HashTable.h" />
     <ClInclude Include="EngineCoreManager.h" />
     <ClInclude Include="Err.h" />

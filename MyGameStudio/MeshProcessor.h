@@ -13,7 +13,8 @@ private:
 
 	static uint8_t* GetFileBuffer(tinygltf::TinyGLTF& loader, const tinygltf::Model& model, uint64_t& resultSize);
 
-	static void ChangeBuffer(uint8_t* buffer, const std::vector<uint8_t>& newData, size_t initialOffset);
+	static void ChangeBuffer(std::vector<uint8_t>& oldData, uint64_t oldDataByteCount, const std::vector<uint8_t>& newData, size_t initialOffset, tinygltf::Model& model);
+	static size_t GetComponentTypeSize(int componentType);
 
 public:
 	static uint8_t* ProcessMesh(const Asset& metadata, uint64_t& resultSize, std::string& errMsg);

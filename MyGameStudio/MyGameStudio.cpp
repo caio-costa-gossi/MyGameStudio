@@ -5,6 +5,7 @@
 #include "EngineCoreManager.h"
 #include "Err.h"
 #include "ImageProcessor.h"
+#include "MeshProcessor.h"
 #include "SystemPathHelper.h"
 
 int main()
@@ -22,7 +23,7 @@ int main()
 	}
 
 	//ConsoleManager::RunConsole();
-	err = AssetPipeline::ImportAsset("assets/testResult.glb");
+	err = AssetPipeline::ImportAsset("assets/test.glb");
 	if (err.Code() != 0)
 	{
 		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);

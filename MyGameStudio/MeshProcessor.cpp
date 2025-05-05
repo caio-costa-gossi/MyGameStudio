@@ -117,7 +117,7 @@ Err MeshProcessor::CompressIndices(tinygltf::Model& model)
 					pCompressedData[i] = static_cast<uint16_t>(indices[i]);
 			}
 
-			ChangeBuffer(buffer.data.data(), compressedData, view.byteOffset + accessor.byteOffset);
+			ChangeBuffer(buffer.data, accessor.count * GetComponentTypeSize(accessor.componentType), compressedData, view.byteOffset + accessor.byteOffset, model);
 			accessor.componentType = newComponentType;
 		}
 	}
@@ -125,13 +125,62 @@ Err MeshProcessor::CompressIndices(tinygltf::Model& model)
 	return error_const::SUCCESS;
 }
 
-void MeshProcessor::ChangeBuffer(uint8_t* buffer, const std::vector<uint8_t>& newData, size_t initialOffset)
+void MeshProcessor::ChangeBuffer(std::vector<uint8_t>& oldData, const uint64_t oldDataByteCount, const std::vector<uint8_t>& newData, const size_t initialOffset, tinygltf::Model& model)
 {
-	size_t offset = 0;
+	const size_t oldDataSize = oldDataByteCount;
+	const size_t newDataSize = newData.size();
+	const size_t biggerCount = std::max(oldDataSize, newDataSize);
 
-	for (const uint8_t datum : newData)
+	const int sizeDiff = static_cast<int>(newDataSize) - static_cast<int>(oldDataSize);
+
+	size_t deleteOffset = 0;
+	for (size_t i = 0; i < biggerCount; ++i)
 	{
-		buffer[initialOffset + offset] = datum;
-		++offset;
+		if (i < newDataSize && i < oldDataSize)
+		{
+			oldData[initialOffset + i] = newData[i];
+		}
+		else if (i < newDataSize && i >= oldDataSize)
+		{
+			oldData.insert(oldData.begin() + static_cast<long long>(initialOffset + i), newData[i]);
+		}
+		else if (i >= newDataSize && i < oldDataSize)
+		{
+			oldData.erase(oldData.begin() + static_cast<long long>(initialOffset + i - deleteOffset));
+			deleteOffset++;
+		}
+	}
+
+	for (const tinygltf::Accessor& accessor : model.accessors)
+	{
+		if (accessor.byteOffset + model.bufferViews[accessor.bufferView].byteOffset > initialOffset)
+			model.bufferViews[accessor.bufferView].byteOffset += sizeDiff;
+	}
+
+	for (const tinygltf::Image& image : model.images)
+	{
+		if (model.bufferViews[image.bufferView].byteOffset > initialOffset)
+			model.bufferViews[image.bufferView].byteOffset += sizeDiff;
+	}
+}
+
+size_t MeshProcessor::GetComponentTypeSize(const int componentType)
+{
+	switch (componentType)
+	{
+	case TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE:
+		return sizeof(unsigned char);
+	case TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT:
+		return sizeof(unsigned short);
+	case TINYGLTF_COMPONENT_TYPE_UNSIGNED_INT:
+		return sizeof(unsigned int);
+	case TINYGLTF_COMPONENT_TYPE_BYTE:
+		return sizeof(char);
+	case TINYGLTF_COMPONENT_TYPE_SHORT:
+		return sizeof(short);
+	case TINYGLTF_COMPONENT_TYPE_INT:
+		return sizeof(int);
+	default:
+		return 0;
 	}
 }

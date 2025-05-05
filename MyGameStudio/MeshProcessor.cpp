@@ -132,25 +132,18 @@ void MeshProcessor::ChangeBuffer(std::vector<uint8_t>& oldData, const uint64_t o
 	const size_t biggerCount = std::max(oldDataSize, newDataSize);
 
 	const int sizeDiff = static_cast<int>(newDataSize) - static_cast<int>(oldDataSize);
+	const int commonSize = std::min(oldDataSize, newDataSize);
 
-	size_t deleteOffset = 0;
-	for (size_t i = 0; i < biggerCount; ++i)
-	{
-		if (i < newDataSize && i < oldDataSize)
-		{
-			oldData[initialOffset + i] = newData[i];
-		}
-		else if (i < newDataSize && i >= oldDataSize)
-		{
-			oldData.insert(oldData.begin() + static_cast<long long>(initialOffset + i), newData[i]);
-		}
-		else if (i >= newDataSize && i < oldDataSize)
-		{
-			oldData.erase(oldData.begin() + static_cast<long long>(initialOffset + i - deleteOffset));
-			deleteOffset++;
-		}
-	}
+	// Memory management
+	std::copy_n(newData.begin(), commonSize, oldData.begin());
 
+	if (newDataSize > oldDataSize)
+		oldData.insert(oldData.begin() + static_cast<long long>(initialOffset + commonSize), newData.begin() + commonSize, newData.end());
+
+	if (newDataSize < oldDataSize)
+		oldData.erase(oldData.begin() + static_cast<long long>(initialOffset + newDataSize), oldData.begin() + static_cast<long long>(initialOffset + oldDataSize));
+
+	// Update metadata
 	for (const tinygltf::Accessor& accessor : model.accessors)
 	{
 		if (accessor.byteOffset + model.bufferViews[accessor.bufferView].byteOffset > initialOffset)

@@ -30,7 +30,9 @@ namespace error_const
 	const auto INTEGER_OUT_OF_BOUNDS = Err("Integer is out of bounds", 7);
 	const auto PARAMETER_IS_NULL = Err("Parameter is null", 8);
 	const auto BUFFER_OVERFLOW = Err("Buffer overflow", 9);
+	const auto MODEL_NOT_TRIANGULATED = Err("3D Model is not triangulated", 20);
 
-	constexpr auto ZIP_ERROR_CODE = 11;
 	constexpr auto DB_ERROR_CODE = 10;
+	constexpr auto ZIP_ERROR_CODE = 11;
+	constexpr auto ASSET_IMPORTATION_ERROR_CODE = 12;
 }

@@ -13,10 +13,11 @@ Err AssetPipeline::ImportAsset(const char* filepath)
 
 	// Load full file and process
 	uint64_t resultSize;
-	const uint8_t* resultBuffer = ProcessAsset(newAsset, resultSize);
+	std::string errMsg;
+	const uint8_t* resultBuffer = ProcessAsset(newAsset, resultSize, errMsg);
 
 	if (resultBuffer == nullptr)
-		return error_const::GENERIC_EXCEPTION;
+		return Err(errMsg, error_const::ASSET_IMPORTATION_ERROR_CODE);
 
 	// Save result to .zip
 	const std::string zipPath = "assets/test.zip";
@@ -89,7 +90,7 @@ Err AssetPipeline::SaveFileToZip(const char* zipPath, const char* pathInsideZip,
 	return error_const::SUCCESS;
 }
 
-uint8_t* AssetPipeline::ProcessAsset(Asset& assetMetadata, uint64_t& resultSize)
+uint8_t* AssetPipeline::ProcessAsset(Asset& assetMetadata, uint64_t& resultSize, std::string& errMsg)
 {
 	uint8_t* returnBuffer = nullptr;
 
@@ -99,7 +100,7 @@ uint8_t* AssetPipeline::ProcessAsset(Asset& assetMetadata, uint64_t& resultSize)
 		returnBuffer = ImageProcessor::ProcessImage(assetMetadata, resultSize);
 		break;
 	case enums::AssetType::mesh3d:
-		returnBuffer = MeshProcessor::ProcessMesh(assetMetadata, resultSize);
+		returnBuffer = MeshProcessor::ProcessMesh(assetMetadata, resultSize, errMsg);
 		break;
 	default:
 		returnBuffer = new uint8_t[assetMetadata.SourceSize];

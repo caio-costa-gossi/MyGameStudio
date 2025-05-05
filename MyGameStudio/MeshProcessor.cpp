@@ -5,17 +5,30 @@
 #include <tiny_gltf.h>
 
 #include "ConsoleManager.h"
+#include "LocalizationManager.h"
 
-uint8_t* MeshProcessor::ProcessMesh(const Asset& metadata, uint64_t& resultSize)
+uint8_t* MeshProcessor::ProcessMesh(const Asset& metadata, uint64_t& resultSize, std::string& errMsg)
 {
 	tinygltf::TinyGLTF loader;
 	tinygltf::Model model;
-	std::string errorMsg;
 
-	loader.LoadBinaryFromFile(&model, &errorMsg, nullptr, metadata.SourceLocation);
+	loader.LoadBinaryFromFile(&model, &errMsg, nullptr, metadata.SourceLocation);
 
+	Err error = VerifyModel(model);
+	if (error.Code())
+	{
+		errMsg = LocalizationManager::GetLocalizedString(string_const::G_NOT_TRIANGULATED);
+		return nullptr;
+	}
+
+	Triangulate(model);
 	CompressIndices(model);
 
+	return GetFileBuffer(loader, model, resultSize);
+}
+
+uint8_t* MeshProcessor::GetFileBuffer(tinygltf::TinyGLTF& loader, const tinygltf::Model& model, uint64_t& resultSize)
+{
 	std::ostringstream outputStream;
 	loader.WriteGltfSceneToStream(&model, outputStream, true, true);
 	const std::string output = outputStream.str();
@@ -25,6 +38,23 @@ uint8_t* MeshProcessor::ProcessMesh(const Asset& metadata, uint64_t& resultSize)
 	memcpy_s(resultBuffer, resultSize, output.data(), resultSize);
 
 	return resultBuffer;
+}
+
+Err MeshProcessor::VerifyModel(const tinygltf::Model& model)
+{
+	for (const tinygltf::Mesh& mesh : model.meshes)
+	{
+		for (const tinygltf::Primitive& primitive : mesh.primitives)
+			if (primitive.mode != 4 && primitive.mode != 5 && primitive.mode != 6)
+				return error_const::MODEL_NOT_TRIANGULATED;
+	}
+
+	return error_const::SUCCESS;
+}
+
+Err MeshProcessor::Triangulate(tinygltf::Model& model)
+{
+	return error_const::SUCCESS;
 }
 
 Err MeshProcessor::CompressIndices(tinygltf::Model& model)

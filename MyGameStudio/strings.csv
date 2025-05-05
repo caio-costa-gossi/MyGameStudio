@@ -12,3 +12,4 @@ language_not_found,Linguagem não encontrada: ,Language not found: ,Langue intro
 invalid_parameter,Parâmetros inválidos. Utilização correta:,Invalid parameters. Correct utilization:,Paramètres invalides. Utilisation correcte:
 use_chlang,"chlang lang={Linguagem desejada}","chlang lang={Desired language}","chlang lang={Langue desirée}"
 asset_import,Importando recurso... ,Importing asset... ,Importation de la resource... 
+not_triangulated,Modelo 3D não triangulado. Por favor configure sua ferramenta DCC para exportar o modelo utilizando triângulos.,3D Model not triangulated. Please configure your DCC tool to export your model using triangles.,Modèle 3D non triangulé. Veuillez configurer votre outil DCC pour exporter votre modéle avec des triangles.

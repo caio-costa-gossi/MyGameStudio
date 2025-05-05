@@ -59,4 +59,5 @@ namespace string_const
     const auto G_INVALID_PARAMETER = "invalid_parameter";
     const auto G_USE_CHLANG = "use_chlang";
     const auto G_ASSET_IMPORT = "asset_import";
+    const auto G_NOT_TRIANGULATED = "not_triangulated";
 }

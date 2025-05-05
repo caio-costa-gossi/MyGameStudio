@@ -22,7 +22,7 @@ int main()
 	}
 
 	//ConsoleManager::RunConsole();
-	err = AssetPipeline::ImportAsset("assets/testTest.glb");
+	err = AssetPipeline::ImportAsset("assets/testResult.glb");
 	if (err.Code() != 0)
 	{
 		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);

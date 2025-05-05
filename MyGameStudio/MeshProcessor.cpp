@@ -54,6 +54,17 @@ Err MeshProcessor::VerifyModel(const tinygltf::Model& model)
 
 Err MeshProcessor::Triangulate(tinygltf::Model& model)
 {
+	/*for (tinygltf::Mesh& mesh : model.meshes)
+	{
+		for (tinygltf::Primitive& primitive : mesh.primitives)
+		{
+			if (primitive.mode == TINYGLTF_MODE_TRIANGLE_FAN)
+			{
+				primitive.
+			}
+		}
+	}*/
+
 	return error_const::SUCCESS;
 }
 
@@ -63,9 +74,9 @@ Err MeshProcessor::CompressIndices(tinygltf::Model& model)
 	{
 		for (tinygltf::Primitive& primitive : mesh.primitives)
 		{
-			const tinygltf::Accessor accessor = model.accessors[primitive.indices];
-			tinygltf::BufferView view = model.bufferViews[accessor.bufferView];
-			tinygltf::Buffer buffer = model.buffers[view.buffer];
+			tinygltf::Accessor& accessor = model.accessors[primitive.indices];
+			tinygltf::BufferView& view = model.bufferViews[accessor.bufferView];
+			tinygltf::Buffer& buffer = model.buffers[view.buffer];
 
 			size_t indexAmount = accessor.count;
 
@@ -106,28 +117,21 @@ Err MeshProcessor::CompressIndices(tinygltf::Model& model)
 					pCompressedData[i] = static_cast<uint16_t>(indices[i]);
 			}
 
-			tinygltf::Buffer newBuffer;
-			newBuffer.data = compressedData;
-			newBuffer.uri.clear();
-			model.buffers.push_back(std::move(newBuffer));
-
-			tinygltf::BufferView newView;
-			newView.buffer = static_cast<int>(model.buffers.size() - 1);
-			newView.byteOffset = 0;
-			newView.byteLength = compressedData.size();
-			newView.target = TINYGLTF_TARGET_ELEMENT_ARRAY_BUFFER;
-			model.bufferViews.push_back(std::move(newView));
-
-			tinygltf::Accessor newAccessor;
-			newAccessor.bufferView = static_cast<int>(model.bufferViews.size() - 1);
-			newAccessor.componentType = newComponentType;
-			newAccessor.count = indexAmount;
-			newAccessor.type = accessor.type;
-			model.accessors.push_back(std::move(newAccessor));
-
-			primitive.indices = static_cast<int>(model.accessors.size() - 1);
+			ChangeBuffer(buffer.data.data(), compressedData, view.byteOffset + accessor.byteOffset);
+			accessor.componentType = newComponentType;
 		}
 	}
 
 	return error_const::SUCCESS;
+}
+
+void MeshProcessor::ChangeBuffer(uint8_t* buffer, const std::vector<uint8_t>& newData, size_t initialOffset)
+{
+	size_t offset = 0;
+
+	for (const uint8_t datum : newData)
+	{
+		buffer[initialOffset + offset] = datum;
+		++offset;
+	}
 }

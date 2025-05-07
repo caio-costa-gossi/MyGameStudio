@@ -2,6 +2,7 @@
 #include <sstream>
 
 #define TINYGLTF_IMPLEMENTATION
+#include <set>
 #include <tiny_gltf.h>
 
 #include "ConsoleManager.h"
@@ -144,16 +145,24 @@ void MeshProcessor::ChangeBuffer(std::vector<uint8_t>& oldData, const uint64_t o
 		oldData.erase(oldData.begin() + static_cast<long long>(initialOffset + newDataSize), oldData.begin() + static_cast<long long>(initialOffset + oldDataSize));
 
 	// Update metadata
+	std::set<int> updatedBuffers;
+
 	for (const tinygltf::Accessor& accessor : model.accessors)
 	{
-		if (accessor.byteOffset + model.bufferViews[accessor.bufferView].byteOffset > initialOffset)
+		if (accessor.byteOffset + model.bufferViews[accessor.bufferView].byteOffset > initialOffset && updatedBuffers.find(accessor.bufferView) == updatedBuffers.end())
+		{
 			model.bufferViews[accessor.bufferView].byteOffset += sizeDiff;
+			updatedBuffers.insert(accessor.bufferView);
+		}
 	}
 
 	for (const tinygltf::Image& image : model.images)
 	{
-		if (model.bufferViews[image.bufferView].byteOffset > initialOffset)
+		if (model.bufferViews[image.bufferView].byteOffset > initialOffset && updatedBuffers.find(image.bufferView) == updatedBuffers.end())
+		{
 			model.bufferViews[image.bufferView].byteOffset += sizeDiff;
+			updatedBuffers.insert(image.bufferView);
+		}
 	}
 }
 

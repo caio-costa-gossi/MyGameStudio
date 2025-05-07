@@ -22,8 +22,8 @@ uint8_t* MeshProcessor::ProcessMesh(const Asset& metadata, uint64_t& resultSize,
 		return nullptr;
 	}
 
-	Triangulate(model);
 	CompressIndices(model);
+	Triangulate(model);
 
 	return GetFileBuffer(loader, model, resultSize);
 }
@@ -55,16 +55,75 @@ Err MeshProcessor::VerifyModel(const tinygltf::Model& model)
 
 Err MeshProcessor::Triangulate(tinygltf::Model& model)
 {
-	/*for (tinygltf::Mesh& mesh : model.meshes)
+	for (tinygltf::Mesh& mesh : model.meshes)
 	{
 		for (tinygltf::Primitive& primitive : mesh.primitives)
 		{
-			if (primitive.mode == TINYGLTF_MODE_TRIANGLE_FAN)
+			std::vector<uint8_t> newIndices;
+			const tinygltf::Accessor accessor = model.accessors[primitive.indices];
+			const tinygltf::BufferView bufferView = model.bufferViews[accessor.bufferView];
+			tinygltf::Buffer buffer = model.buffers[bufferView.buffer];
+
+			const uint8_t* uByteIndices = buffer.data.data();
+			const uint16_t* uShortIndices = reinterpret_cast<uint16_t*>(buffer.data.data());
+
+			if (primitive.mode == TINYGLTF_MODE_TRIANGLE_FAN && accessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE)
 			{
-				primitive.
+				for (size_t i = 1; i < accessor.count - 1; ++i)
+					newIndices.insert(newIndices.end(), {uByteIndices[0], uByteIndices[i], uByteIndices[i + 1]});
 			}
+			else if (primitive.mode == TINYGLTF_MODE_TRIANGLE_FAN && accessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT)
+			{
+				newIndices.resize(accessor.count * sizeof(uint16_t) * 3);
+				uint16_t* pNewIndices = reinterpret_cast<uint16_t*>(newIndices.data());
+
+				for (size_t i = 1; i < accessor.count - 1; ++i)
+				{
+					pNewIndices[i * 3 - 3] = uShortIndices[0];
+					pNewIndices[i * 3 - 2] = uShortIndices[i];
+					pNewIndices[i * 3 - 1] = uShortIndices[i + 1];
+				}
+			}
+			else if (primitive.mode == TINYGLTF_MODE_TRIANGLE_STRIP && accessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE)
+			{
+				newIndices.reserve(accessor.count * 3);
+
+				for (size_t i = 0; i < accessor.count - 2; ++i)
+				{
+					if (i % 2 == 0)
+						newIndices.insert(newIndices.end(), { uByteIndices[i], uByteIndices[i + 1], uByteIndices[i + 2] });
+					else
+						newIndices.insert(newIndices.end(), { uByteIndices[i + 1], uByteIndices[i], uByteIndices[i + 2] });
+				}
+			}
+			else if (primitive.mode == TINYGLTF_MODE_TRIANGLE_STRIP && accessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT)
+			{
+				newIndices.resize(accessor.count * sizeof(uint16_t) * 3);
+				uint16_t* pNewIndices = reinterpret_cast<uint16_t*>(newIndices.data());
+
+				for (size_t i = 0; i < accessor.count - 2; ++i)
+				{
+					if (i % 2 == 0)
+					{
+						pNewIndices[i * 3] = uShortIndices[i];
+						pNewIndices[i * 3 + 1] = uShortIndices[i + 1];
+						pNewIndices[i * 3 + 2] = uShortIndices[i + 2];
+					}
+					else
+					{
+						pNewIndices[i * 3] = uShortIndices[i + 1];
+						pNewIndices[i * 3 + 1] = uShortIndices[i];
+						pNewIndices[i * 3 + 2] = uShortIndices[i + 2];
+					}
+				}
+			}
+			else
+				continue;
+
+			ChangeBuffer(buffer.data, accessor.count * GetComponentTypeSize(accessor.componentType), newIndices, bufferView.byteOffset + accessor.byteOffset, model);
+			primitive.mode = TINYGLTF_MODE_TRIANGLES;
 		}
-	}*/
+	}
 
 	return error_const::SUCCESS;
 }

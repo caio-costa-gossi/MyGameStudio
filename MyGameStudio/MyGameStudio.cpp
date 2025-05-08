@@ -22,12 +22,8 @@ int main()
 		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
 	}
 
-	//ConsoleManager::RunConsole();
-	err = AssetPipeline::ImportAsset("assets/test.glb");
-	if (err.Code() != 0)
-	{
-		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
-	}
+	ConsoleManager::RunConsole();
+	err = AssetPipeline::ImportAsset("assets/cubeBlender.glb");
 
 	err = EngineCoreManager::Shutdown();
 	if (err.Code() != 0)

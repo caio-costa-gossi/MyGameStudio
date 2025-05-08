@@ -117,9 +117,6 @@
     <ClCompile Include="MeshProcessor.cpp">
       <Filter>Asset Management</Filter>
     </ClCompile>
-    <ClCompile Include="GltfModel.cpp">
-      <Filter>Asset Management\Wrappers</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EngineCoreManager.h">
@@ -202,9 +199,6 @@
     </ClInclude>
     <ClInclude Include="MeshProcessor.h">
       <Filter>Asset Management</Filter>
-    </ClInclude>
-    <ClInclude Include="GltfModel.h">
-      <Filter>Asset Management\Wrappers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

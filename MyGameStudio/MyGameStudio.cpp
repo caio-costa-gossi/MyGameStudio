@@ -23,7 +23,6 @@ int main()
 	}
 
 	ConsoleManager::RunConsole();
-	err = AssetPipeline::ImportAsset("assets/cubeBlender.glb");
 
 	err = EngineCoreManager::Shutdown();
 	if (err.Code() != 0)

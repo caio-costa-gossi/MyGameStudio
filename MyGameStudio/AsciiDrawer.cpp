@@ -73,7 +73,11 @@ std::string AsciiDrawer::RightPadString(const std::string& string, const uint16_
 {
 	std::string returnString = string;
 
-	const uint16_t needToPad = charAmount - CountUtf8Characters(string);
+	const uint16_t stringCharCount = CountUtf8Characters(string);
+
+	if (stringCharCount >= charAmount) return string;
+
+	const uint16_t needToPad = charAmount - stringCharCount;
 	returnString += MultiplyString(paddingChar, needToPad);
 
 	return returnString;

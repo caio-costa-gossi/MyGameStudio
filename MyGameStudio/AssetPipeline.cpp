@@ -27,7 +27,10 @@ Err AssetPipeline::ImportAsset(const char* filepath)
 	// Register details in database
 	Err error = AssetDatabase::RegisterAsset(newAsset);
 	if (error.Code())
+	{
+		delete[] resultBuffer;
 		return error;
+	}
 
 	// Delete result buffer and return
 	delete[] resultBuffer;

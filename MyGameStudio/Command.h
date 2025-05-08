@@ -2,6 +2,8 @@
 #include <unordered_map>
 
 #include "AsciiDrawer.h"
+#include "AssetDatabase.h"
+#include "AssetPipeline.h"
 #include "ConsoleManager.h"
 #include "Err.h"
 #include "LocalizationManager.h"
@@ -37,7 +39,7 @@ public:
 	{
 		//ValidateArgs(argc, argn, argv, 1);
 
-		std::cout << AsciiDrawer::DrawBox(20, LocalizationManager::GetLocalizedString(string_const::G_HELP_COMMAND));
+		std::cout << AsciiDrawer::DrawBox(30, LocalizationManager::GetLocalizedString(string_const::G_HELP_COMMAND));
 		return error_const::SUCCESS;
 	}
 
@@ -83,4 +85,48 @@ public:
 	}
 
 	~ChangeLangCommand() override = default;
+};
+
+class ImportAssetCommand : public Command
+{
+public:
+	Err ExecuteCommand(uint8_t argc, char** argn, char** argv) override
+	{
+		const char* filepath = GetArg(argc, argn, argv, "file");
+
+		if (!ValidateArgs(argc, argn, argv, 1) || filepath == nullptr)
+		{
+			PrintUsage(string_const::G_USE_IMPORT);
+			return error_const::SUCCESS;
+		}
+
+		Err err = AssetPipeline::ImportAsset(filepath);
+		if (err.Code())
+		{
+			ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
+			return error_const::SUCCESS;
+		}
+
+		return error_const::SUCCESS;
+	}
+
+	~ImportAssetCommand() override = default;
+};
+
+class ClearAssetDbCommand : public Command
+{
+public:
+	Err ExecuteCommand(uint8_t argc, char** argn, char** argv) override
+	{
+		Err err = AssetDatabase::ClearAllTables();
+		if (err.Code())
+		{
+			ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
+			return error_const::SUCCESS;
+		}
+
+		return error_const::SUCCESS;
+	}
+
+	~ClearAssetDbCommand() override = default;
 };

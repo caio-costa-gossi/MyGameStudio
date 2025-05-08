@@ -13,8 +13,10 @@ uint8_t* MeshProcessor::ProcessMesh(const Asset& metadata, uint64_t& resultSize,
 	tinygltf::TinyGLTF loader;
 	tinygltf::Model model;
 
+	ConsoleManager::Print(std::string(LocalizationManager::GetLocalizedString(string_const::G_ASSET_IMPORT)) + "0%", enums::ConsoleMessageType::info);
 	loader.LoadBinaryFromFile(&model, &errMsg, nullptr, metadata.SourceLocation);
 
+	ConsoleManager::Print(std::string(LocalizationManager::GetLocalizedString(string_const::G_ASSET_IMPORT)) + "20%", enums::ConsoleMessageType::info);
 	Err error = VerifyModel(model);
 	if (error.Code())
 	{
@@ -22,9 +24,13 @@ uint8_t* MeshProcessor::ProcessMesh(const Asset& metadata, uint64_t& resultSize,
 		return nullptr;
 	}
 
+	ConsoleManager::Print(std::string(LocalizationManager::GetLocalizedString(string_const::G_ASSET_IMPORT)) + "40%", enums::ConsoleMessageType::info);
 	CompressIndices(model);
+
+	ConsoleManager::Print(std::string(LocalizationManager::GetLocalizedString(string_const::G_ASSET_IMPORT)) + "80%", enums::ConsoleMessageType::info);
 	Triangulate(model);
 
+	ConsoleManager::Print(std::string(LocalizationManager::GetLocalizedString(string_const::G_ASSET_IMPORT)) + "100%", enums::ConsoleMessageType::info);
 	return GetFileBuffer(loader, model, resultSize);
 }
 

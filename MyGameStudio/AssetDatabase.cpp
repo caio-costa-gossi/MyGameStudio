@@ -1,6 +1,7 @@
 #include "AssetDatabase.h"
 
 #include "ConsoleManager.h"
+#include "LocalizationManager.h"
 
 Err AssetDatabase::Startup()
 {
@@ -62,6 +63,8 @@ Asset AssetDatabase::GetAsset(const uint32_t assetId, const bool addDependencies
 
 Err AssetDatabase::RegisterAsset(const Asset& asset)
 {
+	ConsoleManager::Print(LocalizationManager::GetLocalizedString(string_const::G_ASSET_REGISTER_DB), enums::ConsoleMessageType::info);
+
 	const std::string sqlStatement("INSERT INTO Assets (Name, Extension, Type, SourceSize, ProductSize, SourceLocation, ZipLocation, LocationInZip, LastModifiedDate, CheckModifications) VALUES ('" + 
 		asset.Name + "','" +
 		asset.Extension + "','" +
@@ -94,6 +97,8 @@ Err AssetDatabase::RegisterAsset(const Asset& asset)
 		ConsoleManager::Print("Error registering asset dependencies!", enums::ConsoleMessageType::error);
 		return error;
 	}
+
+	ConsoleManager::Print(LocalizationManager::GetLocalizedString(string_const::G_ASSET_REGISTER_DB_SUCCESS) + std::to_string(newAssetId), enums::ConsoleMessageType::info);
 
 	return error_const::SUCCESS;
 }
@@ -171,6 +176,8 @@ Err AssetDatabase::ClearAllTables()
 		ConsoleManager::Print("Error clearing AssetDependencies table!\n", enums::ConsoleMessageType::error);
 		return error;
 	}
+
+	ConsoleManager::Print(LocalizationManager::GetLocalizedString(string_const::G_ASSET_CLEAR_DB), enums::ConsoleMessageType::info);
 
 	return error_const::SUCCESS;
 }

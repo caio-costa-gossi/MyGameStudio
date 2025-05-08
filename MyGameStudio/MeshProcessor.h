@@ -2,7 +2,7 @@
 #include <cstdint>
 #include "Asset.h"
 #include "Err.h"
-#include "GltfModel.h"
+#include <tiny_gltf.h>
 
 class MeshProcessor
 {

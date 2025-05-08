@@ -60,4 +60,9 @@ namespace string_const
     const auto G_USE_CHLANG = "use_chlang";
     const auto G_ASSET_IMPORT = "asset_import";
     const auto G_NOT_TRIANGULATED = "not_triangulated";
+    const auto G_USE_IMPORT = "use_import";
+    const auto G_ASSET_REGISTER_DB = "asset_register_db";
+    const auto G_ASSET_REGISTER_DB_SUCCESS = "asset_register_db_success";
+    const auto G_ASSET_CLEAR_DB = "asset_clear_db";
+    const auto G_ASSET_CLEAR_DB_CONFIRMATION = "asset_clear_db_confirmation";
 }

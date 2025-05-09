@@ -82,9 +82,9 @@ void ConsoleManager::AllocMem()
 
 void ConsoleManager::DeleteMem()
 {
-	delete argv_;
-	delete argn_;
-	delete fullCommand_;
+	delete[] argv_;
+	delete[] argn_;
+	delete[] fullCommand_;
 }
 
 

@@ -6,7 +6,8 @@ Err CommandFactory::Startup()
 	commandMap_["quit"] = new QuitCommand();
 	commandMap_["chlang"] = new ChangeLangCommand();
 	commandMap_["import"] = new ImportAssetCommand();
-	commandMap_["clear_asset_db"] = new ClearAssetDbCommand();
+	commandMap_["clrdb"] = new ClearAssetDbCommand();
+	commandMap_["lassets"] = new ListAssetsCommand();
 	commandMap_["$not_found"] = new NotFoundCommand();
 
 	return error_const::SUCCESS;

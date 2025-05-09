@@ -68,6 +68,11 @@ void ConsoleManager::Print(const std::string& message, const enums::ConsoleMessa
 	std::cout << message << "\n";
 }
 
+void ConsoleManager::PrintSimple(const std::string& message)
+{
+	std::cout << message << "\n";
+}
+
 void ConsoleManager::AllocMem()
 {
 	argv_ = new char* [16];

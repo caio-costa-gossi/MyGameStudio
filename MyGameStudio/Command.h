@@ -1,6 +1,4 @@
 #pragma once
-#include <unordered_map>
-
 #include "AsciiDrawer.h"
 #include "AssetDatabase.h"
 #include "AssetPipeline.h"
@@ -51,7 +49,7 @@ class QuitCommand : public Command
 public:
 	Err ExecuteCommand(uint8_t argc, char** argn, char** argv) override
 	{
-		std::cout << "\n" << LocalizationManager::GetLocalizedString(string_const::G_QUIT_CONSOLE) << "\n";
+		ConsoleManager::Print(std::string("\n") + LocalizationManager::GetLocalizedString(string_const::G_QUIT_CONSOLE) + "\n", enums::ConsoleMessageType::info);
 		ConsoleManager::StopConsole();
 		return error_const::SUCCESS;
 	}
@@ -74,7 +72,7 @@ public:
 
 		if (enums::StringToLanguage(lang) == enums::Language::lang_not_found)
 		{
-			std::cout << LocalizationManager::GetLocalizedString(string_const::G_LANGUAGE_NOT_FOUND) << lang << "\n";
+			ConsoleManager::PrintSimple(LocalizationManager::GetLocalizedString(string_const::G_LANGUAGE_NOT_FOUND) + std::string(lang));
 			return error_const::SUCCESS;
 		}
 
@@ -129,4 +127,22 @@ public:
 	}
 
 	~ClearAssetDbCommand() override = default;
+};
+
+class ListAssetsCommand : public Command
+{
+public:
+	Err ExecuteCommand(uint8_t argc, char** argn, char** argv) override
+	{
+		const std::vector<Asset> assets = AssetDatabase::GetAssets();
+
+		for (const Asset& asset : assets)
+		{
+			ConsoleManager::PrintSimple(asset.SourceLocation);
+		}
+
+		return error_const::SUCCESS;
+	}
+
+	~ListAssetsCommand() override = default;
 };

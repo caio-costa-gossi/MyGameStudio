@@ -34,4 +34,5 @@ public:
 	static void StopConsole();
 
 	static void Print(const std::string& message, enums::ConsoleMessageType type);
+	static void PrintSimple(const std::string& message);
 };

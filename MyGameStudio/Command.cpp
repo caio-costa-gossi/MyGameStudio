@@ -13,8 +13,8 @@ bool Command::ValidateArgs(const uint8_t argc, char** argn, char** argv, const u
 			try
 			{
 				intArgs[i] = std::stoi(argv[i]);
-			}
-			catch (std::exception& e)
+	 		}
+			catch (std::exception&)
 			{
 				return false;
 			}
@@ -26,7 +26,7 @@ bool Command::ValidateArgs(const uint8_t argc, char** argn, char** argv, const u
 			{
 				floatArgs[i] = std::stof(argv[i]);
 			}
-			catch (std::exception& e)
+			catch (std::exception&)
 			{
 				return false;
 			}

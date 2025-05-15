@@ -114,6 +114,9 @@
     <ClCompile Include="MeshProcessor.cpp">
       <Filter>Asset Management</Filter>
     </ClCompile>
+    <ClCompile Include="Table.cpp">
+      <Filter>Containers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EngineCoreManager.h">
@@ -196,6 +199,9 @@
     </ClInclude>
     <ClInclude Include="MeshProcessor.h">
       <Filter>Asset Management</Filter>
+    </ClInclude>
+    <ClInclude Include="Table.h">
+      <Filter>Containers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

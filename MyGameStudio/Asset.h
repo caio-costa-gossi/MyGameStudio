@@ -23,12 +23,12 @@ struct AssetDependency
 
 struct Asset
 {
-	uint32_t Id;
+	uint32_t Id = 0;
 	std::string Name;
 	std::string Extension;
-	enums::AssetType Type;
-	uint64_t SourceSize;
-	uint64_t ProductSize;
+	enums::AssetType Type = enums::AssetType::undefined;
+	uint64_t SourceSize = 0;
+	uint64_t ProductSize = 0;
 	std::string SourceLocation;
 	std::string ZipLocation;
 	std::string LocationInZip;

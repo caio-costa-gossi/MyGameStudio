@@ -42,7 +42,11 @@ public:
 		}
 
 		sqlite3_step(stmt);
-		return T::FromStmt(stmt);
+
+		T returnValue = T::FromStmt(stmt);
+		sqlite3_finalize(stmt);
+
+		return returnValue;
 	}
 
 	template<typename T>
@@ -74,6 +78,7 @@ public:
 			results.emplace_back(T::FromStmt(stmt));
 		}
 
+		sqlite3_finalize(stmt);
 		return results;
 	}
 };

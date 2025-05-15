@@ -192,7 +192,7 @@ void ConsoleManager::ParseCommandAlternative()
 		}
 	}
 
-	const uint16_t commandLen = std::strlen(usableCommand_);
+	const uint16_t commandLen = static_cast<uint16_t>(std::strlen(usableCommand_));
 	ReplaceWithTerminator(usableCommand_, commandLen);
 
 	argc_ = argc;

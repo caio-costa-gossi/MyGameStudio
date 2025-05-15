@@ -170,24 +170,7 @@ public:
 		}
 
 		Table table(colNames, valueData, colCount, rowCount, false);
-
-		uint32_t colIndex = 0;
-		const std::vector<std::string>& colNames2 = table.GetColNames();
-
-		while (!table.IsTableEnd())
-		{
-			std::string printString;
-			const std::string* col = table.GetNext();
-
-			printString = colNames2[colIndex] + ": \n";
-			for (uint32_t rowIndex = 0; rowIndex < table.RowCount(); rowIndex++)
-			{
-				printString += col[rowIndex] + "\n";
-			}
-
-			ConsoleManager::PrintSimple(printString);
-			colIndex++;
-		}
+		ConsoleManager::PrintSimple(AsciiDrawer::DrawTable(table));
 
 		delete[] valueData;
 		return error_const::SUCCESS;

@@ -38,6 +38,10 @@ public:
 
 	uint32_t ColCount() const { return colCount_; }
 	uint32_t RowCount() const { return rowCount_; }
+	uint32_t Current() const { return curRowCol_; }
+	bool IsRowMajor() const { return isRowMajor_; }
+
+	void ResetCursor() { curRowCol_ = 0; }
 
 	ValueType* GetNext()
 	{
@@ -45,5 +49,27 @@ public:
 			return &itemArray_[curRowCol_++ * colCount_];
 
 		return &itemArray_[curRowCol_++ * rowCount_];
+	}
+
+	void Transpose()
+	{
+		ValueType* tempArray = new ValueType[rowCount_ * colCount_];
+
+		for (uint32_t row = 0; row < rowCount_; ++row)
+		{
+			for (uint32_t col = 0; col < colCount_; ++col)
+			{
+				if (isRowMajor_)
+					tempArray[col * rowCount_ + row] = itemArray_[row * colCount_ + col];
+				else
+					tempArray[row * colCount_ + col] = itemArray_[col * rowCount_ + row];
+			}
+		}
+
+		std::copy(tempArray, tempArray + rowCount_ * colCount_, itemArray_);
+		delete[] tempArray;
+
+		curRowCol_ = 0;
+		isRowMajor_ = !isRowMajor_;
 	}
 };

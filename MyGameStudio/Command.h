@@ -133,18 +133,18 @@ public:
 class ListAssetsCommand : public Command
 {
 private:
-	static Err AssetVecToArray(const uint16_t colCount, std::string* targetData, const std::vector<Asset>& assets)
+	static Err AssetVecToArray(const uint32_t rowCount, std::string* targetData, const std::vector<Asset>& assets)
 	{
 		for (uint32_t assetIndex = 0; assetIndex < assets.size(); ++assetIndex)
 		{
-			targetData[assetIndex * colCount + 0] = std::to_string(assets[assetIndex].Id);
-			targetData[assetIndex * colCount + 1] = assets[assetIndex].Name;
-			targetData[assetIndex * colCount + 2] = assets[assetIndex].Extension;
-			targetData[assetIndex * colCount + 3] = enums::AssetTypeToString(assets[assetIndex].Type);
-			targetData[assetIndex * colCount + 4] = std::to_string(assets[assetIndex].SourceSize);
-			targetData[assetIndex * colCount + 5] = std::to_string(assets[assetIndex].ProductSize);
-			targetData[assetIndex * colCount + 6] = assets[assetIndex].SourceLocation;
-			targetData[assetIndex * colCount + 7] = assets[assetIndex].ZipLocation + "\\" + assets[assetIndex].LocationInZip;
+			targetData[0 * rowCount + assetIndex] = std::to_string(assets[assetIndex].Id);
+			targetData[1 * rowCount + assetIndex] = assets[assetIndex].Name;
+			targetData[2 * rowCount + assetIndex] = assets[assetIndex].Extension;
+			targetData[3 * rowCount + assetIndex] = enums::AssetTypeToString(assets[assetIndex].Type);
+			targetData[4 * rowCount + assetIndex] = std::to_string(assets[assetIndex].SourceSize);
+			targetData[5 * rowCount + assetIndex] = std::to_string(assets[assetIndex].ProductSize);
+			targetData[6 * rowCount + assetIndex] = assets[assetIndex].SourceLocation;
+			targetData[7 * rowCount + assetIndex] = assets[assetIndex].ZipLocation + "\\" + assets[assetIndex].LocationInZip;
 		}
 
 		return error_const::SUCCESS;
@@ -155,14 +155,13 @@ public:
 	{
 		const std::vector<Asset> assets = AssetDatabase::GetAssets();
 
-		//const std::vector<Asset> assets = { Asset() };
-
 		CsvParser parser("AssetTableCols.csv");
 		const std::vector<std::unique_ptr<char[]>>& colNames = parser.GetColumn("names");
 		const uint16_t colCount = static_cast<uint16_t>(colNames.size());
+		const uint32_t rowCount = static_cast<uint32_t>(assets.size());
 
 		auto valueData = new std::string[colCount * assets.size()];
-		Err err = AssetVecToArray(colCount, valueData, assets);
+		Err err = AssetVecToArray(rowCount, valueData, assets);
 
 		if (err.Code())
 		{
@@ -170,20 +169,24 @@ public:
 			return err;
 		}
 
-		Table table(colNames, valueData, colCount, static_cast<uint32_t>(assets.size()));
+		Table table(colNames, valueData, colCount, rowCount, false);
+
+		uint32_t colIndex = 0;
+		const std::vector<std::string>& colNames2 = table.GetColNames();
 
 		while (!table.IsTableEnd())
 		{
 			std::string printString;
-			const std::string* row = table.GetNextRow();
-			const std::vector<std::string>& colNames2 = table.GetColNames();
+			const std::string* col = table.GetNext();
 
-			for (uint32_t i = 0; i < table.ColCount(); ++i)
+			printString = colNames2[colIndex] + ": \n";
+			for (uint32_t rowIndex = 0; rowIndex < table.RowCount(); rowIndex++)
 			{
-				printString += colNames2[i] + ": " + row[i] + "\n";
+				printString += col[rowIndex] + "\n";
 			}
 
 			ConsoleManager::PrintSimple(printString);
+			colIndex++;
 		}
 
 		delete[] valueData;

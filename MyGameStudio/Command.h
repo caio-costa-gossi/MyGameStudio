@@ -50,7 +50,7 @@ class QuitCommand : public Command
 public:
 	Err ExecuteCommand(uint8_t argc, char** argn, char** argv) override
 	{
-		ConsoleManager::Print(std::string("\n") + LocalizationManager::GetLocalizedString(string_const::G_QUIT_CONSOLE) + "\n", enums::ConsoleMessageType::info);
+		ConsoleManager::Print(LocalizationManager::GetLocalizedString(string_const::G_QUIT_CONSOLE), enums::ConsoleMessageType::info);
 		ConsoleManager::StopConsole();
 		return error_const::SUCCESS;
 	}

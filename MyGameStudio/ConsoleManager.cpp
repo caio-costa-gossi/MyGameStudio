@@ -8,7 +8,7 @@ Err ConsoleManager::Startup()
 {
 	CommandFactory::Startup();
 	AllocMem();
-	//SetConsoleSize(1000, 1000);
+	SetConsoleSize(700, 700);
 	return error_const::SUCCESS;
 }
 
@@ -76,28 +76,12 @@ void ConsoleManager::PrintSimple(const std::string& message)
 
 void ConsoleManager::SetConsoleSize(const int16_t width, const int16_t height)
 {
-	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	Print("Maximizing console window...", enums::ConsoleMessageType::info);
 
-	// Primeiro: obter o tamanho atual do buffer
-	CONSOLE_SCREEN_BUFFER_INFO csbi;
-	GetConsoleScreenBufferInfo(hConsole, &csbi);
-
-	// Para evitar falha, encolher a janela primeiro (se necessário)
-	SMALL_RECT windowRect = { 0, 0, 1, 1 };
-	SetConsoleWindowInfo(hConsole, TRUE, &windowRect);
-
-	// Agora definir o novo buffer
-	COORD newSize = { static_cast<SHORT>(width), static_cast<SHORT>(height) };
-	if (!SetConsoleScreenBufferSize(hConsole, newSize)) {
-		std::cerr << "Erro ao definir buffer: " << GetLastError() << "\n";
-		return;
-	}
-
-	// E finalmente, definir a nova janela
-	SMALL_RECT windowSize = { 0, 0, static_cast<SHORT>(width - 10), static_cast<SHORT>(height - 10) };
-	if (!SetConsoleWindowInfo(hConsole, TRUE, &windowSize)) {
-		std::cerr << "Erro ao definir janela: " << GetLastError() << "\n";
-		return;
+	const HWND hConsole = GetConsoleWindow();
+	if (!ShowWindow(hConsole, SW_MAXIMIZE))
+	{
+		Print("Error maximizing console window! Please enlarge it for a better experience.", enums::ConsoleMessageType::error);
 	}
 }
 

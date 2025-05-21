@@ -18,6 +18,7 @@ private:
 	static char** argv_;
 	static char** argn_;
 
+	static void SetConsoleSize(int16_t width, int16_t height);
 	static void AllocMem();
 	static void DeleteMem();
 	static void ReceiveCommand();

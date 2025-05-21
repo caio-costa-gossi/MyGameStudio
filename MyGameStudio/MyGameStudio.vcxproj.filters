@@ -117,6 +117,9 @@
     <ClCompile Include="Table.cpp">
       <Filter>Containers</Filter>
     </ClCompile>
+    <ClCompile Include="AssetRuntimeManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EngineCoreManager.h">
@@ -202,6 +205,9 @@
     </ClInclude>
     <ClInclude Include="Table.h">
       <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetRuntimeManager.h">
+      <Filter>Managers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

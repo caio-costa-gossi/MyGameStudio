@@ -152,6 +152,7 @@
     <ClCompile Include="AssetDatabase.cpp" />
     <ClCompile Include="Asset.cpp" />
     <ClCompile Include="AssetPipeline.cpp" />
+    <ClCompile Include="AssetRuntimeManager.cpp" />
     <ClCompile Include="BaseManager.cpp" />
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="CommandFactory.cpp" />
@@ -182,6 +183,7 @@
     <ClInclude Include="AssetDatabase.h" />
     <ClInclude Include="Asset.h" />
     <ClInclude Include="AssetPipeline.h" />
+    <ClInclude Include="AssetRuntimeManager.h" />
     <ClInclude Include="BaseManager.h" />
     <ClInclude Include="Command.h" />
     <ClInclude Include="CommandFactory.h" />

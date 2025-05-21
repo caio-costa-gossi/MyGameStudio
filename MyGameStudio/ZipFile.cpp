@@ -43,7 +43,7 @@ Err ZipFile::AddFile(const uint8_t* fileContent, const size_t bufferSize, const 
 	return error_const::SUCCESS;
 }
 
-Err ZipFile::ReadFile(const char* filename, uint8_t* fileBuffer, int bufferSize, int64_t& fileSize) const
+Err ZipFile::ReadFile(const char* filename, uint8_t* fileBuffer, const int bufferSize) const
 {
 	if (!isValidFile_)
 	{
@@ -56,7 +56,7 @@ Err ZipFile::ReadFile(const char* filename, uint8_t* fileBuffer, int bufferSize,
 		return Err(std::string(zip_strerror(file_)), error_const::ZIP_ERROR_CODE);
 	}
 
-	if ((fileSize = zip_fread(openFile, fileBuffer, bufferSize)) < 0)
+	if (zip_fread(openFile, fileBuffer, bufferSize) < 0)
 	{
 		return Err(std::string(zip_strerror(file_)), error_const::ZIP_ERROR_CODE);
 	}

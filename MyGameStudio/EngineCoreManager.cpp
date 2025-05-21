@@ -2,6 +2,7 @@
 #include <windows.h>
 
 #include "AssetDatabase.h"
+#include "AssetRuntimeManager.h"
 #include "ConfigManager.h"
 #include "ConsoleManager.h"
 #include "FileManager.h"
@@ -32,6 +33,10 @@ Err EngineCoreManager::Startup()
 		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
 
 	err = AssetDatabase::Startup();
+	if (err.Code())
+		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
+
+	err = AssetRuntimeManager::Startup();
 	if (err.Code())
 		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
 

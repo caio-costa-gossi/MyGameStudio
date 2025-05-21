@@ -13,7 +13,7 @@ public:
 	~ZipFile();
 
 	Err AddFile(const uint8_t* fileContent, size_t bufferSize, const char* filename) const;
-	Err ReadFile(const char* filename, uint8_t* fileBuffer, int bufferSize, int64_t& fileSize) const;
+	Err ReadFile(const char* filename, uint8_t* fileBuffer, int bufferSize) const;
 	Err DeleteFile(const char* filename) const;
 
 	Err AddDir(const char* dirPath) const;

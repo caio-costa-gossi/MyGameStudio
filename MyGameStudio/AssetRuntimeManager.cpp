@@ -1,0 +1,32 @@
+#include "AssetRuntimeManager.h"
+
+#include "AssetDatabase.h"
+#include "ConsoleManager.h"
+#include "ZipFile.h"
+
+Err AssetRuntimeManager::Startup()
+{
+	return error_const::SUCCESS;
+}
+
+uint8_t* AssetRuntimeManager::GetAssetData(uint32_t assetId)
+{
+	if (assetData_[assetId].get() != nullptr)
+		return assetData_[assetId].get();
+
+	const Asset asset = AssetDatabase::GetAsset(assetId);
+	const ZipFile file(asset.ZipLocation.c_str());
+
+	auto pFileContent = std::make_unique<uint8_t[]>(asset.ProductSize);
+	Err err = file.ReadFile(asset.LocationInZip.c_str(), pFileContent.get(), static_cast<int>(asset.ProductSize));
+	if (err.Code())
+	{
+		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
+		return nullptr;
+	}
+
+	assetData_[assetId] = std::move(pFileContent);
+	return assetData_[assetId].get();
+}
+
+auto AssetRuntimeManager::assetData_ = std::unordered_map<uint32_t, std::unique_ptr<uint8_t[]>>();

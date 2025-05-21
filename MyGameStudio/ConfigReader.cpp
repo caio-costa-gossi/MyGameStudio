@@ -57,5 +57,3 @@ const std::unordered_map<const char*, std::unique_ptr<char[]>, CStrHash, CStrEqu
 {
 	return configMap_[object];
 }
-
-//Err ReadFile()

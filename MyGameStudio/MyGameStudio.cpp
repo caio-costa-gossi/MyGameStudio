@@ -1,5 +1,6 @@
 #include "AssetDatabase.h"
 #include "AssetPipeline.h"
+#include "AssetRuntimeManager.h"
 #include "ConsoleManager.h"
 #include "DataStream.h"
 #include "EngineCoreManager.h"

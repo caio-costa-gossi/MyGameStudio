@@ -1,5 +1,4 @@
 #include "AssetRuntimeManager.h"
-
 #include "AssetDatabase.h"
 #include "ConsoleManager.h"
 #include "ZipFile.h"
@@ -9,7 +8,7 @@ Err AssetRuntimeManager::Startup()
 	return error_const::SUCCESS;
 }
 
-uint8_t* AssetRuntimeManager::GetAssetData(uint32_t assetId)
+uint8_t* AssetRuntimeManager::LoadAsset(const uint32_t assetId)
 {
 	if (assetData_[assetId].get() != nullptr)
 		return assetData_[assetId].get();

@@ -10,5 +10,5 @@ private:
 
 public:
 	static Err Startup();
-	static uint8_t* GetAssetData(uint32_t assetId);
+	static uint8_t* LoadAsset(uint32_t assetId);
 };

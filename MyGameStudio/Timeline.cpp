@@ -2,6 +2,8 @@
 
 Timeline::Timeline(Timeline* dependsOn, const float_t scale)
 {
+	elapsed_ = std::chrono::nanoseconds::zero();
+
 	associatedTo_ = dependsOn;
 	associatedTo_->dependents_.push_back(this);
 	isAssociated_ = true;
@@ -10,7 +12,7 @@ Timeline::Timeline(Timeline* dependsOn, const float_t scale)
 	isRunning_ = dependsOn->isRunning_;
 	isStarted_ = dependsOn->isStarted_;
 	unitMeasurement_ = dependsOn->unitMeasurement_;
-	scale_ = scale;
+	scale_ = associatedTo_->scale_ * scale;
 }
 
 Err Timeline::Start(const bool bypassAssoc)
@@ -188,7 +190,7 @@ Err Timeline::Associate(Timeline* dependsOn, const float_t scale)
 	isRunning_ = dependsOn->isRunning_;
 	isStarted_ = dependsOn->isStarted_;
 	unitMeasurement_ = dependsOn->unitMeasurement_;
-	scale_ = scale;
+	scale_ = associatedTo_->scale_ * scale;
 
 	return error_const::SUCCESS;
 }

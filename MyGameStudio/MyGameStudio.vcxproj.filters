@@ -31,6 +31,9 @@
     <Filter Include="Asset Management">
       <UniqueIdentifier>{eacbcc04-2c71-412e-810b-63a170df7172}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Time Management">
+      <UniqueIdentifier>{53afcd4a-198d-42e9-a241-36661f5f63d7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MyGameStudio.cpp">
@@ -120,6 +123,9 @@
     <ClCompile Include="AssetRuntimeManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
+    <ClCompile Include="Timeline.cpp">
+      <Filter>Time Management</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EngineCoreManager.h">
@@ -208,6 +214,9 @@
     </ClInclude>
     <ClInclude Include="AssetRuntimeManager.h">
       <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Timeline.h">
+      <Filter>Time Management</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

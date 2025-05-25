@@ -31,6 +31,12 @@ namespace error_const
 	const auto PARAMETER_IS_NULL = Err("Parameter is null", 8);
 	const auto BUFFER_OVERFLOW = Err("Buffer overflow", 9);
 	const auto MODEL_NOT_TRIANGULATED = Err("3D Model is not triangulated", 20);
+	const auto TIMELINE_ALREADY_STARTED = Err("Timeline was already started!", 30);
+	const auto TIMELINE_IS_STOPPED = Err("Timeline is stopped!", 31);
+	const auto TIMELINE_IS_PAUSED = Err("Timeline is paused!", 32);
+	const auto TIMELINE_IS_RUNNING = Err("Timeline is running!", 33);
+	const auto TIMELINE_IS_ASSOCIATED = Err("Timeline is associated!", 34);
+	const auto TIMELINE_IS_NOT_ASSOCIATED = Err("Timeline is not associated!", 35);
 
 	constexpr auto DB_ERROR_CODE = 10;
 	constexpr auto ZIP_ERROR_CODE = 11;

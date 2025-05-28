@@ -162,6 +162,8 @@
     <ClCompile Include="CsvParser.cpp" />
     <ClCompile Include="DataStream.cpp" />
     <ClCompile Include="Enums.cpp" />
+    <ClCompile Include="Subscription.cpp" />
+    <ClCompile Include="EventDispatcher.cpp" />
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="HashTable.cpp" />
     <ClCompile Include="EngineCoreManager.cpp" />
@@ -195,6 +197,9 @@
     <ClInclude Include="DataStream.h" />
     <ClInclude Include="DdsHeader.h" />
     <ClInclude Include="Enums.h" />
+    <ClInclude Include="CallbackData.h" />
+    <ClInclude Include="Subscription.h" />
+    <ClInclude Include="EventDispatcher.h" />
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="HashTable.h" />
     <ClInclude Include="EngineCoreManager.h" />

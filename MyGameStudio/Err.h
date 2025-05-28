@@ -37,6 +37,7 @@ namespace error_const
 	const auto TIMELINE_IS_RUNNING = Err("Timeline is running!", 33);
 	const auto TIMELINE_IS_ASSOCIATED = Err("Timeline is associated!", 34);
 	const auto TIMELINE_IS_NOT_ASSOCIATED = Err("Timeline is not associated!", 35);
+	const auto CALLBACK_UNSUCCESSFUL = Err("Callback was not executed successfully", 60);
 
 	constexpr auto DB_ERROR_CODE = 10;
 	constexpr auto ZIP_ERROR_CODE = 11;

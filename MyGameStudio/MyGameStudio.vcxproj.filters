@@ -233,8 +233,5 @@
     <ClInclude Include="EventDispatcher.h">
       <Filter>Event Management</Filter>
     </ClInclude>
-    <ClInclude Include="CallbackData.h">
-      <Filter>Event Management</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

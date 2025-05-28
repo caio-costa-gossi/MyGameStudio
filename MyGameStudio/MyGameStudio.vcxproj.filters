@@ -27,6 +27,9 @@
     <Filter Include="Asset Management">
       <UniqueIdentifier>{eacbcc04-2c71-412e-810b-63a170df7172}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameBuilder">
+      <UniqueIdentifier>{e7137fcd-fdff-447e-b948-8e82756c7462}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MyGameStudio.cpp">
@@ -80,6 +83,9 @@
     <ClCompile Include="EngineCoreManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
+    <ClCompile Include="GameBuilder.cpp">
+      <Filter>GameBuilder</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HashTable.h">
@@ -132,6 +138,9 @@
     </ClInclude>
     <ClInclude Include="EngineCoreManager.h">
       <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="GameBuilder.h">
+      <Filter>GameBuilder</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

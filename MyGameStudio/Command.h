@@ -4,6 +4,7 @@
 #include "AssetPipeline.h"
 #include "ConsoleManager.h"
 #include "Err.h"
+#include "GameBuilder.h"
 #include "LocalizationManager.h"
 #include "Table.h"
 
@@ -177,4 +178,22 @@ public:
 	}
 
 	~ListAssetsCommand() override = default;
+};
+
+class RunGameCommand : public Command
+{
+public:
+	Err ExecuteCommand(uint8_t argc, char** argn, char** argv) override
+	{
+		Err err = GameBuilder::BuildGame();
+		if (err.Code())
+		{
+			ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
+			return error_const::SUCCESS;
+		}
+
+		return error_const::SUCCESS;
+	}
+
+	~RunGameCommand() override = default;
 };

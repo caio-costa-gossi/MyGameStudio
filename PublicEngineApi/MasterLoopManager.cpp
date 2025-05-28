@@ -34,5 +34,5 @@ Err MasterLoopManager::Stop()
 
 Err MasterLoopManager::RunGame()
 {
-	GameObjectManager
+	return error_const::SUCCESS;
 }

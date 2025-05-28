@@ -5,10 +5,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
@@ -37,21 +33,27 @@
     <Filter Include="Event Management">
       <UniqueIdentifier>{b765da7a-cb6d-4cfa-ba6c-0c3d8144fa3c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Managers\Physics">
+      <UniqueIdentifier>{47c5453d-063b-4f5a-93a0-65fa2dc34008}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Managers\Animation">
+      <UniqueIdentifier>{00caaf83-655e-43b8-bcef-bf2a0615ac89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Managers\Input">
+      <UniqueIdentifier>{261744ab-1df9-4747-9d8f-120e6843fbae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Managers\Rendering">
+      <UniqueIdentifier>{c014ac14-e87d-4b69-9222-07f60d6a5d2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Managers\GameLoop">
+      <UniqueIdentifier>{b0baa373-0746-45cc-b08f-2bd570eed280}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Managers\Base">
+      <UniqueIdentifier>{3b812eb5-bd56-4209-88cf-d24ade61ce3f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MyGameStudio.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="EngineCoreManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Err.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TestManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="BaseManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="HashTable.cpp">
@@ -135,20 +137,32 @@
     <ClCompile Include="EventDispatcher.cpp">
       <Filter>Event Management</Filter>
     </ClCompile>
+    <ClCompile Include="AnimationManager.cpp">
+      <Filter>Managers\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>Managers\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderingManager.cpp">
+      <Filter>Managers\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsManager.cpp">
+      <Filter>Managers\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="MasterLoopManager.cpp">
+      <Filter>Managers\GameLoop</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseRuntimeManager.cpp">
+      <Filter>Managers\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="EngineCoreManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Err.cpp">
+      <Filter>Helpers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="EngineCoreManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Err.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TestManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="BaseManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="HashTable.h">
       <Filter>Containers</Filter>
     </ClInclude>
@@ -232,6 +246,30 @@
     </ClInclude>
     <ClInclude Include="EventDispatcher.h">
       <Filter>Event Management</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationManager.h">
+      <Filter>Managers\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.h">
+      <Filter>Managers\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderingManager.h">
+      <Filter>Managers\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsManager.h">
+      <Filter>Managers\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="MasterLoopManager.h">
+      <Filter>Managers\GameLoop</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseRuntimeManager.h">
+      <Filter>Managers\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineCoreManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Err.h">
+      <Filter>Helpers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

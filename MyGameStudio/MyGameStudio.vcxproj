@@ -149,12 +149,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AnimationManager.cpp" />
     <ClCompile Include="AsciiDrawer.cpp" />
     <ClCompile Include="AssetDatabase.cpp" />
     <ClCompile Include="Asset.cpp" />
     <ClCompile Include="AssetPipeline.cpp" />
     <ClCompile Include="AssetRuntimeManager.cpp" />
-    <ClCompile Include="BaseManager.cpp" />
+    <ClCompile Include="BaseRuntimeManager.cpp" />
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="CommandFactory.cpp" />
     <ClCompile Include="ConfigManager.cpp" />
@@ -163,6 +164,10 @@
     <ClCompile Include="CsvParser.cpp" />
     <ClCompile Include="DataStream.cpp" />
     <ClCompile Include="Enums.cpp" />
+    <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="MasterLoopManager.cpp" />
+    <ClCompile Include="PhysicsManager.cpp" />
+    <ClCompile Include="RenderingManager.cpp" />
     <ClCompile Include="Subscription.cpp" />
     <ClCompile Include="EventDispatcher.cpp" />
     <ClCompile Include="FileManager.cpp" />
@@ -178,17 +183,17 @@
     <ClCompile Include="StringId.cpp" />
     <ClCompile Include="SystemPathHelper.cpp" />
     <ClCompile Include="Table.cpp" />
-    <ClCompile Include="TestManager.cpp" />
     <ClCompile Include="Timeline.cpp" />
     <ClCompile Include="ZipFile.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AnimationManager.h" />
     <ClInclude Include="AsciiDrawer.h" />
     <ClInclude Include="AssetDatabase.h" />
     <ClInclude Include="Asset.h" />
     <ClInclude Include="AssetPipeline.h" />
     <ClInclude Include="AssetRuntimeManager.h" />
-    <ClInclude Include="BaseManager.h" />
+    <ClInclude Include="BaseRuntimeManager.h" />
     <ClInclude Include="Command.h" />
     <ClInclude Include="CommandFactory.h" />
     <ClInclude Include="ConfigManager.h" />
@@ -198,6 +203,10 @@
     <ClInclude Include="DataStream.h" />
     <ClInclude Include="DdsHeader.h" />
     <ClInclude Include="Enums.h" />
+    <ClInclude Include="InputManager.h" />
+    <ClInclude Include="MasterLoopManager.h" />
+    <ClInclude Include="PhysicsManager.h" />
+    <ClInclude Include="RenderingManager.h" />
     <ClInclude Include="Subscription.h" />
     <ClInclude Include="EventDispatcher.h" />
     <ClInclude Include="FileManager.h" />
@@ -212,7 +221,6 @@
     <ClInclude Include="StringId.h" />
     <ClInclude Include="SystemPathHelper.h" />
     <ClInclude Include="Table.h" />
-    <ClInclude Include="TestManager.h" />
     <ClInclude Include="Timeline.h" />
     <ClInclude Include="ZipFile.h" />
   </ItemGroup>

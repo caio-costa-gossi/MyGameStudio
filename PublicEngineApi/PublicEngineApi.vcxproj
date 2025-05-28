@@ -28,7 +28,9 @@
     <ClInclude Include="Enums.h" />
     <ClInclude Include="Err.h" />
     <ClInclude Include="EventDispatcher.h" />
+    <ClInclude Include="GameConsoleManager.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GameObjectManager.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="LocalizationManager.h" />
     <ClInclude Include="MasterLoopManager.h" />
@@ -49,6 +51,8 @@
     <ClCompile Include="Enums.cpp" />
     <ClCompile Include="Err.cpp" />
     <ClCompile Include="EventDispatcher.cpp" />
+    <ClCompile Include="GameConsoleManager.cpp" />
+    <ClCompile Include="GameObjectManager.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="LocalizationManager.cpp" />
     <ClCompile Include="MasterLoopManager.cpp" />

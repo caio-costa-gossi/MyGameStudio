@@ -85,6 +85,12 @@
     <ClInclude Include="CsvParser.h">
       <Filter>Helpers</Filter>
     </ClInclude>
+    <ClInclude Include="GameObjectManager.h">
+      <Filter>Runtime Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="GameConsoleManager.h">
+      <Filter>Runtime Managers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssetRuntimeManager.cpp">
@@ -140,6 +146,12 @@
     </ClCompile>
     <ClCompile Include="CsvParser.cpp">
       <Filter>Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjectManager.cpp">
+      <Filter>Runtime Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="GameConsoleManager.cpp">
+      <Filter>Runtime Managers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

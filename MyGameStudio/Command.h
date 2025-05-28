@@ -192,6 +192,13 @@ public:
 			return error_const::SUCCESS;
 		}
 
+		err = GameBuilder::RunGame();
+		if (err.Code())
+		{
+			ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
+			return error_const::SUCCESS;
+		}
+
 		return error_const::SUCCESS;
 	}
 

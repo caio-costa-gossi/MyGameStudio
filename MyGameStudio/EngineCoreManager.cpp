@@ -6,6 +6,7 @@
 #include "ConfigManager.h"
 #include "ConsoleManager.h"
 #include "FileManager.h"
+#include "GameBuilder.h"
 #include "LocalizationManager.h"
 
 Err EngineCoreManager::Startup()
@@ -47,6 +48,7 @@ Err EngineCoreManager::Startup()
 
 Err EngineCoreManager::Config()
 {
+	// Get language
 	ConsoleManager::Print("Configuring language...", enums::ConsoleMessageType::info);
 
 	SetConsoleOutputCP(CP_UTF8);
@@ -57,6 +59,11 @@ Err EngineCoreManager::Config()
 
 	ConsoleManager::Print(LocalizationManager::GetLocalizedString(string_const::G_LANG_SELECTED) + std::string(userLanguage), enums::ConsoleMessageType::info);
 
+	// Configure CMake commands
+	ConsoleManager::Print("Configuring GameBuilder...", enums::ConsoleMessageType::info);
+	GameBuilder::Configure();
+
+	// Get version
 	const char* sysVer = ConfigManager::GetConfigForObject("global", "version");
 	if (sysVer == nullptr) sysVer = "Not found";
 	ConsoleManager::Print(LocalizationManager::GetLocalizedString(string_const::G_STARTUP_MSG) + std::string(sysVer), enums::ConsoleMessageType::info);

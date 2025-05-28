@@ -1,6 +1,5 @@
 #include "AssetRuntimeManager.h"
 #include "AssetDatabase.h"
-#include "ConsoleManager.h"
 #include "ZipFile.h"
 
 Err AssetRuntimeManager::Startup()
@@ -19,10 +18,7 @@ uint8_t* AssetRuntimeManager::LoadAsset(const uint32_t assetId)
 	auto pFileContent = std::make_unique<uint8_t[]>(asset.ProductSize);
 	Err err = file.ReadFile(asset.LocationInZip.c_str(), pFileContent.get(), static_cast<int>(asset.ProductSize));
 	if (err.Code())
-	{
-		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
 		return nullptr;
-	}
 
 	assetData_[assetId] = std::move(pFileContent);
 	return assetData_[assetId].get();

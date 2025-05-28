@@ -72,13 +72,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ExecutablePath>$(VC_ExecutablePath_x64);$(CommonExecutablePath);</ExecutablePath>
-    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(ProjectDir)\extern\lib</LibraryPath>
+    <LibraryPath>$(OutDir);$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(ProjectDir)\extern\lib</LibraryPath>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ExecutablePath>$(VC_ExecutablePath_x64);$(CommonExecutablePath);</ExecutablePath>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
-    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(ProjectDir)\extern\lib</LibraryPath>
+    <LibraryPath>$(OutDir);$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(ProjectDir)\extern\lib</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -123,7 +123,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);%appdata%\vcpkg\installed\x64-windows\lib\*.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);$(ProjectDir)extern\lib\*.lib;PublicEngineApi.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -145,84 +145,46 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);%appdata%\vcpkg\installed\x64-windows\lib\*.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);$(ProjectDir)extern\lib\*.lib;PublicEngineApi.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AnimationManager.cpp" />
     <ClCompile Include="AsciiDrawer.cpp" />
-    <ClCompile Include="AssetDatabase.cpp" />
-    <ClCompile Include="Asset.cpp" />
     <ClCompile Include="AssetPipeline.cpp" />
-    <ClCompile Include="AssetRuntimeManager.cpp" />
-    <ClCompile Include="BaseRuntimeManager.cpp" />
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="CommandFactory.cpp" />
     <ClCompile Include="ConfigManager.cpp" />
     <ClCompile Include="ConfigReader.cpp" />
     <ClCompile Include="ConsoleManager.cpp" />
-    <ClCompile Include="CsvParser.cpp" />
     <ClCompile Include="DataStream.cpp" />
-    <ClCompile Include="Enums.cpp" />
-    <ClCompile Include="InputManager.cpp" />
-    <ClCompile Include="MasterLoopManager.cpp" />
-    <ClCompile Include="PhysicsManager.cpp" />
-    <ClCompile Include="RenderingManager.cpp" />
-    <ClCompile Include="Subscription.cpp" />
-    <ClCompile Include="EventDispatcher.cpp" />
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="HashTable.cpp" />
     <ClCompile Include="EngineCoreManager.cpp" />
-    <ClCompile Include="Err.cpp" />
     <ClCompile Include="ImageProcessor.cpp" />
-    <ClCompile Include="LocalizationManager.cpp" />
     <ClCompile Include="MeshProcessor.cpp" />
     <ClCompile Include="MyGameStudio.cpp" />
-    <ClCompile Include="sqlite3.c" />
-    <ClCompile Include="SqliteDatabase.cpp" />
     <ClCompile Include="StringId.cpp" />
     <ClCompile Include="SystemPathHelper.cpp" />
     <ClCompile Include="Table.cpp" />
-    <ClCompile Include="Timeline.cpp" />
-    <ClCompile Include="ZipFile.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AnimationManager.h" />
     <ClInclude Include="AsciiDrawer.h" />
-    <ClInclude Include="AssetDatabase.h" />
-    <ClInclude Include="Asset.h" />
     <ClInclude Include="AssetPipeline.h" />
-    <ClInclude Include="AssetRuntimeManager.h" />
-    <ClInclude Include="BaseRuntimeManager.h" />
     <ClInclude Include="Command.h" />
     <ClInclude Include="CommandFactory.h" />
     <ClInclude Include="ConfigManager.h" />
     <ClInclude Include="ConfigReader.h" />
     <ClInclude Include="ConsoleManager.h" />
-    <ClInclude Include="CsvParser.h" />
     <ClInclude Include="DataStream.h" />
     <ClInclude Include="DdsHeader.h" />
-    <ClInclude Include="Enums.h" />
-    <ClInclude Include="InputManager.h" />
-    <ClInclude Include="MasterLoopManager.h" />
-    <ClInclude Include="PhysicsManager.h" />
-    <ClInclude Include="RenderingManager.h" />
-    <ClInclude Include="Subscription.h" />
-    <ClInclude Include="EventDispatcher.h" />
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="HashTable.h" />
     <ClInclude Include="EngineCoreManager.h" />
-    <ClInclude Include="Err.h" />
     <ClInclude Include="ImageProcessor.h" />
-    <ClInclude Include="LocalizationManager.h" />
     <ClInclude Include="MeshProcessor.h" />
-    <ClInclude Include="sqlite3.h" />
-    <ClInclude Include="SqliteDatabase.h" />
     <ClInclude Include="StringId.h" />
     <ClInclude Include="SystemPathHelper.h" />
     <ClInclude Include="Table.h" />
-    <ClInclude Include="Timeline.h" />
-    <ClInclude Include="ZipFile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

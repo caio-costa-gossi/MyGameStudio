@@ -1,17 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
     <Filter Include="Header Files">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Asset Management">
+      <UniqueIdentifier>{9c77d207-0dd7-4131-8de1-1f3eb72e0ec7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Helpers">
+      <UniqueIdentifier>{f4c90596-9c4a-4709-8129-2f4b1d8b42cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Runtime Managers">
+      <UniqueIdentifier>{b017bd96-ad8e-4ef8-9f7c-0370fe2e5906}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Time Management">
+      <UniqueIdentifier>{34cb79da-b5cb-42f6-9bb3-0db528aeea19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Event Management">
+      <UniqueIdentifier>{66a15330-9468-49c6-ad86-d4f6b35d1e01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Database">
+      <UniqueIdentifier>{56074c5e-694b-4a3f-9bd1-22e54222d0aa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -21,5 +31,115 @@
     <ClInclude Include="GameObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="AssetRuntimeManager.h">
+      <Filter>Asset Management</Filter>
+    </ClInclude>
+    <ClInclude Include="Err.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.h">
+      <Filter>Runtime Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="MasterLoopManager.h">
+      <Filter>Runtime Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsManager.h">
+      <Filter>Runtime Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderingManager.h">
+      <Filter>Runtime Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationManager.h">
+      <Filter>Runtime Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Timeline.h">
+      <Filter>Time Management</Filter>
+    </ClInclude>
+    <ClInclude Include="EventDispatcher.h">
+      <Filter>Event Management</Filter>
+    </ClInclude>
+    <ClInclude Include="Subscription.h">
+      <Filter>Event Management</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalizationManager.h">
+      <Filter>Runtime Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="ZipFile.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset.h">
+      <Filter>Asset Management</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetDatabase.h">
+      <Filter>Asset Management</Filter>
+    </ClInclude>
+    <ClInclude Include="SqliteDatabase.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="Enums.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="sqlite3.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="CsvParser.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AssetRuntimeManager.cpp">
+      <Filter>Asset Management</Filter>
+    </ClCompile>
+    <ClCompile Include="Err.cpp">
+      <Filter>Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>Runtime Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="MasterLoopManager.cpp">
+      <Filter>Runtime Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsManager.cpp">
+      <Filter>Runtime Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderingManager.cpp">
+      <Filter>Runtime Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationManager.cpp">
+      <Filter>Runtime Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Timeline.cpp">
+      <Filter>Time Management</Filter>
+    </ClCompile>
+    <ClCompile Include="EventDispatcher.cpp">
+      <Filter>Event Management</Filter>
+    </ClCompile>
+    <ClCompile Include="Subscription.cpp">
+      <Filter>Event Management</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalizationManager.cpp">
+      <Filter>Runtime Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="ZipFile.cpp">
+      <Filter>Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset.cpp">
+      <Filter>Asset Management</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetDatabase.cpp">
+      <Filter>Asset Management</Filter>
+    </ClCompile>
+    <ClCompile Include="SqliteDatabase.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="Enums.cpp">
+      <Filter>Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="sqlite3.c">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="CsvParser.cpp">
+      <Filter>Helpers</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

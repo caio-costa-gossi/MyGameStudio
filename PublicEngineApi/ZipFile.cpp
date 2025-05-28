@@ -1,5 +1,4 @@
 #include "ZipFile.h"
-#include "ConsoleManager.h"
 
 #undef DeleteFile
 
@@ -12,7 +11,6 @@ ZipFile::ZipFile(const char* filename)
 		zip_error_t error;
 		zip_error_init_with_code(&error, errCode);
 
-		ConsoleManager::Print("Error opening zip file '" + std::string(filename) + "': " + zip_error_strerror(&error), enums::ConsoleMessageType::error);
 		return;
 	}
 

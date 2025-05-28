@@ -27,30 +27,6 @@
     <Filter Include="Asset Management">
       <UniqueIdentifier>{eacbcc04-2c71-412e-810b-63a170df7172}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Time Management">
-      <UniqueIdentifier>{53afcd4a-198d-42e9-a241-36661f5f63d7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Event Management">
-      <UniqueIdentifier>{b765da7a-cb6d-4cfa-ba6c-0c3d8144fa3c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Managers\Physics">
-      <UniqueIdentifier>{47c5453d-063b-4f5a-93a0-65fa2dc34008}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Managers\Animation">
-      <UniqueIdentifier>{00caaf83-655e-43b8-bcef-bf2a0615ac89}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Managers\Input">
-      <UniqueIdentifier>{261744ab-1df9-4747-9d8f-120e6843fbae}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Managers\Rendering">
-      <UniqueIdentifier>{c014ac14-e87d-4b69-9222-07f60d6a5d2c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Managers\GameLoop">
-      <UniqueIdentifier>{b0baa373-0746-45cc-b08f-2bd570eed280}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Managers\Base">
-      <UniqueIdentifier>{3b812eb5-bd56-4209-88cf-d24ade61ce3f}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MyGameStudio.cpp">
@@ -62,19 +38,10 @@
     <ClCompile Include="StringId.cpp">
       <Filter>Helpers</Filter>
     </ClCompile>
-    <ClCompile Include="CsvParser.cpp">
-      <Filter>Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="Enums.cpp">
-      <Filter>Helpers</Filter>
-    </ClCompile>
     <ClCompile Include="ConfigReader.cpp">
       <Filter>Helpers</Filter>
     </ClCompile>
     <ClCompile Include="ConfigManager.cpp">
-      <Filter>Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="LocalizationManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
     <ClCompile Include="FileManager.cpp">
@@ -92,23 +59,8 @@
     <ClCompile Include="AsciiDrawer.cpp">
       <Filter>Helpers</Filter>
     </ClCompile>
-    <ClCompile Include="sqlite3.c">
-      <Filter>Database</Filter>
-    </ClCompile>
-    <ClCompile Include="SqliteDatabase.cpp">
-      <Filter>Database</Filter>
-    </ClCompile>
-    <ClCompile Include="Asset.cpp">
-      <Filter>Asset Management</Filter>
-    </ClCompile>
-    <ClCompile Include="AssetDatabase.cpp">
-      <Filter>Asset Management</Filter>
-    </ClCompile>
     <ClCompile Include="AssetPipeline.cpp">
       <Filter>Asset Management</Filter>
-    </ClCompile>
-    <ClCompile Include="ZipFile.cpp">
-      <Filter>Helpers</Filter>
     </ClCompile>
     <ClCompile Include="ImageProcessor.cpp">
       <Filter>Asset Management</Filter>
@@ -125,41 +77,8 @@
     <ClCompile Include="Table.cpp">
       <Filter>Containers</Filter>
     </ClCompile>
-    <ClCompile Include="AssetRuntimeManager.cpp">
-      <Filter>Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="Timeline.cpp">
-      <Filter>Time Management</Filter>
-    </ClCompile>
-    <ClCompile Include="Subscription.cpp">
-      <Filter>Event Management</Filter>
-    </ClCompile>
-    <ClCompile Include="EventDispatcher.cpp">
-      <Filter>Event Management</Filter>
-    </ClCompile>
-    <ClCompile Include="AnimationManager.cpp">
-      <Filter>Managers\Animation</Filter>
-    </ClCompile>
-    <ClCompile Include="InputManager.cpp">
-      <Filter>Managers\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderingManager.cpp">
-      <Filter>Managers\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysicsManager.cpp">
-      <Filter>Managers\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="MasterLoopManager.cpp">
-      <Filter>Managers\GameLoop</Filter>
-    </ClCompile>
-    <ClCompile Include="BaseRuntimeManager.cpp">
-      <Filter>Managers\Base</Filter>
-    </ClCompile>
     <ClCompile Include="EngineCoreManager.cpp">
       <Filter>Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="Err.cpp">
-      <Filter>Helpers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -169,19 +88,10 @@
     <ClInclude Include="StringId.h">
       <Filter>Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="CsvParser.h">
-      <Filter>Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="Enums.h">
-      <Filter>Helpers</Filter>
-    </ClInclude>
     <ClInclude Include="ConfigReader.h">
       <Filter>Helpers</Filter>
     </ClInclude>
     <ClInclude Include="ConfigManager.h">
-      <Filter>Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="LocalizationManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
     <ClInclude Include="FileManager.h">
@@ -199,23 +109,8 @@
     <ClInclude Include="AsciiDrawer.h">
       <Filter>Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="sqlite3.h">
-      <Filter>Database</Filter>
-    </ClInclude>
-    <ClInclude Include="SqliteDatabase.h">
-      <Filter>Database</Filter>
-    </ClInclude>
-    <ClInclude Include="Asset.h">
-      <Filter>Asset Management</Filter>
-    </ClInclude>
-    <ClInclude Include="AssetDatabase.h">
-      <Filter>Asset Management</Filter>
-    </ClInclude>
     <ClInclude Include="AssetPipeline.h">
       <Filter>Asset Management</Filter>
-    </ClInclude>
-    <ClInclude Include="ZipFile.h">
-      <Filter>Helpers</Filter>
     </ClInclude>
     <ClInclude Include="ImageProcessor.h">
       <Filter>Asset Management</Filter>
@@ -235,41 +130,8 @@
     <ClInclude Include="Table.h">
       <Filter>Containers</Filter>
     </ClInclude>
-    <ClInclude Include="AssetRuntimeManager.h">
-      <Filter>Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Timeline.h">
-      <Filter>Time Management</Filter>
-    </ClInclude>
-    <ClInclude Include="Subscription.h">
-      <Filter>Event Management</Filter>
-    </ClInclude>
-    <ClInclude Include="EventDispatcher.h">
-      <Filter>Event Management</Filter>
-    </ClInclude>
-    <ClInclude Include="AnimationManager.h">
-      <Filter>Managers\Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="InputManager.h">
-      <Filter>Managers\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderingManager.h">
-      <Filter>Managers\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsManager.h">
-      <Filter>Managers\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="MasterLoopManager.h">
-      <Filter>Managers\GameLoop</Filter>
-    </ClInclude>
-    <ClInclude Include="BaseRuntimeManager.h">
-      <Filter>Managers\Base</Filter>
-    </ClInclude>
     <ClInclude Include="EngineCoreManager.h">
       <Filter>Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Err.h">
-      <Filter>Helpers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

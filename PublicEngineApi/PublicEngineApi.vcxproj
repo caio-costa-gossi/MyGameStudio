@@ -19,8 +19,46 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AnimationManager.h" />
+    <ClInclude Include="Asset.h" />
+    <ClInclude Include="AssetDatabase.h" />
+    <ClInclude Include="AssetRuntimeManager.h" />
     <ClInclude Include="CallbackData.h" />
+    <ClInclude Include="CsvParser.h" />
+    <ClInclude Include="Enums.h" />
+    <ClInclude Include="Err.h" />
+    <ClInclude Include="EventDispatcher.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="InputManager.h" />
+    <ClInclude Include="LocalizationManager.h" />
+    <ClInclude Include="MasterLoopManager.h" />
+    <ClInclude Include="PhysicsManager.h" />
+    <ClInclude Include="RenderingManager.h" />
+    <ClInclude Include="sqlite3.h" />
+    <ClInclude Include="SqliteDatabase.h" />
+    <ClInclude Include="Subscription.h" />
+    <ClInclude Include="Timeline.h" />
+    <ClInclude Include="ZipFile.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AnimationManager.cpp" />
+    <ClCompile Include="Asset.cpp" />
+    <ClCompile Include="AssetDatabase.cpp" />
+    <ClCompile Include="AssetRuntimeManager.cpp" />
+    <ClCompile Include="CsvParser.cpp" />
+    <ClCompile Include="Enums.cpp" />
+    <ClCompile Include="Err.cpp" />
+    <ClCompile Include="EventDispatcher.cpp" />
+    <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="LocalizationManager.cpp" />
+    <ClCompile Include="MasterLoopManager.cpp" />
+    <ClCompile Include="PhysicsManager.cpp" />
+    <ClCompile Include="RenderingManager.cpp" />
+    <ClCompile Include="sqlite3.c" />
+    <ClCompile Include="SqliteDatabase.cpp" />
+    <ClCompile Include="Subscription.cpp" />
+    <ClCompile Include="Timeline.cpp" />
+    <ClCompile Include="ZipFile.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -116,6 +154,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -133,6 +172,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>

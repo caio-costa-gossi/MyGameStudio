@@ -1,7 +1,5 @@
 #include "ConsoleManager.h"
-
 #include <windows.h>
-
 #include "CommandFactory.h"
 
 Err ConsoleManager::Startup()

@@ -39,6 +39,7 @@ namespace error_const
 	const auto TIMELINE_IS_NOT_ASSOCIATED = Err("Timeline is not associated!", 35);
 	const auto CALLBACK_UNSUCCESSFUL = Err("Callback was not executed successfully", 60);
 	const auto COMMAND_UNSUCCESSFUL = Err("Command did not execute successfully", 70);
+	const auto CMAKE_NOT_PRESENT = Err("cmake.exe not found! Please install it and add the relative path to config.ini", 80);
 
 	constexpr auto DB_ERROR_CODE = 10;
 	constexpr auto ZIP_ERROR_CODE = 11;

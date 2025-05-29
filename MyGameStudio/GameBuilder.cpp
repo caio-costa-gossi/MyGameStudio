@@ -25,6 +25,10 @@ Err GameBuilder::Configure()
 
 Err GameBuilder::BuildGame()
 {
+	// Check if cmake.exe is present
+	if (!IsCmakePresent())
+		return error_const::CMAKE_NOT_PRESENT;
+
 	// Create CMakeLists.txt
 	ConsoleManager::Print("Creating CMakeLists.txt...", enums::ConsoleMessageType::info);
 	Err err = CreateCMakeLists();

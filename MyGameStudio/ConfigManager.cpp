@@ -25,11 +25,7 @@ const char* ConfigManager::GetConfig(const char* config)
 const char* ConfigManager::GetConfigForObject(const char* object, const char* config)
 {
 	const char* string = reader_.GetConfig(object, config);
-
-	if (string != nullptr)
-		return string;
-
-	return "Config N/A";
+	return string;
 }
 
 const char* ConfigManager::currentObject_;

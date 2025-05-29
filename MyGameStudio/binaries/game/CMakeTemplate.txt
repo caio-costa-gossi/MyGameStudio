@@ -2,15 +2,15 @@ cmake_minimum_required(VERSION 3.10)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 
-project(MyCoolGame VERSION 2.0)
+project(@project_name VERSION @version)
 
 file(GLOB CPP_SOURCE_FILES *.cpp)
 #file(GLOB LIB_FILES "${CMAKE_SOURCE_DIR}/extern/lib/*.lib")
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD @cpp_standard)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-add_executable(MyCoolGame ${CPP_SOURCE_FILES})
+add_executable(@project_name ${CPP_SOURCE_FILES})
 
 #target_link_libraries(MyGameStudio PUBLIC ${LIB_FILES})
 

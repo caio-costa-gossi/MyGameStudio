@@ -64,4 +64,5 @@ namespace string_const
     const auto G_ASSET_REGISTER_DB_SUCCESS = "asset_register_db_success";
     const auto G_ASSET_CLEAR_DB = "asset_clear_db";
     const auto G_ASSET_CLEAR_DB_CONFIRMATION = "asset_clear_db_confirmation";
+    const auto G_USER_SETUP = "user_setup";
 }

@@ -18,3 +18,4 @@ asset_register_db,Registrando recurso na base de dados...,Registering asset to t
 asset_register_db_success,Recurso registrado com sucesso! Novo ID: ,Asset registered successfully! New ID: ,Ressource enregistrée avec succès! Nouveau ID: 
 asset_clear_db,Base de dados de recursos apagada!,Asset database cleared!,Base de donées de ressources effacée!
 asset_clear_db_confirmation,Deseja apagar a base de dados de recursos? Ela não poderá ser recuperada.,Do you wish to clear the asset database? It cannot be recovered,Voulez-vous effacer la base de donées de ressources? Elle ne peut pas être récuperée.
+user_setup,Configurações carregadas para: ,Settings loaded for user: , Paramètres chargés pour:  

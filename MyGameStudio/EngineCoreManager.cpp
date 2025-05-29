@@ -53,20 +53,25 @@ Err EngineCoreManager::Config()
 
 	SetConsoleOutputCP(CP_UTF8);
 
-	const char* userLanguage = ConfigManager::GetConfigForObject("user", "language");
+	const char* userLanguage = ConfigManager::GetConfigForObject("global", "language");
 	if (userLanguage == nullptr) userLanguage = "en_us";
 	LocalizationManager::SetLanguage(enums::StringToLanguage(userLanguage));
 
 	ConsoleManager::Print(LocalizationManager::GetLocalizedString(string_const::G_LANG_SELECTED) + std::string(userLanguage), enums::ConsoleMessageType::info);
 
-	// Configure CMake commands
-	ConsoleManager::Print("Configuring GameBuilder...", enums::ConsoleMessageType::info);
-	GameBuilder::Configure();
-
-	// Get version
+	// Configure ConfigManager
 	const char* sysVer = ConfigManager::GetConfigForObject("global", "version");
 	if (sysVer == nullptr) sysVer = "Not found";
 	ConsoleManager::Print(LocalizationManager::GetLocalizedString(string_const::G_STARTUP_MSG) + std::string(sysVer), enums::ConsoleMessageType::info);
+
+	const char* user = ConfigManager::GetConfigForObject("global", "user");
+	if (user == nullptr) user = "user1";
+	ConfigManager::SetObject(user);
+	ConsoleManager::Print(LocalizationManager::GetLocalizedString(string_const::G_USER_SETUP) + std::string(user), enums::ConsoleMessageType::info);
+
+	// Configure CMake commands
+	ConsoleManager::Print("Configuring GameBuilder...", enums::ConsoleMessageType::info);
+	GameBuilder::Configure();
 
 	return error_const::SUCCESS;
 }

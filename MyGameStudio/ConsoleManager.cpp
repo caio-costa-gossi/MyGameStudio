@@ -72,6 +72,26 @@ void ConsoleManager::PrintSimple(const std::string& message)
 	std::cout << message << "\n";
 }
 
+void ConsoleManager::PrintInfo(const std::string& message)
+{
+	Print(message, enums::ConsoleMessageType::info);
+}
+
+void ConsoleManager::PrintError(const std::string& message)
+{
+	Print(message, enums::ConsoleMessageType::error);
+}
+
+void ConsoleManager::PrintWarning(const std::string& message)
+{
+	Print(message, enums::ConsoleMessageType::warning);
+}
+
+void ConsoleManager::PrintCritical(const std::string& message)
+{
+	Print(message, enums::ConsoleMessageType::critical_error);
+}
+
 void ConsoleManager::SetConsoleSize(const int16_t width, const int16_t height)
 {
 	Print("Maximizing console window...", enums::ConsoleMessageType::info);

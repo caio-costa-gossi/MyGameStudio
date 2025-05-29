@@ -5,6 +5,7 @@
 #include "ConsoleManager.h"
 #include "Err.h"
 #include "GameBuilder.h"
+#include "GameRuntimeTestManager.h"
 #include "LocalizationManager.h"
 #include "Table.h"
 
@@ -51,7 +52,7 @@ class QuitCommand : public Command
 public:
 	Err ExecuteCommand(uint8_t argc, char** argn, char** argv) override
 	{
-		ConsoleManager::Print(LocalizationManager::GetLocalizedString(string_const::G_QUIT_CONSOLE), enums::ConsoleMessageType::info);
+		ConsoleManager::PrintInfo(LocalizationManager::GetLocalizedString(string_const::G_QUIT_CONSOLE));
 		ConsoleManager::StopConsole();
 		return error_const::SUCCESS;
 	}
@@ -103,7 +104,7 @@ public:
 		Err err = AssetPipeline::ImportAsset(filepath);
 		if (err.Code())
 		{
-			ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
+			ConsoleManager::PrintError(err.Message());
 			return error_const::SUCCESS;
 		}
 
@@ -121,7 +122,7 @@ public:
 		Err err = AssetDatabase::ClearAllTables();
 		if (err.Code())
 		{
-			ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
+			ConsoleManager::PrintError(err.Message());
 			return error_const::SUCCESS;
 		}
 
@@ -188,14 +189,14 @@ public:
 		Err err = GameBuilder::BuildGame();
 		if (err.Code())
 		{
-			ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
+			ConsoleManager::PrintError(err.Message());
 			return error_const::SUCCESS;
 		}
 
 		err = GameBuilder::RunGame();
 		if (err.Code())
 		{
-			ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
+			ConsoleManager::PrintError(err.Message());
 			return error_const::SUCCESS;
 		}
 
@@ -203,4 +204,24 @@ public:
 	}
 
 	~RunGameCommand() override = default;
+};
+
+class QuitGameCommand : public Command
+{
+public:
+	Err ExecuteCommand(uint8_t argc, char** argn, char** argv) override
+	{
+		if (!GameRuntimeTestManager::IsGameRunning())
+		{
+			ConsoleManager::PrintError(error_const::GAME_NOT_RUNNING.Message());
+			return error_const::SUCCESS;
+		}
+
+		ConsoleManager::PrintInfo(LocalizationManager::GetLocalizedString(string_const::G_QUIT_GAME));
+		GameRuntimeTestManager::EndGameProcess();
+
+		return error_const::SUCCESS;
+	}
+
+	~QuitGameCommand() override = default;
 };

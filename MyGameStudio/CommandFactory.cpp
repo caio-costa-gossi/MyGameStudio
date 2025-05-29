@@ -9,6 +9,7 @@ Err CommandFactory::Startup()
 	commandMap_["clrdb"] = new ClearAssetDbCommand();
 	commandMap_["lassets"] = new ListAssetsCommand();
 	commandMap_["run"] = new RunGameCommand();
+	commandMap_["qgame"] = new QuitGameCommand();
 	commandMap_["$not_found"] = new NotFoundCommand();
 
 	return error_const::SUCCESS;

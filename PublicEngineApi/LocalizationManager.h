@@ -65,4 +65,10 @@ namespace string_const
     const auto G_ASSET_CLEAR_DB = "asset_clear_db";
     const auto G_ASSET_CLEAR_DB_CONFIRMATION = "asset_clear_db_confirmation";
     const auto G_USER_SETUP = "user_setup";
+    const auto G_PREPARE_BUILD_GAME = "prepare_build_game";
+    const auto G_BUILD_GAME = "build_game";
+    const auto G_RUN_GAME = "run_game";
+    const auto G_QUIT_GAME = "quit_game";
+    const auto G_BUILD_SUCCESSFUL = "build_successful";
+    const auto G_GAME_BIN_NOT_FOUND = "game_bin_not_found";
 }

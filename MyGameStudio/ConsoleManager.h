@@ -36,4 +36,8 @@ public:
 
 	static void Print(const std::string& message, enums::ConsoleMessageType type);
 	static void PrintSimple(const std::string& message);
+	static void PrintInfo(const std::string& message);
+	static void PrintWarning(const std::string& message);
+	static void PrintError(const std::string& message);
+	static void PrintCritical(const std::string& message);
 };

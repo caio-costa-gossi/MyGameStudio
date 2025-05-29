@@ -4,15 +4,15 @@
 
 PROCESS_INFORMATION TerminalFactory::CreateTerminal(const std::string& command)
 {
-	int screenWidth = GetSystemMetrics(SM_CXSCREEN);
-	int screenHeight = GetSystemMetrics(SM_CYSCREEN);
+	const int screenWidth = GetSystemMetrics(SM_CXSCREEN);
+	const int screenHeight = GetSystemMetrics(SM_CYSCREEN);
 
 	STARTUPINFOA si = 
 	{
 		sizeof(si),
 		nullptr,
 		nullptr,
-		(LPSTR) "Game Console",
+		const_cast<LPSTR>("Game Console"),
 		static_cast<DWORD>(screenWidth / 2),
 		static_cast<DWORD>(screenHeight / 2),
 		static_cast<DWORD>(screenWidth / 2),
@@ -20,12 +20,18 @@ PROCESS_INFORMATION TerminalFactory::CreateTerminal(const std::string& command)
 		0,
 		0,
 		0,
-		STARTF_USEPOSITION | STARTF_USESIZE
+		STARTF_USEPOSITION | STARTF_USESIZE,
+		0,
+		0,
+		nullptr,
+		nullptr,
+		nullptr,
+		nullptr
 	};
 
 	PROCESS_INFORMATION pi;
 
-	if (!CreateProcessA(
+	CreateProcessA(
 		nullptr,
 		const_cast<LPSTR>(command.c_str()),
 		nullptr,
@@ -36,10 +42,7 @@ PROCESS_INFORMATION TerminalFactory::CreateTerminal(const std::string& command)
 		nullptr,
 		&si,
 		&pi
-	))
-	{
-		ConsoleManager::Print("Could not create the process", enums::ConsoleMessageType::error);
-	}
+	);
 
 	return pi;
 }

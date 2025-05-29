@@ -4,6 +4,9 @@
 
 #include "ConfigManager.h"
 #include "ConsoleManager.h"
+#include "GameRuntimeTestManager.h"
+#include "LocalizationManager.h"
+#include "TerminalFactory.h"
 
 Err GameBuilder::Configure()
 {
@@ -25,39 +28,47 @@ Err GameBuilder::Configure()
 
 Err GameBuilder::BuildGame()
 {
+	// Check if game is running already
+	if (GameRuntimeTestManager::IsGameRunning())
+		return error_const::GAME_ALREADY_RUNNING;
+
 	// Check if cmake.exe is present
 	if (!IsCmakePresent())
 		return error_const::CMAKE_NOT_PRESENT;
 
 	// Create CMakeLists.txt
-	ConsoleManager::Print("Creating CMakeLists.txt...", enums::ConsoleMessageType::info);
+	ConsoleManager::PrintInfo("Creating CMakeLists.txt...");
 	Err err = CreateCMakeLists();
 	if (err.Code())
 		return err;
 
 	// Call cmake.exe
-	ConsoleManager::Print("Preparing build...", enums::ConsoleMessageType::info);
-	ConsoleManager::Print("Executing '" + prepareBuildCmd_ + "'...", enums::ConsoleMessageType::info);
+	ConsoleManager::PrintInfo(LocalizationManager::GetLocalizedString(string_const::G_PREPARE_BUILD_GAME));
+	ConsoleManager::PrintInfo("Executing '" + prepareBuildCmd_ + "'...");
 	int returnCode = std::system(prepareBuildCmd_.c_str());
 
 	if (returnCode)
 		return error_const::COMMAND_UNSUCCESSFUL;
 
 	// Call cmake build
-	ConsoleManager::Print("Building...", enums::ConsoleMessageType::info);
-	ConsoleManager::Print("Executing '" + buildCmd_ + "'...", enums::ConsoleMessageType::info);
+	ConsoleManager::PrintInfo(LocalizationManager::GetLocalizedString(string_const::G_BUILD_GAME));
+	ConsoleManager::PrintInfo("Executing '" + buildCmd_ + "'...");
 	returnCode = std::system(buildCmd_.c_str());
 
 	if (returnCode)
 		return error_const::COMMAND_UNSUCCESSFUL;
 
-	ConsoleManager::Print("Build was successful.", enums::ConsoleMessageType::info);
+	ConsoleManager::PrintInfo(LocalizationManager::GetLocalizedString(string_const::G_BUILD_SUCCESSFUL));
 	return error_const::SUCCESS;
 }
 
 Err GameBuilder::RunGame()
 {
-	ConsoleManager::Print("Running...", enums::ConsoleMessageType::info);
+	// Check if game is running already
+	if (GameRuntimeTestManager::IsGameRunning())
+		return error_const::GAME_ALREADY_RUNNING;
+
+	ConsoleManager::PrintInfo(LocalizationManager::GetLocalizedString(string_const::G_RUN_GAME));
 
 	std::string possibleExePaths[] = { "\\bin\\", "\\bin\\Debug\\", "\\bin\\Release\\" };
 
@@ -65,15 +76,18 @@ Err GameBuilder::RunGame()
 	{
 		runCmd_ = "\"" + buildDir_ + possibleExePaths[i] + projectName_ + ".exe\"";
 
-		ConsoleManager::Print("Executing '" + runCmd_ + "'...", enums::ConsoleMessageType::info);
-		int returnCode = std::system(runCmd_.c_str());
+		ConsoleManager::PrintInfo("Executing '" + runCmd_ + "'...");
+		PROCESS_INFORMATION gameProcess = TerminalFactory::CreateTerminal(runCmd_);
 
-		if (!returnCode)
+		if (gameProcess.hProcess != nullptr)
+		{
+			GameRuntimeTestManager::SetGameRunning(gameProcess);
 			break;
+		}
 
 		// Last possible path
 		if (i == 2)
-			ConsoleManager::Print("Game binary not found...", enums::ConsoleMessageType::error);
+			ConsoleManager::PrintError(LocalizationManager::GetLocalizedString(string_const::G_GAME_BIN_NOT_FOUND));
 	}
 
 	return error_const::SUCCESS;

@@ -1,6 +1,7 @@
 #include "ConsoleManager.h"
 #include "EngineCoreManager.h"
 #include "Err.h"
+#include "TerminalFactory.h"
 
 int main()
 {
@@ -17,6 +18,11 @@ int main()
 	}
 
 	ConsoleManager::RunConsole();
+	//PROCESS_INFORMATION pi = TerminalFactory::CreateTerminal("cmd.exe");
+
+	/*TerminateProcess(pi.hProcess, 0);
+	CloseHandle(pi.hThread);
+	CloseHandle(pi.hProcess);*/
 
 	err = EngineCoreManager::Shutdown();
 	if (err.Code() != 0)

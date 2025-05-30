@@ -1,5 +1,4 @@
 #include "MasterLoopManager.h"
-
 #include "GameObjectManager.h"
 
 Err MasterLoopManager::Run()
@@ -36,3 +35,5 @@ Err MasterLoopManager::RunGame()
 {
 	return error_const::SUCCESS;
 }
+
+bool MasterLoopManager::loopRunning_;

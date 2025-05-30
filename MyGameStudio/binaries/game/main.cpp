@@ -1,12 +1,14 @@
 #include <iostream>
 #include <string>
+#include "MasterLoopManager.h"
 
 int main(int argc, char** argv)
 {
-	std::string something;
+	std::cout << "Initializing game systems...\n";
+	MasterLoopManager::Startup();
 
-	std::cout << "I'm running!\n";
-	std::cin >> something;
+	std::cout << "Running game. WARNING: Loop currently executes infinitely. Please use qgame to quit it.\n";
+	MasterLoopManager::Run();
 
 	return 0;
 }

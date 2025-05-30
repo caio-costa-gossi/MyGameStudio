@@ -14,3 +14,8 @@ Err GameDebugger::Shutdown()
 {
 	return error_const::SUCCESS;
 }
+
+
+std::string GameDebugger::debuggerExePath_ = "binaries/game/debugger.exe";
+HANDLE GameDebugger::hConsoleWriteTo_;
+PROCESS_INFORMATION GameDebugger::debugConsoleInfo_;

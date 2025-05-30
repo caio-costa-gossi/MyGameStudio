@@ -21,6 +21,9 @@ Err GameRuntimeTestManager::RunGame()
 	if (err.Code())
 		return err;
 
+	// Init debug information console
+
+
 	return error_const::SUCCESS;
 }
 

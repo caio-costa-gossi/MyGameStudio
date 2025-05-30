@@ -91,7 +91,7 @@ Err GameBuilder::RunGame()
 
 		// Last possible path
 		if (i == 2)
-			ConsoleManager::PrintError(LocalizationManager::GetLocalizedString(string_const::G_GAME_BIN_NOT_FOUND));
+			return error_const::GAME_BIN_NOT_FOUND;
 	}
 
 	return error_const::SUCCESS;

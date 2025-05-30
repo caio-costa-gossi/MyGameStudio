@@ -51,6 +51,13 @@ namespace enums
 		#undef X
 	};
 
+	enum class AssetSaveType : uint8_t
+	{
+		save_to_zip,
+		save_to_assets,
+		save_to_game
+	};
+
 	enum class ConsoleMessageType : uint8_t
 	{
 		info,

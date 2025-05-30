@@ -42,6 +42,7 @@ namespace error_const
 	const auto CMAKE_NOT_PRESENT = Err("cmake.exe not found! Please install it and add the relative path to config.ini", 80);
 	const auto GAME_ALREADY_RUNNING = Err("The game is already running!", 90);
 	const auto GAME_NOT_RUNNING = Err("The game is not running yet!", 91);
+	const auto ERROR_OPEN_FILE = Err("Error opening file", 100);
 
 	constexpr auto DB_ERROR_CODE = 10;
 	constexpr auto ZIP_ERROR_CODE = 11;

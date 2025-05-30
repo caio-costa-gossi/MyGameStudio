@@ -1,4 +1,43 @@
 #include "GameRuntimeTestManager.h"
+#include "GameBuilder.h"
+
+Err GameRuntimeTestManager::RunGame()
+{
+	// Check if game is running already
+	Err err = UpdateGameProcessStatus();
+	if (err.Code())
+		return err;
+
+	if (isGameRunning_)
+		return error_const::GAME_ALREADY_RUNNING;
+
+	// Build game
+	err = GameBuilder::BuildGame();
+	if (err.Code())
+		return err;
+
+	// Run game
+	err = GameBuilder::RunGame();
+	if (err.Code())
+		return err;
+
+	return error_const::SUCCESS;
+}
+
+Err GameRuntimeTestManager::QuitGame()
+{
+	// Check if game is already stopped
+	Err err = UpdateGameProcessStatus();
+	if (err.Code())
+		return err;
+
+	if (!isGameRunning_)
+		return error_const::GAME_NOT_RUNNING;
+
+	EndGameProcess();
+
+	return error_const::SUCCESS;
+}
 
 Err GameRuntimeTestManager::SetGameRunning(const PROCESS_INFORMATION& gameProcess)
 {

@@ -97,6 +97,9 @@
     <ClInclude Include="SystemPathHelper.h">
       <Filter>Helpers</Filter>
     </ClInclude>
+    <ClInclude Include="SystemsInfoHelper.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssetRuntimeManager.cpp">
@@ -163,6 +166,9 @@
       <Filter>Helpers</Filter>
     </ClCompile>
     <ClCompile Include="SystemPathHelper.cpp">
+      <Filter>Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="SystemsInfoHelper.cpp">
       <Filter>Helpers</Filter>
     </ClCompile>
   </ItemGroup>

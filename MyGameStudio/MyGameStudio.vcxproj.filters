@@ -27,7 +27,7 @@
     <Filter Include="Asset Management">
       <UniqueIdentifier>{eacbcc04-2c71-412e-810b-63a170df7172}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameBuilder">
+    <Filter Include="GameRuntimeTest">
       <UniqueIdentifier>{e7137fcd-fdff-447e-b948-8e82756c7462}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -81,10 +81,13 @@
       <Filter>Managers</Filter>
     </ClCompile>
     <ClCompile Include="GameBuilder.cpp">
-      <Filter>GameBuilder</Filter>
+      <Filter>GameRuntimeTest</Filter>
     </ClCompile>
     <ClCompile Include="GameRuntimeTestManager.cpp">
-      <Filter>Managers</Filter>
+      <Filter>GameRuntimeTest</Filter>
+    </ClCompile>
+    <ClCompile Include="GameDebugger.cpp">
+      <Filter>GameRuntimeTest</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -137,10 +140,13 @@
       <Filter>Managers</Filter>
     </ClInclude>
     <ClInclude Include="GameBuilder.h">
-      <Filter>GameBuilder</Filter>
+      <Filter>GameRuntimeTest</Filter>
     </ClInclude>
     <ClInclude Include="GameRuntimeTestManager.h">
-      <Filter>Managers</Filter>
+      <Filter>GameRuntimeTest</Filter>
+    </ClInclude>
+    <ClInclude Include="GameDebugger.h">
+      <Filter>GameRuntimeTest</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

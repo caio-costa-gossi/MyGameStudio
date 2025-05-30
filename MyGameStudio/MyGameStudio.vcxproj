@@ -159,6 +159,7 @@
     <ClCompile Include="DataStream.cpp" />
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="GameBuilder.cpp" />
+    <ClCompile Include="GameDebugger.cpp" />
     <ClCompile Include="GameRuntimeTestManager.cpp" />
     <ClCompile Include="HashTable.cpp" />
     <ClCompile Include="EngineCoreManager.cpp" />
@@ -180,6 +181,7 @@
     <ClInclude Include="DdsHeader.h" />
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="GameBuilder.h" />
+    <ClInclude Include="GameDebugger.h" />
     <ClInclude Include="GameRuntimeTestManager.h" />
     <ClInclude Include="HashTable.h" />
     <ClInclude Include="EngineCoreManager.h" />

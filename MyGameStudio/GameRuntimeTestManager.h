@@ -8,10 +8,13 @@ private:
 	static bool isGameRunning_;
 	static PROCESS_INFORMATION gameProcessInformation_;
 
-public:
-	static Err SetGameRunning(const PROCESS_INFORMATION& gameProcess);
 	static Err EndGameProcess();
 	static Err UpdateGameProcessStatus();
 
+public:
+	static Err RunGame();
+	static Err QuitGame();
+
+	static Err SetGameRunning(const PROCESS_INFORMATION& gameProcess);
 	static bool IsGameRunning();
 };

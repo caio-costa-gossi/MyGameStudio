@@ -7,6 +7,7 @@
 #include "GameRuntimeTestManager.h"
 #include "LocalizationManager.h"
 #include "SystemPathHelper.h"
+#include "SystemsInfoHelper.h"
 #include "TerminalFactory.h"
 
 Err GameBuilder::Configure()
@@ -71,12 +72,16 @@ Err GameBuilder::RunGame()
 
 	std::string possibleExePaths[] = { "\\bin\\", "\\bin\\Debug\\", "\\bin\\Release\\" };
 
+	const uint64_t scrX = SystemsInfoHelper::GetScreenWidth();
+	const uint64_t scrY = SystemsInfoHelper::GetScreenHeight();
+
 	for (int i = 0; i < 2; ++i)
 	{
 		runCmd_ = "\"" + buildDir_ + possibleExePaths[i] + projectName_ + ".exe\"";
 
 		ConsoleManager::PrintInfo("Executing '" + runCmd_ + "'...");
-		PROCESS_INFORMATION gameProcess = TerminalFactory::CreateTerminal(runCmd_);
+		const CreateTerminalInfo info = { runCmd_, "Game Terminal", scrX / 2, scrY / 2, scrX / 2, scrY / 2 };
+		PROCESS_INFORMATION gameProcess = TerminalFactory::CreateTerminal(info, false).ProcessInfo;
 
 		if (gameProcess.hProcess != nullptr)
 		{

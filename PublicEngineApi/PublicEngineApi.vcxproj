@@ -36,6 +36,7 @@
     <ClInclude Include="MasterLoopManager.h" />
     <ClInclude Include="PhysicsManager.h" />
     <ClInclude Include="SystemPathHelper.h" />
+    <ClInclude Include="SystemsInfoHelper.h" />
     <ClInclude Include="TerminalFactory.h" />
     <ClInclude Include="RenderingManager.h" />
     <ClInclude Include="sqlite3.h" />
@@ -60,6 +61,7 @@
     <ClCompile Include="MasterLoopManager.cpp" />
     <ClCompile Include="PhysicsManager.cpp" />
     <ClCompile Include="SystemPathHelper.cpp" />
+    <ClCompile Include="SystemsInfoHelper.cpp" />
     <ClCompile Include="TerminalFactory.cpp" />
     <ClCompile Include="RenderingManager.cpp" />
     <ClCompile Include="sqlite3.c" />

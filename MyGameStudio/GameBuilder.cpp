@@ -4,6 +4,7 @@
 
 #include "ConfigManager.h"
 #include "ConsoleManager.h"
+#include "FileManager.h"
 #include "GameRuntimeTestManager.h"
 #include "LocalizationManager.h"
 #include "TerminalFactory.h"
@@ -14,6 +15,8 @@ Err GameBuilder::Configure()
 	cmakePath_ = workingDir_ + ConfigManager::GetConfig("cmake_path");
 	srcDir_ = workingDir_ + ConfigManager::GetConfig("game_source_dir");
 	buildDir_ = workingDir_ + ConfigManager::GetConfig("game_build_dir");
+	includeDir_ = workingDir_ + ConfigManager::GetConfig("include_dir");
+	libDir_ = workingDir_ + ConfigManager::GetConfig("lib_dir");
 
 	projectName_ = ConfigManager::GetConfig("game_name");
 	projectVersion_ = ConfigManager::GetConfig("game_version");
@@ -28,10 +31,6 @@ Err GameBuilder::Configure()
 
 Err GameBuilder::BuildGame()
 {
-	// Check if game is running already
-	if (GameRuntimeTestManager::IsGameRunning())
-		return error_const::GAME_ALREADY_RUNNING;
-
 	// Check if cmake.exe is present
 	if (!IsCmakePresent())
 		return error_const::CMAKE_NOT_PRESENT;
@@ -105,6 +104,9 @@ Err GameBuilder::CreateCMakeLists()
 	ReplaceInString(templateText, "@project_name", projectName_);
 	ReplaceInString(templateText, "@version", projectVersion_);
 	ReplaceInString(templateText, "@cpp_standard", cppStandard_);
+	ReplaceInString(templateText, "@include_dir", includeDir_);
+	ReplaceInString(templateText, "@lib_dir", libDir_);
+	FileManager::WinSeparatorToUnix(templateText);
 
 	targetFile << templateText;
 
@@ -138,6 +140,8 @@ std::string GameBuilder::workingDir_;
 std::string GameBuilder::cmakePath_;
 std::string GameBuilder::srcDir_;
 std::string GameBuilder::buildDir_;
+std::string GameBuilder::includeDir_;
+std::string GameBuilder::libDir_;
 
 std::string GameBuilder::projectName_;
 std::string GameBuilder::projectVersion_;

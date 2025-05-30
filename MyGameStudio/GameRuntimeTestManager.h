@@ -11,6 +11,7 @@ private:
 public:
 	static Err SetGameRunning(const PROCESS_INFORMATION& gameProcess);
 	static Err EndGameProcess();
+	static Err UpdateGameProcessStatus();
 
 	static bool IsGameRunning();
 };

@@ -186,7 +186,22 @@ class RunGameCommand : public Command
 public:
 	Err ExecuteCommand(uint8_t argc, char** argn, char** argv) override
 	{
-		Err err = GameBuilder::BuildGame();
+		// Check if game is running already
+		Err err = GameRuntimeTestManager::UpdateGameProcessStatus();
+		if (err.Code())
+		{
+			ConsoleManager::PrintError(err.Message());
+			return error_const::SUCCESS;
+		}
+
+		if (GameRuntimeTestManager::IsGameRunning())
+		{
+			ConsoleManager::PrintError(error_const::GAME_ALREADY_RUNNING.Message());
+			return error_const::SUCCESS;
+		}
+
+		// Build game
+		err = GameBuilder::BuildGame();
 		if (err.Code())
 		{
 			ConsoleManager::PrintError(err.Message());
@@ -211,6 +226,14 @@ class QuitGameCommand : public Command
 public:
 	Err ExecuteCommand(uint8_t argc, char** argn, char** argv) override
 	{
+		// Check if game is already stopped
+		Err err = GameRuntimeTestManager::UpdateGameProcessStatus();
+		if (err.Code())
+		{
+			ConsoleManager::PrintError(err.Message());
+			return error_const::SUCCESS;
+		}
+
 		if (!GameRuntimeTestManager::IsGameRunning())
 		{
 			ConsoleManager::PrintError(error_const::GAME_NOT_RUNNING.Message());

@@ -25,6 +25,23 @@ Err GameRuntimeTestManager::EndGameProcess()
 	return error_const::SUCCESS;
 }
 
+Err GameRuntimeTestManager::UpdateGameProcessStatus()
+{
+	if (!isGameRunning_)
+		return error_const::SUCCESS;
+
+	DWORD result = WaitForSingleObject(gameProcessInformation_.hProcess, 0);
+
+	if (result == WAIT_OBJECT_0)
+	{
+		CloseHandle(gameProcessInformation_.hThread);
+		CloseHandle(gameProcessInformation_.hProcess);
+		isGameRunning_ = false;
+	}
+
+	return error_const::SUCCESS;
+}
+
 bool GameRuntimeTestManager::IsGameRunning()
 {
 	return isGameRunning_;

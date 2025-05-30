@@ -1,5 +1,9 @@
 #include "GameRuntimeTestManager.h"
+
+#include <thread>
+
 #include "GameBuilder.h"
+#include "GameDebugger.h"
 
 Err GameRuntimeTestManager::RunGame()
 {
@@ -22,7 +26,13 @@ Err GameRuntimeTestManager::RunGame()
 		return err;
 
 	// Init debug information console
+	err = GameDebugger::Startup();
+	if (err.Code())
+		return err;
 
+	// Run debug information console on another thread
+	std::thread debugThread(GameDebugger::Run);
+	debugThread.detach();
 
 	return error_const::SUCCESS;
 }
@@ -37,6 +47,12 @@ Err GameRuntimeTestManager::QuitGame()
 	if (!isGameRunning_)
 		return error_const::GAME_NOT_RUNNING;
 
+	// End debugger thread
+	err = GameDebugger::Shutdown();
+	if (err.Code())
+		return err;
+
+	// End game process
 	EndGameProcess();
 
 	return error_const::SUCCESS;
@@ -72,7 +88,7 @@ Err GameRuntimeTestManager::UpdateGameProcessStatus()
 	if (!isGameRunning_)
 		return error_const::SUCCESS;
 
-	DWORD result = WaitForSingleObject(gameProcessInformation_.hProcess, 0);
+	const DWORD result = WaitForSingleObject(gameProcessInformation_.hProcess, 0);
 
 	if (result == WAIT_OBJECT_0)
 	{

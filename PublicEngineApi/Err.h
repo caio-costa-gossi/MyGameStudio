@@ -40,6 +40,7 @@ namespace error_const
 	const auto CALLBACK_UNSUCCESSFUL = Err("Callback was not executed successfully", 60);
 	const auto COMMAND_UNSUCCESSFUL = Err("Command did not execute successfully", 70);
 	const auto CMAKE_NOT_PRESENT = Err("cmake.exe not found! Please install it and add the relative path to config.ini", 80);
+	const auto CMAKE_TEMPLATE_NOT_FOUND = Err("File 'CMakeTemplate.txt' was not found. Please make sure it is in the same folder as the game source code.", 81);
 	const auto GAME_ALREADY_RUNNING = Err("The game is already running!", 90);
 	const auto GAME_NOT_RUNNING = Err("The game is not running yet!", 91);
 	const auto GAME_BIN_NOT_FOUND = Err("The game binary was not found!", 92);

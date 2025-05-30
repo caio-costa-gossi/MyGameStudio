@@ -104,8 +104,11 @@ Err GameBuilder::CreateCMakeLists()
 
 	std::stringstream buffer;
 	buffer << fileTemplate.rdbuf();
-
 	std::string templateText = buffer.str();
+
+	if (templateText.empty())
+		return error_const::CMAKE_TEMPLATE_NOT_FOUND;
+
 	ReplaceInString(templateText, "@project_name", projectName_);
 	ReplaceInString(templateText, "@version", projectVersion_);
 	ReplaceInString(templateText, "@cpp_standard", cppStandard_);

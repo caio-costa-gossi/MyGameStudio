@@ -68,9 +68,6 @@
     <ClCompile Include="ImageProcessor.cpp">
       <Filter>Asset Management</Filter>
     </ClCompile>
-    <ClCompile Include="SystemPathHelper.cpp">
-      <Filter>Helpers</Filter>
-    </ClCompile>
     <ClCompile Include="DataStream.cpp">
       <Filter>Containers</Filter>
     </ClCompile>
@@ -123,9 +120,6 @@
     </ClInclude>
     <ClInclude Include="ImageProcessor.h">
       <Filter>Asset Management</Filter>
-    </ClInclude>
-    <ClInclude Include="SystemPathHelper.h">
-      <Filter>Helpers</Filter>
     </ClInclude>
     <ClInclude Include="DataStream.h">
       <Filter>Containers</Filter>

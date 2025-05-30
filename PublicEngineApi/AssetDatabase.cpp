@@ -58,7 +58,7 @@ Asset AssetDatabase::GetAsset(const uint32_t assetId, const bool addDependencies
 
 Err AssetDatabase::RegisterAsset(const Asset& asset)
 {
-	const std::string sqlStatement("INSERT INTO Assets (Name, Extension, Type, SourceSize, ProductSize, SourceLocation, ZipLocation, LocationInZip, LastModifiedDate, CheckModifications) VALUES ('" + 
+	const std::string sqlStatement("INSERT INTO Assets (Name, Extension, Type, SourceSize, ProductSize, SourceLocation, ZipLocation, AssetLocation, LastModifiedDate, CheckModifications) VALUES ('" + 
 		asset.Name + "','" +
 		asset.Extension + "','" +
 		enums::AssetTypeToString(asset.Type) + "'," +
@@ -66,7 +66,7 @@ Err AssetDatabase::RegisterAsset(const Asset& asset)
 		std::to_string(asset.ProductSize) + ",'" +
 		asset.SourceLocation + "','" +
 		asset.ZipLocation + "','" +
-		asset.LocationInZip + "','" +
+		asset.AssetLocation + "','" +
 		asset.LastModifiedDate + "'," +
 		std::to_string(asset.CheckModifications) + ");"
 	);
@@ -98,7 +98,7 @@ Err AssetDatabase::UpdateAsset(const Asset& asset)
 		",ProductSize = " + std::to_string(asset.ProductSize) +
 		",SourceLocation = '" + asset.SourceLocation +
 		"',ZipLocation = '" + asset.ZipLocation +
-		"',LocationInZip = '" + asset.LocationInZip +
+		"',AssetLocation = '" + asset.AssetLocation +
 		"',LastModifiedDate = '" + asset.LastModifiedDate +
 		"',CheckModifications = " + std::to_string(asset.CheckModifications) +
 		" WHERE Id = " + std::to_string(asset.Id));
@@ -185,7 +185,7 @@ auto AssetDatabase::assetDbFilename_ = "Assets.db";
 auto AssetDatabase::createAssetsTableQuery_ = 
 "CREATE TABLE IF NOT EXISTS Assets "
 "(Id INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL, Extension TEXT NOT NULL, "
-"Type TEXT, SourceSize INTEGER, ProductSize INTEGER, SourceLocation TEXT UNIQUE, ZipLocation TEXT, LocationInZip TEXT, LastModifiedDate TEXT, CheckModifications INTEGER);";
+"Type TEXT, SourceSize INTEGER, ProductSize INTEGER, SourceLocation TEXT UNIQUE, ZipLocation TEXT, AssetLocation TEXT, LastModifiedDate TEXT, CheckModifications INTEGER);";
 
 auto AssetDatabase::createAssetDependenciesTableQuery_ = 
 "CREATE TABLE IF NOT EXISTS AssetDependencies "

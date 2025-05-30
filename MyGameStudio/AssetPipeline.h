@@ -14,7 +14,7 @@ public:
 	static int64_t LoadFile(const char* filepath, uint8_t* fileBuffer, uint64_t bufferSize);
 	static Err SaveFile(const char* filepath, const uint8_t* fileBuffer, uint64_t bufferSize);
 
-	static enums::AssetType GetAssetType(const uint8_t* fileBuffer, uint64_t bufferSize);
+	static enums::AssetType GetAssetType(const uint8_t* fileBuffer, uint64_t bufferSize, const std::string& extension);
 	static std::string GetTargetExtension(enums::AssetType type);
 	static enums::AssetSaveType GetSaveType(enums::AssetType type);
 

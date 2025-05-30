@@ -7,6 +7,7 @@
 #include "GameBuilder.h"
 #include "GameRuntimeTestManager.h"
 #include "LocalizationManager.h"
+#include "SystemPathHelper.h"
 #include "Table.h"
 
 class Command
@@ -146,7 +147,7 @@ private:
 			targetData[4 * rowCount + assetIndex] = std::to_string(assets[assetIndex].SourceSize);
 			targetData[5 * rowCount + assetIndex] = std::to_string(assets[assetIndex].ProductSize);
 			targetData[6 * rowCount + assetIndex] = assets[assetIndex].SourceLocation;
-			targetData[7 * rowCount + assetIndex] = assets[assetIndex].ZipLocation + "\\" + assets[assetIndex].LocationInZip;
+			targetData[7 * rowCount + assetIndex] = assets[assetIndex].ZipLocation + SystemPathHelper::GetUnixSeparator() + assets[assetIndex].AssetLocation;
 		}
 
 		return error_const::SUCCESS;

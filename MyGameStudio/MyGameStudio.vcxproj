@@ -166,7 +166,6 @@
     <ClCompile Include="MeshProcessor.cpp" />
     <ClCompile Include="MyGameStudio.cpp" />
     <ClCompile Include="StringId.cpp" />
-    <ClCompile Include="SystemPathHelper.cpp" />
     <ClCompile Include="Table.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -187,7 +186,6 @@
     <ClInclude Include="ImageProcessor.h" />
     <ClInclude Include="MeshProcessor.h" />
     <ClInclude Include="StringId.h" />
-    <ClInclude Include="SystemPathHelper.h" />
     <ClInclude Include="Table.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

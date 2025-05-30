@@ -1,12 +1,14 @@
 #include "ZipFile.h"
+#include "SystemPathHelper.h"
 
 #undef DeleteFile
 
 ZipFile::ZipFile(const char* filename)
 {
 	int errCode;
+	std::string strFilename = filename;
 
-	if ((file_ = zip_open(filename, ZIP_CREATE, &errCode)) == nullptr)
+	if ((file_ = zip_open(SystemPathHelper::RemoveRelativeSlash(strFilename).c_str(), ZIP_CREATE, &errCode)) == nullptr)
 	{
 		zip_error_t error;
 		zip_error_init_with_code(&error, errCode);

@@ -9,8 +9,12 @@
 
 Err AssetPipeline::ImportAsset(const char* filepath)
 {
+	// Standardize path separator to unix
+	std::string stdFilepath = filepath;
+	SystemPathHelper::WinSeparatorToUnix(stdFilepath);
+
 	// Load file and get metadata
-	Asset newAsset = GetAssetMetadata(filepath);
+	Asset newAsset = GetAssetMetadata(stdFilepath.c_str());
 
 	// Load full file and process
 	std::string errMsg;
@@ -84,7 +88,7 @@ Asset AssetPipeline::GetAssetMetadata(const char* filepath)
 	}
 
 	asset.SourceSize = fileSize;
-	asset.Type = GetAssetType(metadataFileBuffer.get(), 10);
+	asset.Type = GetAssetType(metadataFileBuffer.get(), 10, asset.Extension);
 
 	return asset;
 }
@@ -94,21 +98,37 @@ Err AssetPipeline::SaveResult(Asset& assetMetadata, const uint8_t* assetData)
 	if (GetSaveType(assetMetadata.Type) == enums::AssetSaveType::save_to_zip)
 	{
 		// Save to .zip
-		const std::string zipPath = "assets/test.zip";
+		assetMetadata.AssetLocation = SystemPathHelper::RemoveFileExtension(assetMetadata.Name) + GetTargetExtension(assetMetadata.Type);
+
+		std::string assetDir = ConfigManager::GetConfig("asset_dir");
+		SystemPathHelper::WinSeparatorToUnix(assetDir);
+
+		const std::string zipPath = SystemPathHelper::RemoveRelativeSlash(assetDir) + SystemPathHelper::GetUnixSeparator() + "test.zip";
 		assetMetadata.ZipLocation = zipPath;
-		SaveFileToZip(assetMetadata.ZipLocation.c_str(), assetMetadata.LocationInZip.c_str(), assetData, assetMetadata.ProductSize);
+
+		SaveFileToZip(assetMetadata.ZipLocation.c_str(), assetMetadata.AssetLocation.c_str(), assetData, assetMetadata.ProductSize);
 	}
 	else if (GetSaveType(assetMetadata.Type) == enums::AssetSaveType::save_to_assets)
 	{
 		// Save to assets folder
-		Err err = SaveFile(assetMetadata.LocationInZip.c_str(), assetData, assetMetadata.ProductSize);
+		std::string assetDir = ConfigManager::GetConfig("asset_dir");
+		SystemPathHelper::WinSeparatorToUnix(assetDir);
+		assetMetadata.AssetLocation = SystemPathHelper::RemoveRelativeSlash(assetDir) + SystemPathHelper::GetUnixSeparator() + SystemPathHelper::RemoveFileExtension(assetMetadata.Name) + GetTargetExtension(assetMetadata.Type);
+		assetMetadata.ZipLocation = "";
+
+		Err err = SaveFile(assetMetadata.AssetLocation.c_str(), assetData, assetMetadata.ProductSize);
 		if (err.Code())
 			return err;
 	}
 	else
 	{
 		// Save to game folder
-		Err err = SaveFile(std::string(ConfigManager::GetConfig("game_source_dir") + assetMetadata.Name + assetMetadata.Extension).c_str(), assetData, assetMetadata.ProductSize);
+		std::string gameDir = ConfigManager::GetConfig("game_source_dir");
+		SystemPathHelper::WinSeparatorToUnix(gameDir);
+		assetMetadata.AssetLocation = SystemPathHelper::RemoveRelativeSlash(gameDir) + SystemPathHelper::GetUnixSeparator() + SystemPathHelper::RemoveFileExtension(assetMetadata.Name) + GetTargetExtension(assetMetadata.Type);
+		assetMetadata.ZipLocation = "";
+
+		Err err = SaveFile(assetMetadata.AssetLocation.c_str(), assetData, assetMetadata.ProductSize);
 		if (err.Code())
 			return err;
 	}
@@ -150,13 +170,12 @@ uint8_t* AssetPipeline::ProcessAsset(Asset& assetMetadata, std::string& errMsg)
 		resultSize = assetMetadata.SourceSize;
 	}
 
-	assetMetadata.LocationInZip = SystemPathHelper::RemoveFileExtension(assetMetadata.Name) + GetTargetExtension(assetMetadata.Type);
 	assetMetadata.ProductSize = resultSize;
 
 	return returnBuffer;
 }
 
-enums::AssetType AssetPipeline::GetAssetType(const uint8_t* fileBuffer, uint64_t bufferSize)
+enums::AssetType AssetPipeline::GetAssetType(const uint8_t* fileBuffer, uint64_t bufferSize, const std::string& extension)
 {
 	if (fileBuffer == nullptr || bufferSize < 8)
 		return enums::AssetType::undefined;
@@ -186,6 +205,9 @@ enums::AssetType AssetPipeline::GetAssetType(const uint8_t* fileBuffer, uint64_t
 		fileBuffer[2] == 0x54 &&
 		fileBuffer[3] == 0x46)
 		return enums::AssetType::mesh3d;
+
+	if (extension == "cpp" || extension == "c")
+		return enums::AssetType::script;
 
 	return enums::AssetType::plaintext;
 }

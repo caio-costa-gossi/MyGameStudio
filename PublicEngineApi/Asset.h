@@ -31,7 +31,7 @@ struct Asset
 	uint64_t ProductSize = 0;
 	std::string SourceLocation;
 	std::string ZipLocation;
-	std::string LocationInZip;
+	std::string AssetLocation;
 	std::string LastModifiedDate;
 	bool CheckModifications = false;
 	std::vector<uint32_t> DependsOnAssets;
@@ -48,7 +48,7 @@ struct Asset
 		a.ProductSize = sqlite3_column_int64(stmt, 5);
 		a.SourceLocation = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 6)));
 		a.ZipLocation = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 7)));
-		a.LocationInZip = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 8)));
+		a.AssetLocation = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 8)));
 		a.LastModifiedDate = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 9)));
 		a.CheckModifications = sqlite3_column_int(stmt, 10);
 

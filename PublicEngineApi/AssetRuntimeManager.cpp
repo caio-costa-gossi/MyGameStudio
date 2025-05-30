@@ -16,7 +16,7 @@ uint8_t* AssetRuntimeManager::LoadAsset(const uint32_t assetId)
 	const ZipFile file(asset.ZipLocation.c_str());
 
 	auto pFileContent = std::make_unique<uint8_t[]>(asset.ProductSize);
-	Err err = file.ReadFile(asset.LocationInZip.c_str(), pFileContent.get(), static_cast<int>(asset.ProductSize));
+	Err err = file.ReadFile(asset.AssetLocation.c_str(), pFileContent.get(), static_cast<int>(asset.ProductSize));
 	if (err.Code())
 		return nullptr;
 

@@ -94,6 +94,9 @@
     <ClInclude Include="TerminalFactory.h">
       <Filter>Helpers</Filter>
     </ClInclude>
+    <ClInclude Include="SystemPathHelper.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssetRuntimeManager.cpp">
@@ -157,6 +160,9 @@
       <Filter>Runtime Managers</Filter>
     </ClCompile>
     <ClCompile Include="TerminalFactory.cpp">
+      <Filter>Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="SystemPathHelper.cpp">
       <Filter>Helpers</Filter>
     </ClCompile>
   </ItemGroup>

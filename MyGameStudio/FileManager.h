@@ -84,5 +84,4 @@ public:
 	static Err Shutdown();
 
 	static FileIoTaskJanitor ReadFileAsync(const uint8_t priority, const char* filePath, char** fileBuffer, size_t bufferSize, void(*callback)(FileIoTask*) = nullptr);
-	static Err WinSeparatorToUnix(std::string& string);
 };

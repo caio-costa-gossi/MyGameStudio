@@ -63,17 +63,6 @@ Err FileManager::RunTask(FileIoTask* task)
 	return error_const::SUCCESS;
 }
 
-Err FileManager::WinSeparatorToUnix(std::string& string)
-{
-	for (size_t i = 0; i < string.size(); ++i)
-	{
-		if (string[i] == '\\')
-			string.replace(i, 1, "/");
-	}
-
-	return error_const::SUCCESS;
-}
-
 
 auto FileManager::fileTaskQueue_ = std::priority_queue<FileIoTask*, std::vector<FileIoTask*>, FileIoTaskCompare>();
 auto FileManager::workerThreadRunning_ = false;

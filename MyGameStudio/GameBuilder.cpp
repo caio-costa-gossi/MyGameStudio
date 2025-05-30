@@ -4,9 +4,9 @@
 
 #include "ConfigManager.h"
 #include "ConsoleManager.h"
-#include "FileManager.h"
 #include "GameRuntimeTestManager.h"
 #include "LocalizationManager.h"
+#include "SystemPathHelper.h"
 #include "TerminalFactory.h"
 
 Err GameBuilder::Configure()
@@ -106,7 +106,7 @@ Err GameBuilder::CreateCMakeLists()
 	ReplaceInString(templateText, "@cpp_standard", cppStandard_);
 	ReplaceInString(templateText, "@include_dir", includeDir_);
 	ReplaceInString(templateText, "@lib_dir", libDir_);
-	FileManager::WinSeparatorToUnix(templateText);
+	SystemPathHelper::WinSeparatorToUnix(templateText);
 
 	targetFile << templateText;
 

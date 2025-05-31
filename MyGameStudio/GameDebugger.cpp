@@ -30,16 +30,12 @@ Err GameDebugger::Startup()
 
 void GameDebugger::Run()
 {
-	std::cout << "Debugger thread entered!";
-
 	while (runDebugger_)
 	{
 		// Poll information
 
 		// Write to process pipe
 	}
-
-	std::cout << "Debugger thread exited!";
 }
 
 Err GameDebugger::Shutdown()

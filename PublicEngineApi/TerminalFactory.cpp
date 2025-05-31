@@ -44,7 +44,7 @@ NewTerminal TerminalFactory::CreateTerminal(const CreateTerminalInfo& info, cons
 		const_cast<LPSTR>(info.TerminalCmd.c_str()),
 		nullptr,
 		nullptr,
-		FALSE,
+		generateCommPipe,
 		CREATE_NEW_CONSOLE,
 		nullptr,
 		nullptr,
@@ -52,5 +52,5 @@ NewTerminal TerminalFactory::CreateTerminal(const CreateTerminalInfo& info, cons
 		&pi
 	);
 
-	return NewTerminal { pi, nullptr };
+	return NewTerminal { pi, hWriteTo };
 }

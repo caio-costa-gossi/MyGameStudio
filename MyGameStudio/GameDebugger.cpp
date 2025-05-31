@@ -1,4 +1,6 @@
 #include "GameDebugger.h"
+
+#include "ConsoleManager.h"
 #include "SystemsInfoHelper.h"
 #include "TerminalFactory.h"
 
@@ -30,11 +32,18 @@ Err GameDebugger::Startup()
 
 void GameDebugger::Run()
 {
+	uint32_t bytesWritten;
+
+
 	while (runDebugger_)
 	{
 		// Poll information
 
 		// Write to process pipe
+		std::string writeString = "Test string\n";
+		WriteFile(hConsoleWriteTo_, writeString.c_str(), static_cast<uint32_t>(writeString.size()), reinterpret_cast<LPDWORD>(&bytesWritten), nullptr);
+
+		Sleep(5000);
 	}
 }
 

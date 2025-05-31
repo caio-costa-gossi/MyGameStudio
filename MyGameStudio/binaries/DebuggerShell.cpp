@@ -1,12 +1,18 @@
 #include <iostream>
+#include <string>
 #include <Windows.h>
 
 int main()
 {
+	std::cout << "Initializing debugger...\n";
+	HANDLE hInput = GetStdHandle(STD_INPUT_HANDLE);
+	char buffer[1024] = {0};
+	uint32_t bytesRead;
+
 	while (true)
 	{
-		std::cout << "The debugger is alive!\n";
-		Sleep(5000);
+		ReadFile(hInput, buffer, sizeof(buffer), reinterpret_cast<LPDWORD>(&bytesRead), nullptr);
+		std::cout << buffer;
 	}
 
 	return 0;

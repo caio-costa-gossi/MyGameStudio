@@ -1,14 +1,16 @@
 #include "GameDebugger.h"
 
 #include "ConsoleManager.h"
+#include "ProcessResourceViewer.h"
 #include "SystemsInfoHelper.h"
 #include "TerminalFactory.h"
 
-Err GameDebugger::Startup()
+Err GameDebugger::Startup(const PROCESS_INFORMATION& gameInfo)
 {
 	if (runDebugger_)
 		return error_const::GAME_DEBUGGER_ALREADY_RUNNING;
 
+	gameInfo_ = gameInfo;
 	runDebugger_ = true;
 
 	// Init debugger console
@@ -33,17 +35,19 @@ Err GameDebugger::Startup()
 void GameDebugger::Run()
 {
 	uint32_t bytesWritten;
-
+	ProcessResourceViewer resources(gameInfo_);
 
 	while (runDebugger_)
 	{
 		// Poll information
+		const float cpuPercent = resources.GetCpuUsage();
+		const int64_t ramUsage = resources.GetRamUsage();
 
 		// Write to process pipe
-		std::string writeString = "Test string\n";
+		std::string writeString = "CPU: " + std::to_string(cpuPercent) + "%, RAM: " + std::to_string(ramUsage) + "B\n";
 		WriteFile(hConsoleWriteTo_, writeString.c_str(), static_cast<uint32_t>(writeString.size()), reinterpret_cast<LPDWORD>(&bytesWritten), nullptr);
 
-		Sleep(5000);
+		Sleep(3000);
 	}
 }
 
@@ -95,3 +99,4 @@ std::atomic<bool> GameDebugger::runDebugger_ = false;
 std::string GameDebugger::debuggerExePath_ = "binaries/game/debugger.exe";
 HANDLE GameDebugger::hConsoleWriteTo_;
 PROCESS_INFORMATION GameDebugger::debugConsoleInfo_;
+PROCESS_INFORMATION GameDebugger::gameInfo_;

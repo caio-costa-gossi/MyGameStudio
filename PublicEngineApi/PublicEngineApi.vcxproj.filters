@@ -23,6 +23,9 @@
     <Filter Include="Database">
       <UniqueIdentifier>{56074c5e-694b-4a3f-9bd1-22e54222d0aa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Helpers\System">
+      <UniqueIdentifier>{f667a50e-99a7-49f3-96c8-02e5f7f8fb0d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CallbackData.h">
@@ -95,10 +98,13 @@
       <Filter>Helpers</Filter>
     </ClInclude>
     <ClInclude Include="SystemPathHelper.h">
-      <Filter>Helpers</Filter>
+      <Filter>Helpers\System</Filter>
     </ClInclude>
     <ClInclude Include="SystemsInfoHelper.h">
-      <Filter>Helpers</Filter>
+      <Filter>Helpers\System</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessResourceViewer.h">
+      <Filter>Helpers\System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -166,10 +172,13 @@
       <Filter>Helpers</Filter>
     </ClCompile>
     <ClCompile Include="SystemPathHelper.cpp">
-      <Filter>Helpers</Filter>
+      <Filter>Helpers\System</Filter>
     </ClCompile>
     <ClCompile Include="SystemsInfoHelper.cpp">
-      <Filter>Helpers</Filter>
+      <Filter>Helpers\System</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessResourceViewer.cpp">
+      <Filter>Helpers\System</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

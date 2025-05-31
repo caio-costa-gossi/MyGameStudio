@@ -26,7 +26,7 @@ Err GameRuntimeTestManager::RunGame()
 		return err;
 
 	// Init debug information console
-	err = GameDebugger::Startup();
+	err = GameDebugger::Startup(gameProcessInformation_);
 	if (err.Code())
 		return err;
 

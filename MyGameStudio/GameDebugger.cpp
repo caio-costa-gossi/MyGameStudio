@@ -3,6 +3,8 @@
 #include "ProcessResourceViewer.h"
 #include "SystemsInfoHelper.h"
 #include "TerminalFactory.h"
+#include <sstream>
+#include <iomanip>
 
 Err GameDebugger::Startup(const PROCESS_INFORMATION& gameInfo)
 {
@@ -38,14 +40,12 @@ void GameDebugger::Run()
 
 	while (runDebugger_)
 	{
-
-
 		// Poll information
 		const float cpuPercent = resources.GetCpuUsage();
 		const int64_t ramUsage = resources.GetRamUsage() / 1024;
 
 		// Write to process pipe
-		std::string writeString = "CPU: " + std::to_string(cpuPercent) + "%, RAM: " + std::to_string(ramUsage) + "KB\n";
+		std::string writeString = "CPU: " + FormatFloat(cpuPercent) + "%, RAM: " + std::to_string(ramUsage) + "KB\n";
 		WriteFile(hConsoleWriteTo_, writeString.c_str(), static_cast<uint32_t>(writeString.size()), reinterpret_cast<LPDWORD>(&bytesWritten), nullptr);
 
 		Sleep(3000);
@@ -94,6 +94,13 @@ Err GameDebugger::UpdateDebuggerProcessInfo()
 	}
 
 	return error_const::SUCCESS;
+}
+
+std::string GameDebugger::FormatFloat(const float number)
+{
+	std::ostringstream outStream;
+	outStream << std::fixed << std::setprecision(2) << number;
+	return outStream.str();
 }
 
 std::atomic<bool> GameDebugger::runDebugger_ = false;

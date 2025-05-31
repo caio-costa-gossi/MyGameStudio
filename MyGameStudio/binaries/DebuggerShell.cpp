@@ -11,8 +11,8 @@ int main()
 
 	while (true)
 	{
-		ReadFile(hInput, buffer, sizeof(buffer), reinterpret_cast<LPDWORD>(&bytesRead), nullptr);
-		std::cout << buffer;
+		ReadFile(hInput, buffer, sizeof(buffer) - 1, reinterpret_cast<LPDWORD>(&bytesRead), nullptr);
+		std::cout.write(buffer, bytesRead);
 	}
 
 	return 0;

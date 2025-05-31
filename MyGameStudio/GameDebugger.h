@@ -15,6 +15,8 @@ private:
 	static Err UpdateDebuggerProcessInfo();
 	static Err EndDebuggerProcess();
 
+	static std::string FormatFloat(float number);
+
 public:
 	static Err Startup(const PROCESS_INFORMATION& gameInfo);
 	static void Run();

@@ -12,15 +12,11 @@ int main(int argc, char** argv)
 	std::cout << "Running game. WARNING: Loop currently executes infinitely. Please use qgame to quit it.\n";
 	//MasterLoopManager::Run();
 
-	std::vector<char*> memoryBlocks;
-	while (true)
-	{
-		const size_t blockSize = 1024 * 1024;
-		char* block = new char[blockSize];
-		std::fill(block, block + blockSize, 0);
-		memoryBlocks.push_back(block);
-		Sleep(1000);
-	}
+	volatile double x = 0.0001;
+
+    while (true) {
+        x = std::exp(std::sin(std::sqrt(std::abs(std::log(x + 1e-10) + 1.0))));
+    }
 
 	return 0;
 }

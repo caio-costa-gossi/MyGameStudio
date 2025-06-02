@@ -10,13 +10,9 @@ int main(int argc, char** argv)
 	MasterLoopManager::Startup();
 
 	std::cout << "Running game. WARNING: Loop currently executes infinitely. Please use qgame to quit it.\n";
-	//MasterLoopManager::Run();
+	MasterLoopManager::Run();
 
-	volatile double x = 0.0001;
-
-    while (true) {
-        x = std::exp(std::sin(std::sqrt(std::abs(std::log(x + 1e-10) + 1.0))));
-    }
-
+	std::cout << "Shutting game down...\n";
+	MasterLoopManager::Shutdown();
 	return 0;
 }

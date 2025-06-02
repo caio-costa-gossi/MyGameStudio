@@ -37,7 +37,7 @@ float ProcessResourceViewer::GetCpuUsage()
 		lastSystemMeasure_ = newSystemMeasure;
 		lastCpuMeasure_ = newMeasure;
 
-		return static_cast<float>(processDelta) / static_cast<float>(systemDelta * numProcessors_);
+		return static_cast<float>(processDelta) / static_cast<float>(systemDelta * numProcessors_) * 100;
 	}
 
 	return -1;

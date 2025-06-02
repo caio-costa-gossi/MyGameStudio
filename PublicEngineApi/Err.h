@@ -46,6 +46,7 @@ namespace error_const
 	const auto GAME_BIN_NOT_FOUND = Err("The game binary was not found!", 92);
 	const auto GAME_DEBUGGER_ALREADY_RUNNING = Err("The game debugger is already running!", 93);
 	const auto GAME_DEBUGGER_NOT_RUNNING = Err("The game debugger is not running!", 94);
+	const auto CONSOLE_MANAGER_STARTUP_FAIL = Err("Game console manager startup failed!", 95);
 	const auto ERROR_OPEN_FILE = Err("Error opening file", 100);
 	const auto TERMINAL_OPEN_FAILURE = Err("Terminal was not created successfully", 110);
 	const auto TERMINAL_PIPE_OPEN_FAILURE = Err("Terminal communication pipeline was not created successfully", 111);

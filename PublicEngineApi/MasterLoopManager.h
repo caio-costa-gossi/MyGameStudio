@@ -6,7 +6,7 @@ class MasterLoopManager
 private:
 	static bool loopRunning_;
 
-	static Err RunGame();
+	static Err UpdateGame();
 
 public:
 	static Err Startup();

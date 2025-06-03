@@ -20,6 +20,9 @@ Err MasterLoopManager::Run()
 
 Err MasterLoopManager::Startup()
 {
+	// Main game timeline
+	mainGameTimeline_ = Timeline(timeline::MICROSECOND);
+
 	Err err = GameConsoleManager::Startup();
 	if (err.Code())
 	{
@@ -27,37 +30,69 @@ Err MasterLoopManager::Startup()
 		return err;
 	}
 
+	// Subsystem startup
 	err = InputManager::Startup();
 	if (err.Code())
-		GameConsoleManager::PrintError("Error code" + std::to_string(err.Code()) + ": " + err.Message());
+		GameConsoleManager::PrintError(err);
 
 	err = GameObjectManager::Startup();
-
+	if (err.Code())
+		GameConsoleManager::PrintError(err);
 
 	err = PhysicsManager::Startup();
-
+	if (err.Code())
+		GameConsoleManager::PrintError(err);
 
 	err = AnimationManager::Startup();
-
+	if (err.Code())
+		GameConsoleManager::PrintError(err);
 
 	err = RenderingManager::Startup();
+	if (err.Code())
+		GameConsoleManager::PrintError(err);
+
+	// Start time
+	mainGameTimeline_.Start();
 
 	return error_const::SUCCESS;
 }
 
 Err MasterLoopManager::Shutdown()
 {
-	InputManager::Shutdown();
-	GameObjectManager::Shutdown();
-	PhysicsManager::Shutdown();
-	AnimationManager::Shutdown();
-	RenderingManager::Shutdown();
+	// Stop time
+	mainGameTimeline_.Pause();
+
+	// Shutdown subsystems
+	Err err = InputManager::Shutdown();
+	if (err.Code())
+		GameConsoleManager::PrintError(err);
+
+	err = GameObjectManager::Shutdown();
+	if (err.Code())
+		GameConsoleManager::PrintError(err);
+
+	err = PhysicsManager::Shutdown();
+	if (err.Code())
+		GameConsoleManager::PrintError(err);
+
+	err = AnimationManager::Shutdown();
+	if (err.Code())
+		GameConsoleManager::PrintError(err);
+
+	err = RenderingManager::Shutdown();
+	if (err.Code())
+		GameConsoleManager::PrintError(err);
 
 	return error_const::SUCCESS;
 }
 
 Err MasterLoopManager::UpdateGame()
 {
+	// Update time
+	mainGameTimeline_.UpdateLastTime();
+	GameConsoleManager::PrintInfo("FPS: " + std::to_string(1000000 / mainGameTimeline_.GetDelta()));
+
+	// Update subsystems
 	InputManager::Update();
 	GameObjectManager::Update();
 	PhysicsManager::Update();
@@ -74,3 +109,4 @@ Err MasterLoopManager::Stop()
 }
 
 bool MasterLoopManager::loopRunning_;
+Timeline MasterLoopManager::mainGameTimeline_;

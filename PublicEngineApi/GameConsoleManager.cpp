@@ -36,7 +36,7 @@ void GameConsoleManager::PrintError(const std::string& msg)
 
 void GameConsoleManager::PrintError(const Err& err)
 {
-	PrintError("Error code: " + std::to_string(err.Code()) + " - '" + err.Message()) + "'";
+	PrintError("Error code: " + std::to_string(err.Code()) + " - '" + err.Message() + "'");
 }
 
 void GameConsoleManager::PrintCritical(const std::string& msg)

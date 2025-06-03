@@ -1,18 +1,24 @@
 #include <iostream>
-#include <string>
-#include <vector>
-#include <Windows.h>
+#include "Err.h"
 #include "MasterLoopManager.h"
+#include "GameConsoleManager.h"
 
 int main(int argc, char** argv)
 {
 	std::cout << "Initializing game systems...\n";
-	MasterLoopManager::Startup();
+	Err err = MasterLoopManager::Startup();
+	if (err.Code())
+		GameConsoleManager::PrintError(err.Message());
 
-	std::cout << "Running game. WARNING: Loop currently executes infinitely. Please use qgame to quit it.\n";
-	MasterLoopManager::Run();
+	GameConsoleManager::PrintInfo("Running game. WARNING: Loop currently executes infinitely. Please use qgame to quit it.\n");
+	err = MasterLoopManager::Run();
+	if (err.Code())
+		GameConsoleManager::PrintError(err.Message());
 
-	std::cout << "Shutting game down...\n";
-	MasterLoopManager::Shutdown();
+	GameConsoleManager::PrintInfo("Shutting game down...\n");
+	err = MasterLoopManager::Shutdown();
+	if (err.Code())
+		GameConsoleManager::PrintError(err.Message());
+
 	return 0;
 }

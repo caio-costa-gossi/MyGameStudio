@@ -10,7 +10,7 @@ private:
 
 public:
 	static Err Startup();
-	static Err Update();
+	static Err Update(uint64_t delta);
 	static Err Shutdown();
 
 	static Err AddObject(GameObject* object);

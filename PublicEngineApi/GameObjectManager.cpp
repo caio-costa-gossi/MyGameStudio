@@ -10,11 +10,11 @@ Err GameObjectManager::Shutdown()
 	return error_const::SUCCESS;
 }
 
-Err GameObjectManager::Update()
+Err GameObjectManager::Update(const uint64_t delta)
 {
 	for (GameObject* object : objectList_)
 	{
-		object->Update(nullptr);
+		object->Update(delta);
 	}
 
 	return error_const::SUCCESS;

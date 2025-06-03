@@ -90,11 +90,10 @@ Err MasterLoopManager::UpdateGame()
 {
 	// Update time
 	mainGameTimeline_.UpdateLastTime();
-	GameConsoleManager::PrintInfo("FPS: " + std::to_string(1000000 / mainGameTimeline_.GetDelta()));
 
 	// Update subsystems
 	InputManager::Update();
-	GameObjectManager::Update();
+	GameObjectManager::Update(mainGameTimeline_.GetDelta());
 	PhysicsManager::Update();
 	AnimationManager::Update();
 	RenderingManager::Update();

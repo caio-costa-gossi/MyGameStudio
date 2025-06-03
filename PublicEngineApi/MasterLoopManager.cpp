@@ -35,18 +35,22 @@ Err MasterLoopManager::Startup()
 	if (err.Code())
 		GameConsoleManager::PrintError(err);
 
-	err = GameObjectManager::Startup();
+	GameConsoleManager::PrintInfo("Starting GameObjectManager...");
+	err = GameObjectManager::Get().Startup();
 	if (err.Code())
 		GameConsoleManager::PrintError(err);
 
+	GameConsoleManager::PrintInfo("Starting PhysicsManager...");
 	err = PhysicsManager::Startup();
 	if (err.Code())
 		GameConsoleManager::PrintError(err);
 
+	GameConsoleManager::PrintInfo("Starting AnimationManager...");
 	err = AnimationManager::Startup();
 	if (err.Code())
 		GameConsoleManager::PrintError(err);
 
+	GameConsoleManager::PrintInfo("Starting RenderingManager...");
 	err = RenderingManager::Startup();
 	if (err.Code())
 		GameConsoleManager::PrintError(err);
@@ -67,7 +71,7 @@ Err MasterLoopManager::Shutdown()
 	if (err.Code())
 		GameConsoleManager::PrintError(err);
 
-	err = GameObjectManager::Shutdown();
+	err = GameObjectManager::Get().Shutdown();
 	if (err.Code())
 		GameConsoleManager::PrintError(err);
 
@@ -93,7 +97,7 @@ Err MasterLoopManager::UpdateGame()
 
 	// Update subsystems
 	InputManager::Update();
-	GameObjectManager::Update(mainGameTimeline_.GetDelta());
+	GameObjectManager::Get().Update(mainGameTimeline_.GetDelta());
 	PhysicsManager::Update();
 	AnimationManager::Update();
 	RenderingManager::Update();

@@ -1,7 +1,20 @@
 #include "GameObjectManager.h"
 
+GameObjectManager& GameObjectManager::Get()
+{
+	static GameObjectManager instance;
+	return instance;
+}
+
 Err GameObjectManager::Startup()
 {
+	for (GameObjectFactory* factory : factoryList_)
+	{
+		GameObject* newObject = factory->Get();
+		newObject->SetPos({ 1,1 });
+		objectList_.push_back(newObject);
+	}
+
 	return error_const::SUCCESS;
 }
 
@@ -10,7 +23,7 @@ Err GameObjectManager::Shutdown()
 	return error_const::SUCCESS;
 }
 
-Err GameObjectManager::Update(const uint64_t delta)
+Err GameObjectManager::Update(const uint64_t delta) const
 {
 	for (GameObject* object : objectList_)
 	{
@@ -20,11 +33,8 @@ Err GameObjectManager::Update(const uint64_t delta)
 	return error_const::SUCCESS;
 }
 
-Err GameObjectManager::AddObject(GameObject* object)
+Err GameObjectManager::AddFactory(GameObjectFactory* factory)
 {
-	objectList_.push_back(object);
+	factoryList_.push_back(factory);
 	return error_const::SUCCESS;
 }
-
-
-auto GameObjectManager::objectList_ = std::vector<GameObject*>();

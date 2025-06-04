@@ -5,6 +5,8 @@
 class UserScriptProcessor
 {
 private:
+	static std::string registerClassText_;
+
 	static Err LoadFile(const std::string& filepath, uint8_t* fileBuffer, uint64_t bufferSize);
 
 public:

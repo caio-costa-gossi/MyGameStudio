@@ -92,6 +92,9 @@
     <ClCompile Include="UserScriptProcessor.cpp">
       <Filter>Asset Management</Filter>
     </ClCompile>
+    <ClCompile Include="StringUtils.cpp">
+      <Filter>Helpers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HashTable.h">
@@ -153,6 +156,9 @@
     </ClInclude>
     <ClInclude Include="UserScriptProcessor.h">
       <Filter>Asset Management</Filter>
+    </ClInclude>
+    <ClInclude Include="StringUtils.h">
+      <Filter>Helpers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

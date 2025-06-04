@@ -16,7 +16,7 @@ public:
 	static GameObjectManager& Get();
 
 	Err Startup();
-	Err Update(uint64_t delta) const;
+	void Update(uint64_t delta) const;
 	Err Shutdown();
 
 	Err AddFactory(GameObjectFactory* factory);

@@ -23,14 +23,12 @@ Err GameObjectManager::Shutdown()
 	return error_const::SUCCESS;
 }
 
-Err GameObjectManager::Update(const uint64_t delta) const
+void GameObjectManager::Update(const uint64_t delta) const
 {
 	for (GameObject* object : objectList_)
 	{
 		object->Update(delta);
 	}
-
-	return error_const::SUCCESS;
 }
 
 Err GameObjectManager::AddFactory(GameObjectFactory* factory)

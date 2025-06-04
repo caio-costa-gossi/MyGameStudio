@@ -1,5 +1,4 @@
 #pragma once
-#include "CallbackData.h"
 #include "MVector.h"
 
 class GameObject
@@ -17,7 +16,5 @@ public:
 
 	virtual ~GameObject() = default;
 
-	virtual void OnCreation() {}
 	virtual void Update(uint64_t delta) = 0;
-	virtual void OnDestruction() {}
 };

@@ -5,6 +5,7 @@
 #include "ImageProcessor.h"
 #include "MeshProcessor.h"
 #include "SystemPathHelper.h"
+#include "UserScriptProcessor.h"
 #include "ZipFile.h"
 
 Err AssetPipeline::ImportAsset(const char* filepath)
@@ -15,6 +16,8 @@ Err AssetPipeline::ImportAsset(const char* filepath)
 
 	// Load file and get metadata
 	Asset newAsset = GetAssetMetadata(stdFilepath.c_str());
+	if (newAsset.SourceSize == 0)
+		return error_const::FILE_NOT_FOUND;
 
 	// Load full file and process
 	std::string errMsg;
@@ -164,6 +167,12 @@ uint8_t* AssetPipeline::ProcessAsset(Asset& assetMetadata, std::string& errMsg)
 	case enums::AssetType::mesh3d:
 		returnBuffer = MeshProcessor::ProcessMesh(assetMetadata, resultSize, errMsg);
 		break;
+	case enums::AssetType::script:
+		returnBuffer = UserScriptProcessor::ProcessScript(assetMetadata, resultSize);
+		break;
+	case enums::AssetType::header:
+		returnBuffer = UserScriptProcessor::ProcessHeader(assetMetadata, resultSize);
+		break;
 	default:
 		returnBuffer = new uint8_t[assetMetadata.SourceSize];
 		LoadFile(assetMetadata.SourceLocation.c_str(), returnBuffer, assetMetadata.SourceSize);
@@ -209,6 +218,9 @@ enums::AssetType AssetPipeline::GetAssetType(const uint8_t* fileBuffer, uint64_t
 	if (extension == "cpp" || extension == "c")
 		return enums::AssetType::script;
 
+	if (extension == "h")
+		return enums::AssetType::header;
+
 	return enums::AssetType::plaintext;
 }
 
@@ -226,6 +238,8 @@ std::string AssetPipeline::GetTargetExtension(const enums::AssetType type)
 		return ".glb";
 	case enums::AssetType::script:
 		return ".cpp";
+	case enums::AssetType::header:
+		return ".h";
 	case enums::AssetType::plaintext:
 		return "";
 	default:
@@ -238,6 +252,8 @@ enums::AssetSaveType AssetPipeline::GetSaveType(enums::AssetType type)
 	switch (type)
 	{
 	case enums::AssetType::script:
+		return enums::AssetSaveType::save_to_game;
+	case enums::AssetType::header:
 		return enums::AssetSaveType::save_to_game;
 	default:
 		return enums::AssetSaveType::save_to_zip;

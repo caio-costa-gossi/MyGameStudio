@@ -89,6 +89,9 @@
     <ClCompile Include="GameDebugger.cpp">
       <Filter>GameRuntimeTest</Filter>
     </ClCompile>
+    <ClCompile Include="UserScriptProcessor.cpp">
+      <Filter>Asset Management</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HashTable.h">
@@ -147,6 +150,9 @@
     </ClInclude>
     <ClInclude Include="GameDebugger.h">
       <Filter>GameRuntimeTest</Filter>
+    </ClInclude>
+    <ClInclude Include="UserScriptProcessor.h">
+      <Filter>Asset Management</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

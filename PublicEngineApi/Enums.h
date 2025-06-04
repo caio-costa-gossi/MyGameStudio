@@ -18,6 +18,7 @@ X(video) \
 X(font) \
 X(plaintext) \
 X(script) \
+X(header) \
 X(level) \
 X(tile_set) \
 X(collider) \

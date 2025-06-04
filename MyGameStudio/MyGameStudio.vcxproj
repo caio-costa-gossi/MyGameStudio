@@ -168,6 +168,7 @@
     <ClCompile Include="MyGameStudio.cpp" />
     <ClCompile Include="StringId.cpp" />
     <ClCompile Include="Table.cpp" />
+    <ClCompile Include="UserScriptProcessor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AsciiDrawer.h" />
@@ -189,6 +190,7 @@
     <ClInclude Include="MeshProcessor.h" />
     <ClInclude Include="StringId.h" />
     <ClInclude Include="Table.h" />
+    <ClInclude Include="UserScriptProcessor.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

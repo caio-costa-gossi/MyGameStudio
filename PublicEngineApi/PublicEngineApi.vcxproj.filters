@@ -117,6 +117,9 @@
     <ClInclude Include="MVector.h">
       <Filter>Data Structures</Filter>
     </ClInclude>
+    <ClInclude Include="SystemFileHelper.h">
+      <Filter>Helpers\System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssetRuntimeManager.cpp">
@@ -193,6 +196,9 @@
     </ClCompile>
     <ClCompile Include="GameObjectFactory.cpp">
       <Filter>Game Object Management</Filter>
+    </ClCompile>
+    <ClCompile Include="SystemFileHelper.cpp">
+      <Filter>Helpers\System</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -98,6 +98,9 @@
     <ClCompile Include="InputWindow.cpp">
       <Filter>Commands</Filter>
     </ClCompile>
+    <ClCompile Include="AssetImportationManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HashTable.h">
@@ -165,6 +168,9 @@
     </ClInclude>
     <ClInclude Include="InputWindow.h">
       <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetImportationManager.h">
+      <Filter>Managers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

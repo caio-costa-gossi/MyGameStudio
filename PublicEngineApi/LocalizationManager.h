@@ -74,4 +74,8 @@ namespace string_const
     const auto G_CONFIRM_CLRDB = "confirm_clrdb";
     const auto G_YN_QUESTION_DEFAULT_N = "yn_question_default_n";
     const auto G_YN_QUESTION_DEFAULT_Y = "yn_question_default_y";
+    const auto G_USE_DASSET = "use_dasset";
+    const auto G_CONFIRM_DASSET = "confirm_dasset";
+    const auto G_DASSET_SUCCESS = "dasset_success";
+    const auto G_STRING_NOT_NUMBER = "string_not_number";
 }

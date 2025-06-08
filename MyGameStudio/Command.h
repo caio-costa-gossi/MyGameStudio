@@ -220,3 +220,42 @@ public:
 
 	~QuitGameCommand() override = default;
 };
+
+class DeleteAssetCommand : public Command
+{
+public:
+	Err ExecuteCommand(uint8_t argc, char** argn, char** argv) override
+	{
+		const char* idString = GetArg(argc, argn, argv, "id");
+		uint32_t id;
+
+		if (!ValidateArgs(argc, argn, argv, 1) || idString == nullptr)
+		{
+			PrintUsage(string_const::G_USE_DASSET);
+			return error_const::SUCCESS;
+		}
+
+		try
+		{
+			id = std::stoul(idString == nullptr ? "" : idString);
+		}
+		catch (...)
+		{
+			ConsoleManager::PrintError(LocalizationManager::GetLocalizedString(string_const::G_STRING_NOT_NUMBER));
+			return error_const::SUCCESS;
+		}
+
+		Asset toDelete = AssetDatabase::GetAsset(id);
+
+		Err err = AssetDatabase::DeleteAsset(id);
+		if (err.Code())
+		{
+			ConsoleManager::PrintError(err.Message());
+			return error_const::SUCCESS;
+		}
+
+		return error_const::SUCCESS;
+	}
+
+	~ClearAssetDbCommand() override = default;
+};

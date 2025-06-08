@@ -150,6 +150,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AsciiDrawer.cpp" />
+    <ClCompile Include="AssetImportationManager.cpp" />
     <ClCompile Include="AssetPipeline.cpp" />
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="CommandFactory.cpp" />
@@ -174,6 +175,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AsciiDrawer.h" />
+    <ClInclude Include="AssetImportationManager.h" />
     <ClInclude Include="AssetPipeline.h" />
     <ClInclude Include="Command.h" />
     <ClInclude Include="CommandFactory.h" />

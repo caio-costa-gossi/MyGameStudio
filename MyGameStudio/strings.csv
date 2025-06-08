@@ -28,3 +28,7 @@ game_bin_not_found,Binário do jogo não encontrado,Game binary not found,Binair
 confirm_clrdb,Você tem certeza que deseja limpar a base de recursos?,Are you sure you want to clear the asset database?,Êtes-vous sûr de vouloir effacer la base de ressources?
 yn_question_default_n,(y = sim/N = não),(y = yes/N = no),(y = oui/N = non)
 yn_question_default_y,(Y = sim/n = não),(Y = yes/n = no),(Y = oui/n = non)
+use_dasset,"dasset id={ID do recurso}","dasset id={asset ID}","dasset id={ID de ressource}"
+confirm_dasset,Você tem certeza que deseja deletar o recurso de ID @asset_id (@filename)?,Are you sure you want to delete asset ID @asset_id (@filename)?,Êtes-vous sûr de vouloir supprimer ressource de ID @asset_id (@filename)?
+dasset_sucess,Recurso deletado com sucesso,Asset deleted successfully,Ressource suprimée avec succès
+string_not_number,Argumento passado não é um número válido,Argument is not a valid number,L'argument n'est pas un nombre valide

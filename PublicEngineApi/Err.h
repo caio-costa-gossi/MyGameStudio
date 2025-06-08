@@ -49,8 +49,10 @@ namespace error_const
 	const auto CONSOLE_MANAGER_STARTUP_FAIL = Err("Game console manager startup failed!", 95);
 	const auto ERROR_OPEN_FILE = Err("Error opening file", 100);
 	const auto FILE_NOT_FOUND = Err("File not found", 101);
+	const auto FILE_DELETION_FAIL = Err("Error deleting file!", 102);
 	const auto TERMINAL_OPEN_FAILURE = Err("Terminal was not created successfully", 110);
 	const auto TERMINAL_PIPE_OPEN_FAILURE = Err("Terminal communication pipeline was not created successfully", 111);
+	const auto STR_TO_INT_FAIL = Err("String passed is not a valid number", 112);
 
 	constexpr auto DB_ERROR_CODE = 10;
 	constexpr auto ZIP_ERROR_CODE = 11;

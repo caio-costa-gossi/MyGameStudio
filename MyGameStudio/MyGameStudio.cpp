@@ -2,6 +2,7 @@
 #include "EngineCoreManager.h"
 #include "Err.h"
 #include "GameRuntimeTestManager.h"
+#include "SystemFileHelper.h"
 #include "TerminalFactory.h"
 
 int main()

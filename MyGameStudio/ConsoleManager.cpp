@@ -67,9 +67,9 @@ void ConsoleManager::Print(const std::string& message, const enums::ConsoleMessa
 	std::cout << message << "\n";
 }
 
-void ConsoleManager::PrintSimple(const std::string& message)
+void ConsoleManager::PrintSimple(const std::string& message, const bool newline)
 {
-	std::cout << message << "\n";
+	std::cout << message << (newline ? "\n" : "");
 }
 
 void ConsoleManager::PrintInfo(const std::string& message)

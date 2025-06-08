@@ -6,6 +6,7 @@
 #include "Err.h"
 #include "GameBuilder.h"
 #include "GameRuntimeTestManager.h"
+#include "InputWindow.h"
 #include "LocalizationManager.h"
 #include "SystemPathHelper.h"
 #include "Table.h"
@@ -120,6 +121,9 @@ class ClearAssetDbCommand : public Command
 public:
 	Err ExecuteCommand(uint8_t argc, char** argn, char** argv) override
 	{
+		if (InputWindow::GetInput("Are you sure you want to clear the assets database?", "(y = yes/N = no)") != "y")
+			return error_const::SUCCESS;
+
 		Err err = AssetDatabase::ClearAllTables();
 		if (err.Code())
 		{

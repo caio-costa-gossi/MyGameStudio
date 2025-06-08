@@ -164,6 +164,7 @@
     <ClCompile Include="HashTable.cpp" />
     <ClCompile Include="EngineCoreManager.cpp" />
     <ClCompile Include="ImageProcessor.cpp" />
+    <ClCompile Include="InputWindow.cpp" />
     <ClCompile Include="MeshProcessor.cpp" />
     <ClCompile Include="MyGameStudio.cpp" />
     <ClCompile Include="StringId.cpp" />
@@ -188,6 +189,7 @@
     <ClInclude Include="HashTable.h" />
     <ClInclude Include="EngineCoreManager.h" />
     <ClInclude Include="ImageProcessor.h" />
+    <ClInclude Include="InputWindow.h" />
     <ClInclude Include="MeshProcessor.h" />
     <ClInclude Include="StringId.h" />
     <ClInclude Include="StringUtils.h" />

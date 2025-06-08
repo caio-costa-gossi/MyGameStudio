@@ -95,6 +95,9 @@
     <ClCompile Include="StringUtils.cpp">
       <Filter>Helpers</Filter>
     </ClCompile>
+    <ClCompile Include="InputWindow.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HashTable.h">
@@ -159,6 +162,9 @@
     </ClInclude>
     <ClInclude Include="StringUtils.h">
       <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="InputWindow.h">
+      <Filter>Commands</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

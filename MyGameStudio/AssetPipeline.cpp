@@ -8,7 +8,7 @@
 #include "UserScriptProcessor.h"
 #include "ZipFile.h"
 
-Err AssetPipeline::ImportAsset(const char* filepath)
+Err AssetPipeline::ImportAsset(const char* filepath, Asset& importedAsset)
 {
 	// Standardize path separator to unix
 	std::string stdFilepath = filepath;
@@ -29,13 +29,8 @@ Err AssetPipeline::ImportAsset(const char* filepath)
 	// Save result to .zip
 	SaveResult(newAsset, resultBuffer);
 
-	// Register details in database
-	Err error = AssetDatabase::RegisterAsset(newAsset);
-	if (error.Code())
-	{
-		delete[] resultBuffer;
-		return error;
-	}
+	// Return asset metadata
+	importedAsset = newAsset;
 
 	// Delete result buffer and return
 	delete[] resultBuffer;

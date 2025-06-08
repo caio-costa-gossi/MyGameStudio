@@ -22,31 +22,27 @@ public:
 	bool IsDbOpen() const;
 
 	template<typename T>
-	T ExecuteQuerySingle(const char* sqlStatement) const
+	Err ExecuteQuerySingle(const char* sqlStatement, T& result) const
 	{
 		static_assert(std::is_invocable_r<T, decltype(&T::FromStmt), sqlite3_stmt*>().value,
 			"Error: class T must have a T::FromStmt(sqlite3_stmt*) method.");
 
 		if (!isDbOpen_)
-		{
-			std::cout << "Error! Database is closed!";
-			return T();
-		}
+			return Err("Database is closed", error_const::DB_ERROR_CODE);
 
 		sqlite3_stmt* stmt = nullptr;
 
 		if (sqlite3_prepare_v2(database_, sqlStatement, -1, &stmt, nullptr))
-		{
-			std::cout << "Error preparing statement for DB query!";
-			return T();
-		}
+			return Err("Error preparing statement for DB query!", error_const::DB_ERROR_CODE);
 
-		sqlite3_step(stmt);
+		if (sqlite3_step(stmt) == SQLITE_DONE)
+			return Err("No entries found in the table", error_const::DB_ERROR_CODE);
 
 		T returnValue = T::FromStmt(stmt);
 		sqlite3_finalize(stmt);
 
-		return returnValue;
+		result = returnValue;
+		return error_const::SUCCESS;
 	}
 
 	template<typename T>

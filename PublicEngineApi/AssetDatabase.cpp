@@ -42,9 +42,12 @@ std::vector<Asset> AssetDatabase::GetAssets()
 	return assets;
 }
 
-Asset AssetDatabase::GetAsset(const uint32_t assetId, const bool addDependencies)
+Err AssetDatabase::GetAsset(const uint32_t assetId, Asset& returnValue, const bool addDependencies)
 {
-	auto asset = db_.ExecuteQuerySingle<Asset>(std::string("SELECT * FROM Assets WHERE Id = " + std::to_string(assetId)).c_str());
+	Asset asset;
+	Err err = db_.ExecuteQuerySingle<Asset>(std::string("SELECT * FROM Assets WHERE Id = " + std::to_string(assetId)).c_str(), asset);
+	if (err.Code())
+		return err;
 
 	if (addDependencies)
 	{
@@ -53,7 +56,8 @@ Asset AssetDatabase::GetAsset(const uint32_t assetId, const bool addDependencies
 			asset.AddDependencies(dependencies);
 	}
 
-	return asset;
+	returnValue = asset;
+	return error_const::SUCCESS;
 }
 
 Err AssetDatabase::RegisterAsset(const Asset& asset)

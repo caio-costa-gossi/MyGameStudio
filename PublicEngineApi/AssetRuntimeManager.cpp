@@ -12,11 +12,15 @@ uint8_t* AssetRuntimeManager::LoadAsset(const uint32_t assetId)
 	if (assetData_[assetId].get() != nullptr)
 		return assetData_[assetId].get();
 
-	const Asset asset = AssetDatabase::GetAsset(assetId);
-	const ZipFile file(asset.ZipLocation.c_str());
+	Asset asset;
+	Err err = AssetDatabase::GetAsset(assetId, asset);
+	if (err.Code())
+		return nullptr;
 
+	const ZipFile file(asset.ZipLocation.c_str());
 	auto pFileContent = std::make_unique<uint8_t[]>(asset.ProductSize);
-	Err err = file.ReadFile(asset.AssetLocation.c_str(), pFileContent.get(), static_cast<int>(asset.ProductSize));
+
+	err = file.ReadFile(asset.AssetLocation.c_str(), pFileContent.get(), static_cast<int>(asset.ProductSize));
 	if (err.Code())
 		return nullptr;
 

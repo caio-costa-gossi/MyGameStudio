@@ -8,6 +8,7 @@ Err CommandFactory::Startup()
 	commandMap_["import"] = new ImportAssetCommand();
 	commandMap_["clrdb"] = new ClearAssetDbCommand();
 	commandMap_["lassets"] = new ListAssetsCommand();
+	commandMap_["dasset"] = new DeleteAssetCommand();
 	commandMap_["run"] = new RunGameCommand();
 	commandMap_["qgame"] = new QuitGameCommand();
 	commandMap_["$not_found"] = new NotFoundCommand();

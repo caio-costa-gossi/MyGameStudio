@@ -1,6 +1,7 @@
 #pragma once
 #include "AsciiDrawer.h"
 #include "AssetDatabase.h"
+#include "AssetImportationManager.h"
 #include "AssetPipeline.h"
 #include "ConsoleManager.h"
 #include "Err.h"
@@ -8,6 +9,7 @@
 #include "GameRuntimeTestManager.h"
 #include "InputWindow.h"
 #include "LocalizationManager.h"
+#include "StringUtils.h"
 #include "SystemPathHelper.h"
 #include "Table.h"
 
@@ -103,7 +105,7 @@ public:
 			return error_const::SUCCESS;
 		}
 
-		Err err = AssetPipeline::ImportAsset(filepath);
+		Err err = AssetImportationManager::ImportAsset(filepath);
 		if (err.Code())
 		{
 			ConsoleManager::PrintError(err.Message());
@@ -226,6 +228,7 @@ class DeleteAssetCommand : public Command
 public:
 	Err ExecuteCommand(uint8_t argc, char** argn, char** argv) override
 	{
+		// Parse arguments
 		const char* idString = GetArg(argc, argn, argv, "id");
 		uint32_t id;
 
@@ -245,9 +248,26 @@ public:
 			return error_const::SUCCESS;
 		}
 
-		Asset toDelete = AssetDatabase::GetAsset(id);
+		// Asset deleting logic
+		Asset toDelete;
+		Err err = AssetDatabase::GetAsset(id, toDelete);
+		if (err.Code())
+		{
+			ConsoleManager::PrintError(err.Message());
+			return error_const::SUCCESS;
+		}
 
-		Err err = AssetDatabase::DeleteAsset(id);
+		std::string confirmation = LocalizationManager::GetLocalizedString(string_const::G_CONFIRM_DASSET);
+		StringUtils::ReplaceInString(confirmation, "@asset_id", std::to_string(toDelete.Id));
+		StringUtils::ReplaceInString(confirmation, "@filename", toDelete.Name);
+
+		if (InputWindow::GetInput(
+			confirmation,
+			LocalizationManager::GetLocalizedString(string_const::G_YN_QUESTION_DEFAULT_N)
+		) != "y")
+			return error_const::SUCCESS;
+
+		err = AssetImportationManager::DeleteAsset(toDelete);
 		if (err.Code())
 		{
 			ConsoleManager::PrintError(err.Message());
@@ -257,5 +277,5 @@ public:
 		return error_const::SUCCESS;
 	}
 
-	~ClearAssetDbCommand() override = default;
+	~DeleteAssetCommand() override = default;
 };

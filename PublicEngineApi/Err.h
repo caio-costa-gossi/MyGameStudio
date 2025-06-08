@@ -53,6 +53,7 @@ namespace error_const
 	const auto TERMINAL_OPEN_FAILURE = Err("Terminal was not created successfully", 110);
 	const auto TERMINAL_PIPE_OPEN_FAILURE = Err("Terminal communication pipeline was not created successfully", 111);
 	const auto STR_TO_INT_FAIL = Err("String passed is not a valid number", 112);
+	const auto ASSET_NOT_FOUND = Err("Asset not found", 120);
 
 	constexpr auto DB_ERROR_CODE = 10;
 	constexpr auto ZIP_ERROR_CODE = 11;

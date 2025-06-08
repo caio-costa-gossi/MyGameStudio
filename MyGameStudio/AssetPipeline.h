@@ -4,7 +4,7 @@
 
 class AssetPipeline
 {
-public:
+private:
 	static Asset GetAssetMetadata(const char* filepath);
 	static uint8_t* ProcessAsset(Asset& assetMetadata, std::string& errMsg);
 
@@ -19,5 +19,5 @@ public:
 	static enums::AssetSaveType GetSaveType(enums::AssetType type);
 
 public:
-	static Err ImportAsset(const char* filepath);
+	static Err ImportAsset(const char* filepath, Asset& importedAsset);
 };

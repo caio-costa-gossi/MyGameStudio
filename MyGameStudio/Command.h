@@ -127,7 +127,10 @@ public:
 			LocalizationManager::GetLocalizedString(string_const::G_CONFIRM_CLRDB), 
 			LocalizationManager::GetLocalizedString(string_const::G_YN_QUESTION_DEFAULT_N)
 		) != "y")
+		{
+			ConsoleManager::PrintInfo(LocalizationManager::GetLocalizedString(string_const::G_CANCELED_BY_USER));
 			return error_const::SUCCESS;
+		}
 
 		Err err = AssetDatabase::ClearAllTables();
 		if (err.Code())
@@ -136,6 +139,7 @@ public:
 			return error_const::SUCCESS;
 		}
 
+		ConsoleManager::PrintInfo(LocalizationManager::GetLocalizedString(string_const::G_ASSETDB_CLEARED));
 		return error_const::SUCCESS;
 	}
 
@@ -265,7 +269,10 @@ public:
 			confirmation,
 			LocalizationManager::GetLocalizedString(string_const::G_YN_QUESTION_DEFAULT_N)
 		) != "y")
+		{
+			ConsoleManager::PrintInfo(LocalizationManager::GetLocalizedString(string_const::G_CANCELED_BY_USER));
 			return error_const::SUCCESS;
+		}
 
 		err = AssetImportationManager::DeleteAsset(toDelete);
 		if (err.Code())
@@ -274,6 +281,7 @@ public:
 			return error_const::SUCCESS;
 		}
 
+		ConsoleManager::PrintInfo(LocalizationManager::GetLocalizedString(string_const::G_ASSET_DELETION_SUCCESS));
 		return error_const::SUCCESS;
 	}
 

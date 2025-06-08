@@ -78,4 +78,7 @@ namespace string_const
     const auto G_CONFIRM_DASSET = "confirm_dasset";
     const auto G_DASSET_SUCCESS = "dasset_success";
     const auto G_STRING_NOT_NUMBER = "string_not_number";
+    const auto G_CANCELED_BY_USER = "canceled_by_user";
+    const auto G_ASSETDB_CLEARED = "assetdb_cleared";
+    const auto G_ASSET_DELETION_SUCCESS = "asset_deletion_success";
 }

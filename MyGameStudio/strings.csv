@@ -32,3 +32,6 @@ use_dasset,"dasset id={ID do recurso}","dasset id={asset ID}","dasset id={ID de 
 confirm_dasset,Você tem certeza que deseja deletar o recurso de ID @asset_id (@filename)?,Are you sure you want to delete asset ID @asset_id (@filename)?,Êtes-vous sûr de vouloir supprimer ressource de ID @asset_id (@filename)?
 dasset_sucess,Recurso deletado com sucesso,Asset deleted successfully,Ressource suprimée avec succès
 string_not_number,Argumento passado não é um número válido,Argument is not a valid number,L'argument n'est pas un nombre valide
+canceled_by_user,Operação cancelada pelo usuário,Operation canceled by user,Opération annulée par l'utilisateur
+assetdb_cleared,Base de recursos apagada com sucesso,Asset database cleared successfully,Base de ressources effacée avec succès
+asset_deletion_success,Recurso apagado com sucesso,Asset deleted successfully,Ressource supprimée avec succès

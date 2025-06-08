@@ -121,7 +121,10 @@ class ClearAssetDbCommand : public Command
 public:
 	Err ExecuteCommand(uint8_t argc, char** argn, char** argv) override
 	{
-		if (InputWindow::GetInput("Are you sure you want to clear the assets database?", "(y = yes/N = no)") != "y")
+		if (InputWindow::GetInput(
+			LocalizationManager::GetLocalizedString(string_const::G_CONFIRM_CLRDB), 
+			LocalizationManager::GetLocalizedString(string_const::G_YN_QUESTION_DEFAULT_N)
+		) != "y")
 			return error_const::SUCCESS;
 
 		Err err = AssetDatabase::ClearAllTables();

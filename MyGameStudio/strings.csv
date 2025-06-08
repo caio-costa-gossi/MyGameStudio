@@ -25,3 +25,6 @@ run_game,Executando o jogo...,Running game process...,Exécution du jeu...
 quit_game,Saindo do jogo...,Quitting game process...,Quitter le jeu...
 build_successful,Build realizada com sucesso,Build completed successfully,Build terminée avec succès
 game_bin_not_found,Binário do jogo não encontrado,Game binary not found,Binaire du jeu introuvable
+confirm_clrdb,Você tem certeza que deseja limpar a base de recursos?,Are you sure you want to clear the asset database?,Êtes-vous sûr de vouloir effacer la base de ressources?
+yn_question_default_n,(y = sim/N = não),(y = yes/N = no),(y = oui/N = non)
+yn_question_default_y,(Y = sim/n = não),(Y = yes/n = no),(Y = oui/n = non)

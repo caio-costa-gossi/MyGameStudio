@@ -71,4 +71,7 @@ namespace string_const
     const auto G_QUIT_GAME = "quit_game";
     const auto G_BUILD_SUCCESSFUL = "build_successful";
     const auto G_GAME_BIN_NOT_FOUND = "game_bin_not_found";
+    const auto G_CONFIRM_CLRDB = "confirm_clrdb";
+    const auto G_YN_QUESTION_DEFAULT_N = "yn_question_default_n";
+    const auto G_YN_QUESTION_DEFAULT_Y = "yn_question_default_y";
 }

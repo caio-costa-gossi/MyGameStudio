@@ -14,3 +14,8 @@ Err StringUtils::ReplaceInString(std::string& string, const std::string& lookFor
 
 	return error_const::SUCCESS;
 }
+
+bool StringUtils::CanParseAsBool(const std::string& string)
+{
+	return std::strcmp(string.c_str(), "false") || std::strcmp(string.c_str(), "true");
+}

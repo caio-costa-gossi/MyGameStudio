@@ -55,3 +55,14 @@ const char* Command::GetArg(const uint8_t argc, char** argn, char** argv, const 
 
 	return nullptr;
 }
+
+bool Command::ArgnExists(const uint8_t argc, char** argn, const char* argName)
+{
+	for (uint8_t i = 0; i < argc; ++i)
+	{
+		if (std::strcmp(argn[i], argName) == 0)
+			return true;
+	}
+
+	return false;
+}

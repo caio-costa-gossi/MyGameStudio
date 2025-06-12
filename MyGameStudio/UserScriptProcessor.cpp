@@ -4,9 +4,20 @@
 #include "StringUtils.h"
 #include "SystemPathHelper.h"
 
-uint8_t* UserScriptProcessor::ProcessScript(const Asset& metadata, uint64_t& resultSize)
+uint8_t* UserScriptProcessor::ProcessScript(const Asset& metadata, uint64_t& resultSize, const bool ctrlFlag)
 {
 	ConsoleManager::PrintInfo("Importing script...");
+
+	// If it's not game object, don't add anything
+	if (ctrlFlag)
+	{
+		resultSize = metadata.SourceSize;
+		const auto scriptBuffer = new uint8_t[resultSize];
+		LoadFile(metadata.SourceLocation, scriptBuffer, resultSize);
+
+		ConsoleManager::PrintInfo("Complete not game object!");
+		return scriptBuffer;
+	}
 
 	std::string registerTxtFormatted = registerClassText_;
 	StringUtils::ReplaceInString(registerTxtFormatted, "@class_name", SystemPathHelper::RemoveFileExtension(metadata.Name));

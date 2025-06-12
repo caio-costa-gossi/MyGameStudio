@@ -18,6 +18,7 @@ class Command
 protected:
 	static bool ValidateArgs(uint8_t argc, char** argn, char** argv, uint8_t expectedArgc, int intArgs[] = nullptr, float floatArgs[] = nullptr);
 	static const char* GetArg(uint8_t argc, char** argn, char** argv, const char* argName);
+	static bool ArgnExists(uint8_t argc, char** argn, const char* argName);
 	static void PrintUsage(const char* commandName);
 
 public:
@@ -98,14 +99,15 @@ public:
 	Err ExecuteCommand(uint8_t argc, char** argn, char** argv) override
 	{
 		const char* filepath = GetArg(argc, argn, argv, "file");
+		const bool notGameObject = ArgnExists(argc, argn, "ngobj");
 
-		if (!ValidateArgs(argc, argn, argv, 1) || filepath == nullptr)
+		if (filepath == nullptr || (argc != 1 && argc != 2))
 		{
 			PrintUsage(string_const::G_USE_IMPORT);
 			return error_const::SUCCESS;
 		}
 
-		Err err = AssetImportationManager::ImportAsset(filepath);
+		Err err = AssetImportationManager::ImportAsset(filepath, notGameObject);
 		if (err.Code())
 		{
 			ConsoleManager::PrintError(err.Message());

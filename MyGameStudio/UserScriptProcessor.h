@@ -10,6 +10,6 @@ private:
 	static Err LoadFile(const std::string& filepath, uint8_t* fileBuffer, uint64_t bufferSize);
 
 public:
-	static uint8_t* ProcessScript(const Asset& metadata, uint64_t& resultSize);
+	static uint8_t* ProcessScript(const Asset& metadata, uint64_t& resultSize, bool ctrlFlag = false);
 	static uint8_t* ProcessHeader(const Asset& metadata, uint64_t& resultSize);
 };

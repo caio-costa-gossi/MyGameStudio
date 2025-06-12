@@ -9,6 +9,3 @@ public:
 		GameConsoleManager::PrintInfo("Hello world from world! Delta: " + std::to_string(delta));
 	}
 };
-#include "GameObjectMacro.h"
-#include "GameObjectManager.h"
-REGISTER_GAME_OBJECT(World)

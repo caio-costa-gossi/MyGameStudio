@@ -4,11 +4,11 @@
 #include "SystemFileHelper.h"
 #include "ZipFile.h"
 
-Err AssetImportationManager::ImportAsset(const char* filepath)
+Err AssetImportationManager::ImportAsset(const char* filepath, const bool ctrlFlag)
 {
 	Asset newAsset;
 
-	Err err = AssetPipeline::ImportAsset(filepath, newAsset);
+	Err err = AssetPipeline::ImportAsset(filepath, newAsset, ctrlFlag);
 	if (err.Code())
 		return err;
 

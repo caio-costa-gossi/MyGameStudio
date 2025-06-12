@@ -8,7 +8,7 @@
 #include "UserScriptProcessor.h"
 #include "ZipFile.h"
 
-Err AssetPipeline::ImportAsset(const char* filepath, Asset& importedAsset)
+Err AssetPipeline::ImportAsset(const char* filepath, Asset& importedAsset, const bool ctrlFlag)
 {
 	// Standardize path separator to unix
 	std::string stdFilepath = filepath;
@@ -21,7 +21,7 @@ Err AssetPipeline::ImportAsset(const char* filepath, Asset& importedAsset)
 
 	// Load full file and process
 	std::string errMsg;
-	const uint8_t* resultBuffer = ProcessAsset(newAsset, errMsg);
+	const uint8_t* resultBuffer = ProcessAsset(newAsset, errMsg, ctrlFlag);
 
 	if (resultBuffer == nullptr)
 		return Err(errMsg, error_const::ASSET_IMPORTATION_ERROR_CODE);
@@ -149,7 +149,7 @@ Err AssetPipeline::SaveFileToZip(const char* zipPath, const char* pathInsideZip,
 	return error_const::SUCCESS;
 }
 
-uint8_t* AssetPipeline::ProcessAsset(Asset& assetMetadata, std::string& errMsg)
+uint8_t* AssetPipeline::ProcessAsset(Asset& assetMetadata, std::string& errMsg, const bool ctrlFlag)
 {
 	uint8_t* returnBuffer = nullptr;
 	uint64_t resultSize;
@@ -163,7 +163,7 @@ uint8_t* AssetPipeline::ProcessAsset(Asset& assetMetadata, std::string& errMsg)
 		returnBuffer = MeshProcessor::ProcessMesh(assetMetadata, resultSize, errMsg);
 		break;
 	case enums::AssetType::script:
-		returnBuffer = UserScriptProcessor::ProcessScript(assetMetadata, resultSize);
+		returnBuffer = UserScriptProcessor::ProcessScript(assetMetadata, resultSize, ctrlFlag);
 		break;
 	case enums::AssetType::header:
 		returnBuffer = UserScriptProcessor::ProcessHeader(assetMetadata, resultSize);

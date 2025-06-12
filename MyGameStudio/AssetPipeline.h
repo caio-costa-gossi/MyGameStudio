@@ -6,7 +6,7 @@ class AssetPipeline
 {
 private:
 	static Asset GetAssetMetadata(const char* filepath);
-	static uint8_t* ProcessAsset(Asset& assetMetadata, std::string& errMsg);
+	static uint8_t* ProcessAsset(Asset& assetMetadata, std::string& errMsg, bool ctrlFlag = false);
 
 	static Err SaveResult(Asset& assetMetadata, const uint8_t* assetData);
 	static Err SaveFileToZip(const char* zipPath, const char* pathInsideZip, const uint8_t* fileBuffer, uint64_t bufferSize);
@@ -19,5 +19,5 @@ private:
 	static enums::AssetSaveType GetSaveType(enums::AssetType type);
 
 public:
-	static Err ImportAsset(const char* filepath, Asset& importedAsset);
+	static Err ImportAsset(const char* filepath, Asset& importedAsset, bool ctrlFlag = false);
 };

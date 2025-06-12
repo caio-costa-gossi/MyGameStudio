@@ -222,6 +222,11 @@ void ConsoleManager::ParseCommandAlternative()
 		}
 	}
 
+	// Arg ended without =
+	if (nameOfArg)
+		argv_[argc] = nullptr;
+
+	// Rest of parsing
 	const uint16_t commandLen = static_cast<uint16_t>(std::strlen(usableCommand_));
 	ReplaceWithTerminator(usableCommand_, commandLen);
 

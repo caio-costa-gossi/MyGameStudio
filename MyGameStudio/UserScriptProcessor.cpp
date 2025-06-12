@@ -15,7 +15,7 @@ uint8_t* UserScriptProcessor::ProcessScript(const Asset& metadata, uint64_t& res
 		const auto scriptBuffer = new uint8_t[resultSize];
 		LoadFile(metadata.SourceLocation, scriptBuffer, resultSize);
 
-		ConsoleManager::PrintInfo("Complete not game object!");
+		ConsoleManager::PrintInfo("Complete!");
 		return scriptBuffer;
 	}
 

@@ -54,6 +54,12 @@ namespace error_const
 	const auto TERMINAL_PIPE_OPEN_FAILURE = Err("Terminal communication pipeline was not created successfully", 111);
 	const auto STR_TO_INT_FAIL = Err("String passed is not a valid number", 112);
 	const auto ASSET_NOT_FOUND = Err("Asset not found", 120);
+	const auto INPUT_MOD_INIT_FAIL = Err("DInput interface initialization failure", 130);
+	const auto INPUT_ENUM_FAIL = Err("Input enumeration failure", 131);
+	const auto INPUT_CREATE_FAIL = Err("Input creation failure", 132);
+	const auto INPUT_SET_FORMAT_FAIL = Err("Input set data format failure", 133);
+	const auto INPUT_SET_CL_FAIL = Err("Input set cooperative level failure", 134);
+	const auto INPUT_DEV_ACQUIRE_FAIL = Err("Acquire input device failure", 135);
 
 	constexpr auto DB_ERROR_CODE = 10;
 	constexpr auto ZIP_ERROR_CODE = 11;

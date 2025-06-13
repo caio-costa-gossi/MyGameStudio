@@ -2,6 +2,7 @@
 #include "EngineCoreManager.h"
 #include "Err.h"
 #include "GameRuntimeTestManager.h"
+#include "InputManager.h"
 #include "SystemFileHelper.h"
 #include "TerminalFactory.h"
 
@@ -19,7 +20,21 @@ int main()
 		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
 	}
 
-	ConsoleManager::RunConsole();
+	//ConsoleManager::RunConsole();
+	err = InputManager::Startup();
+	if (err.Code() != 0)
+	{
+		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
+	}
+
+	while (true)
+	{
+		err = InputManager::Update();
+		if (err.Code() != 0)
+		{
+			ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
+		}
+	}
 
 	err = EngineCoreManager::Shutdown();
 	if (err.Code() != 0)

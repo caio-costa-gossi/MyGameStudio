@@ -59,7 +59,9 @@ namespace error_const
 	const auto INPUT_CREATE_FAIL = Err("Input creation failure", 132);
 	const auto INPUT_SET_FORMAT_FAIL = Err("Input set data format failure", 133);
 	const auto INPUT_SET_CL_FAIL = Err("Input set cooperative level failure", 134);
-	const auto INPUT_DEV_ACQUIRE_FAIL = Err("Acquire input device failure", 135);
+	const auto INPUT_JOYSTICK_ACQUIRE_FAIL = Err("Failed do acquire joystick devices. Those will be turned off.", 135);
+	const auto INPUT_MOUSE_ACQUIRE_FAIL = Err("Failed do acquire mouse device. It will be turned off.", 136);
+	const auto INPUT_KEYBOARD_ACQUIRE_FAIL = Err("Failed do acquire keyboard device. It will be turned off.", 137);
 
 	constexpr auto DB_ERROR_CODE = 10;
 	constexpr auto ZIP_ERROR_CODE = 11;

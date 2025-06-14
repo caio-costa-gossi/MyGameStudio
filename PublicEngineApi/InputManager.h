@@ -11,8 +11,7 @@ private:
 	// Main DI Interface
 	static LPDIRECTINPUT8 dInput_;
 
-	// Auxiliary structures & devices
-	static std::vector<LPCDIDEVICEINSTANCE> deviceInstances_;
+	// Devices
 	static std::vector<Device> joysticks_;
 	static Device mouse_;
 	static Device keyboard_;
@@ -31,6 +30,8 @@ private:
 	static EventDispatcher dispatcher_;
 
 	static BOOL EnumDevicesCallback(LPCDIDEVICEINSTANCE instance, LPVOID value);
+	static void CreateTestWindow(HWND& hNewWindow);
+	static LRESULT CALLBACK TestWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 public:
 	static Err Startup();

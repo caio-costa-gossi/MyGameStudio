@@ -1,10 +1,9 @@
 #include "ConsoleManager.h"
 #include "EngineCoreManager.h"
 #include "Err.h"
-#include "GameRuntimeTestManager.h"
 #include "InputManager.h"
-#include "SystemFileHelper.h"
-#include "TerminalFactory.h"
+#include "TestWindowCreator.h"
+
 
 int main()
 {
@@ -21,19 +20,17 @@ int main()
 	}
 
 	//ConsoleManager::RunConsole();
-	err = InputManager::Startup();
+
+	err = TestWindowCreator::StartTestWindow();
 	if (err.Code() != 0)
 	{
 		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
 	}
 
-	while (true)
+	err = TestWindowCreator::UpdateTestWindow();
+	if (err.Code() != 0)
 	{
-		err = InputManager::Update();
-		if (err.Code() != 0)
-		{
-			ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
-		}
+		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
 	}
 
 	err = EngineCoreManager::Shutdown();

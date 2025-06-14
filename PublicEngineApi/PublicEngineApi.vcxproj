@@ -47,6 +47,7 @@
     <ClInclude Include="sqlite3.h" />
     <ClInclude Include="SqliteDatabase.h" />
     <ClInclude Include="Subscription.h" />
+    <ClInclude Include="TestWindowCreator.h" />
     <ClInclude Include="Timeline.h" />
     <ClInclude Include="ZipFile.h" />
   </ItemGroup>
@@ -75,6 +76,7 @@
     <ClCompile Include="sqlite3.c" />
     <ClCompile Include="SqliteDatabase.cpp" />
     <ClCompile Include="Subscription.cpp" />
+    <ClCompile Include="TestWindowCreator.cpp" />
     <ClCompile Include="Timeline.cpp" />
     <ClCompile Include="ZipFile.cpp" />
   </ItemGroup>

@@ -34,7 +34,7 @@ private:
 	static LRESULT CALLBACK TestWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 public:
-	static Err Startup();
+	static Err Startup(HWND hWindow);
 	static Err Update();
 	static Err Shutdown();
 

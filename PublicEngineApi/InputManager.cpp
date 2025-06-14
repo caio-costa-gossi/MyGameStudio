@@ -5,7 +5,7 @@
 
 #include "GameConsoleManager.h"
 
-Err InputManager::Startup()
+Err InputManager::Startup(HWND hWindow)
 {
 	const HINSTANCE hModule = GetModuleHandle(nullptr);
 
@@ -39,15 +39,7 @@ Err InputManager::Startup()
 	if (FAILED(keyboard_->SetDataFormat(&c_dfDIKeyboard)))
 		return error_const::INPUT_SET_FORMAT_FAIL;
 
-	// Create test window & set cooperative level
-	HWND hWindow = nullptr;
-	std::thread winThread(CreateTestWindow, std::ref(hWindow));
-
-	while (hWindow == nullptr)
-	{
-		Sleep(1);
-	}
-
+	//Set cooperative level
 	for (const Device device: joysticks_)
 	{
 		if (FAILED(device->SetCooperativeLevel(hWindow, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND)))
@@ -63,7 +55,9 @@ Err InputManager::Startup()
 	// Acquire devices
 	for (const Device device : joysticks_)
 	{
-		if (FAILED(device->Acquire()))
+		HRESULT result = device->Acquire();
+
+		if (FAILED(result))
 		{
 			GameConsoleManager::PrintError(error_const::INPUT_JOYSTICK_ACQUIRE_FAIL.Message());
 			isJoystickActive_ = false;
@@ -88,36 +82,32 @@ Err InputManager::Startup()
 
 Err InputManager::Update()
 {
+	HRESULT pollResult, stateResult;
+
 	if (isKeyboardActive_)
 	{
-		if (keyboard_->Poll() != DI_OK)
+		keyboard_->Poll();
+
+		if (keyboard_->GetDeviceState(sizeof(keyboardState_), &keyboardState_) != DI_OK)
 			GameConsoleManager::PrintError("Error polling from keyboard");
-		else
-		{
-			keyboard_->GetDeviceState(sizeof(keyboardState_), &keyboardState_);
-		}
 	}
 
 	if (isMouseActive_)
 	{
-		if (mouse_->Poll() != DI_OK)
+		mouse_->Poll();
+		if (mouse_->GetDeviceState(sizeof(mouseState_), &mouseState_) != DI_OK)
 			GameConsoleManager::PrintError("Error polling from mouse");
-		else
-		{
-			mouse_->GetDeviceState(sizeof(mouseState_), &mouseState_);
-		}
+
+		GameConsoleManager::PrintInfo("(" + std::to_string(mouseState_.lX) + "," + std::to_string(mouseState_.lY) + "," + std::to_string(mouseState_.lZ) + ")");
 	}
 
 	if (isJoystickActive_)
 	{
 		for (uint8_t i = 0; i < joystickCount_; ++i)
 		{
-			if (joysticks_[i]->Poll() != DI_OK)
+			joysticks_[i]->Poll();
+			if (joysticks_[i]->GetDeviceState(sizeof(joystickStates_[i]), &joystickStates_[i]) != DI_OK)
 				GameConsoleManager::PrintError("Error polling from joystick " + std::to_string(i));
-			else
-			{
-				joysticks_[i]->GetDeviceState(sizeof(joystickStates_[i]), &joystickStates_[i]);
-			}
 		}
 	}
 

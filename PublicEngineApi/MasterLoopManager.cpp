@@ -31,7 +31,7 @@ Err MasterLoopManager::Startup()
 	}
 
 	// Subsystem startup
-	err = InputManager::Startup();
+	err = InputManager::Startup(nullptr);
 	if (err.Code())
 		GameConsoleManager::PrintError(err);
 

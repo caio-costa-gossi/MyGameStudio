@@ -28,6 +28,9 @@
     <Filter Include="Data Structures">
       <UniqueIdentifier>{64b9a90e-2a18-40a9-a3e5-47ef778da323}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Testing">
+      <UniqueIdentifier>{59f38740-70f2-4312-a470-74450ccbcf60}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetRuntimeManager.h">
@@ -120,6 +123,9 @@
     <ClInclude Include="SystemFileHelper.h">
       <Filter>Helpers\System</Filter>
     </ClInclude>
+    <ClInclude Include="TestWindowCreator.h">
+      <Filter>Testing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssetRuntimeManager.cpp">
@@ -199,6 +205,9 @@
     </ClCompile>
     <ClCompile Include="SystemFileHelper.cpp">
       <Filter>Helpers\System</Filter>
+    </ClCompile>
+    <ClCompile Include="TestWindowCreator.cpp">
+      <Filter>Testing</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

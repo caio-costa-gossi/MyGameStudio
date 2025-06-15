@@ -31,6 +31,9 @@
     <Filter Include="Testing">
       <UniqueIdentifier>{59f38740-70f2-4312-a470-74450ccbcf60}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Runtime Managers\Input">
+      <UniqueIdentifier>{5f54ab0b-fbeb-4be5-a926-3771fed71768}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetRuntimeManager.h">
@@ -38,9 +41,6 @@
     </ClInclude>
     <ClInclude Include="Err.h">
       <Filter>Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="InputManager.h">
-      <Filter>Runtime Managers</Filter>
     </ClInclude>
     <ClInclude Include="MasterLoopManager.h">
       <Filter>Runtime Managers</Filter>
@@ -126,6 +126,12 @@
     <ClInclude Include="TestWindowCreator.h">
       <Filter>Testing</Filter>
     </ClInclude>
+    <ClInclude Include="InputManager.h">
+      <Filter>Runtime Managers\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="DILayer.h">
+      <Filter>Runtime Managers\Input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssetRuntimeManager.cpp">
@@ -133,9 +139,6 @@
     </ClCompile>
     <ClCompile Include="Err.cpp">
       <Filter>Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="InputManager.cpp">
-      <Filter>Runtime Managers</Filter>
     </ClCompile>
     <ClCompile Include="MasterLoopManager.cpp">
       <Filter>Runtime Managers</Filter>
@@ -208,6 +211,12 @@
     </ClCompile>
     <ClCompile Include="TestWindowCreator.cpp">
       <Filter>Testing</Filter>
+    </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>Runtime Managers\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="DILayer.cpp">
+      <Filter>Runtime Managers\Input</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

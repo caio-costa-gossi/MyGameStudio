@@ -87,6 +87,7 @@ Err DILayer::Update()
 		if (keyboard_->GetDeviceState(sizeof(keyboardState_), &keyboardState_) != DI_OK)
 		{
 			GameConsoleManager::PrintError("Error polling from keyboard. Trying to reacquire...");
+			keyboard_->Acquire();
 		}
 	}
 
@@ -96,6 +97,7 @@ Err DILayer::Update()
 		if (mouse_->GetDeviceState(sizeof(mouseState_), &mouseState_) != DI_OK)
 		{
 			GameConsoleManager::PrintError("Error polling from mouse. Trying to reacquire...");
+			mouse_->Acquire();
 		}
 
 		GameConsoleManager::PrintInfo("(" + std::to_string(mouseState_.lX) + "," + std::to_string(mouseState_.lY) + "," + std::to_string(mouseState_.lZ) + ")");
@@ -109,6 +111,7 @@ Err DILayer::Update()
 			if (joysticks_[i]->GetDeviceState(sizeof(joystickStates_[i]), &joystickStates_[i]) != DI_OK)
 			{
 				GameConsoleManager::PrintError("Error polling from joystick " + std::to_string(i) + ". Trying to reacquire...");
+				joysticks_[i]->Acquire();
 			}
 		}
 	}

@@ -132,6 +132,9 @@
     <ClInclude Include="DILayer.h">
       <Filter>Runtime Managers\Input</Filter>
     </ClInclude>
+    <ClInclude Include="SDLInputLayer.h">
+      <Filter>Runtime Managers\Input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssetRuntimeManager.cpp">
@@ -216,6 +219,9 @@
       <Filter>Runtime Managers\Input</Filter>
     </ClCompile>
     <ClCompile Include="DILayer.cpp">
+      <Filter>Runtime Managers\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="SDLInputLayer.cpp">
       <Filter>Runtime Managers\Input</Filter>
     </ClCompile>
   </ItemGroup>

@@ -66,4 +66,5 @@ namespace error_const
 	constexpr auto DB_ERROR_CODE = 10;
 	constexpr auto ZIP_ERROR_CODE = 11;
 	constexpr auto ASSET_IMPORTATION_ERROR_CODE = 12;
+	constexpr auto SDL_ERROR_CODE = 140;
 }

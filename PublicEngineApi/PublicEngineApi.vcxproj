@@ -40,6 +40,7 @@
     <ClInclude Include="MVector.h" />
     <ClInclude Include="PhysicsManager.h" />
     <ClInclude Include="ProcessResourceViewer.h" />
+    <ClInclude Include="SDLInputLayer.h" />
     <ClInclude Include="SystemFileHelper.h" />
     <ClInclude Include="SystemPathHelper.h" />
     <ClInclude Include="SystemsInfoHelper.h" />
@@ -70,6 +71,7 @@
     <ClCompile Include="MasterLoopManager.cpp" />
     <ClCompile Include="PhysicsManager.cpp" />
     <ClCompile Include="ProcessResourceViewer.cpp" />
+    <ClCompile Include="SDLInputLayer.cpp" />
     <ClCompile Include="SystemFileHelper.cpp" />
     <ClCompile Include="SystemPathHelper.cpp" />
     <ClCompile Include="SystemsInfoHelper.cpp" />
@@ -177,6 +179,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)extern\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -195,6 +198,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)extern\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>

@@ -1,5 +1,7 @@
 #include "TestWindowCreator.h"
 #include <iostream>
+#include <SDL3/SDL.h>
+
 #include "GameConsoleManager.h"
 #include "InputManager.h"
 
@@ -52,6 +54,18 @@ LRESULT TestWindowCreator::TestWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, L
 
 Err TestWindowCreator::CreateTestWindow()
 {
+	// Init subsystem and create window
+	if (SDL_Init(SDL_INIT_VIDEO))
+		return Err(SDL_GetError(), error_const::SDL_ERROR_CODE);
+
+	window_ = SDL_CreateWindow("Input test window", 640, 480, SDL_WINDOW_INPUT_FOCUS | SDL_WINDOW_MOUSE_FOCUS);
+
+	if (window_ == nullptr)
+		return Err(SDL_GetError(), error_const::SDL_ERROR_CODE);
+
+	// Set HW properties
+	SDL_SysWM
+
 	const auto className = "TestWindowClass";
 
 	WNDCLASSA wc = {};
@@ -80,4 +94,14 @@ Err TestWindowCreator::CreateTestWindow()
 	return error_const::SUCCESS;
 }
 
+Err TestWindowCreator::Shutdown()
+{
+	SDL_DestroyWindow(window_);
+	InputManager::Shutdown();
+
+	return error_const::SUCCESS;
+}
+
+
+SDL_Window* TestWindowCreator::window_;
 HWND TestWindowCreator::hWindow_ = nullptr;

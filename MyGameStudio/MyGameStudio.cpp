@@ -21,7 +21,7 @@ int main()
 
 	//ConsoleManager::RunConsole();
 
-	err = TestWindowCreator::StartTestWindow();
+	/*err = TestWindowCreator::StartTestWindow();
 	if (err.Code() != 0)
 	{
 		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
@@ -31,6 +31,19 @@ int main()
 	if (err.Code() != 0)
 	{
 		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
+	}*/
+
+	err = InputManager::Startup(nullptr);
+	if (err.Code())
+		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
+
+	while (true)
+	{
+		err = InputManager::Update();
+		if (err.Code())
+			ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
+
+		Sleep(1 / 30);
 	}
 
 	err = EngineCoreManager::Shutdown();

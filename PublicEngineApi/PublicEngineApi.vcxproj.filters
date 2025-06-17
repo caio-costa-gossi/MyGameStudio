@@ -135,6 +135,15 @@
     <ClInclude Include="SDLInputLayer.h">
       <Filter>Runtime Managers\Input</Filter>
     </ClInclude>
+    <ClInclude Include="JoystickState.h">
+      <Filter>Runtime Managers\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyboardState.h">
+      <Filter>Runtime Managers\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseState.h">
+      <Filter>Runtime Managers\Input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssetRuntimeManager.cpp">

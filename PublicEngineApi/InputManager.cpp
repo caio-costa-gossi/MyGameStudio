@@ -2,10 +2,15 @@
 #include <windows.h>
 #include "DILayer.h"
 #include "GameConsoleManager.h"
+#include "SDLInputLayer.h"
 
 Err InputManager::Startup(const HWND hWindow)
 {
-	Err err = DILayer::Startup(hWindow);
+	/*Err err = DILayer::Startup(hWindow);
+	if (err.Code())
+		return err;*/
+
+	Err err = SDLInputLayer::Startup(hWindow);
 	if (err.Code())
 		return err;
 
@@ -14,7 +19,11 @@ Err InputManager::Startup(const HWND hWindow)
 
 Err InputManager::Update()
 {
-	Err err = DILayer::Update();
+	/*Err err = DILayer::Update();
+	if (err.Code())
+		return err;*/
+
+	Err err = SDLInputLayer::Update();
 	if (err.Code())
 		return err;
 
@@ -23,7 +32,11 @@ Err InputManager::Update()
 
 Err InputManager::Shutdown()
 {
-	Err err = DILayer::Shutdown();
+	/*Err err = DILayer::Shutdown();
+	if (err.Code())
+		return err;*/
+
+	Err err = SDLInputLayer::Shutdown();
 	if (err.Code())
 		return err;
 

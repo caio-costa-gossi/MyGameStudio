@@ -25,7 +25,6 @@ private:
 	static bool isJoystickActive_;
 
 	static Err StartupJoysticks();
-	static Err StartupKeyboardMouse();
 
 public:
 	static Err Startup(HWND hWindow);

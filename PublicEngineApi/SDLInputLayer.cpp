@@ -3,11 +3,10 @@
 
 Err SDLInputLayer::Startup(HWND hWindow)
 {
-	Err err = StartupJoysticks();
-	if (err.Code())
-		return err;
+	if (!SDL_Init(SDL_INIT_EVENTS))
+		return Err(SDL_GetError(), error_const::SDL_ERROR_CODE);
 
-	err = StartupKeyboardMouse();
+	Err err = StartupJoysticks();
 	if (err.Code())
 		return err;
 
@@ -16,11 +15,56 @@ Err SDLInputLayer::Startup(HWND hWindow)
 
 Err SDLInputLayer::Shutdown()
 {
+	for (const Joystick& joystick : joysticks_)
+	{
+		SDL_CloseJoystick(joystick.Joystick);
+	}
+
+	SDL_Quit();
 	return error_const::SUCCESS;
 }
 
 Err SDLInputLayer::Update()
 {
+	SDL_Event event;
+
+	while (SDL_PollEvent(&event))
+	{
+		switch (event.type) {
+		/*case SDL_EVENT_JOYSTICK_AXIS_MOTION:
+			std::cout << "Axis " << static_cast<int>(event.jaxis.axis)
+				<< " moved to " << event.jaxis.value << "\n";
+			break;*/
+
+		case SDL_EVENT_JOYSTICK_BUTTON_DOWN:
+			std::cout << "Button " << static_cast<int>(event.jbutton.button)
+				<< " pressed.\n";
+			break;
+
+		case SDL_EVENT_JOYSTICK_BUTTON_UP:
+			std::cout << "Button " << static_cast<int>(event.jbutton.button)
+				<< " released.\n";
+			break;
+
+		case SDL_EVENT_JOYSTICK_HAT_MOTION:
+			std::cout << "Hat " << static_cast<int>(event.jhat.hat)
+				<< " changed to " << static_cast<int>(event.jhat.value) << "\n";
+			break;
+		case SDL_EVENT_KEY_DOWN:
+			std::cout << "Key down!";
+			break;
+		case SDL_EVENT_KEY_UP:
+			std::cout << "Key up!";
+			break;
+		case SDL_EVENT_MOUSE_MOTION:
+			std::cout << "Mouse moved!";
+			break;
+		case SDL_EVENT_MOUSE_ADDED:
+			std::cout << "Mouse added!";
+			break;
+		}
+	}
+
 	return error_const::SUCCESS;
 }
 
@@ -62,6 +106,8 @@ Err SDLInputLayer::StartupJoysticks()
 }
 
 
-
-uint8_t SDLInputLayer::joystickCount_ = 0;
 auto SDLInputLayer::joysticks_ = std::vector<Joystick>();
+uint8_t SDLInputLayer::joystickCount_ = 0;
+bool SDLInputLayer::isKeyboardActive_ = true;
+bool SDLInputLayer::isMouseActive_ = true;
+bool SDLInputLayer::isJoystickActive_ = true;

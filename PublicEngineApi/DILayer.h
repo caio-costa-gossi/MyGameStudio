@@ -4,7 +4,11 @@
 #include <Windows.h>
 #include "InputLayer.h"
 
-using Device = LPDIRECTINPUTDEVICE8;
+struct Device
+{
+	LPDIRECTINPUTDEVICE8 Data;
+	std::vector<std::string> ObjectNames;
+};
 
 class DILayer : public InputLayer
 {
@@ -30,10 +34,12 @@ private:
 
 	// Callback instance access
 	static DILayer* instance_;
+	static Device* device_;
 
 	EventDispatcher dispatcher_;
 
-	static BOOL EnumDevicesCallback(LPCDIDEVICEINSTANCE instance, LPVOID value);
+	static BOOL EnumDevicesCallback(LPCDIDEVICEINSTANCE instance, LPVOID pContext);
+	static BOOL EnumObjectsCallback(LPCDIDEVICEOBJECTINSTANCE object, LPVOID pContext);
 
 public:
 	Err Startup(HWND hWindow) override;

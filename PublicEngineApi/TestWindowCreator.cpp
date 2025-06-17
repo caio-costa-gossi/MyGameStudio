@@ -44,7 +44,7 @@ Err TestWindowCreator::Run()
 			return err;
 
 		// Cap 20 FPS
-		Sleep(50);
+		Sleep(2000);
 	}
 
 	return error_const::SUCCESS;

@@ -17,42 +17,51 @@ Err DILayer::Startup(HWND hWindow)
 	joystickCount_ = static_cast<uint8_t>(joysticks_.size());
 
 	// Create mouse & keyboard
-	if (FAILED(dInput_->CreateDevice(GUID_SysKeyboard, &keyboard_, nullptr)))
+	if (FAILED(dInput_->CreateDevice(GUID_SysKeyboard, &keyboard_.Data, nullptr)))
 		return error_const::INPUT_CREATE_FAIL;
 
-	if (FAILED(dInput_->CreateDevice(GUID_SysMouse, &mouse_, nullptr)))
+	if (FAILED(dInput_->CreateDevice(GUID_SysMouse, &mouse_.Data, nullptr)))
 		return error_const::INPUT_CREATE_FAIL;
+
+	// Enumerate device objects for joysticks
+	for (Device& joystick : joysticks_)
+	{
+		device_ = &joystick;
+
+		if (FAILED(joystick.Data->EnumObjects(EnumObjectsCallback, nullptr, DIDFT_ALL)))
+			GameConsoleManager::PrintError("Failed to enumerate objects");
+	}
 
 	// Set data format
 	for (const Device device : joysticks_)
 	{
-		if (FAILED(device->SetDataFormat(&c_dfDIJoystick)))
+		if (FAILED(device.Data->SetDataFormat(&c_dfDIJoystick)))
 			return error_const::INPUT_SET_FORMAT_FAIL;
 	}
 
-	if (FAILED(mouse_->SetDataFormat(&c_dfDIMouse)))
+	if (FAILED(mouse_.Data->SetDataFormat(&c_dfDIMouse)))
 		return error_const::INPUT_SET_FORMAT_FAIL;
 
-	if (FAILED(keyboard_->SetDataFormat(&c_dfDIKeyboard)))
+	if (FAILED(keyboard_.Data->SetDataFormat(&c_dfDIKeyboard)))
 		return error_const::INPUT_SET_FORMAT_FAIL;
 
 	// Set cooperative level
 	for (const Device device : joysticks_)
 	{
-		if (FAILED(device->SetCooperativeLevel(hWindow, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND)))
+		if (FAILED(device.Data->SetCooperativeLevel(hWindow, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND)))
 			return error_const::INPUT_SET_CL_FAIL;
 	}
 
-	if (FAILED(mouse_->SetCooperativeLevel(hWindow, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND)))
+	if (FAILED(mouse_.Data->SetCooperativeLevel(hWindow, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND)))
 		return error_const::INPUT_SET_CL_FAIL;
 
-	if (FAILED(keyboard_->SetCooperativeLevel(hWindow, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND)))
+	if (FAILED(keyboard_.Data->SetCooperativeLevel(hWindow, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND)))
 		return error_const::INPUT_SET_CL_FAIL;
 
 	// Acquire devices
 	for (const Device device : joysticks_)
 	{
-		HRESULT result = device->Acquire();
+		HRESULT result = device.Data->Acquire();
 
 		if (FAILED(result))
 		{
@@ -62,13 +71,13 @@ Err DILayer::Startup(HWND hWindow)
 		}
 	}
 
-	if (FAILED(mouse_->Acquire()))
+	if (FAILED(mouse_.Data->Acquire()))
 	{
 		GameConsoleManager::PrintError(error_const::INPUT_MOUSE_ACQUIRE_FAIL.Message());
 		isMouseActive_ = false;
 	}
 
-	if (FAILED(keyboard_->Acquire()))
+	if (FAILED(keyboard_.Data->Acquire()))
 	{
 		GameConsoleManager::PrintError(error_const::INPUT_KEYBOARD_ACQUIRE_FAIL.Message());
 		isKeyboardActive_ = false;
@@ -83,36 +92,39 @@ Err DILayer::Update()
 
 	if (isKeyboardActive_)
 	{
-		keyboard_->Poll();
+		keyboard_.Data->Poll();
 
-		if (keyboard_->GetDeviceState(sizeof(keyboardState_), &keyboardState_) != DI_OK)
+		if (keyboard_.Data->GetDeviceState(sizeof(keyboardState_), &keyboardState_) != DI_OK)
 		{
 			GameConsoleManager::PrintError("Error polling from keyboard. Trying to reacquire...");
-			keyboard_->Acquire();
+			keyboard_.Data->Acquire();
 		}
 	}
 
 	if (isMouseActive_)
 	{
-		mouse_->Poll();
-		if (mouse_->GetDeviceState(sizeof(mouseState_), &mouseState_) != DI_OK)
+		mouse_.Data->Poll();
+		if (mouse_.Data->GetDeviceState(sizeof(mouseState_), &mouseState_) != DI_OK)
 		{
 			GameConsoleManager::PrintError("Error polling from mouse. Trying to reacquire...");
-			mouse_->Acquire();
+			mouse_.Data->Acquire();
 		}
-
-		GameConsoleManager::PrintInfo("(" + std::to_string(mouseState_.lX) + "," + std::to_string(mouseState_.lY) + "," + std::to_string(mouseState_.lZ) + ")");
 	}
 
 	if (isJoystickActive_)
 	{
 		for (uint8_t i = 0; i < joystickCount_; ++i)
 		{
-			joysticks_[i]->Poll();
-			if (joysticks_[i]->GetDeviceState(sizeof(joystickStates_[i]), &joystickStates_[i]) != DI_OK)
+			joysticks_[i].Data->Poll();
+			if (joysticks_[i].Data->GetDeviceState(sizeof(joystickStates_[i]), &joystickStates_[i]) != DI_OK)
 			{
 				GameConsoleManager::PrintError("Error polling from joystick " + std::to_string(i) + ". Trying to reacquire...");
-				joysticks_[i]->Acquire();
+				joysticks_[i].Data->Acquire();
+			}
+
+			for (int btn = 0; btn < 16; ++btn)
+			{
+				std::cout << "Btn " + std::to_string(btn) + ": " + std::to_string(joystickStates_[i].rgbButtons[btn]) << "\n";
 			}
 		}
 	}
@@ -124,14 +136,14 @@ Err DILayer::Shutdown()
 {
 	for (Device device : joysticks_)
 	{
-		if (device) device->Unacquire();
-		if (device) device->Release();
+		if (device.Data) device.Data->Unacquire();
+		if (device.Data) device.Data->Release();
 	}
 
-	if (keyboard_) keyboard_->Unacquire();
-	if (keyboard_) keyboard_->Release();
-	if (mouse_) mouse_->Unacquire();
-	if (mouse_) mouse_->Release();
+	if (keyboard_.Data) keyboard_.Data->Unacquire();
+	if (keyboard_.Data) keyboard_.Data->Release();
+	if (mouse_.Data) mouse_.Data->Unacquire();
+	if (mouse_.Data) mouse_.Data->Release();
 
 	if (dInput_) dInput_->Release();
 
@@ -143,17 +155,35 @@ InputState DILayer::GetInputStates()
 	return {};
 }
 
-BOOL DILayer::EnumDevicesCallback(const LPCDIDEVICEINSTANCE instance, LPVOID value)
+BOOL DILayer::EnumDevicesCallback(const LPCDIDEVICEINSTANCE instance, LPVOID pContext)
 {
 	if (instance_ == nullptr)
 		return DIENUM_STOP;
 
 	Device newDevice;
-	instance_->dInput_->CreateDevice(instance->guidInstance, &newDevice, nullptr);
+	instance_->dInput_->CreateDevice(instance->guidInstance, &newDevice.Data, nullptr);
 	instance_->joysticks_.push_back(newDevice);
 
 	return DIENUM_CONTINUE;
 }
 
+BOOL DILayer::EnumObjectsCallback(const LPCDIDEVICEOBJECTINSTANCE object, LPVOID pContext)
+{
+	if (device_ == nullptr)
+		return DIENUM_CONTINUE;
+
+	if (!(object->dwType & DIDFT_BUTTON))
+		return DIENUM_CONTINUE;
+
+	char deviceName[256];
+	size_t converted;
+	wcstombs_s(&converted, deviceName, object->tszName, 256);
+	std::cout << " Name: " << deviceName << "\n";
+
+	device_->ObjectNames.emplace_back(deviceName);
+	return DIENUM_CONTINUE;
+}
+
 
 DILayer* DILayer::instance_ = nullptr;
+Device* DILayer::device_ = nullptr;

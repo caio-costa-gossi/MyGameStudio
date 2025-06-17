@@ -3,27 +3,31 @@
 #include <vector>
 #include <SDL3/SDL.h>
 
-struct SDLJoystickInterface
+struct SDLGamepadInterface
 {
-	SDL_Joystick* Joystick;
-	const char* JoystickName;
+	SDL_Gamepad* Gamepad;
+	SDL_GamepadType GamepadType;
+	const char* GamepadName;
 };
 
-using Joystick = SDLJoystickInterface;
+using GamepadInfo = SDLGamepadInterface;
 
 class SDLInputLayer : public InputLayer
 {
 private:
 	// Devices
-	std::vector<Joystick> joysticks_ = std::vector<Joystick>();
+	std::vector<GamepadInfo> gamepads_ = std::vector<GamepadInfo>();
 
 	// Input type control
-	uint8_t joystickCount_ = 0;
+	uint8_t gamepadCount_ = 0;
 	bool isKeyboardActive_ = true;
 	bool isMouseActive_ = true;
-	bool isJoystickActive_ = true;
+	bool isGamepadActive_ = true;
 
-	Err StartupJoysticks();
+	// Engine input structure
+	InputState currentState_;
+
+	Err StartupGamepads();
 
 public:
 	Err Startup(HWND hWindow = nullptr) override;

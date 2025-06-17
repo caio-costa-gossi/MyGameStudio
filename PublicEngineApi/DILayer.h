@@ -26,6 +26,9 @@ private:
 	DIMOUSESTATE mouseState_ = DIMOUSESTATE();
 	BYTE keyboardState_[256] = {0};
 
+	// Engine input structure
+	InputState currentState_;
+
 	// Input type control
 	uint8_t joystickCount_ = 0;
 	bool isKeyboardActive_ = true;

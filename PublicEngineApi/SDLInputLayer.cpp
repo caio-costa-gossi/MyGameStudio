@@ -6,7 +6,7 @@ Err SDLInputLayer::Startup(HWND hWindow)
 	if (!SDL_Init(SDL_INIT_EVENTS))
 		return Err(SDL_GetError(), error_const::SDL_ERROR_CODE);
 
-	Err err = StartupJoysticks();
+	Err err = StartupGamepads();
 	if (err.Code())
 		return err;
 
@@ -15,9 +15,9 @@ Err SDLInputLayer::Startup(HWND hWindow)
 
 Err SDLInputLayer::Shutdown()
 {
-	for (const Joystick& joystick : joysticks_)
+	for (const GamepadInfo& gamepad : gamepads_)
 	{
-		SDL_CloseJoystick(joystick.Joystick);
+		SDL_CloseGamepad(gamepad.Gamepad);
 	}
 
 	SDL_Quit();
@@ -73,38 +73,39 @@ InputState SDLInputLayer::GetInputStates()
 	return {};
 }
 
-Err SDLInputLayer::StartupJoysticks()
+Err SDLInputLayer::StartupGamepads()
 {
 	if (!SDL_Init(SDL_INIT_JOYSTICK))
 		return Err(SDL_GetError(), error_const::SDL_ERROR_CODE);
 
-	int joystickCount;
-	SDL_JoystickID* joystickList = SDL_GetJoysticks(&joystickCount);
+	int gamepadCount;
+	SDL_JoystickID* gamepadList = SDL_GetGamepads(&gamepadCount);
+	gamepadCount_ = static_cast<uint8_t>(gamepadCount);
 
-	// Start joysticks
-	if (joystickCount <= 0)
+	// Start gamepads
+	if (gamepadCount <= 0)
 	{
-		isJoystickActive_ = false;
-		GameConsoleManager::PrintInfo("No joysticks detected. Disabling joystick input...");
+		isGamepadActive_ = false;
+		GameConsoleManager::PrintInfo("No gamepads detected. Disabling gamepad input...");
 		return error_const::SUCCESS;
 	}
 
-	// Open joysticks
-	for (int i = 0; i < joystickCount; ++i)
+	// Open gamepads
+	for (int i = 0; i < gamepadCount; ++i)
 	{
-		if (joystickList[i] == '\0')
+		if (gamepadList[i] == '\0')
 			break;
 
-		SDL_Joystick* newJoystick = SDL_OpenJoystick(joystickList[i]);
+		SDL_Gamepad* newGamepad = SDL_OpenGamepad(gamepadList[i]);
 
-		if (newJoystick == nullptr)
+		if (newGamepad == nullptr)
 		{
-			GameConsoleManager::PrintInfo("Failure to open joystick " + std::to_string(i) + ": " + SDL_GetError());
+			GameConsoleManager::PrintInfo("Failure to open gamepad " + std::to_string(i) + ": " + SDL_GetError());
 			continue;
 		}
 			
-		joysticks_.push_back({ newJoystick, SDL_GetJoystickName(newJoystick) });
-		GameConsoleManager::PrintInfo("Added " + std::string(SDL_GetJoystickName(newJoystick)));
+		gamepads_.push_back({ newGamepad, SDL_GetGamepadName(newGamepad) });
+		GameConsoleManager::PrintInfo("Added " + std::string(SDL_GetGamepadName(newGamepad)));
 	}
 
 	return error_const::SUCCESS;

@@ -132,13 +132,13 @@
     <ClInclude Include="InputManager.h">
       <Filter>Runtime Managers\Input</Filter>
     </ClInclude>
-    <ClInclude Include="JoystickState.h">
+    <ClInclude Include="Gamepad.h">
       <Filter>Runtime Managers\Input</Filter>
     </ClInclude>
-    <ClInclude Include="KeyboardState.h">
+    <ClInclude Include="Keyboard.h">
       <Filter>Runtime Managers\Input</Filter>
     </ClInclude>
-    <ClInclude Include="MouseState.h">
+    <ClInclude Include="Mouse.h">
       <Filter>Runtime Managers\Input</Filter>
     </ClInclude>
     <ClInclude Include="DILayer.h">

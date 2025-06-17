@@ -37,11 +37,11 @@
     <ClInclude Include="InputState.h" />
     <ClInclude Include="InputLayer.h" />
     <ClInclude Include="InputManager.h" />
-    <ClInclude Include="JoystickState.h" />
-    <ClInclude Include="KeyboardState.h" />
+    <ClInclude Include="Gamepad.h" />
+    <ClInclude Include="Keyboard.h" />
     <ClInclude Include="LocalizationManager.h" />
     <ClInclude Include="MasterLoopManager.h" />
-    <ClInclude Include="MouseState.h" />
+    <ClInclude Include="Mouse.h" />
     <ClInclude Include="MVector.h" />
     <ClInclude Include="PhysicsManager.h" />
     <ClInclude Include="ProcessResourceViewer.h" />

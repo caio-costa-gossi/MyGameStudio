@@ -2,5 +2,5 @@
 
 struct KeyboardState
 {
-	bool BtnState[256];
+	bool BtnState[256] = { false };
 };

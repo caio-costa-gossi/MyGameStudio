@@ -1,12 +1,14 @@
 #pragma once
-#include "JoystickState.h"
-#include "KeyboardState.h"
-#include "MouseState.h"
+#include <vector>
+
+#include "Gamepad.h"
+#include "Keyboard.h"
+#include "Mouse.h"
 
 struct InputState
 {
 	uint8_t JoystickCount;
-	JoystickState* JoystickStates;
+	std::vector<Gamepad> Gamepads;
 	KeyboardState KeyboardState;
 	MouseState MouseState;
 };

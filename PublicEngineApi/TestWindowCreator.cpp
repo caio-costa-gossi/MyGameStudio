@@ -7,7 +7,7 @@
 Err TestWindowCreator::CreateTestWindow()
 {
 	// Init subsystem and create window
-	if (SDL_Init(SDL_INIT_VIDEO))
+	if (!SDL_Init(SDL_INIT_VIDEO))
 		return Err(SDL_GetError(), error_const::SDL_ERROR_CODE);
 
 	window_ = SDL_CreateWindow("Input test window", 640, 480, SDL_WINDOW_INPUT_FOCUS | SDL_WINDOW_MOUSE_FOCUS);

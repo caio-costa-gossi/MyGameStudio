@@ -21,29 +21,22 @@ int main()
 
 	//ConsoleManager::RunConsole();
 
-	/*err = TestWindowCreator::StartTestWindow();
+	err = TestWindowCreator::Startup();
 	if (err.Code() != 0)
 	{
 		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
 	}
 
-	err = TestWindowCreator::UpdateTestWindow();
+	err = TestWindowCreator::Run();
 	if (err.Code() != 0)
 	{
 		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
-	}*/
+	}
 
-	err = InputManager::Startup(nullptr);
-	if (err.Code())
-		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
-
-	while (true)
+	err = TestWindowCreator::Shutdown();
+	if (err.Code() != 0)
 	{
-		err = InputManager::Update();
-		if (err.Code())
-			ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
-
-		Sleep(1 / 30);
+		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
 	}
 
 	err = EngineCoreManager::Shutdown();

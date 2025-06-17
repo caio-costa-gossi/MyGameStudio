@@ -3,8 +3,8 @@
 
 Err SDLInputLayer::Startup(HWND hWindow)
 {
-	if (!SDL_Init(SDL_INIT_EVENTS))
-		return Err(SDL_GetError(), error_const::SDL_ERROR_CODE);
+	/*if (!SDL_Init(SDL_INIT_EVENTS))
+		return Err(SDL_GetError(), error_const::SDL_ERROR_CODE);*/
 
 	Err err = StartupJoysticks();
 	if (err.Code())

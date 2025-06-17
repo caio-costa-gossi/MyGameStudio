@@ -1,4 +1,6 @@
 #pragma once
+#define SDL_PROP_WINDOW_WIND32_HWND_POINTER
+
 #include <Windows.h>
 #include <dinput.h>
 #include <SDL3/SDL.h>
@@ -10,10 +12,10 @@ private:
 	static SDL_Window* window_;
 	static HWND hWindow_;
 
-public:
-	static Err StartTestWindow();
-	static Err UpdateTestWindow();
 	static Err CreateTestWindow();
+
+public:
+	static Err Startup();
+	static Err Run();
 	static Err Shutdown();
-	static LRESULT CALLBACK TestWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 };

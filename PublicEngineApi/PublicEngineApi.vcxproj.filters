@@ -34,6 +34,9 @@
     <Filter Include="Runtime Managers\Input">
       <UniqueIdentifier>{5f54ab0b-fbeb-4be5-a926-3771fed71768}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Runtime Managers\Input\InputLayer">
+      <UniqueIdentifier>{352de222-aba2-4054-ad1c-86645dc205c8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetRuntimeManager.h">
@@ -129,12 +132,6 @@
     <ClInclude Include="InputManager.h">
       <Filter>Runtime Managers\Input</Filter>
     </ClInclude>
-    <ClInclude Include="DILayer.h">
-      <Filter>Runtime Managers\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="SDLInputLayer.h">
-      <Filter>Runtime Managers\Input</Filter>
-    </ClInclude>
     <ClInclude Include="JoystickState.h">
       <Filter>Runtime Managers\Input</Filter>
     </ClInclude>
@@ -142,6 +139,18 @@
       <Filter>Runtime Managers\Input</Filter>
     </ClInclude>
     <ClInclude Include="MouseState.h">
+      <Filter>Runtime Managers\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="DILayer.h">
+      <Filter>Runtime Managers\Input\InputLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="InputLayer.h">
+      <Filter>Runtime Managers\Input\InputLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="SDLInputLayer.h">
+      <Filter>Runtime Managers\Input\InputLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="InputState.h">
       <Filter>Runtime Managers\Input</Filter>
     </ClInclude>
   </ItemGroup>
@@ -228,10 +237,13 @@
       <Filter>Runtime Managers\Input</Filter>
     </ClCompile>
     <ClCompile Include="DILayer.cpp">
-      <Filter>Runtime Managers\Input</Filter>
+      <Filter>Runtime Managers\Input\InputLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="InputLayer.cpp">
+      <Filter>Runtime Managers\Input\InputLayer</Filter>
     </ClCompile>
     <ClCompile Include="SDLInputLayer.cpp">
-      <Filter>Runtime Managers\Input</Filter>
+      <Filter>Runtime Managers\Input\InputLayer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

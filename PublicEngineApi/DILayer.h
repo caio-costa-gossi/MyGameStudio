@@ -2,38 +2,44 @@
 #include <dinput.h>
 #include "EventDispatcher.h"
 #include <Windows.h>
+#include "InputLayer.h"
 
 using Device = LPDIRECTINPUTDEVICE8;
 
-class DILayer
+class DILayer : public InputLayer
 {
 private:
 	// Main DI Interface
-	static LPDIRECTINPUT8 dInput_;
+	LPDIRECTINPUT8 dInput_ = nullptr;
 
 	// Devices
-	static std::vector<Device> joysticks_;
-	static Device mouse_;
-	static Device keyboard_;
+	std::vector<Device> joysticks_ = std::vector<Device>();
+	Device mouse_ = Device();
+	Device keyboard_ = Device();
 
 	// States
-	static std::vector<DIJOYSTATE> joystickStates_;
-	static DIMOUSESTATE mouseState_;
-	static BYTE keyboardState_[256];
+	std::vector<DIJOYSTATE> joystickStates_ = std::vector<DIJOYSTATE>(4);
+	DIMOUSESTATE mouseState_ = DIMOUSESTATE();
+	BYTE keyboardState_[256] = {0};
 
 	// Input type control
-	static uint8_t joystickCount_;
-	static bool isKeyboardActive_;
-	static bool isMouseActive_;
-	static bool isJoystickActive_;
+	uint8_t joystickCount_ = 0;
+	bool isKeyboardActive_ = true;
+	bool isMouseActive_ = true;
+	bool isJoystickActive_ = true;
 
-	static EventDispatcher dispatcher_;
+	// Callback instance access
+	static DILayer* instance_;
+
+	EventDispatcher dispatcher_;
 
 	static BOOL EnumDevicesCallback(LPCDIDEVICEINSTANCE instance, LPVOID value);
 
 public:
-	static Err Startup(HWND hWindow);
-	static Err Update();
-	static Err Shutdown();
+	Err Startup(HWND hWindow) override;
+	Err Update() override;
+	Err Shutdown() override;
+
+	InputState GetInputStates() override;
 
 };

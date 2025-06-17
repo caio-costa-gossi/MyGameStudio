@@ -10,6 +10,7 @@ Err DILayer::Startup(HWND hWindow)
 		return error_const::INPUT_MOD_INIT_FAIL;
 
 	// Enumerate joysticks and create
+	instance_ = this;
 	if (FAILED(dInput_->EnumDevices(DI8DEVCLASS_GAMECTRL, EnumDevicesCallback, nullptr, DIEDFL_ALLDEVICES)))
 		return error_const::INPUT_ENUM_FAIL;
 
@@ -35,7 +36,7 @@ Err DILayer::Startup(HWND hWindow)
 	if (FAILED(keyboard_->SetDataFormat(&c_dfDIKeyboard)))
 		return error_const::INPUT_SET_FORMAT_FAIL;
 
-	//Set cooperative level
+	// Set cooperative level
 	for (const Device device : joysticks_)
 	{
 		if (FAILED(device->SetCooperativeLevel(hWindow, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND)))
@@ -137,27 +138,22 @@ Err DILayer::Shutdown()
 	return error_const::SUCCESS;
 }
 
+InputState DILayer::GetInputStates()
+{
+	return {};
+}
+
 BOOL DILayer::EnumDevicesCallback(const LPCDIDEVICEINSTANCE instance, LPVOID value)
 {
+	if (instance_ == nullptr)
+		return DIENUM_STOP;
+
 	Device newDevice;
-	dInput_->CreateDevice(instance->guidInstance, &newDevice, nullptr);
-	joysticks_.push_back(newDevice);
+	instance_->dInput_->CreateDevice(instance->guidInstance, &newDevice, nullptr);
+	instance_->joysticks_.push_back(newDevice);
 
 	return DIENUM_CONTINUE;
 }
 
 
-LPDIRECTINPUT8 DILayer::dInput_ = nullptr;
-
-auto DILayer::joysticks_ = std::vector<Device>();
-Device DILayer::mouse_;
-Device DILayer::keyboard_;
-
-auto DILayer::joystickStates_ = std::vector<DIJOYSTATE>(4);
-DIMOUSESTATE DILayer::mouseState_;
-BYTE DILayer::keyboardState_[256] = { 0 };
-
-uint8_t DILayer::joystickCount_ = 0;
-bool DILayer::isKeyboardActive_ = true;
-bool DILayer::isMouseActive_ = true;
-bool DILayer::isJoystickActive_ = true;
+DILayer* DILayer::instance_ = nullptr;

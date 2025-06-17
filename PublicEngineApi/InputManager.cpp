@@ -4,13 +4,16 @@
 #include "GameConsoleManager.h"
 #include "SDLInputLayer.h"
 
-Err InputManager::Startup(const HWND hWindow)
+Err InputManager::Startup(const HWND hWindow, const bool usingSdl)
 {
-	/*Err err = DILayer::Startup(hWindow);
-	if (err.Code())
-		return err;*/
+	// Define input layer
+	if (usingSdl)
+		inputLayer_ = new SDLInputLayer();
+	else
+		inputLayer_ = new DILayer();
 
-	Err err = SDLInputLayer::Startup(hWindow);
+	// Startup instance
+	Err err = inputLayer_->Startup(hWindow);
 	if (err.Code())
 		return err;
 
@@ -19,24 +22,18 @@ Err InputManager::Startup(const HWND hWindow)
 
 Err InputManager::Update()
 {
-	/*Err err = DILayer::Update();
-	if (err.Code())
-		return err;*/
-
-	Err err = SDLInputLayer::Update();
+	Err err = inputLayer_->Update();
 	if (err.Code())
 		return err;
+
+	inputState_ = inputLayer_->GetInputStates();
 
 	return error_const::SUCCESS;
 }
 
 Err InputManager::Shutdown()
 {
-	/*Err err = DILayer::Shutdown();
-	if (err.Code())
-		return err;*/
-
-	Err err = SDLInputLayer::Shutdown();
+	Err err = inputLayer_->Shutdown();
 	if (err.Code())
 		return err;
 
@@ -47,3 +44,7 @@ Err InputManager::SubBeforeInput(const Subscription& sub)
 {
 	return error_const::SUCCESS;
 }
+
+
+InputLayer* InputManager::inputLayer_ = nullptr;
+InputState InputManager::inputState_;

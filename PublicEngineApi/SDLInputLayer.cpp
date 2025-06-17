@@ -51,21 +51,26 @@ Err SDLInputLayer::Update()
 				<< " changed to " << static_cast<int>(event.jhat.value) << "\n";
 			break;
 		case SDL_EVENT_KEY_DOWN:
-			std::cout << "Key down!";
+			std::cout << "Key down!\n";
 			break;
 		case SDL_EVENT_KEY_UP:
-			std::cout << "Key up!";
+			std::cout << "Key up!\n";
 			break;
 		case SDL_EVENT_MOUSE_MOTION:
-			std::cout << "Mouse moved!";
+			std::cout << "Mouse moved!\n";
 			break;
 		case SDL_EVENT_MOUSE_ADDED:
-			std::cout << "Mouse added!";
+			std::cout << "Mouse added!\n";
 			break;
 		}
 	}
 
 	return error_const::SUCCESS;
+}
+
+InputState SDLInputLayer::GetInputStates()
+{
+	return {};
 }
 
 Err SDLInputLayer::StartupJoysticks()
@@ -104,10 +109,3 @@ Err SDLInputLayer::StartupJoysticks()
 
 	return error_const::SUCCESS;
 }
-
-
-auto SDLInputLayer::joysticks_ = std::vector<Joystick>();
-uint8_t SDLInputLayer::joystickCount_ = 0;
-bool SDLInputLayer::isKeyboardActive_ = true;
-bool SDLInputLayer::isMouseActive_ = true;
-bool SDLInputLayer::isJoystickActive_ = true;

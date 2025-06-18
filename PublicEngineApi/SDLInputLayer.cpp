@@ -44,6 +44,13 @@ Err SDLInputLayer::Update()
 			if (err.Code())
 				GameConsoleManager::PrintError(err.Message());
 		}
+
+		if (isKeyboardActive_)
+		{
+			err = UpdateKeyboard(event);
+			if (err.Code())
+				GameConsoleManager::PrintError(err.Message());
+		}
 	}
 
 	return error_const::SUCCESS;
@@ -139,6 +146,17 @@ Err SDLInputLayer::UpdateGamepadAxis(const uint8_t gamepadId, const uint8_t axis
 
 Err SDLInputLayer::UpdateKeyboard(const SDL_Event& event)
 {
+	switch (event.type)
+	{
+	case SDL_EVENT_KEY_DOWN:
+	case SDL_EVENT_KEY_UP:
+		currentState_.KeyboardState.BtnState[event.key.scancode] = event.key.down;
+		break;
+
+	default:
+		break;
+	}
+
 	return error_const::SUCCESS;
 }
 

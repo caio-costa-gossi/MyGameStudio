@@ -1,4 +1,6 @@
 #include "DILayer.h"
+
+#include "DILayerMapping.h"
 #include "GameConsoleManager.h"
 
 Err DILayer::Startup(HWND hWindow)
@@ -88,45 +90,81 @@ Err DILayer::Startup(HWND hWindow)
 
 Err DILayer::Update()
 {
-	HRESULT pollResult, stateResult;
+	Err err;
 
 	if (isKeyboardActive_)
 	{
-		keyboard_.Data->Poll();
-
-		if (keyboard_.Data->GetDeviceState(sizeof(keyboardState_), &keyboardState_) != DI_OK)
-		{
-			GameConsoleManager::PrintError("Error polling from keyboard. Trying to reacquire...");
-			keyboard_.Data->Acquire();
-		}
+		err = UpdateKeyboard();
+		if (err.Code())
+			GameConsoleManager::PrintError(err.Message());
 	}
+
+	/*for (int i = 0; i < 256; ++i)
+	{*/
+		if (keyboardState_[30] != 0)
+			std::cout << "1";
+		else
+			std::cout << "0";
+	//}
+	std::cout << "\n";
 
 	if (isMouseActive_)
 	{
-		mouse_.Data->Poll();
-		if (mouse_.Data->GetDeviceState(sizeof(mouseState_), &mouseState_) != DI_OK)
-		{
-			GameConsoleManager::PrintError("Error polling from mouse. Trying to reacquire...");
-			mouse_.Data->Acquire();
-		}
+		err = UpdateMouse();
+		if (err.Code())
+			GameConsoleManager::PrintError(err.Message());
 	}
 
 	if (isJoystickActive_)
 	{
 		for (uint8_t i = 0; i < joystickCount_; ++i)
 		{
-			joysticks_[i].Data->Poll();
-			if (joysticks_[i].Data->GetDeviceState(sizeof(joystickStates_[i]), &joystickStates_[i]) != DI_OK)
-			{
-				GameConsoleManager::PrintError("Error polling from joystick " + std::to_string(i) + ". Trying to reacquire...");
-				joysticks_[i].Data->Acquire();
-			}
-
-			for (int btn = 0; btn < 16; ++btn)
-			{
-				std::cout << "Btn " + std::to_string(btn) + ": " + std::to_string(joystickStates_[i].rgbButtons[btn]) << "\n";
-			}
+			err = UpdateJoystick(i);
+			if (err.Code())
+				GameConsoleManager::PrintError(err.Message());
 		}
+	}
+
+	return error_const::SUCCESS;
+}
+
+Err DILayer::UpdateJoystick(const uint8_t joystickId)
+{
+	joysticks_[joystickId].Data->Poll();
+
+	if (joysticks_[joystickId].Data->GetDeviceState(sizeof(joystickStates_[joystickId]), &joystickStates_[joystickId]) != DI_OK)
+	{
+		joysticks_[joystickId].Data->Acquire();
+		return error_const::INPUT_JOYSTICK_POLL_FAIL;
+	}
+
+	return error_const::SUCCESS;
+}
+
+Err DILayer::UpdateKeyboard()
+{
+	keyboard_.Data->Poll();
+
+	if (keyboard_.Data->GetDeviceState(sizeof(keyboardState_), &keyboardState_) != DI_OK)
+	{
+		keyboard_.Data->Acquire();
+		return error_const::INPUT_KEYBOARD_POLL_FAIL;
+	}
+
+	for (uint16_t key = 0; key < keyboard_di_count; ++key)
+		currentState_.KeyboardState.BtnState[gKeyboardMapping[static_cast<uint8_t>(key)]] = keyboardState_[key] != 0;
+
+	return error_const::SUCCESS;
+}
+
+Err DILayer::UpdateMouse()
+{
+	mouse_.Data->Poll();
+
+	if (mouse_.Data->GetDeviceState(sizeof(mouseState_), &mouseState_) != DI_OK)
+	{
+		mouse_.Data->Acquire();
+		return error_const::INPUT_MOUSE_POLL_FAIL;
 	}
 
 	return error_const::SUCCESS;
@@ -152,7 +190,7 @@ Err DILayer::Shutdown()
 
 InputState DILayer::GetInputStates()
 {
-	return {};
+	return currentState_;
 }
 
 BOOL DILayer::EnumDevicesCallback(const LPCDIDEVICEINSTANCE instance, LPVOID pContext)

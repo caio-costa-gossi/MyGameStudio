@@ -26,6 +26,7 @@
     <ClInclude Include="CallbackData.h" />
     <ClInclude Include="CsvParser.h" />
     <ClInclude Include="DILayer.h" />
+    <ClInclude Include="DILayerMapping.h" />
     <ClInclude Include="Enums.h" />
     <ClInclude Include="Err.h" />
     <ClInclude Include="EventDispatcher.h" />

@@ -63,6 +63,9 @@ namespace error_const
 	const auto INPUT_JOYSTICK_ACQUIRE_FAIL = Err("Failed do acquire joystick devices. Those will be turned off.", 135);
 	const auto INPUT_MOUSE_ACQUIRE_FAIL = Err("Failed do acquire mouse device. It will be turned off.", 136);
 	const auto INPUT_KEYBOARD_ACQUIRE_FAIL = Err("Failed do acquire keyboard device. It will be turned off.", 137);
+	const auto INPUT_MOUSE_POLL_FAIL = Err("Failed to poll from mouse", 138);
+	const auto INPUT_KEYBOARD_POLL_FAIL = Err("Failed to poll from keyboard", 139);
+	const auto INPUT_JOYSTICK_POLL_FAIL = Err("Failed to poll from joystick", 140);
 
 	constexpr auto DB_ERROR_CODE = 10;
 	constexpr auto ZIP_ERROR_CODE = 11;

@@ -24,7 +24,7 @@ private:
 	// States
 	std::vector<DIJOYSTATE> joystickStates_ = std::vector<DIJOYSTATE>(4);
 	DIMOUSESTATE mouseState_ = DIMOUSESTATE();
-	BYTE keyboardState_[256] = {0};
+	BYTE keyboardState_[keyboard_di_count] = {0};
 
 	// Engine input structure
 	InputState currentState_;
@@ -35,12 +35,18 @@ private:
 	bool isMouseActive_ = true;
 	bool isJoystickActive_ = true;
 
+	// Main private methods
+	Err UpdateJoystick(uint8_t joystickId);
+	Err UpdateKeyboard();
+	Err UpdateMouse();
+
 	// Callback instance access
 	static DILayer* instance_;
 	static Device* device_;
 
 	EventDispatcher dispatcher_;
 
+	// Callbacks for DI
 	static BOOL EnumDevicesCallback(LPCDIDEVICEINSTANCE instance, LPVOID pContext);
 	static BOOL EnumObjectsCallback(LPCDIDEVICEOBJECTINSTANCE object, LPVOID pContext);
 

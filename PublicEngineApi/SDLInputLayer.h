@@ -10,7 +10,6 @@ struct SDLGamepadInterface
 	SDL_Gamepad* Gamepad;
 	SDL_GamepadType GamepadType;
 	std::string GamepadName;
-	bool UpdatedAxisInFrame[6] = { false };
 };
 
 using GamepadInfo = SDLGamepadInterface;

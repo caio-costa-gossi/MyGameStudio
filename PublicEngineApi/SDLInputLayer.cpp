@@ -1,7 +1,8 @@
 #include "SDLInputLayer.h"
 #include "GameConsoleManager.h"
 #include "NumericUtils.h"
-#include <bitset>
+
+#undef max()
 
 Err SDLInputLayer::Startup(HWND hWindow)
 {
@@ -33,10 +34,6 @@ Err SDLInputLayer::Update()
 	SDL_Event event;
 	Err err;
 
-	// Reset gamepad axis update for frame
-	for (GamepadInfo& info : gamepads_)
-		std::memset(info.UpdatedAxisInFrame, 0, sizeof(info.UpdatedAxisInFrame));
-
 	// Update currentState_
 	while (SDL_PollEvent(&event))
 	{
@@ -48,8 +45,7 @@ Err SDLInputLayer::Update()
 		}
 	}
 
-	std::string debugString = std::bitset<32>(currentState_.Gamepads[0].State.BtnState).to_string();
-	GameConsoleManager::PrintInfo(debugString);
+	GameConsoleManager::PrintInfo(std::to_string(currentState_.Gamepads[0].State.AxisState[gamepad_axis_rightx]));
 
 	return error_const::SUCCESS;
 }
@@ -150,15 +146,10 @@ Err SDLInputLayer::UpdateGamepadHat(const uint8_t gamepadId, const uint8_t newHa
 
 Err SDLInputLayer::UpdateGamepadAxis(const uint8_t gamepadId, const uint8_t axisId, const int16_t axisValue)
 {
-	const uint8_t gamepadIndex = idToIndex_[gamepadId];
+	const int16_t rectifiedAxisValue = 
+		(axisId == gamepad_axis_right_trigger || axisId == gamepad_axis_left_trigger) ? (axisValue + std::numeric_limits<int16_t>::max()) / 2 : axisValue;
 
-	// Only update this axis for this gamepad once per frame
-	if (gamepads_[gamepadIndex].UpdatedAxisInFrame[axisId])
-		return error_const::SUCCESS;
-
-	currentState_.Gamepads[gamepadIndex].State.AxisState[axisId] = axisValue;
-
-	gamepads_[gamepadIndex].UpdatedAxisInFrame[axisId] = true;
+	currentState_.Gamepads[idToIndex_[gamepadId]].State.AxisState[axisId] = rectifiedAxisValue;
 	return error_const::SUCCESS;
 }
 

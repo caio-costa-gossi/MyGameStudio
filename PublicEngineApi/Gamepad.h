@@ -1,6 +1,18 @@
 #pragma once
 #include <cstdint>
 
+enum Axis : int8_t
+{
+	gamepad_axis_invalid = -1,
+	gamepad_axis_leftx,
+	gamepad_axis_lefty,
+	gamepad_axis_rightx,
+	gamepad_axis_righty,
+	gamepad_axis_left_trigger,
+	gamepad_axis_right_trigger,
+	gamepad_axis_count
+};
+
 enum GamepadButton : int8_t
 {
 	gamepad_button_invalid = -1,

@@ -1,6 +1,7 @@
 #include "SDLInputLayer.h"
 #include "GameConsoleManager.h"
 #include "NumericUtils.h"
+#include <bitset>
 
 #undef max()
 
@@ -45,8 +46,6 @@ Err SDLInputLayer::Update()
 		}
 	}
 
-	GameConsoleManager::PrintInfo(std::to_string(currentState_.Gamepads[0].State.AxisState[gamepad_axis_rightx]));
-
 	return error_const::SUCCESS;
 }
 
@@ -57,7 +56,7 @@ InputState SDLInputLayer::GetInputStates()
 
 Err SDLInputLayer::StartupGamepads()
 {
-	if (!SDL_Init(SDL_INIT_JOYSTICK | SDL_INIT_GAMEPAD))
+	if (!SDL_Init(SDL_INIT_GAMEPAD))
 		return Err(SDL_GetError(), error_const::SDL_ERROR_CODE);
 
 	int gamepadCount;
@@ -107,16 +106,12 @@ Err SDLInputLayer::UpdateGamepads(const SDL_Event& event)
 
 	switch (event.type)
 	{
-	case SDL_EVENT_JOYSTICK_BUTTON_UP:
-	case SDL_EVENT_JOYSTICK_BUTTON_DOWN:
+	case SDL_EVENT_GAMEPAD_BUTTON_UP:
+	case SDL_EVENT_GAMEPAD_BUTTON_DOWN:
 		err = UpdateGamepadButton(static_cast<uint8_t>(event.jbutton.which), event.jbutton.button, event.jbutton.down);
 		break;
 
-	case SDL_EVENT_JOYSTICK_HAT_MOTION:
-		err = UpdateGamepadHat(static_cast<uint8_t>(event.jhat.which), event.jhat.value);
-		break;
-
-	case SDL_EVENT_JOYSTICK_AXIS_MOTION:
+	case SDL_EVENT_GAMEPAD_AXIS_MOTION:
 		err = UpdateGamepadAxis(static_cast<uint8_t>(event.jaxis.which), event.jaxis.axis, event.jaxis.value);
 		break;
 
@@ -136,20 +131,9 @@ Err SDLInputLayer::UpdateGamepadButton(const uint8_t gamepadId, const uint8_t bu
 	return error_const::SUCCESS;
 }
 
-Err SDLInputLayer::UpdateGamepadHat(const uint8_t gamepadId, const uint8_t newHatState)
-{
-	// Merge bits 24-32 from Hat reading with the buttonState
-	uint32_t& buttonState = currentState_.Gamepads[idToIndex_[gamepadId]].State.BtnState;
-	buttonState = (buttonState & 0x00FFFFFF) | (static_cast<uint32_t>(newHatState) << 24);
-	return error_const::SUCCESS;
-}
-
 Err SDLInputLayer::UpdateGamepadAxis(const uint8_t gamepadId, const uint8_t axisId, const int16_t axisValue)
 {
-	const int16_t rectifiedAxisValue = 
-		(axisId == gamepad_axis_right_trigger || axisId == gamepad_axis_left_trigger) ? (axisValue + std::numeric_limits<int16_t>::max()) / 2 : axisValue;
-
-	currentState_.Gamepads[idToIndex_[gamepadId]].State.AxisState[axisId] = rectifiedAxisValue;
+	currentState_.Gamepads[idToIndex_[gamepadId]].State.AxisState[axisId] = axisValue;
 	return error_const::SUCCESS;
 }
 

@@ -40,7 +40,6 @@ private:
 	Err UpdateMouse(const SDL_Event& event);
 
 	Err UpdateGamepadButton(uint8_t gamepadId, uint8_t buttonId, bool isPressed);
-	Err UpdateGamepadHat(uint8_t gamepadId, uint8_t newHatState);
 	Err UpdateGamepadAxis(uint8_t gamepadId, uint8_t axisId, int16_t axisValue);
 
 public:

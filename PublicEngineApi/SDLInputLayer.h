@@ -1,4 +1,6 @@
 #pragma once
+#include <unordered_map>
+
 #include "InputLayer.h"
 #include <vector>
 #include <SDL3/SDL.h>
@@ -7,7 +9,7 @@ struct SDLGamepadInterface
 {
 	SDL_Gamepad* Gamepad;
 	SDL_GamepadType GamepadType;
-	const char* GamepadName;
+	std::string GamepadName;
 };
 
 using GamepadInfo = SDLGamepadInterface;
@@ -15,6 +17,9 @@ using GamepadInfo = SDLGamepadInterface;
 class SDLInputLayer : public InputLayer
 {
 private:
+	// Auxiliary structures
+	std::unordered_map<uint8_t, uint8_t> idToIndex_ = std::unordered_map<uint8_t, uint8_t>();
+
 	// Devices
 	std::vector<GamepadInfo> gamepads_ = std::vector<GamepadInfo>();
 
@@ -25,9 +30,16 @@ private:
 	bool isGamepadActive_ = true;
 
 	// Engine input structure
-	InputState currentState_;
+	InputState currentState_ = InputState();
 
+	// Methods
 	Err StartupGamepads();
+
+	Err UpdateGamepads(const SDL_Event& event);
+	Err UpdateKeyboard(const SDL_Event& event);
+	Err UpdateMouse(const SDL_Event& event);
+
+	Err UpdateGamepadButton(uint8_t gamepadId, uint8_t buttonId, bool isPressed);
 
 public:
 	Err Startup(HWND hWindow = nullptr) override;

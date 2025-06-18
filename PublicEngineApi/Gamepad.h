@@ -47,4 +47,5 @@ struct GamepadState
 struct Gamepad
 {
 	GamepadState State;
+	std::string Name;
 };

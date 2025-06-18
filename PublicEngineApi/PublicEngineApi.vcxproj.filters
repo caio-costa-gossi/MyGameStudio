@@ -153,6 +153,9 @@
     <ClInclude Include="InputState.h">
       <Filter>Runtime Managers\Input</Filter>
     </ClInclude>
+    <ClInclude Include="NumericUtils.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssetRuntimeManager.cpp">
@@ -244,6 +247,9 @@
     </ClCompile>
     <ClCompile Include="SDLInputLayer.cpp">
       <Filter>Runtime Managers\Input\InputLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="NumericUtils.cpp">
+      <Filter>Helpers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

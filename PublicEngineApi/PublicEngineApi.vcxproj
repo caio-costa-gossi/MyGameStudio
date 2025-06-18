@@ -43,6 +43,7 @@
     <ClInclude Include="MasterLoopManager.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="MVector.h" />
+    <ClInclude Include="NumericUtils.h" />
     <ClInclude Include="PhysicsManager.h" />
     <ClInclude Include="ProcessResourceViewer.h" />
     <ClInclude Include="SDLInputLayer.h" />
@@ -75,6 +76,7 @@
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="LocalizationManager.cpp" />
     <ClCompile Include="MasterLoopManager.cpp" />
+    <ClCompile Include="NumericUtils.cpp" />
     <ClCompile Include="PhysicsManager.cpp" />
     <ClCompile Include="ProcessResourceViewer.cpp" />
     <ClCompile Include="SDLInputLayer.cpp" />

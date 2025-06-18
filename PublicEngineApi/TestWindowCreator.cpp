@@ -28,7 +28,7 @@ Err TestWindowCreator::Startup()
 	if (err.Code())
 		return err;
 
-	err = InputManager::Startup(hWindow_, false);
+	err = InputManager::Startup(hWindow_, true);
 	if (err.Code())
 		return err;
 
@@ -44,7 +44,7 @@ Err TestWindowCreator::Run()
 			return err;
 
 		// Cap 20 FPS
-		Sleep(1000);
+		Sleep(2000);
 	}
 
 	return error_const::SUCCESS;

@@ -7,7 +7,7 @@
 
 struct InputState
 {
-	uint8_t JoystickCount;
+	uint8_t GamepadCount = 0;
 	std::vector<Gamepad> Gamepads;
 	KeyboardState KeyboardState;
 	MouseState MouseState;

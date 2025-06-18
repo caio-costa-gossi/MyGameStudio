@@ -10,6 +10,7 @@ private:
 
 public:
 	explicit Err(std::string errorMessage, uint16_t errorCode);
+	Err() = default;
 
 	std::string Message() const;
 	uint16_t Code() const;

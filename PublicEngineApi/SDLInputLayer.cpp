@@ -1,6 +1,7 @@
 #include "SDLInputLayer.h"
 #include "GameConsoleManager.h"
 #include "NumericUtils.h"
+#include <bitset>
 
 Err SDLInputLayer::Startup(HWND hWindow)
 {
@@ -47,6 +48,9 @@ Err SDLInputLayer::Update()
 		}
 	}
 
+	std::string debugString = std::bitset<32>(currentState_.Gamepads[0].State.BtnState).to_string();
+	GameConsoleManager::PrintInfo(debugString);
+
 	return error_const::SUCCESS;
 }
 
@@ -57,7 +61,7 @@ InputState SDLInputLayer::GetInputStates()
 
 Err SDLInputLayer::StartupGamepads()
 {
-	if (!SDL_Init(SDL_INIT_JOYSTICK))
+	if (!SDL_Init(SDL_INIT_JOYSTICK | SDL_INIT_GAMEPAD))
 		return Err(SDL_GetError(), error_const::SDL_ERROR_CODE);
 
 	int gamepadCount;
@@ -130,7 +134,7 @@ Err SDLInputLayer::UpdateGamepads(const SDL_Event& event)
 Err SDLInputLayer::UpdateGamepadButton(const uint8_t gamepadId, const uint8_t buttonId, const bool isPressed)
 {
 	uint32_t& buttonState = currentState_.Gamepads[idToIndex_[gamepadId]].State.BtnState;
-	const uint8_t mask = NumericUtils::Bitmask(buttonId);
+	const uint32_t mask = NumericUtils::Bitmask(buttonId);
 
 	buttonState = (buttonState & ~mask) | (isPressed * mask);
 	return error_const::SUCCESS;
@@ -138,7 +142,9 @@ Err SDLInputLayer::UpdateGamepadButton(const uint8_t gamepadId, const uint8_t bu
 
 Err SDLInputLayer::UpdateGamepadHat(const uint8_t gamepadId, const uint8_t newHatState)
 {
-	currentState_.Gamepads[idToIndex_[gamepadId]].State.HatState = newHatState;
+	// Merge bits 24-32 from Hat reading with the buttonState
+	uint32_t& buttonState = currentState_.Gamepads[idToIndex_[gamepadId]].State.BtnState;
+	buttonState = (buttonState & 0x00FFFFFF) | (static_cast<uint32_t>(newHatState) << 24);
 	return error_const::SUCCESS;
 }
 

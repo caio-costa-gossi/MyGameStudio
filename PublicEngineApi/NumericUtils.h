@@ -4,11 +4,11 @@
 class NumericUtils
 {
 public:
-	static uint8_t Bitmask(const uint8_t val)
+	static uint32_t Bitmask(const uint8_t val)
 	{
-		if (val >= 8)
+		if (val >= 32)
 			return 0;
 
-		return static_cast<uint8_t>(1u << val);
+		return 1u << val;
 	}
 };

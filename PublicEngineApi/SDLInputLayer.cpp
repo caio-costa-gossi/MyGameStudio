@@ -35,6 +35,12 @@ Err SDLInputLayer::Update()
 	SDL_Event event;
 	Err err;
 
+	// Reset mouse vel
+	currentState_.MouseState.XVel = 0;
+	currentState_.MouseState.YVel = 0;
+	currentState_.MouseState.WheelXVel = 0;
+	currentState_.MouseState.WheelYVel = 0;
+
 	// Update currentState_
 	while (SDL_PollEvent(&event))
 	{
@@ -48,6 +54,13 @@ Err SDLInputLayer::Update()
 		if (isKeyboardActive_)
 		{
 			err = UpdateKeyboard(event);
+			if (err.Code())
+				GameConsoleManager::PrintError(err.Message());
+		}
+
+		if (isMouseActive_)
+		{
+			err = UpdateMouse(event);
 			if (err.Code())
 				GameConsoleManager::PrintError(err.Message());
 		}
@@ -162,5 +175,53 @@ Err SDLInputLayer::UpdateKeyboard(const SDL_Event& event)
 
 Err SDLInputLayer::UpdateMouse(const SDL_Event& event)
 {
+	Err err = error_const::SUCCESS;
+
+	switch (event.type)
+	{
+	case SDL_EVENT_MOUSE_BUTTON_DOWN:
+	case SDL_EVENT_MOUSE_BUTTON_UP:
+		err = UpdateMouseButton(event.button.button, event.button.down);
+		break;
+
+	case SDL_EVENT_MOUSE_MOTION:
+		err = UpdateMouseMotion(event.motion);
+		break;
+
+	case SDL_EVENT_MOUSE_WHEEL:
+		err = UpdateMouseWheel(event.wheel);
+		break;
+
+	default:
+		break;
+	}
+
+	return err;
+}
+
+Err SDLInputLayer::UpdateMouseButton(const uint8_t buttonIndex, const bool isPressed)
+{
+	uint8_t& buttonState = currentState_.MouseState.BtnState;
+	const uint8_t mask = static_cast<uint8_t>(NumericUtils::Bitmask(buttonIndex));
+
+	buttonState = (buttonState & ~mask) | (isPressed * mask);
+	return error_const::SUCCESS;
+}
+
+Err SDLInputLayer::UpdateMouseMotion(const SDL_MouseMotionEvent& event)
+{
+	currentState_.MouseState.XPos = event.x;
+	currentState_.MouseState.YPos = event.y;
+	currentState_.MouseState.XVel = event.xrel;
+	currentState_.MouseState.YVel = event.yrel;
+
+	return error_const::SUCCESS;
+}
+
+Err SDLInputLayer::UpdateMouseWheel(const SDL_MouseWheelEvent& event)
+{
+	currentState_.MouseState.WheelXVel = event.x;
+	currentState_.MouseState.WheelYVel = event.y;
+
 	return error_const::SUCCESS;
 }

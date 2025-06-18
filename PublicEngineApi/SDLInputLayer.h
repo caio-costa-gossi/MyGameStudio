@@ -41,6 +41,9 @@ private:
 
 	Err UpdateGamepadButton(uint8_t gamepadId, uint8_t buttonId, bool isPressed);
 	Err UpdateGamepadAxis(uint8_t gamepadId, uint8_t axisId, int16_t axisValue);
+	Err UpdateMouseButton(uint8_t buttonIndex, bool isPressed);
+	Err UpdateMouseMotion(const SDL_MouseMotionEvent& event);
+	Err UpdateMouseWheel(const SDL_MouseWheelEvent& event);
 
 public:
 	Err Startup(HWND hWindow = nullptr) override;

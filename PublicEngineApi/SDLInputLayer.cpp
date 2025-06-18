@@ -32,6 +32,11 @@ Err SDLInputLayer::Update()
 	SDL_Event event;
 	Err err;
 
+	// Reset gamepad axis update for frame
+	for (GamepadInfo& info : gamepads_)
+		std::memset(info.UpdatedAxisInFrame, 0, sizeof(info.UpdatedAxisInFrame));
+
+	// Update currentState_
 	while (SDL_PollEvent(&event))
 	{
 		if (isGamepadActive_)
@@ -108,14 +113,12 @@ Err SDLInputLayer::UpdateGamepads(const SDL_Event& event)
 		break;
 
 	case SDL_EVENT_JOYSTICK_HAT_MOTION:
-		std::cout << "Hat " << static_cast<int>(event.jhat.hat)
-			<< " changed to " << static_cast<int>(event.jhat.value) << "\n";
+		err = UpdateGamepadHat(static_cast<uint8_t>(event.jhat.which), event.jhat.value);
 		break;
 
-	/*case SDL_EVENT_JOYSTICK_AXIS_MOTION:
-		std::cout << "Axis " << static_cast<int>(event.jaxis.axis)
-			<< " moved to " << event.jaxis.value << "\n";
-		break;*/
+	case SDL_EVENT_JOYSTICK_AXIS_MOTION:
+		err = UpdateGamepadAxis(static_cast<uint8_t>(event.jaxis.which), event.jaxis.axis, event.jaxis.value);
+		break;
 
 	default:
 		break;
@@ -130,6 +133,26 @@ Err SDLInputLayer::UpdateGamepadButton(const uint8_t gamepadId, const uint8_t bu
 	const uint8_t mask = NumericUtils::Bitmask(buttonId);
 
 	buttonState = (buttonState & ~mask) | (isPressed * mask);
+	return error_const::SUCCESS;
+}
+
+Err SDLInputLayer::UpdateGamepadHat(const uint8_t gamepadId, const uint8_t newHatState)
+{
+	currentState_.Gamepads[idToIndex_[gamepadId]].State.HatState = newHatState;
+	return error_const::SUCCESS;
+}
+
+Err SDLInputLayer::UpdateGamepadAxis(const uint8_t gamepadId, const uint8_t axisId, const int16_t axisValue)
+{
+	const uint8_t gamepadIndex = idToIndex_[gamepadId];
+
+	// Only update this axis for this gamepad once per frame
+	if (gamepads_[gamepadIndex].UpdatedAxisInFrame[axisId])
+		return error_const::SUCCESS;
+
+	currentState_.Gamepads[gamepadIndex].State.AxisState[axisId] = axisValue;
+
+	gamepads_[gamepadIndex].UpdatedAxisInFrame[axisId] = true;
 	return error_const::SUCCESS;
 }
 

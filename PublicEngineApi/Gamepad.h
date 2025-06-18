@@ -35,13 +35,8 @@ enum GamepadButton : int8_t
 struct GamepadState
 {
 	uint32_t BtnState = 0;
-	uint32_t HatState = 0;
-	float LTrigger = 0;
-	float RTrigger = 0;
-	float LAnalogX = 0;
-	float LAnalogY = 0;
-	float RAnalogX = 0;
-	float RAnalogY = 0;
+	uint8_t HatState = 0;
+	int16_t AxisState[6] = { 0 };
 };
 
 struct Gamepad

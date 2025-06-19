@@ -66,6 +66,12 @@ Err SDLInputLayer::Update()
 		}
 	}
 
+	for (int i = 0; i < gamepad_axis_count; ++i)
+	{
+		std::cout << i << ": " << std::to_string(currentState_.Gamepads[0].State.AxisState[i]) << "; ";
+	}
+	std::cout << "\n";
+
 	return error_const::SUCCESS;
 }
 

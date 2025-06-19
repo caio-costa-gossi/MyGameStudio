@@ -4,6 +4,14 @@
 #include <Windows.h>
 #include "InputLayer.h"
 
+enum DpadBit : uint8_t
+{
+	di_dpad_up = 28,
+	di_dpad_down,
+	di_dpad_left,
+	di_dpad_right
+};
+
 struct Device
 {
 	LPDIRECTINPUTDEVICE8 Data;
@@ -43,6 +51,8 @@ private:
 	// Aux update methods
 	Err UpdateJoystickButton(uint8_t joystickId);
 	Err UpdateJoystickHat(uint8_t joystickId);
+	Err UpdateJoystickAnalog(uint8_t joystickId);
+	void SetBits(uint32_t& bitset, uint8_t bit1, uint8_t bit2);
 
 	// Callback instance access
 	static DILayer* instance_;

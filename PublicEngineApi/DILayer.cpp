@@ -1,9 +1,9 @@
 #include "DILayer.h"
-
 #include <bitset>
-
 #include "DILayerMapping.h"
 #include "GameConsoleManager.h"
+
+#undef max()
 
 Err DILayer::Startup(HWND hWindow)
 {
@@ -125,12 +125,6 @@ Err DILayer::Update()
 		}
 	}
 
-	if (!currentState_.Gamepads.empty())
-	{
-		std::string debugString = std::bitset<32>(currentState_.Gamepads[0].State.BtnState).to_string();
-		GameConsoleManager::PrintInfo(debugString);
-	}
-
 	return error_const::SUCCESS;
 }
 
@@ -152,6 +146,10 @@ Err DILayer::UpdateJoystick(const uint8_t joystickId)
 	if (err.Code())
 		return err;
 
+	err = UpdateJoystickAnalog(joystickId);
+	if (err.Code())
+		return err;
+
 	return error_const::SUCCESS;
 }
 
@@ -160,9 +158,9 @@ Err DILayer::UpdateJoystickButton(const uint8_t joystickId)
 	const BYTE* rawBtnState = joystickStates_[joystickId].rgbButtons;
 	uint32_t newButtonState = 0;
 
-	// Update buttons
+	// Update buttons, insert into uint32_t using common mapping
 	for (uint8_t buttonId = 0; buttonId < gamepad_button_count; ++buttonId)
-		newButtonState += (1 << buttonId) * (rawBtnState[buttonId] != 0);
+		newButtonState += (1 << gGamepadButtonMapping[buttonId]) * (rawBtnState[buttonId] != 0);
 
 	currentState_.Gamepads[joystickId].State.BtnState = newButtonState;
 	return error_const::SUCCESS;
@@ -172,38 +170,82 @@ Err DILayer::UpdateJoystickHat(const uint8_t joystickId)
 {
 	uint32_t& buttonState = currentState_.Gamepads[joystickId].State.BtnState;
 
-	// Update hat -> Bits 27-31: up,down,left,right
+	// Update hat -> Bits 28-31: up,down,left,right
 	switch (joystickStates_[joystickId].rgdwPOV[0])
 	{
+	// D-pad UP
 	case 0:
-		buttonState += 0x10000000; // D-pad UP
+		buttonState += 1 << gGamepadButtonMapping[di_dpad_up];
 		break;
+	// D-pad UP+RIGHT
 	case 4500:
-		buttonState += 0x90000000; // D-pad UP+RIGHT
+		buttonState += 1 << gGamepadButtonMapping[di_dpad_up];
+		buttonState += 1 << gGamepadButtonMapping[di_dpad_right];
 		break;
+	// D-pad RIGHT
 	case 9000:
-		buttonState += 0x80000000; // D-pad RIGHT
+		buttonState += 1 << gGamepadButtonMapping[di_dpad_right];
 		break;
+	// D-pad RIGHT+DOWN
 	case 13500:
-		buttonState += 0xA0000000; // D-pad RIGHT+DOWN
+		buttonState += 1 << gGamepadButtonMapping[di_dpad_right];
+		buttonState += 1 << gGamepadButtonMapping[di_dpad_down];
 		break;
+	// D-pad DOWN
 	case 18000:
-		buttonState += 0x20000000; // D-pad DOWN
+		buttonState += 1 << gGamepadButtonMapping[di_dpad_down];
 		break;
+	// D-pad DOWN+LEFT
 	case 22500:
-		buttonState += 0x60000000; // D-pad DOWN+LEFT
+		buttonState += 1 << gGamepadButtonMapping[di_dpad_down];
+		buttonState += 1 << gGamepadButtonMapping[di_dpad_left];
 		break;
+	// D-pad LEFT
 	case 27000:
-		buttonState += 0x40000000; // D-pad LEFT
+		buttonState += 1 << gGamepadButtonMapping[di_dpad_left];
 		break;
+	// D-pad LEFT+UP
 	case 31500:
-		buttonState += 0x50000000; // D-pad LEFT+UP
+		buttonState += 1 << gGamepadButtonMapping[di_dpad_up];
+		buttonState += 1 << gGamepadButtonMapping[di_dpad_left];
 		break;
 	default:
 		break;
 	}
 
 	return error_const::SUCCESS;
+}
+
+Err DILayer::UpdateJoystickAnalog(const uint8_t joystickId)
+{
+	int32_t int16Max = std::numeric_limits<int16_t>::max();
+
+	// Most common mapping, not guaranteed
+	currentState_.Gamepads[joystickId].State.AxisState[gamepad_axis_leftx] = joystickStates_[joystickId].lX - int16Max;
+	currentState_.Gamepads[joystickId].State.AxisState[gamepad_axis_lefty] = joystickStates_[joystickId].lY - int16Max;
+	currentState_.Gamepads[joystickId].State.AxisState[gamepad_axis_rightx] = joystickStates_[joystickId].lZ - int16Max;
+	currentState_.Gamepads[joystickId].State.AxisState[gamepad_axis_righty] = joystickStates_[joystickId].lRz - int16Max;
+	currentState_.Gamepads[joystickId].State.AxisState[gamepad_axis_left_trigger] = joystickStates_[joystickId].lRx - int16Max;
+	currentState_.Gamepads[joystickId].State.AxisState[gamepad_axis_right_trigger] = joystickStates_[joystickId].lRy - int16Max;
+
+	int32_t* axis = currentState_.Gamepads[joystickId].State.AxisState;
+
+	std::string leftx = std::to_string(axis[gamepad_axis_leftx]);
+	std::string lefty = std::to_string(axis[gamepad_axis_lefty]);
+	std::string rightx = std::to_string(axis[gamepad_axis_rightx]);
+	std::string righty = std::to_string(axis[gamepad_axis_righty]);
+	std::string ltrigger = std::to_string(axis[gamepad_axis_left_trigger]);
+	std::string rtrigger = std::to_string(axis[gamepad_axis_right_trigger]);
+
+	GameConsoleManager::PrintInfo("(" + leftx + "," + lefty + "); (" + rightx + "," + righty + "); (" + ltrigger + "," + rtrigger + ")");
+
+	return error_const::SUCCESS;
+}
+
+void DILayer::SetBits(uint32_t& bitset, const uint8_t bit1, const uint8_t bit2)
+{
+	if (bit1 < 32)
+		bitset += 1 << bit1;
 }
 
 Err DILayer::UpdateKeyboard()
@@ -280,8 +322,8 @@ BOOL DILayer::EnumObjectsCallback(const LPCDIDEVICEOBJECTINSTANCE object, LPVOID
 	if (device_ == nullptr)
 		return DIENUM_CONTINUE;
 
-	if (!(object->dwType & DIDFT_BUTTON))
-		return DIENUM_CONTINUE;
+	/*if (!(object->dwType & DIDFT_BUTTON))
+		return DIENUM_CONTINUE;*/
 
 	char deviceName[256];
 	size_t converted;

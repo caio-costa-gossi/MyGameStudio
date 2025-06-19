@@ -22,7 +22,7 @@ private:
 	Device keyboard_ = Device();
 
 	// States
-	std::vector<DIJOYSTATE> joystickStates_ = std::vector<DIJOYSTATE>(4);
+	std::vector<DIJOYSTATE> joystickStates_ = std::vector<DIJOYSTATE>();
 	DIMOUSESTATE mouseState_ = DIMOUSESTATE();
 	BYTE keyboardState_[keyboard_di_count] = {0};
 
@@ -40,6 +40,10 @@ private:
 	Err UpdateKeyboard();
 	Err UpdateMouse();
 
+	// Aux update methods
+	Err UpdateJoystickButton(uint8_t joystickId);
+	Err UpdateJoystickHat(uint8_t joystickId);
+
 	// Callback instance access
 	static DILayer* instance_;
 	static Device* device_;
@@ -56,5 +60,5 @@ public:
 	Err Shutdown() override;
 
 	InputState GetInputStates() override;
-
+	const std::string& GetBtnNameByIndex(uint8_t joystickId, uint8_t buttonIndex);
 };

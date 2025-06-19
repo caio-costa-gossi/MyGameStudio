@@ -1,5 +1,7 @@
 #include "DILayer.h"
 
+#include <bitset>
+
 #include "DILayerMapping.h"
 #include "GameConsoleManager.h"
 
@@ -33,6 +35,8 @@ Err DILayer::Startup(HWND hWindow)
 		if (FAILED(joystick.Data->EnumObjects(EnumObjectsCallback, nullptr, DIDFT_ALL)))
 			GameConsoleManager::PrintError("Failed to enumerate objects");
 	}
+
+	currentState_.GamepadCount = static_cast<uint8_t>(joysticks_.size());
 
 	// Set data format
 	for (const Device device : joysticks_)
@@ -88,6 +92,11 @@ Err DILayer::Startup(HWND hWindow)
 	return error_const::SUCCESS;
 }
 
+const std::string& DILayer::GetBtnNameByIndex(const uint8_t joystickId, const uint8_t buttonIndex)
+{
+	return joysticks_[joystickId].ObjectNames[buttonIndex];
+}
+
 Err DILayer::Update()
 {
 	Err err;
@@ -98,15 +107,6 @@ Err DILayer::Update()
 		if (err.Code())
 			GameConsoleManager::PrintError(err.Message());
 	}
-
-	/*for (int i = 0; i < 256; ++i)
-	{*/
-		if (keyboardState_[30] != 0)
-			std::cout << "1";
-		else
-			std::cout << "0";
-	//}
-	std::cout << "\n";
 
 	if (isMouseActive_)
 	{
@@ -125,6 +125,12 @@ Err DILayer::Update()
 		}
 	}
 
+	if (!currentState_.Gamepads.empty())
+	{
+		std::string debugString = std::bitset<32>(currentState_.Gamepads[0].State.BtnState).to_string();
+		GameConsoleManager::PrintInfo(debugString);
+	}
+
 	return error_const::SUCCESS;
 }
 
@@ -136,6 +142,65 @@ Err DILayer::UpdateJoystick(const uint8_t joystickId)
 	{
 		joysticks_[joystickId].Data->Acquire();
 		return error_const::INPUT_JOYSTICK_POLL_FAIL;
+	}
+
+	Err err = UpdateJoystickButton(joystickId);
+	if (err.Code())
+		return err;
+
+	err = UpdateJoystickHat(joystickId);
+	if (err.Code())
+		return err;
+
+	return error_const::SUCCESS;
+}
+
+Err DILayer::UpdateJoystickButton(const uint8_t joystickId)
+{
+	const BYTE* rawBtnState = joystickStates_[joystickId].rgbButtons;
+	uint32_t newButtonState = 0;
+
+	// Update buttons
+	for (uint8_t buttonId = 0; buttonId < gamepad_button_count; ++buttonId)
+		newButtonState += (1 << buttonId) * (rawBtnState[buttonId] != 0);
+
+	currentState_.Gamepads[joystickId].State.BtnState = newButtonState;
+	return error_const::SUCCESS;
+}
+
+Err DILayer::UpdateJoystickHat(const uint8_t joystickId)
+{
+	uint32_t& buttonState = currentState_.Gamepads[joystickId].State.BtnState;
+
+	// Update hat -> Bits 27-31: up,down,left,right
+	switch (joystickStates_[joystickId].rgdwPOV[0])
+	{
+	case 0:
+		buttonState += 0x10000000; // D-pad UP
+		break;
+	case 4500:
+		buttonState += 0x90000000; // D-pad UP+RIGHT
+		break;
+	case 9000:
+		buttonState += 0x80000000; // D-pad RIGHT
+		break;
+	case 13500:
+		buttonState += 0xA0000000; // D-pad RIGHT+DOWN
+		break;
+	case 18000:
+		buttonState += 0x20000000; // D-pad DOWN
+		break;
+	case 22500:
+		buttonState += 0x60000000; // D-pad DOWN+LEFT
+		break;
+	case 27000:
+		buttonState += 0x40000000; // D-pad LEFT
+		break;
+	case 31500:
+		buttonState += 0x50000000; // D-pad LEFT+UP
+		break;
+	default:
+		break;
 	}
 
 	return error_const::SUCCESS;
@@ -198,9 +263,14 @@ BOOL DILayer::EnumDevicesCallback(const LPCDIDEVICEINSTANCE instance, LPVOID pCo
 	if (instance_ == nullptr)
 		return DIENUM_STOP;
 
+	// Create device and push it to the list
 	Device newDevice;
 	instance_->dInput_->CreateDevice(instance->guidInstance, &newDevice.Data, nullptr);
 	instance_->joysticks_.push_back(newDevice);
+
+	// Push device states
+	instance_->joystickStates_.emplace_back();
+	instance_->currentState_.Gamepads.emplace_back();
 
 	return DIENUM_CONTINUE;
 }

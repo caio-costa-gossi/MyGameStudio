@@ -52,7 +52,7 @@ private:
 	Err UpdateJoystickButton(uint8_t joystickId);
 	Err UpdateJoystickHat(uint8_t joystickId);
 	Err UpdateJoystickAnalog(uint8_t joystickId);
-	void SetBits(uint32_t& bitset, uint8_t bit1, uint8_t bit2);
+	Err UpdateMouseVelPos(int32_t xVel, int32_t yVel, int32_t zVel);
 
 	// Callback instance access
 	static DILayer* instance_;

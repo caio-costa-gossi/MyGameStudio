@@ -45,3 +45,11 @@ static std::unordered_map<uint8_t, uint8_t> gGamepadButtonMapping =
 	{30,gamepad_button_dpad_left},
 	{31,gamepad_button_dpad_right}
 };
+
+static std::unordered_map<uint8_t, uint8_t> gMouseButtonMapping =
+{
+	{0,mouse_button_left},
+	{1,mouse_button_right},
+	{2,mouse_button_middle},
+	{3,mouse_button_x1}
+};

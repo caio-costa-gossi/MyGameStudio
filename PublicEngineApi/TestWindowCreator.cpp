@@ -10,7 +10,8 @@ Err TestWindowCreator::CreateTestWindow()
 	if (!SDL_Init(SDL_INIT_VIDEO))
 		return Err(SDL_GetError(), error_const::SDL_ERROR_CODE);
 
-	window_ = SDL_CreateWindow("Input test window", 640, 480, SDL_WINDOW_INPUT_FOCUS | SDL_WINDOW_MOUSE_FOCUS);
+	window_ = SDL_CreateWindow("Input test window", 640, 480, SDL_WINDOW_INPUT_FOCUS | SDL_WINDOW_MOUSE_FOCUS | SDL_WINDOW_RESIZABLE);
+	SDL_WarpMouseInWindow(window_, 0, 0);
 
 	if (window_ == nullptr)
 		return Err(SDL_GetError(), error_const::SDL_ERROR_CODE);
@@ -37,8 +38,26 @@ Err TestWindowCreator::Startup()
 
 Err TestWindowCreator::Run()
 {
-	while (true)
+	SDL_Event eventList[1024];
+	bool testWindowRunning = true;
+
+	while (testWindowRunning)
 	{
+		int numEvents = SDL_PeepEvents(eventList, 1024, SDL_PEEKEVENT, SDL_EVENT_FIRST, SDL_EVENT_LAST);
+
+		for (int i = 0; i < numEvents; ++i)
+		{
+			switch (eventList[i].type)
+			{
+			case SDL_EVENT_QUIT:
+			case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
+				testWindowRunning = false;
+				break;
+			default:
+				break;
+			}
+		}
+
 		Err err = InputManager::Update();
 		if (err.Code())
 			return err;

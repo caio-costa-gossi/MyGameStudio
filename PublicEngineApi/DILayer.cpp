@@ -4,6 +4,7 @@
 #include "GameConsoleManager.h"
 
 #undef max()
+#define DI_WHEEL_BASE_VEL 120
 
 Err DILayer::Startup(HWND hWindow)
 {
@@ -125,6 +126,15 @@ Err DILayer::Update()
 		}
 	}
 
+	std::string xPos = std::to_string(currentState_.MouseState.XPos);
+	std::string yPos = std::to_string(currentState_.MouseState.YPos);
+	std::string xVel = std::to_string(currentState_.MouseState.XVel);
+	std::string yVel = std::to_string(currentState_.MouseState.YVel);
+	std::string xWheel = std::to_string(currentState_.MouseState.WheelXVel);
+	std::string yWheel = std::to_string(currentState_.MouseState.WheelYVel);
+	std::string mouseBtn = std::bitset<8>(currentState_.MouseState.BtnState).to_string();
+	GameConsoleManager::PrintInfo("(" + xPos + "," + yPos + "); (" + xVel + "," + yVel + "); (" + xWheel + "," + yWheel + "); - " + mouseBtn);
+
 	return error_const::SUCCESS;
 }
 
@@ -228,24 +238,7 @@ Err DILayer::UpdateJoystickAnalog(const uint8_t joystickId)
 	currentState_.Gamepads[joystickId].State.AxisState[gamepad_axis_left_trigger] = joystickStates_[joystickId].lRx - int16Max;
 	currentState_.Gamepads[joystickId].State.AxisState[gamepad_axis_right_trigger] = joystickStates_[joystickId].lRy - int16Max;
 
-	int32_t* axis = currentState_.Gamepads[joystickId].State.AxisState;
-
-	std::string leftx = std::to_string(axis[gamepad_axis_leftx]);
-	std::string lefty = std::to_string(axis[gamepad_axis_lefty]);
-	std::string rightx = std::to_string(axis[gamepad_axis_rightx]);
-	std::string righty = std::to_string(axis[gamepad_axis_righty]);
-	std::string ltrigger = std::to_string(axis[gamepad_axis_left_trigger]);
-	std::string rtrigger = std::to_string(axis[gamepad_axis_right_trigger]);
-
-	GameConsoleManager::PrintInfo("(" + leftx + "," + lefty + "); (" + rightx + "," + righty + "); (" + ltrigger + "," + rtrigger + ")");
-
 	return error_const::SUCCESS;
-}
-
-void DILayer::SetBits(uint32_t& bitset, const uint8_t bit1, const uint8_t bit2)
-{
-	if (bit1 < 32)
-		bitset += 1 << bit1;
 }
 
 Err DILayer::UpdateKeyboard()
@@ -273,6 +266,35 @@ Err DILayer::UpdateMouse()
 		mouse_.Data->Acquire();
 		return error_const::INPUT_MOUSE_POLL_FAIL;
 	}
+
+	// Update mouse button state
+	uint8_t newBtnState = 0;
+	const BYTE* rawBtnState = mouseState_.rgbButtons;
+
+	for (uint8_t btnId = 0; btnId < 4; ++btnId)
+		newBtnState += (1 << gMouseButtonMapping[btnId]) * (rawBtnState[btnId] != 0);
+
+	currentState_.MouseState.BtnState = newBtnState;
+
+	// Update mouse vel and position
+	Err err = UpdateMouseVelPos(mouseState_.lX, mouseState_.lY, mouseState_.lZ);
+	if (err.Code())
+		return err;
+
+	return error_const::SUCCESS;
+}
+
+Err DILayer::UpdateMouseVelPos(const int32_t xVel, const int32_t yVel, const int32_t zVel)
+{
+	currentState_.MouseState.XVel = static_cast<float>(xVel);
+	currentState_.MouseState.YVel = static_cast<float>(yVel);
+
+	currentState_.MouseState.XPos += currentState_.MouseState.XVel;
+	currentState_.MouseState.YPos += currentState_.MouseState.YVel;
+
+	// Divide wheel vel by 120 for consistency with SDL3
+	currentState_.MouseState.WheelYVel = static_cast<float>(zVel) / DI_WHEEL_BASE_VEL;
+	currentState_.MouseState.WheelXVel = 0;
 
 	return error_const::SUCCESS;
 }

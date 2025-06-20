@@ -66,11 +66,14 @@ Err SDLInputLayer::Update()
 		}
 	}
 
-	for (int i = 0; i < gamepad_axis_count; ++i)
-	{
-		std::cout << i << ": " << std::to_string(currentState_.Gamepads[0].State.AxisState[i]) << "; ";
-	}
-	std::cout << "\n";
+	std::string xPos = std::to_string(currentState_.MouseState.XPos);
+	std::string yPos = std::to_string(currentState_.MouseState.YPos);
+	std::string xVel = std::to_string(currentState_.MouseState.XVel);
+	std::string yVel = std::to_string(currentState_.MouseState.YVel);
+	std::string xWheel = std::to_string(currentState_.MouseState.WheelXVel);
+	std::string yWheel = std::to_string(currentState_.MouseState.WheelYVel);
+	std::string mouseBtn = std::bitset<8>(currentState_.MouseState.BtnState).to_string();
+	GameConsoleManager::PrintInfo("(" + xPos + "," + yPos + "); (" + xVel + "," + yVel + "); (" + xWheel + "," + yWheel + "); - " + mouseBtn);
 
 	return error_const::SUCCESS;
 }

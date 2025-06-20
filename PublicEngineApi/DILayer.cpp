@@ -98,7 +98,7 @@ const std::string& DILayer::GetBtnNameByIndex(const uint8_t joystickId, const ui
 	return joysticks_[joystickId].ObjectNames[buttonIndex];
 }
 
-Err DILayer::Update()
+Err DILayer::Update(const SDL_Event* eventList, uint32_t numEvent)
 {
 	Err err;
 
@@ -125,15 +125,6 @@ Err DILayer::Update()
 				GameConsoleManager::PrintError(err.Message());
 		}
 	}
-
-	std::string xPos = std::to_string(currentState_.MouseState.XPos);
-	std::string yPos = std::to_string(currentState_.MouseState.YPos);
-	std::string xVel = std::to_string(currentState_.MouseState.XVel);
-	std::string yVel = std::to_string(currentState_.MouseState.YVel);
-	std::string xWheel = std::to_string(currentState_.MouseState.WheelXVel);
-	std::string yWheel = std::to_string(currentState_.MouseState.WheelYVel);
-	std::string mouseBtn = std::bitset<8>(currentState_.MouseState.BtnState).to_string();
-	GameConsoleManager::PrintInfo("(" + xPos + "," + yPos + "); (" + xVel + "," + yVel + "); (" + xWheel + "," + yWheel + "); - " + mouseBtn);
 
 	return error_const::SUCCESS;
 }

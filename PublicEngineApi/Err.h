@@ -66,6 +66,7 @@ namespace error_const
 	const auto INPUT_MOUSE_POLL_FAIL = Err("Failed to poll from mouse", 138);
 	const auto INPUT_KEYBOARD_POLL_FAIL = Err("Failed to poll from keyboard", 139);
 	const auto INPUT_JOYSTICK_POLL_FAIL = Err("Failed to poll from joystick", 140);
+	const auto INPUT_SDL_EVENT_NULL = Err("SDL Input Event array is null", 141);
 
 	constexpr auto DB_ERROR_CODE = 10;
 	constexpr auto ZIP_ERROR_CODE = 11;

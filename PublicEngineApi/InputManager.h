@@ -15,7 +15,7 @@ private:
 
 public:
 	static Err Startup(HWND hWindow, bool usingSdl = true);
-	static Err Update();
+	static Err Update(const SDL_Event* eventList = nullptr, uint32_t numEvent = 0);
 	static Err Shutdown();
 
 	static Err SubBeforeInput(const Subscription& sub);

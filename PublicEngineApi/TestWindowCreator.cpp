@@ -7,7 +7,7 @@
 Err TestWindowCreator::CreateTestWindow()
 {
 	// Init subsystem and create window
-	if (!SDL_Init(SDL_INIT_VIDEO))
+	if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS))
 		return Err(SDL_GetError(), error_const::SDL_ERROR_CODE);
 
 	window_ = SDL_CreateWindow("Input test window", 640, 480, SDL_WINDOW_INPUT_FOCUS | SDL_WINDOW_MOUSE_FOCUS | SDL_WINDOW_RESIZABLE);
@@ -29,7 +29,7 @@ Err TestWindowCreator::Startup()
 	if (err.Code())
 		return err;
 
-	err = InputManager::Startup(hWindow_, false);
+	err = InputManager::Startup(hWindow_, true);
 	if (err.Code())
 		return err;
 
@@ -38,17 +38,25 @@ Err TestWindowCreator::Startup()
 
 Err TestWindowCreator::Run()
 {
-	SDL_Event eventList[1024];
 	bool testWindowRunning = true;
 
 	while (testWindowRunning)
 	{
-		int numEvents = SDL_PeepEvents(eventList, 1024, SDL_PEEKEVENT, SDL_EVENT_FIRST, SDL_EVENT_LAST);
+		SDL_Event event;
 
-		for (int i = 0; i < numEvents; ++i)
+		while (SDL_PollEvent(&event))
 		{
-			switch (eventList[i].type)
+			// Collect input events
+			if (event.type >= 0x300 && event.type < 0x700)
 			{
+				inputEventList_.push_back(event);
+				continue;
+			}
+
+			// Handle other events
+			switch (event.type)
+			{
+
 			case SDL_EVENT_QUIT:
 			case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
 				testWindowRunning = false;
@@ -58,9 +66,11 @@ Err TestWindowCreator::Run()
 			}
 		}
 
-		Err err = InputManager::Update();
+		Err err = InputManager::Update(inputEventList_.data(), static_cast<uint32_t>(inputEventList_.size()));
 		if (err.Code())
 			return err;
+
+		inputEventList_.clear();
 
 		// Cap 20 FPS
 		Sleep(50);
@@ -80,3 +90,4 @@ Err TestWindowCreator::Shutdown()
 
 SDL_Window* TestWindowCreator::window_;
 HWND TestWindowCreator::hWindow_ = nullptr;
+std::vector<SDL_Event> TestWindowCreator::inputEventList_ = std::vector<SDL_Event>();

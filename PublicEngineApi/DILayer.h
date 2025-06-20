@@ -66,7 +66,7 @@ private:
 
 public:
 	Err Startup(HWND hWindow) override;
-	Err Update() override;
+	Err Update(const SDL_Event* eventList = nullptr, uint32_t numEvent = 0) override;
 	Err Shutdown() override;
 
 	InputState GetInputStates() override;

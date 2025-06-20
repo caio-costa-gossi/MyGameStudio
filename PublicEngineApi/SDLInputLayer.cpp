@@ -7,9 +7,7 @@
 
 Err SDLInputLayer::Startup(HWND hWindow)
 {
-	if (!SDL_Init(SDL_INIT_EVENTS))
-		return Err(SDL_GetError(), error_const::SDL_ERROR_CODE);
-
+	// SDL Event subsystem must already have been started
 	Err err = StartupGamepads();
 	if (err.Code())
 		return err;
@@ -30,9 +28,8 @@ Err SDLInputLayer::Shutdown()
 	return error_const::SUCCESS;
 }
 
-Err SDLInputLayer::Update()
+Err SDLInputLayer::Update(const SDL_Event* eventList, const uint32_t numEvent)
 {
-	SDL_Event event;
 	Err err;
 
 	// Reset mouse vel
@@ -41,9 +38,14 @@ Err SDLInputLayer::Update()
 	currentState_.MouseState.WheelXVel = 0;
 	currentState_.MouseState.WheelYVel = 0;
 
+	if (eventList == nullptr)
+		return error_const::INPUT_SDL_EVENT_NULL;
+
 	// Update currentState_
-	while (SDL_PollEvent(&event))
+	for (uint32_t i = 0; i < numEvent; ++i)
 	{
+		SDL_Event event = eventList[i];
+
 		if (isGamepadActive_)
 		{
 			err = UpdateGamepads(event);
@@ -65,15 +67,6 @@ Err SDLInputLayer::Update()
 				GameConsoleManager::PrintError(err.Message());
 		}
 	}
-
-	std::string xPos = std::to_string(currentState_.MouseState.XPos);
-	std::string yPos = std::to_string(currentState_.MouseState.YPos);
-	std::string xVel = std::to_string(currentState_.MouseState.XVel);
-	std::string yVel = std::to_string(currentState_.MouseState.YVel);
-	std::string xWheel = std::to_string(currentState_.MouseState.WheelXVel);
-	std::string yWheel = std::to_string(currentState_.MouseState.WheelYVel);
-	std::string mouseBtn = std::bitset<8>(currentState_.MouseState.BtnState).to_string();
-	GameConsoleManager::PrintInfo("(" + xPos + "," + yPos + "); (" + xVel + "," + yVel + "); (" + xWheel + "," + yWheel + "); - " + mouseBtn);
 
 	return error_const::SUCCESS;
 }

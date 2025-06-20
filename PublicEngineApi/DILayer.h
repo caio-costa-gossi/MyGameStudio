@@ -54,6 +54,8 @@ private:
 	Err UpdateJoystickAnalog(uint8_t joystickId);
 	Err UpdateMouseVelPos(int32_t xVel, int32_t yVel, int32_t zVel);
 
+	static uint16_t ScancodeToKeycode(uint16_t scancode);
+
 	// Callback instance access
 	static DILayer* instance_;
 	static Device* device_;

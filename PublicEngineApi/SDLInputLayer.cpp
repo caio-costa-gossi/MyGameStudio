@@ -165,7 +165,8 @@ Err SDLInputLayer::UpdateKeyboard(const SDL_Event& event)
 	{
 	case SDL_EVENT_KEY_DOWN:
 	case SDL_EVENT_KEY_UP:
-		currentState_.KeyboardState.BtnState[event.key.scancode] = event.key.down;
+		currentState_.KeyboardState.RawState[event.key.raw] = event.key.down;
+		currentState_.KeyboardState.PhysicalKeyState[event.key.scancode] = event.key.down;
 		break;
 
 	default:

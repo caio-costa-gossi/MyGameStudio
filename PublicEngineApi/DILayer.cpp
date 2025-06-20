@@ -242,8 +242,13 @@ Err DILayer::UpdateKeyboard()
 		return error_const::INPUT_KEYBOARD_POLL_FAIL;
 	}
 
-	for (uint16_t key = 0; key < keyboard_di_count; ++key)
-		currentState_.KeyboardState.BtnState[gKeyboardMapping[static_cast<uint8_t>(key)]] = keyboardState_[key] != 0;
+	// Get raw scancode
+	for (uint16_t key = 0; key < scancode_key_count; ++key)
+		currentState_.KeyboardState.RawState[key] = keyboardState_[key] != 0;
+
+	// Get physical stardardized USB HID scancode (on Windows)
+	for (uint16_t key = 0; key < scancode_key_count; ++key)
+		currentState_.KeyboardState.PhysicalKeyState[gWinScancodeToUsbScancode[key]] = keyboardState_[key] != 0;
 
 	return error_const::SUCCESS;
 }
@@ -335,8 +340,8 @@ BOOL DILayer::EnumObjectsCallback(const LPCDIDEVICEOBJECTINSTANCE object, LPVOID
 	if (device_ == nullptr)
 		return DIENUM_CONTINUE;
 
-	/*if (!(object->dwType & DIDFT_BUTTON))
-		return DIENUM_CONTINUE;*/
+	if (!(object->dwType & DIDFT_BUTTON))
+		return DIENUM_CONTINUE;
 
 	char deviceName[256];
 	size_t converted;
@@ -346,6 +351,12 @@ BOOL DILayer::EnumObjectsCallback(const LPCDIDEVICEOBJECTINSTANCE object, LPVOID
 	device_->ObjectNames.emplace_back(deviceName);
 	return DIENUM_CONTINUE;
 }
+
+uint16_t DILayer::ScancodeToKeycode(const uint16_t scancode)
+{
+	return static_cast<uint16_t>(MapVirtualKeyExA(scancode, MAPVK_VSC_TO_VK, GetKeyboardLayout(0)));
+}
+
 
 
 DILayer* DILayer::instance_ = nullptr;

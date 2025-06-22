@@ -4,13 +4,12 @@
 #include "Err.h"
 #include "Event.h"
 #include "InputState.h"
-#include "Timeline.h"
 
 class DIEventLayer
 {
 private:
 	static Err BuildGamepadBtnEvent();
-	static Err BuildGamepadAxisEvent();
+	static Err BuildGamepadAxisEvent(int32_t deadzone);
 	static Err BuildKeyboardEvent();
 	static Err BuildMouseBtnEvent();
 	static Err BuildMouseMoveEvent();
@@ -21,6 +20,6 @@ private:
 	static std::vector<Event>* eventQueue_;
 
 public:
-	static Err AddEvents(const InputState& currentState, const InputState& nextState, std::vector<Event>* eventList);
+	static Err AddEvents(const InputState& currentState, const InputState& nextState, std::vector<Event>* eventList, int32_t deadzone);
 	
 };

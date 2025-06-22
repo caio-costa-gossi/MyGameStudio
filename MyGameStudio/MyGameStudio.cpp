@@ -31,7 +31,7 @@ int main()
 		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
 	}
 
-	Subscription sub = Subscription(MyCallback, event_class_keyboard);
+	Subscription sub = Subscription(MyCallback, event_class_gamepad);
 	err = InputManager::SubForInputEvent(sub);
 	if (err.Code() != 0)
 	{

@@ -3,7 +3,7 @@
 #include "DILayerMapping.h"
 #include "NumericUtils.h"
 
-Err DIEventLayer::AddEvents(const InputState& currentState, const InputState& nextState, std::vector<Event>* eventList)
+Err DIEventLayer::AddEvents(const InputState& currentState, const InputState& nextState, std::vector<Event>* eventList, const int32_t deadzone)
 {
 	currentState_ = currentState;
 	nextState_ = nextState;
@@ -15,7 +15,7 @@ Err DIEventLayer::AddEvents(const InputState& currentState, const InputState& ne
 	if (err.Code())
 		return err;
 
-	err = BuildGamepadAxisEvent();
+	err = BuildGamepadAxisEvent(deadzone);
 	if (err.Code())
 		return err;
 
@@ -68,7 +68,7 @@ Err DIEventLayer::BuildGamepadBtnEvent()
 	return error_const::SUCCESS;
 }
 
-Err DIEventLayer::BuildGamepadAxisEvent()
+Err DIEventLayer::BuildGamepadAxisEvent(const int32_t deadzone)
 {
 	for (uint8_t joyId = 0; joyId < currentState_.GamepadCount; ++joyId)
 	{

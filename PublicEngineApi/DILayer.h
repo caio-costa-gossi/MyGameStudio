@@ -65,7 +65,7 @@ private:
 	static BOOL EnumObjectsCallback(LPCDIDEVICEOBJECTINSTANCE object, LPVOID pContext);
 
 public:
-	Err Startup(HWND hWindow) override;
+	Err Startup(HWND hWindow, int32_t deadzone = 500) override;
 	Err Update(const SDL_Event* eventList = nullptr, uint32_t numEvent = 0) override;
 	Err Shutdown() override;
 

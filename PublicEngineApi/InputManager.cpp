@@ -4,7 +4,7 @@
 #include "GameConsoleManager.h"
 #include "SDLInputLayer.h"
 
-Err InputManager::Startup(const HWND hWindow, const bool usingSdl)
+Err InputManager::Startup(const HWND hWindow, const int32_t deadzone, const bool usingSdl)
 {
 	// Define input layer
 	if (usingSdl)
@@ -13,7 +13,7 @@ Err InputManager::Startup(const HWND hWindow, const bool usingSdl)
 		inputLayer_ = new DILayer();
 
 	// Startup instance
-	Err err = inputLayer_->Startup(hWindow);
+	Err err = inputLayer_->Startup(hWindow, deadzone);
 	if (err.Code())
 		return err;
 

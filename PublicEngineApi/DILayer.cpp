@@ -8,8 +8,9 @@
 #undef max()
 #define DI_WHEEL_BASE_VEL 120
 
-Err DILayer::Startup(const HWND hWindow)
+Err DILayer::Startup(const HWND hWindow, const int32_t deadzone)
 {
+	deadzone_ = deadzone;
 	const HINSTANCE hModule = GetModuleHandle(nullptr);
 
 	// Init interface
@@ -130,7 +131,7 @@ Err DILayer::Update(const SDL_Event* eventList, uint32_t numEvent)
 	}
 
 	// Build and add events
-	err = DIEventLayer::AddEvents(currentState_, nextState_, &eventsToFlush_);
+	err = DIEventLayer::AddEvents(currentState_, nextState_, &eventsToFlush_, deadzone_);
 	if (err.Code())
 		return err;
 
@@ -236,13 +237,32 @@ Err DILayer::UpdateJoystickAnalog(const uint8_t joystickId)
 {
 	constexpr int32_t int16Max = std::numeric_limits<int16_t>::max();
 
+	// Clip values under the deadzone if necessary
+	int32_t lx = joystickStates_[joystickId].lX - int16Max;
+	if (lx != 0 && std::abs(lx) <= deadzone_) lx = 0;
+
+	int32_t ly = joystickStates_[joystickId].lY - int16Max;
+	if (ly != 0 && std::abs(ly) <= deadzone_) ly = 0;
+
+	int32_t lz = joystickStates_[joystickId].lZ - int16Max;
+	if (lz != 0 && std::abs(lz) <= deadzone_) lz = 0;
+
+	int32_t lrx = joystickStates_[joystickId].lRz - int16Max;
+	if (lrx != 0 && std::abs(lrx) <= deadzone_) lrx = 0;
+
+	int32_t lry = joystickStates_[joystickId].lRx - int16Max;
+	if (lry != 0 && std::abs(lry) <= deadzone_) lry = 0;
+
+	int32_t lrz = joystickStates_[joystickId].lRy - int16Max;
+	if (lrz != 0 && std::abs(lrz) <= deadzone_) lrz = 0;
+
 	// Most common mapping, not guaranteed
-	nextState_.Gamepads[joystickId].State.AxisState[gamepad_axis_leftx] = joystickStates_[joystickId].lX - int16Max;
-	nextState_.Gamepads[joystickId].State.AxisState[gamepad_axis_lefty] = joystickStates_[joystickId].lY - int16Max;
-	nextState_.Gamepads[joystickId].State.AxisState[gamepad_axis_rightx] = joystickStates_[joystickId].lZ - int16Max;
-	nextState_.Gamepads[joystickId].State.AxisState[gamepad_axis_righty] = joystickStates_[joystickId].lRz - int16Max;
-	nextState_.Gamepads[joystickId].State.AxisState[gamepad_axis_left_trigger] = joystickStates_[joystickId].lRx - int16Max;
-	nextState_.Gamepads[joystickId].State.AxisState[gamepad_axis_right_trigger] = joystickStates_[joystickId].lRy - int16Max;
+	nextState_.Gamepads[joystickId].State.AxisState[gamepad_axis_leftx] = lx;
+	nextState_.Gamepads[joystickId].State.AxisState[gamepad_axis_lefty] = ly;
+	nextState_.Gamepads[joystickId].State.AxisState[gamepad_axis_rightx] = lz;
+	nextState_.Gamepads[joystickId].State.AxisState[gamepad_axis_righty] = lrx;
+	nextState_.Gamepads[joystickId].State.AxisState[gamepad_axis_left_trigger] = lry;
+	nextState_.Gamepads[joystickId].State.AxisState[gamepad_axis_right_trigger] = lrz;
 
 	return error_const::SUCCESS;
 }

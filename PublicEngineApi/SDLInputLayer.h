@@ -43,7 +43,7 @@ private:
 	Err UpdateMouseWheel(const SDL_MouseWheelEvent& event);
 
 public:
-	Err Startup(HWND hWindow = nullptr) override;
+	Err Startup(HWND hWindow = nullptr, int32_t deadzone = 500) override;
 	Err Update(const SDL_Event* eventList = nullptr, uint32_t numEvent = 0) override;
 	Err Shutdown() override;
 };

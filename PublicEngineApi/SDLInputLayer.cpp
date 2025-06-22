@@ -5,8 +5,10 @@
 
 #undef max()
 
-Err SDLInputLayer::Startup(HWND hWindow)
+Err SDLInputLayer::Startup(HWND hWindow, const int32_t deadzone)
 {
+	deadzone_ = deadzone;
+
 	// SDL Event subsystem must already have been started
 	Err err = StartupGamepads();
 	if (err.Code())
@@ -166,11 +168,19 @@ Err SDLInputLayer::UpdateGamepadButton(const uint8_t gamepadId, const uint8_t bu
 
 Err SDLInputLayer::UpdateGamepadAxis(const uint8_t gamepadId, const uint8_t axisId, const int16_t axisValue)
 {
+	int16_t valueAfterDeadzone = axisValue;
+	if (std::abs(axisValue) <= deadzone_)
+		valueAfterDeadzone = 0;
+
+	// Only change values if new value is different from old value
+	if (valueAfterDeadzone == currentState_.Gamepads[idToIndex_[gamepadId]].State.AxisState[axisId])
+		return error_const::SUCCESS;
+
 	// Update state
-	currentState_.Gamepads[idToIndex_[gamepadId]].State.AxisState[axisId] = axisValue;
+	currentState_.Gamepads[idToIndex_[gamepadId]].State.AxisState[axisId] = valueAfterDeadzone;
 
 	// Build event
-	const GamepadAxisEvent axisEvent = { static_cast<GamepadAxis>(axisId), axisValue, idToIndex_[gamepadId] };
+	const GamepadAxisEvent axisEvent = { static_cast<GamepadAxis>(axisId), valueAfterDeadzone, idToIndex_[gamepadId] };
 	Event newEvent = { event_gamepad_axis_move, event_class_gamepad, 0 };
 	newEvent.GamepadAxis = axisEvent;
 	eventsToFlush_.emplace_back(newEvent);

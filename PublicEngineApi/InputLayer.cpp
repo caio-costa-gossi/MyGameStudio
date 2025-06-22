@@ -9,3 +9,17 @@ Err InputLayer::Subscribe(const Subscription& subscription)
 {
 	return eventDispatcher_.Subscribe(subscription);
 }
+
+Err InputLayer::FireEvents()
+{
+	for (const Event& event : eventsToFlush_)
+	{
+		Err err = eventDispatcher_.FireEvent(event);
+		if (err.Code())
+			return err;
+	}
+
+	eventsToFlush_.clear();
+
+	return error_const::SUCCESS;
+}

@@ -40,7 +40,7 @@ Err InputManager::Shutdown()
 
 Err InputManager::SubForInputEvent(const Subscription& sub)
 {
-	//inputLayer_->Subscribe(sub);
+	inputLayer_->Subscribe(sub);
 	return error_const::SUCCESS;
 }
 

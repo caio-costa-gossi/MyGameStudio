@@ -10,8 +10,9 @@ class InputLayer
 protected:
 	InputState currentState_ = InputState();
 	EventDispatcher eventDispatcher_;
+	std::vector<Event> eventsToFlush_ = std::vector<Event>();
 
-	virtual Err FireEvents() = 0;
+	Err FireEvents();
 
 public:
 	virtual Err Startup(HWND hWindow = nullptr) = 0;

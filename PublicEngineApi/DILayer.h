@@ -63,9 +63,6 @@ private:
 	static BOOL EnumDevicesCallback(LPCDIDEVICEINSTANCE instance, LPVOID pContext);
 	static BOOL EnumObjectsCallback(LPCDIDEVICEOBJECTINSTANCE object, LPVOID pContext);
 
-	// Event Handling
-	Err FireEvents() override;
-
 public:
 	Err Startup(HWND hWindow) override;
 	Err Update(const SDL_Event* eventList = nullptr, uint32_t numEvent = 0) override;

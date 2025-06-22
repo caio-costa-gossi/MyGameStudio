@@ -356,11 +356,6 @@ uint16_t DILayer::ScancodeToKeycode(const uint16_t scancode)
 	return static_cast<uint16_t>(MapVirtualKeyExA(scancode, MAPVK_VSC_TO_VK, GetKeyboardLayout(0)));
 }
 
-Err DILayer::FireEvents()
-{
-	return error_const::SUCCESS;
-}
-
 
 DILayer* DILayer::instance_ = nullptr;
 Device* DILayer::device_ = nullptr;

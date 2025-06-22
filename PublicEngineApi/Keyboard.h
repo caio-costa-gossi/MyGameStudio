@@ -1,4 +1,5 @@
 #pragma once
+#include <cstdint>
 
 enum KeyboardKey : uint16_t
 {

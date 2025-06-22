@@ -42,9 +42,6 @@ private:
 	Err UpdateMouseMotion(const SDL_MouseMotionEvent& event);
 	Err UpdateMouseWheel(const SDL_MouseWheelEvent& event);
 
-	// Event Handling
-	Err FireEvents() override;
-
 public:
 	Err Startup(HWND hWindow = nullptr) override;
 	Err Update(const SDL_Event* eventList = nullptr, uint32_t numEvent = 0) override;

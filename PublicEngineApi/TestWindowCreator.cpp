@@ -29,7 +29,7 @@ Err TestWindowCreator::Startup()
 	if (err.Code())
 		return err;
 
-	err = InputManager::Startup(hWindow_, false);
+	err = InputManager::Startup(hWindow_, true);
 	if (err.Code())
 		return err;
 

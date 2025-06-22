@@ -68,9 +68,13 @@ Err SDLInputLayer::Update(const SDL_Event* eventList, const uint32_t numEvent)
 		}
 	}
 
-	err = FireEvents();
-	if (err.Code())
-		return err;
+	// Dispatch events of this frame
+	if (!eventsToFlush_.empty())
+	{
+		err = FireEvents();
+		if (err.Code())
+			return err;
+	}
 
 	return error_const::SUCCESS;
 }
@@ -145,16 +149,32 @@ Err SDLInputLayer::UpdateGamepads(const SDL_Event& event)
 
 Err SDLInputLayer::UpdateGamepadButton(const uint8_t gamepadId, const uint8_t buttonId, const bool isPressed)
 {
+	// Update state
 	uint32_t& buttonState = currentState_.Gamepads[idToIndex_[gamepadId]].State.BtnState;
 	const uint32_t mask = NumericUtils::Bitmask(buttonId);
 
 	buttonState = (buttonState & ~mask) | (isPressed * mask);
+
+	// Build event
+	const GamepadButtonEvent btnEvent = { static_cast<GamepadButton>(buttonId), isPressed, idToIndex_[gamepadId] };
+	Event newEvent = {isPressed ? event_gamepad_button_press : event_gamepad_button_release, event_class_gamepad, 0};
+	newEvent.GamepadButton = btnEvent;
+	eventsToFlush_.emplace_back(newEvent);
+
 	return error_const::SUCCESS;
 }
 
 Err SDLInputLayer::UpdateGamepadAxis(const uint8_t gamepadId, const uint8_t axisId, const int16_t axisValue)
 {
+	// Update state
 	currentState_.Gamepads[idToIndex_[gamepadId]].State.AxisState[axisId] = axisValue;
+
+	// Build event
+	const GamepadAxisEvent axisEvent = { static_cast<GamepadAxis>(axisId), axisValue, idToIndex_[gamepadId] };
+	Event newEvent = { event_gamepad_axis_move, event_class_gamepad, 0 };
+	newEvent.GamepadAxis = axisEvent;
+	eventsToFlush_.emplace_back(newEvent);
+
 	return error_const::SUCCESS;
 }
 
@@ -164,9 +184,17 @@ Err SDLInputLayer::UpdateKeyboard(const SDL_Event& event)
 	{
 	case SDL_EVENT_KEY_DOWN:
 	case SDL_EVENT_KEY_UP:
+	{
 		currentState_.KeyboardState.RawState[event.key.raw] = event.key.down;
 		currentState_.KeyboardState.PhysicalKeyState[event.key.scancode] = event.key.down;
+
+		const KeyboardEvent kbEvent = { static_cast<KeyboardKey>(event.key.scancode), static_cast<ScancodeKey>(event.key.raw), event.key.down };
+		Event newEvent = { event.key.down ? event_keyboard_button_press : event_keyboard_button_release, event_class_keyboard, 0 };
+		newEvent.Keyboard = kbEvent;
+		eventsToFlush_.emplace_back(newEvent);
+
 		break;
+	}
 
 	default:
 		break;
@@ -203,32 +231,48 @@ Err SDLInputLayer::UpdateMouse(const SDL_Event& event)
 
 Err SDLInputLayer::UpdateMouseButton(const uint8_t buttonIndex, const bool isPressed)
 {
+	// Update state
 	uint8_t& buttonState = currentState_.MouseState.BtnState;
 	const uint8_t mask = static_cast<uint8_t>(NumericUtils::Bitmask(buttonIndex));
-
 	buttonState = (buttonState & ~mask) | (isPressed * mask);
+
+	// Build event
+	const MouseButtonEvent btnEvent = { static_cast<MouseButton>(buttonIndex), isPressed };
+	Event newEvent = { isPressed ? event_mouse_button_press : event_mouse_button_release, event_class_mouse, 0 };
+	newEvent.MouseButton = btnEvent;
+	eventsToFlush_.emplace_back(newEvent);
+
 	return error_const::SUCCESS;
 }
 
 Err SDLInputLayer::UpdateMouseMotion(const SDL_MouseMotionEvent& event)
 {
+	// Update state
 	currentState_.MouseState.XPos = event.x;
 	currentState_.MouseState.YPos = event.y;
 	currentState_.MouseState.XVel = event.xrel;
 	currentState_.MouseState.YVel = event.yrel;
+
+	// Build event
+	const MouseMoveEvent moveEvent = { event.x, event.y, event.xrel, event.yrel };
+	Event newEvent = { event_mouse_move, event_class_mouse, 0 };
+	newEvent.MouseMove = moveEvent;
+	eventsToFlush_.emplace_back(newEvent);
 
 	return error_const::SUCCESS;
 }
 
 Err SDLInputLayer::UpdateMouseWheel(const SDL_MouseWheelEvent& event)
 {
+	// Update state
 	currentState_.MouseState.WheelXVel = event.x;
 	currentState_.MouseState.WheelYVel = event.y;
 
-	return error_const::SUCCESS;
-}
+	// Build event
+	const MouseWheelEvent wheelEvent = { event.x, event.y };
+	Event newEvent = { event_mouse_wheel, event_class_mouse, 0 };
+	newEvent.MouseWheel = wheelEvent;
+	eventsToFlush_.emplace_back(newEvent);
 
-Err SDLInputLayer::FireEvents()
-{
 	return error_const::SUCCESS;
 }

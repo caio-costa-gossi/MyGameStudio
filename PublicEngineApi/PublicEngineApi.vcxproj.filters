@@ -183,6 +183,9 @@
     <ClInclude Include="MouseWheelEvent.h">
       <Filter>Event Management\EventType</Filter>
     </ClInclude>
+    <ClInclude Include="DIEventLayer.h">
+      <Filter>Runtime Managers\Input\InputLayer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssetRuntimeManager.cpp">
@@ -277,6 +280,9 @@
     </ClCompile>
     <ClCompile Include="NumericUtils.cpp">
       <Filter>Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="DIEventLayer.cpp">
+      <Filter>Runtime Managers\Input\InputLayer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

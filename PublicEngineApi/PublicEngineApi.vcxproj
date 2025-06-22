@@ -25,6 +25,7 @@
     <ClInclude Include="AssetRuntimeManager.h" />
     <ClInclude Include="CallbackData.h" />
     <ClInclude Include="CsvParser.h" />
+    <ClInclude Include="DIEventLayer.h" />
     <ClInclude Include="DILayer.h" />
     <ClInclude Include="DILayerMapping.h" />
     <ClInclude Include="Enums.h" />
@@ -73,6 +74,7 @@
     <ClCompile Include="AssetDatabase.cpp" />
     <ClCompile Include="AssetRuntimeManager.cpp" />
     <ClCompile Include="CsvParser.cpp" />
+    <ClCompile Include="DIEventLayer.cpp" />
     <ClCompile Include="DILayer.cpp" />
     <ClCompile Include="Enums.cpp" />
     <ClCompile Include="Err.cpp" />

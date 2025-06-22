@@ -40,6 +40,9 @@ private:
 	bool isMouseActive_ = true;
 	bool isJoystickActive_ = true;
 
+	// Aux structure for event handling
+	InputState nextState_ = InputState();
+
 	// Main private methods
 	Err UpdateJoystick(uint8_t joystickId);
 	Err UpdateKeyboard();
@@ -56,8 +59,6 @@ private:
 	// Callback instance access
 	static DILayer* instance_;
 	static Device* device_;
-
-	EventDispatcher dispatcher_;
 
 	// Callbacks for DI
 	static BOOL EnumDevicesCallback(LPCDIDEVICEINSTANCE instance, LPVOID pContext);

@@ -1,5 +1,7 @@
 #include "DILayer.h"
 #include <bitset>
+
+#include "DIEventLayer.h"
 #include "DILayerMapping.h"
 #include "GameConsoleManager.h"
 
@@ -101,6 +103,7 @@ const std::string& DILayer::GetBtnNameByIndex(const uint8_t joystickId, const ui
 Err DILayer::Update(const SDL_Event* eventList, uint32_t numEvent)
 {
 	Err err;
+	nextState_ = currentState_;
 
 	if (isKeyboardActive_)
 	{
@@ -125,6 +128,11 @@ Err DILayer::Update(const SDL_Event* eventList, uint32_t numEvent)
 				GameConsoleManager::PrintError(err.Message());
 		}
 	}
+
+	currentState_ = nextState_;
+
+	std::string debugString = std::bitset<32>(currentState_.Gamepads[0].State.BtnState).to_string();
+	GameConsoleManager::PrintInfo(debugString);
 
 	err = FireEvents();
 	if (err.Code())
@@ -167,13 +175,14 @@ Err DILayer::UpdateJoystickButton(const uint8_t joystickId)
 	for (uint8_t buttonId = 0; buttonId < gamepad_button_count; ++buttonId)
 		newButtonState += (1 << gGamepadButtonMapping[buttonId]) * (rawBtnState[buttonId] != 0);
 
-	currentState_.Gamepads[joystickId].State.BtnState = newButtonState;
+	// Update button state
+	nextState_.Gamepads[joystickId].State.BtnState = newButtonState;
 	return error_const::SUCCESS;
 }
 
 Err DILayer::UpdateJoystickHat(const uint8_t joystickId)
 {
-	uint32_t& buttonState = currentState_.Gamepads[joystickId].State.BtnState;
+	uint32_t& buttonState = nextState_.Gamepads[joystickId].State.BtnState;
 
 	// Update hat -> Bits 28-31: up,down,left,right
 	switch (joystickStates_[joystickId].rgdwPOV[0])
@@ -223,15 +232,15 @@ Err DILayer::UpdateJoystickHat(const uint8_t joystickId)
 
 Err DILayer::UpdateJoystickAnalog(const uint8_t joystickId)
 {
-	int32_t int16Max = std::numeric_limits<int16_t>::max();
+	constexpr int32_t int16Max = std::numeric_limits<int16_t>::max();
 
 	// Most common mapping, not guaranteed
-	currentState_.Gamepads[joystickId].State.AxisState[gamepad_axis_leftx] = joystickStates_[joystickId].lX - int16Max;
-	currentState_.Gamepads[joystickId].State.AxisState[gamepad_axis_lefty] = joystickStates_[joystickId].lY - int16Max;
-	currentState_.Gamepads[joystickId].State.AxisState[gamepad_axis_rightx] = joystickStates_[joystickId].lZ - int16Max;
-	currentState_.Gamepads[joystickId].State.AxisState[gamepad_axis_righty] = joystickStates_[joystickId].lRz - int16Max;
-	currentState_.Gamepads[joystickId].State.AxisState[gamepad_axis_left_trigger] = joystickStates_[joystickId].lRx - int16Max;
-	currentState_.Gamepads[joystickId].State.AxisState[gamepad_axis_right_trigger] = joystickStates_[joystickId].lRy - int16Max;
+	nextState_.Gamepads[joystickId].State.AxisState[gamepad_axis_leftx] = joystickStates_[joystickId].lX - int16Max;
+	nextState_.Gamepads[joystickId].State.AxisState[gamepad_axis_lefty] = joystickStates_[joystickId].lY - int16Max;
+	nextState_.Gamepads[joystickId].State.AxisState[gamepad_axis_rightx] = joystickStates_[joystickId].lZ - int16Max;
+	nextState_.Gamepads[joystickId].State.AxisState[gamepad_axis_righty] = joystickStates_[joystickId].lRz - int16Max;
+	nextState_.Gamepads[joystickId].State.AxisState[gamepad_axis_left_trigger] = joystickStates_[joystickId].lRx - int16Max;
+	nextState_.Gamepads[joystickId].State.AxisState[gamepad_axis_right_trigger] = joystickStates_[joystickId].lRy - int16Max;
 
 	return error_const::SUCCESS;
 }
@@ -248,11 +257,11 @@ Err DILayer::UpdateKeyboard()
 
 	// Get raw scancode
 	for (uint16_t key = 0; key < scancode_key_count; ++key)
-		currentState_.KeyboardState.RawState[key] = keyboardState_[key] != 0;
+		nextState_.KeyboardState.RawState[key] = keyboardState_[key] != 0;
 
 	// Get physical stardardized USB HID scancode (on Windows)
 	for (uint16_t key = 0; key < scancode_key_count; ++key)
-		currentState_.KeyboardState.PhysicalKeyState[gWinScancodeToUsbScancode[key]] = keyboardState_[key] != 0;
+		nextState_.KeyboardState.PhysicalKeyState[gWinScancodeToUsbScancode[key]] = keyboardState_[key] != 0;
 
 	return error_const::SUCCESS;
 }
@@ -274,7 +283,7 @@ Err DILayer::UpdateMouse()
 	for (uint8_t btnId = 0; btnId < 4; ++btnId)
 		newBtnState += (1 << gMouseButtonMapping[btnId]) * (rawBtnState[btnId] != 0);
 
-	currentState_.MouseState.BtnState = newBtnState;
+	nextState_.MouseState.BtnState = newBtnState;
 
 	// Update mouse vel and position
 	Err err = UpdateMouseVelPos(mouseState_.lX, mouseState_.lY, mouseState_.lZ);
@@ -286,15 +295,15 @@ Err DILayer::UpdateMouse()
 
 Err DILayer::UpdateMouseVelPos(const int32_t xVel, const int32_t yVel, const int32_t zVel)
 {
-	currentState_.MouseState.XVel = static_cast<float>(xVel);
-	currentState_.MouseState.YVel = static_cast<float>(yVel);
+	nextState_.MouseState.XVel = static_cast<float>(xVel);
+	nextState_.MouseState.YVel = static_cast<float>(yVel);
 
-	currentState_.MouseState.XPos += currentState_.MouseState.XVel;
-	currentState_.MouseState.YPos += currentState_.MouseState.YVel;
+	nextState_.MouseState.XPos += nextState_.MouseState.XVel;
+	nextState_.MouseState.YPos += nextState_.MouseState.YVel;
 
 	// Divide wheel vel by 120 for consistency with SDL3
-	currentState_.MouseState.WheelYVel = static_cast<float>(zVel) / DI_WHEEL_BASE_VEL;
-	currentState_.MouseState.WheelXVel = 0;
+	nextState_.MouseState.WheelYVel = static_cast<float>(zVel) / DI_WHEEL_BASE_VEL;
+	nextState_.MouseState.WheelXVel = 0;
 
 	return error_const::SUCCESS;
 }

@@ -129,10 +129,12 @@ Err DILayer::Update(const SDL_Event* eventList, uint32_t numEvent)
 		}
 	}
 
-	currentState_ = nextState_;
+	// Build and add events
+	err = DIEventLayer::AddEvents(currentState_, nextState_, &eventsToFlush_);
+	if (err.Code())
+		return err;
 
-	std::string debugString = std::bitset<32>(currentState_.Gamepads[0].State.BtnState).to_string();
-	GameConsoleManager::PrintInfo(debugString);
+	currentState_ = nextState_;
 
 	err = FireEvents();
 	if (err.Code())

@@ -4,6 +4,7 @@
 #include "Err.h"
 #include "EventDispatcher.h"
 #include "InputState.h"
+#include "Timeline.h"
 
 class InputLayer
 {

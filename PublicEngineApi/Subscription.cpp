@@ -26,8 +26,8 @@ const EventClass& Subscription::GetClassFilter() const
 	return classFilter_;
 }
 
-Err Subscription::ExecuteCallback() const
+Err Subscription::ExecuteCallback(const CallbackData& data) const
 {
-	callback_(nullptr);
+	callback_(&data);
 	return error_const::SUCCESS;
 }

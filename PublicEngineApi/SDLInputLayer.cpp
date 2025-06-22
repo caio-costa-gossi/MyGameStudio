@@ -157,7 +157,7 @@ Err SDLInputLayer::UpdateGamepadButton(const uint8_t gamepadId, const uint8_t bu
 
 	// Build event
 	const GamepadButtonEvent btnEvent = { static_cast<GamepadButton>(buttonId), isPressed, idToIndex_[gamepadId] };
-	Event newEvent = {isPressed ? event_gamepad_button_press : event_gamepad_button_release, event_class_gamepad, 0};
+	Event newEvent = {isPressed ? event_gamepad_button_press : event_gamepad_button_release, event_class_gamepad, 0 };
 	newEvent.GamepadButton = btnEvent;
 	eventsToFlush_.emplace_back(newEvent);
 

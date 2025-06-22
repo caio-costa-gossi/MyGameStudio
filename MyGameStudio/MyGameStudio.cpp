@@ -6,7 +6,7 @@
 
 void MyCallback(const CallbackData* data)
 {
-	std::cout << "hello, im here!!\n";
+	std::cout << data->Event.ToString();
 }
 
 int main()

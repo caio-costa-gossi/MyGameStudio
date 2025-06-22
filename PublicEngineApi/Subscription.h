@@ -29,5 +29,5 @@ public:
 	const EventClass& GetClassFilter() const;
 
 	[[nodiscard]]
-	Err ExecuteCallback() const;
+	Err ExecuteCallback(const CallbackData& data) const;
 };

@@ -48,7 +48,7 @@ struct Event
 {
 	EventType Type;
 	EventClass Class;
-	uint64_t Timestamp;
+	int64_t Timestamp;
 
 	// Event type-specific information
 	GamepadButtonEvent GamepadButton;
@@ -57,5 +57,9 @@ struct Event
 	MouseMoveEvent MouseMove;
 	MouseWheelEvent MouseWheel;
 	KeyboardEvent Keyboard;
+
+	// Aux methods
+	[[nodiscard]]
+	std::string ToString() const;
 };
 

@@ -78,6 +78,7 @@
     <ClCompile Include="DILayer.cpp" />
     <ClCompile Include="Enums.cpp" />
     <ClCompile Include="Err.cpp" />
+    <ClCompile Include="Event.cpp" />
     <ClCompile Include="EventDispatcher.cpp" />
     <ClCompile Include="GameConsoleManager.cpp" />
     <ClCompile Include="GameObjectFactory.cpp" />

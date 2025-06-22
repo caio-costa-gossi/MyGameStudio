@@ -8,7 +8,7 @@
 #undef max()
 #define DI_WHEEL_BASE_VEL 120
 
-Err DILayer::Startup(HWND hWindow)
+Err DILayer::Startup(const HWND hWindow)
 {
 	const HINSTANCE hModule = GetModuleHandle(nullptr);
 

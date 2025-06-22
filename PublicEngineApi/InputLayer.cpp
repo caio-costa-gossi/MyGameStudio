@@ -12,7 +12,7 @@ Err InputLayer::Subscribe(const Subscription& subscription)
 
 Err InputLayer::FireEvents()
 {
-	for (const Event& event : eventsToFlush_)
+	for (Event& event : eventsToFlush_)
 	{
 		Err err = eventDispatcher_.FireEvent(event);
 		if (err.Code())

@@ -10,13 +10,24 @@ private:
 	uint8_t priority_ = 1;
 	bool oneShot_;
 
-	std::string subscriptionName_;
+	uint32_t subscriptionId_;
+	EventClass classFilter_ = event_class_generic;
 
 public:
 	Subscription() = default;
-	Subscription(const std::function<void(const CallbackData*)>& callback, const std::string& name = "undefined", uint8_t priority = 1, const bool oneShot = false);
+	explicit Subscription(const std::function<void(const CallbackData*)>& callback, const EventClass& classFilter = event_class_generic, uint32_t subscriptionId = 0, uint8_t priority = 1, bool oneShot = false);
 
 	bool operator< (const Subscription& other) const;
+
+	[[nodiscard]]
 	bool IsOneShot() const;
+
+	[[nodiscard]]
+	uint32_t GetSubscriptionId() const;
+
+	[[nodiscard]]
+	const EventClass& GetClassFilter() const;
+
+	[[nodiscard]]
 	Err ExecuteCallback() const;
 };

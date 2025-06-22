@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum Axis : int8_t
+enum GamepadAxis : int8_t
 {
 	gamepad_axis_invalid = -1,
 	gamepad_axis_leftx,

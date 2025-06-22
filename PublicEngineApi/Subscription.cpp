@@ -1,7 +1,7 @@
 #include "Subscription.h"
 
-Subscription::Subscription(const std::function<void(const CallbackData*)>& callback, const std::string& name, const uint8_t priority, const bool oneShot) :
-	callback_(callback), subscriptionName_(name), priority_(priority), oneShot_(oneShot)
+Subscription::Subscription(const std::function<void(const CallbackData*)>& callback, const EventClass& classFilter, const uint32_t subscriptionId, const uint8_t priority, const bool oneShot) :
+	callback_(callback), classFilter_(classFilter), subscriptionId_(subscriptionId), priority_(priority), oneShot_(oneShot)
 {
 	
 }
@@ -14,6 +14,16 @@ bool Subscription::operator<(const Subscription& other) const
 bool Subscription::IsOneShot() const
 {
 	return oneShot_;
+}
+
+uint32_t Subscription::GetSubscriptionId() const
+{
+	return subscriptionId_;
+}
+
+const EventClass& Subscription::GetClassFilter() const
+{
+	return classFilter_;
 }
 
 Err Subscription::ExecuteCallback() const

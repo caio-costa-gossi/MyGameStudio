@@ -1,15 +1,18 @@
 #include "EventDispatcher.h"
 
-Err EventDispatcher::FireEvent()
+Err EventDispatcher::FireEvent(const Event& event)
 {
-	for (auto it = subscriptionSet_.begin(); it != subscriptionSet_.end(); )
+	for (auto it = subscriptionSet_.begin(); it != subscriptionSet_.end(); ++it)
 	{
+		if (it->GetClassFilter() != event.Class)
+			continue;
+
 		Err err = it->ExecuteCallback();
+		if (err.Code())
+			return err;
 
 		if (it->IsOneShot())
 			it = subscriptionSet_.erase(it);
-		else
-			++it;
 	}
 
 	return error_const::SUCCESS;

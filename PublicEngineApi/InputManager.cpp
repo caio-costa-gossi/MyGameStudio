@@ -26,8 +26,6 @@ Err InputManager::Update(const SDL_Event* eventList, const uint32_t numEvent)
 	if (err.Code())
 		return err;
 
-	inputState_ = inputLayer_->GetInputStates();
-
 	return error_const::SUCCESS;
 }
 
@@ -40,11 +38,16 @@ Err InputManager::Shutdown()
 	return error_const::SUCCESS;
 }
 
-Err InputManager::SubBeforeInput(const Subscription& sub)
+Err InputManager::SubForInputEvent(const Subscription& sub)
 {
+	//inputLayer_->Subscribe(sub);
 	return error_const::SUCCESS;
+}
+
+const InputState& InputManager::GetInputState()
+{
+	return inputLayer_->GetInputState();
 }
 
 
 InputLayer* InputManager::inputLayer_ = nullptr;
-InputState InputManager::inputState_;

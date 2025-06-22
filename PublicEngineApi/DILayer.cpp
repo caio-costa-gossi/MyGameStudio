@@ -126,6 +126,10 @@ Err DILayer::Update(const SDL_Event* eventList, uint32_t numEvent)
 		}
 	}
 
+	err = FireEvents();
+	if (err.Code())
+		return err;
+
 	return error_const::SUCCESS;
 }
 
@@ -313,11 +317,6 @@ Err DILayer::Shutdown()
 	return error_const::SUCCESS;
 }
 
-InputState DILayer::GetInputStates()
-{
-	return currentState_;
-}
-
 BOOL DILayer::EnumDevicesCallback(const LPCDIDEVICEINSTANCE instance, LPVOID pContext)
 {
 	if (instance_ == nullptr)
@@ -357,6 +356,10 @@ uint16_t DILayer::ScancodeToKeycode(const uint16_t scancode)
 	return static_cast<uint16_t>(MapVirtualKeyExA(scancode, MAPVK_VSC_TO_VK, GetKeyboardLayout(0)));
 }
 
+Err DILayer::FireEvents()
+{
+	return error_const::SUCCESS;
+}
 
 
 DILayer* DILayer::instance_ = nullptr;

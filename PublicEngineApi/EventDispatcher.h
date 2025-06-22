@@ -9,6 +9,6 @@ private:
 	std::set<Subscription> subscriptionSet_;
 
 public:
-	Err FireEvent();
+	Err FireEvent(const Event& event);
 	Err Subscribe(const Subscription& subscription);
 };

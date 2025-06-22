@@ -34,9 +34,6 @@ private:
 	DIMOUSESTATE mouseState_ = DIMOUSESTATE();
 	BYTE keyboardState_[keyboard_di_count] = {0};
 
-	// Engine input structure
-	InputState currentState_;
-
 	// Input type control
 	uint8_t joystickCount_ = 0;
 	bool isKeyboardActive_ = true;
@@ -66,11 +63,13 @@ private:
 	static BOOL EnumDevicesCallback(LPCDIDEVICEINSTANCE instance, LPVOID pContext);
 	static BOOL EnumObjectsCallback(LPCDIDEVICEOBJECTINSTANCE object, LPVOID pContext);
 
+	// Event Handling
+	Err FireEvents() override;
+
 public:
 	Err Startup(HWND hWindow) override;
 	Err Update(const SDL_Event* eventList = nullptr, uint32_t numEvent = 0) override;
 	Err Shutdown() override;
 
-	InputState GetInputStates() override;
 	const std::string& GetBtnNameByIndex(uint8_t joystickId, uint8_t buttonIndex);
 };

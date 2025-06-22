@@ -37,6 +37,9 @@
     <Filter Include="Runtime Managers\Input\InputLayer">
       <UniqueIdentifier>{352de222-aba2-4054-ad1c-86645dc205c8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Event Management\EventType">
+      <UniqueIdentifier>{c1926fe8-3473-438b-86bf-f590ee6394b2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetRuntimeManager.h">
@@ -158,6 +161,27 @@
     </ClInclude>
     <ClInclude Include="DILayerMapping.h">
       <Filter>Runtime Managers\Input\InputLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="Event.h">
+      <Filter>Event Management</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyboardEvent.h">
+      <Filter>Event Management\EventType</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseButtonEvent.h">
+      <Filter>Event Management\EventType</Filter>
+    </ClInclude>
+    <ClInclude Include="GamepadButtonEvent.h">
+      <Filter>Event Management\EventType</Filter>
+    </ClInclude>
+    <ClInclude Include="GamepadAxisEvent.h">
+      <Filter>Event Management\EventType</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseMoveEvent.h">
+      <Filter>Event Management\EventType</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseWheelEvent.h">
+      <Filter>Event Management\EventType</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

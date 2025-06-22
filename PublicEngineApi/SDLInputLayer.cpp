@@ -68,12 +68,11 @@ Err SDLInputLayer::Update(const SDL_Event* eventList, const uint32_t numEvent)
 		}
 	}
 
-	return error_const::SUCCESS;
-}
+	err = FireEvents();
+	if (err.Code())
+		return err;
 
-InputState SDLInputLayer::GetInputStates()
-{
-	return currentState_;
+	return error_const::SUCCESS;
 }
 
 Err SDLInputLayer::StartupGamepads()
@@ -226,5 +225,10 @@ Err SDLInputLayer::UpdateMouseWheel(const SDL_MouseWheelEvent& event)
 	currentState_.MouseState.WheelXVel = event.x;
 	currentState_.MouseState.WheelYVel = event.y;
 
+	return error_const::SUCCESS;
+}
+
+Err SDLInputLayer::FireEvents()
+{
 	return error_const::SUCCESS;
 }

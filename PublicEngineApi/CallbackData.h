@@ -1,11 +1,7 @@
 #pragma once
-#include <string>
+#include "Event.h"
 
 struct CallbackData
 {
-	uint16_t EventId;
-	std::string EventDescription;
-	void* Param1;
-	void* Param2;
-	void* Param3;
+	Event Event;
 };

@@ -9,14 +9,11 @@ class InputManager
 private:
 	static InputLayer* inputLayer_;
 
-	static EventDispatcher dispatcher_;
-
-	static InputState inputState_;
-
 public:
 	static Err Startup(HWND hWindow, bool usingSdl = true);
 	static Err Update(const SDL_Event* eventList = nullptr, uint32_t numEvent = 0);
 	static Err Shutdown();
 
-	static Err SubBeforeInput(const Subscription& sub);
+	static Err SubForInputEvent(const Subscription& sub);
+	static const InputState& GetInputState();
 };

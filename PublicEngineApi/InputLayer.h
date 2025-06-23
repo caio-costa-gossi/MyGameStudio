@@ -22,7 +22,7 @@ public:
 	virtual Err Update(const SDL_Event* eventList = nullptr, uint32_t numEvent = 0) = 0;
 	virtual Err Shutdown() = 0;
 
-	InputState GetInputState();
+	const InputState& GetInputState();
 	Err Subscribe(const Subscription& subscription);
 
 	virtual ~InputLayer() = default;

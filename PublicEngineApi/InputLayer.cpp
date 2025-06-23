@@ -2,7 +2,7 @@
 
 #include "GameConsoleManager.h"
 
-InputState InputLayer::GetInputState()
+const InputState& InputLayer::GetInputState()
 {
 	return currentState_;
 }

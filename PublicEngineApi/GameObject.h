@@ -5,15 +5,13 @@
 class GameObject
 {
 protected:
-	uint64_t xPos_ = 0;
-	uint64_t yPos_ = 0;
-	uint64_t zPos_ = 0;
+	Vec3I64 pos_;
 
 public:
 	GameObject() = default;
-	void SetPos(const Vec2U64& pos) { xPos_ = pos.X; yPos_ = pos.Y; }
-	void SetPos(const Vec3U64& pos) { xPos_ = pos.X; yPos_ = pos.Y; zPos_ = pos.Z; }
-	Vec3U64 GetPos() { return { xPos_, yPos_, zPos_ }; }
+	void SetPos(const Vec2I64& pos) { pos_.X = pos.X; pos_.Y = pos.Y; pos_.Z = 0; }
+	void SetPos(const Vec3I64& pos) { pos_.X = pos.X; pos_.Y = pos.Y; pos_.Z = pos.Z; }
+	Vec3I64 GetPos() const { return pos_; }
 
 	virtual ~GameObject() = default;
 

@@ -19,5 +19,6 @@ private:
 public:
 	static Err Startup();
 	static Err Run();
+	static Err Update();
 	static Err Shutdown();
 };

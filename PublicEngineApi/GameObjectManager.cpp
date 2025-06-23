@@ -1,5 +1,7 @@
 #include "GameObjectManager.h"
 
+#include "InputManager.h"
+
 GameObjectManager& GameObjectManager::Get()
 {
 	static GameObjectManager instance;
@@ -8,11 +10,39 @@ GameObjectManager& GameObjectManager::Get()
 
 Err GameObjectManager::Startup()
 {
+	// Startup all game objects
 	for (GameObjectFactory* factory : factoryList_)
 	{
 		GameObject* newObject = factory->Get();
 		newObject->SetPos({ 1,1 });
 		objectList_.push_back(newObject);
+	}
+
+	// Register all game objects callbacks
+
+	// Input
+	for (GameObject* object : objectList_)
+	{
+		auto gamepadCallback = [object](const CallbackData* data)
+			{
+				object->OnGamepadChange(data);
+			};
+		const Subscription gamepadSub(gamepadCallback, event_class_gamepad);
+		InputManager::SubForInputEvent(gamepadSub);
+
+		auto keyboardCallback = [object](const CallbackData* data)
+			{
+				object->OnKeyboardChange(data);
+			};
+		const Subscription keyboardSub(keyboardCallback, event_class_keyboard);
+		InputManager::SubForInputEvent(keyboardSub);
+
+		auto mouseCallback = [object](const CallbackData* data)
+			{
+				object->OnMouseChange(data);
+			};
+		const Subscription mouseSub(mouseCallback, event_class_mouse);
+		InputManager::SubForInputEvent(mouseSub);
 	}
 
 	return error_const::SUCCESS;

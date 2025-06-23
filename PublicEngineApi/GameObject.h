@@ -1,4 +1,5 @@
 #pragma once
+#include "CallbackData.h"
 #include "MVector.h"
 
 class GameObject
@@ -17,4 +18,7 @@ public:
 	virtual ~GameObject() = default;
 
 	virtual void Update(uint64_t delta) = 0;
+	virtual void OnGamepadChange(const CallbackData* data) = 0;
+	virtual void OnKeyboardChange(const CallbackData* data) = 0;
+	virtual void OnMouseChange(const CallbackData* data) = 0;
 };

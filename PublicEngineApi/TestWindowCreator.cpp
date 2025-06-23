@@ -79,6 +79,40 @@ Err TestWindowCreator::Run()
 	return error_const::SUCCESS;
 }
 
+Err TestWindowCreator::Update()
+{
+	SDL_Event event;
+
+	while (SDL_PollEvent(&event))
+	{
+		// Collect input events
+		if (event.type >= 0x300 && event.type < 0x700)
+		{
+			inputEventList_.push_back(event);
+			continue;
+		}
+
+		// Handle other events
+		switch (event.type)
+		{
+
+		case SDL_EVENT_QUIT:
+		case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
+			break;
+		default:
+			break;
+		}
+	}
+
+	Err err = InputManager::Update(inputEventList_.data(), static_cast<uint32_t>(inputEventList_.size()));
+	if (err.Code())
+		return err;
+
+	inputEventList_.clear();
+
+	return error_const::SUCCESS;
+}
+
 Err TestWindowCreator::Shutdown()
 {
 	SDL_DestroyWindow(window_);

@@ -24,6 +24,3 @@ public:
 		GameConsoleManager::PrintInfo("Mouse changed!");
 	}
 };
-#include "GameObjectMacro.h"
-#include "GameObjectManager.h"
-REGISTER_GAME_OBJECT(Enemy)

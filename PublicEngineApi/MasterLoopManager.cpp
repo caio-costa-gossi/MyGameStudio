@@ -5,6 +5,7 @@
 #include "InputManager.h"
 #include "PhysicsManager.h"
 #include "RenderingManager.h"
+#include "TestWindowCreator.h"
 
 Err MasterLoopManager::Run()
 {
@@ -31,9 +32,15 @@ Err MasterLoopManager::Startup()
 	}
 
 	// Subsystem startup
-	err = InputManager::Startup(nullptr);
+
+	// Test window creator for input handling
+	err = TestWindowCreator::Startup();
 	if (err.Code())
 		GameConsoleManager::PrintError(err);
+
+	/*err = InputManager::Startup(nullptr);
+	if (err.Code())
+		GameConsoleManager::PrintError(err);*/
 
 	GameConsoleManager::PrintInfo("Starting GameObjectManager...");
 	err = GameObjectManager::Get().Startup();
@@ -67,7 +74,11 @@ Err MasterLoopManager::Shutdown()
 	mainGameTimeline_.Pause();
 
 	// Shutdown subsystems
-	Err err = InputManager::Shutdown();
+	/*Err err = InputManager::Shutdown();
+	if (err.Code())
+		GameConsoleManager::PrintError(err);*/
+
+	Err err = TestWindowCreator::Shutdown();
 	if (err.Code())
 		GameConsoleManager::PrintError(err);
 
@@ -96,7 +107,8 @@ Err MasterLoopManager::UpdateGame()
 	mainGameTimeline_.UpdateLastTime();
 
 	// Update subsystems
-	InputManager::Update();
+	TestWindowCreator::Update();
+	//InputManager::Update();
 	GameObjectManager::Get().Update(mainGameTimeline_.GetDelta());
 	PhysicsManager::Update();
 	AnimationManager::Update();

@@ -23,9 +23,9 @@ int main()
 		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
 	}
 
-	//ConsoleManager::RunConsole();
+	ConsoleManager::RunConsole();
 
-	err = TestWindowCreator::Startup();
+	/*err = TestWindowCreator::Startup();
 	if (err.Code() != 0)
 	{
 		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
@@ -48,7 +48,7 @@ int main()
 	if (err.Code() != 0)
 	{
 		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
-	}
+	}*/
 
 	err = EngineCoreManager::Shutdown();
 	if (err.Code() != 0)

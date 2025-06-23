@@ -1,5 +1,7 @@
 #include "InputLayer.h"
 
+#include "GameConsoleManager.h"
+
 InputState InputLayer::GetInputState()
 {
 	return currentState_;
@@ -16,7 +18,7 @@ Err InputLayer::FireEvents()
 	{
 		Err err = eventDispatcher_.FireEvent(event);
 		if (err.Code())
-			return err;
+			GameConsoleManager::PrintError(err);
 	}
 
 	eventsToFlush_.clear();

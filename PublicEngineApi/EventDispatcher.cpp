@@ -1,5 +1,7 @@
 #include "EventDispatcher.h"
 
+#include "GameConsoleManager.h"
+
 EventDispatcher::EventDispatcher()
 {
 	eventTimeline_.Start();
@@ -7,7 +9,7 @@ EventDispatcher::EventDispatcher()
 
 Err EventDispatcher::FireEvent(Event& event)
 {
-	for (auto it = subscriptionSet_.begin(); it != subscriptionSet_.end(); ++it)
+	for (auto it = subscriptionList_.begin(); it != subscriptionList_.end(); ++it)
 	{
 		// Check subscription filter
 		if (it->GetClassFilter() != event.Class)
@@ -19,11 +21,11 @@ Err EventDispatcher::FireEvent(Event& event)
 
 		Err err = it->ExecuteCallback(data);
 		if (err.Code())
-			return err;
+			GameConsoleManager::PrintError(err);
 
 		// Check OneShot
 		if (it->IsOneShot())
-			it = subscriptionSet_.erase(it);
+			it = subscriptionList_.erase(it);
 	}
 
 	return error_const::SUCCESS;
@@ -31,6 +33,6 @@ Err EventDispatcher::FireEvent(Event& event)
 
 Err EventDispatcher::Subscribe(const Subscription& subscription)
 {
-	subscriptionSet_.insert(subscription);
+	subscriptionList_.push_back(subscription);
 	return error_const::SUCCESS;
 }

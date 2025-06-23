@@ -1,5 +1,5 @@
 #pragma once
-#include <set>
+#include <vector>
 #include "Err.h"
 #include "Subscription.h"
 #include "Timeline.h"
@@ -7,7 +7,7 @@
 class EventDispatcher
 {
 private:
-	std::set<Subscription> subscriptionSet_;
+	std::vector<Subscription> subscriptionList_;
 	Timeline eventTimeline_ = Timeline(timeline::NANOSECOND);
 
 public:

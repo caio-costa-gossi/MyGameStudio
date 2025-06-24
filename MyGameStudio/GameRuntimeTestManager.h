@@ -1,4 +1,5 @@
 #pragma once
+#include "Enums.h"
 #include "windows.h"
 #include "Err.h"
 
@@ -12,7 +13,7 @@ private:
 	static Err UpdateGameProcessStatus();
 
 public:
-	static Err RunGame(bool inputDebug = false);
+	static Err RunGame(enums::GameDebugType debugType = enums::no_debug_from_child);
 	static Err QuitGame();
 
 	static Err SetGameRunning(const PROCESS_INFORMATION& gameProcess);

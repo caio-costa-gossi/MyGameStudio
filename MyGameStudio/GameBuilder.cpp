@@ -62,7 +62,7 @@ Err GameBuilder::BuildGame()
 	return error_const::SUCCESS;
 }
 
-Err GameBuilder::RunGame()
+Err GameBuilder::RunGame(const enums::GameDebugType debugType)
 {
 	// Check if game is running already
 	if (GameRuntimeTestManager::IsGameRunning())
@@ -78,6 +78,10 @@ Err GameBuilder::RunGame()
 	for (int i = 0; i < 2; ++i)
 	{
 		runCmd_ = "\"" + buildDir_ + possibleExePaths[i] + projectName_ + ".exe\"";
+		if (debugType != enums::no_debug_from_child)
+		{
+			runCmd_ += " " + std::to_string(debugType) + " DebugPipe";
+		}
 
 		ConsoleManager::PrintInfo("Executing '" + runCmd_ + "'...");
 		const CreateTerminalInfo info = { runCmd_, "Game Terminal", scrX / 2, scrY / 2, scrX / 2, scrY / 2 };

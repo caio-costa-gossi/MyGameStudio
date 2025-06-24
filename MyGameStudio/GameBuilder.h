@@ -1,5 +1,6 @@
 #pragma once
 #include "Err.h"
+#include "GameDebugger.h"
 
 class GameBuilder
 {
@@ -27,5 +28,5 @@ private:
 public:
 	static Err Configure();
 	static Err BuildGame();
-	static Err RunGame();
+	static Err RunGame(enums::GameDebugType debugType);
 };

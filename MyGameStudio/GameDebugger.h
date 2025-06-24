@@ -3,6 +3,7 @@
 
 #include "ProcessResourceViewer.h"
 #include "Err.h"
+#include "GameRuntimeTestManager.h"
 
 class GameDebugger
 {
@@ -15,17 +16,18 @@ private:
 	static ProcessResourceViewer resourceViewer_;
 
 	static std::atomic<bool> runDebugger_;
+	static enums::GameDebugType debugType_;
 
 	static Err UpdateDebuggerProcessInfo();
 	static Err EndDebuggerProcess();
 
 	static std::string GetUsageInfo();
-	static std::string GetInputInfo();
+	static std::string GetDebugInfoFromChild();
 
 	static std::string FormatFloat(float number);
 
 public:
-	static Err Startup(const PROCESS_INFORMATION& gameInfo);
-	static void Run(bool inputDebug);
+	static Err Startup(const PROCESS_INFORMATION& gameInfo, enums::GameDebugType debugType);
+	static void Run();
 	static Err Shutdown();
 };

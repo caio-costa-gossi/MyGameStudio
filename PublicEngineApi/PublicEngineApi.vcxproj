@@ -33,6 +33,7 @@
     <ClInclude Include="Event.h" />
     <ClInclude Include="EventDispatcher.h" />
     <ClInclude Include="GameConsoleManager.h" />
+    <ClInclude Include="GameDebuggerChild.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObjectFactory.h" />
     <ClInclude Include="GameObjectMacro.h" />
@@ -82,6 +83,7 @@
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="EventDispatcher.cpp" />
     <ClCompile Include="GameConsoleManager.cpp" />
+    <ClCompile Include="GameDebuggerChild.cpp" />
     <ClCompile Include="GameObjectFactory.cpp" />
     <ClCompile Include="GameObjectManager.cpp" />
     <ClCompile Include="InputLayer.cpp" />

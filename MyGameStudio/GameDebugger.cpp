@@ -9,12 +9,14 @@
 #include "SystemsInfoHelper.h"
 #include "TerminalFactory.h"
 #include "InputManager.h"
+#include "Win32PipeManager.h"
 
-Err GameDebugger::Startup(const PROCESS_INFORMATION& gameInfo)
+Err GameDebugger::Startup(const PROCESS_INFORMATION& gameInfo, const enums::GameDebugType debugType)
 {
 	if (runDebugger_)
 		return error_const::GAME_DEBUGGER_ALREADY_RUNNING;
 
+	debugType_ = debugType;
 	gameInfo_ = gameInfo;
 	runDebugger_ = true;
 
@@ -35,10 +37,18 @@ Err GameDebugger::Startup(const PROCESS_INFORMATION& gameInfo)
 	debugConsoleInfo_ = debugTerminal.ProcessInfo;
 	resourceViewer_ = ProcessResourceViewer(gameInfo_);
 
+	if (debugType_ != enums::no_debug_from_child)
+	{
+		const HANDLE debugPipe = Win32PipeManager::CreatePipe("DebugPipe", false);
+		Err err = Win32PipeManager::SetPipeHandle(debugPipe);
+		if (err.Code())
+			return err;
+	}
+
 	return error_const::SUCCESS;
 }
 
-void GameDebugger::Run(const bool inputDebug)
+void GameDebugger::Run()
 {
 	uint32_t bytesWritten;
 
@@ -47,8 +57,8 @@ void GameDebugger::Run(const bool inputDebug)
 		std::string toWrite;
 
 		// Poll information
-		if (inputDebug)
-			toWrite = GetInputInfo();
+		if (debugType_ != enums::no_debug_from_child)
+			toWrite = GetDebugInfoFromChild();
 		else
 			toWrite = GetUsageInfo();
 
@@ -112,12 +122,9 @@ std::string GameDebugger::GetUsageInfo()
 	return std::string("CPU: " + FormatFloat(cpuPercent) + "%, RAM: " + std::to_string(ramUsage) + "KB\n");
 }
 
-std::string GameDebugger::GetInputInfo()
+std::string GameDebugger::GetDebugInfoFromChild()
 {
-	const InputState currentState = InputManager::GetInputState();
-
-	std::string gamepadBtn = std::bitset<32>(currentState.Gamepads[0].State.BtnState).to_string();
-	return gamepadBtn;
+	return Win32PipeManager::ReceivePipeMessage();
 }
 
 std::string GameDebugger::FormatFloat(const float number)
@@ -129,6 +136,7 @@ std::string GameDebugger::FormatFloat(const float number)
 
 
 std::atomic<bool> GameDebugger::runDebugger_ = false;
+enums::GameDebugType GameDebugger::debugType_ = enums::no_debug_from_child;
 
 std::string GameDebugger::debuggerExePath_ = "binaries/game/debugger.exe";
 HANDLE GameDebugger::hConsoleWriteTo_;

@@ -18,4 +18,6 @@ public:
 
 	static Err SendPipeMessage(const std::string& message);
 	static std::string ReceivePipeMessage();
+
+	static Err ClosePipeHandle();
 };

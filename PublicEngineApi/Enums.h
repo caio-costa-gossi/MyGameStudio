@@ -67,6 +67,12 @@ namespace enums
 		critical_error
 	};
 
+	enum GameDebugType : uint8_t
+	{
+		no_debug_from_child = 0,
+		input_debug = 1
+	};
+
 	// Functions
 
 	inline const char* LanguageToString(Language language)

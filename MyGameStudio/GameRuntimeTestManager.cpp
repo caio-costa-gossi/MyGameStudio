@@ -2,10 +2,11 @@
 
 #include <thread>
 
+#include "Enums.h"
 #include "GameBuilder.h"
 #include "GameDebugger.h"
 
-Err GameRuntimeTestManager::RunGame(const bool inputDebug)
+Err GameRuntimeTestManager::RunGame(const enums::GameDebugType debugType)
 {
 	// Check if game is running already
 	Err err = UpdateGameProcessStatus();
@@ -21,17 +22,17 @@ Err GameRuntimeTestManager::RunGame(const bool inputDebug)
 		return err;
 
 	// Run game
-	err = GameBuilder::RunGame();
+	err = GameBuilder::RunGame(debugType);
 	if (err.Code())
 		return err;
 
 	// Init debug information console
-	err = GameDebugger::Startup(gameProcessInformation_);
+	err = GameDebugger::Startup(gameProcessInformation_, debugType);
 	if (err.Code())
 		return err;
 
 	// Run debug information console on another thread
-	std::thread debugThread(GameDebugger::Run, inputDebug);
+	std::thread debugThread(GameDebugger::Run);
 	debugThread.detach();
 
 	return error_const::SUCCESS;

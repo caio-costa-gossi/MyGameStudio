@@ -40,6 +40,9 @@
     <Filter Include="Event Management\EventType">
       <UniqueIdentifier>{c1926fe8-3473-438b-86bf-f590ee6394b2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Runtime Managers\Debug">
+      <UniqueIdentifier>{39ffeb47-2635-4c96-95fc-a4d6d23ff957}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetRuntimeManager.h">
@@ -189,6 +192,9 @@
     <ClInclude Include="Win32PipeManager.h">
       <Filter>Helpers\System</Filter>
     </ClInclude>
+    <ClInclude Include="GameDebuggerChild.h">
+      <Filter>Runtime Managers\Debug</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssetRuntimeManager.cpp">
@@ -292,6 +298,9 @@
     </ClCompile>
     <ClCompile Include="Win32PipeManager.cpp">
       <Filter>Helpers\System</Filter>
+    </ClCompile>
+    <ClCompile Include="GameDebuggerChild.cpp">
+      <Filter>Runtime Managers\Debug</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -6,7 +6,7 @@
 int main(int argc, char** argv)
 {
 	std::cout << "Initializing game systems...\n";
-	Err err = MasterLoopManager::Startup();
+	Err err = MasterLoopManager::Startup(argc, argv);
 	if (err.Code())
 		GameConsoleManager::PrintError(err.Message());
 

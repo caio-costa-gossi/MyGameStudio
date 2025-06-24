@@ -1,6 +1,7 @@
 #include "MasterLoopManager.h"
 #include "AnimationManager.h"
 #include "GameConsoleManager.h"
+#include "GameDebuggerChild.h"
 #include "GameObjectManager.h"
 #include "InputManager.h"
 #include "PhysicsManager.h"
@@ -13,16 +14,26 @@ Err MasterLoopManager::Run()
 
 	while (loopRunning_)
 	{
+		if (debug_)
+		{
+			Err err = GameDebuggerChild::SendInfo();
+			if (err.Code())
+				return err;
+		}
+		
 		UpdateGame();
 	}
 
 	return error_const::SUCCESS;
 }
 
-Err MasterLoopManager::Startup()
+Err MasterLoopManager::Startup(const int argc, char** argv)
 {
 	// Main game timeline
 	mainGameTimeline_ = Timeline(timeline::MICROSECOND);
+
+	if (argc > 1)
+		debug_ = true;
 
 	Err err = GameConsoleManager::Startup();
 	if (err.Code())
@@ -32,6 +43,14 @@ Err MasterLoopManager::Startup()
 	}
 
 	// Subsystem startup
+
+	// Debugging information communication pipe
+	if (debug_)
+	{
+		err = GameDebuggerChild::InitDebuggerPipe(argc, argv);
+		if (err.Code())
+			return err;
+	}
 
 	// Test window creator for input handling
 	err = TestWindowCreator::Startup();
@@ -74,6 +93,7 @@ Err MasterLoopManager::Shutdown()
 	mainGameTimeline_.Pause();
 
 	// Shutdown subsystems
+
 	/*Err err = InputManager::Shutdown();
 	if (err.Code())
 		GameConsoleManager::PrintError(err);*/
@@ -81,6 +101,13 @@ Err MasterLoopManager::Shutdown()
 	Err err = TestWindowCreator::Shutdown();
 	if (err.Code())
 		GameConsoleManager::PrintError(err);
+
+	if (debug_)
+	{
+		err = GameDebuggerChild::Shutdown();
+		if (err.Code())
+			GameConsoleManager::PrintError(err);
+	}
 
 	err = GameObjectManager::Get().Shutdown();
 	if (err.Code())
@@ -124,4 +151,5 @@ Err MasterLoopManager::Stop()
 }
 
 bool MasterLoopManager::loopRunning_;
+bool MasterLoopManager::debug_ = false;
 Timeline MasterLoopManager::mainGameTimeline_;

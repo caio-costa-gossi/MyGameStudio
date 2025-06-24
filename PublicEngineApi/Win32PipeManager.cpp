@@ -73,5 +73,16 @@ std::string Win32PipeManager::ReceivePipeMessage()
     return { message };
 }
 
+Err Win32PipeManager::ClosePipeHandle()
+{
+    if (hPipe_ == nullptr)
+        return error_const::INVALID_PARAMETERS;
+
+    CloseHandle(hPipe_);
+
+    return error_const::SUCCESS;
+}
+
 
 HANDLE Win32PipeManager::hPipe_;
+bool Win32PipeManager::connected_ = false;

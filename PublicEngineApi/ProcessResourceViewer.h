@@ -16,6 +16,7 @@ private:
 	uint64_t FtimeToUint64(FILETIME ftime) const;
 
 public:
+	ProcessResourceViewer() = default;
 	explicit ProcessResourceViewer(const PROCESS_INFORMATION& processInfo);
 	int64_t GetRamUsage() const;
 	float GetCpuUsage();

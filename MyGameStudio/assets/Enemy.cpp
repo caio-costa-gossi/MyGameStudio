@@ -1,5 +1,7 @@
 #include "GameObject.h"
 #include "GameConsoleManager.h"
+#include "InputManager.h"
+#include <bitset>
 
 class Enemy : public GameObject
 {

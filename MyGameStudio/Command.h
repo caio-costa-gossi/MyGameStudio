@@ -202,7 +202,7 @@ class RunGameCommand : public Command
 public:
 	Err ExecuteCommand(uint8_t argc, char** argn, char** argv) override
 	{
-		Err err = GameRuntimeTestManager::RunGame();
+		Err err = GameRuntimeTestManager::RunGame(true);
 		if (err.Code())
 			ConsoleManager::PrintError(err.Message());
 

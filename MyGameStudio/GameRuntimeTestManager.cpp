@@ -5,7 +5,7 @@
 #include "GameBuilder.h"
 #include "GameDebugger.h"
 
-Err GameRuntimeTestManager::RunGame()
+Err GameRuntimeTestManager::RunGame(const bool inputDebug)
 {
 	// Check if game is running already
 	Err err = UpdateGameProcessStatus();
@@ -31,7 +31,7 @@ Err GameRuntimeTestManager::RunGame()
 		return err;
 
 	// Run debug information console on another thread
-	std::thread debugThread(GameDebugger::Run);
+	std::thread debugThread(GameDebugger::Run, inputDebug);
 	debugThread.detach();
 
 	return error_const::SUCCESS;

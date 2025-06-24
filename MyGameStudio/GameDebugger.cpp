@@ -1,10 +1,14 @@
 #include "GameDebugger.h"
+
+#include <bitset>
+#include <sstream>
+#include <iomanip>
+
 #include "ConsoleManager.h"
 #include "ProcessResourceViewer.h"
 #include "SystemsInfoHelper.h"
 #include "TerminalFactory.h"
-#include <sstream>
-#include <iomanip>
+#include "InputManager.h"
 
 Err GameDebugger::Startup(const PROCESS_INFORMATION& gameInfo)
 {
@@ -29,24 +33,27 @@ Err GameDebugger::Startup(const PROCESS_INFORMATION& gameInfo)
 
 	hConsoleWriteTo_ = debugTerminal.WriteHandle;
 	debugConsoleInfo_ = debugTerminal.ProcessInfo;
+	resourceViewer_ = ProcessResourceViewer(gameInfo_);
 
 	return error_const::SUCCESS;
 }
 
-void GameDebugger::Run()
+void GameDebugger::Run(const bool inputDebug)
 {
 	uint32_t bytesWritten;
-	ProcessResourceViewer resources(gameInfo_);
 
 	while (runDebugger_)
 	{
-		// Poll information
-		const float cpuPercent = resources.GetCpuUsage();
-		const int64_t ramUsage = resources.GetRamUsage() / 1024;
+		std::string toWrite;
 
-		// Write to process pipe
-		std::string writeString = "CPU: " + FormatFloat(cpuPercent) + "%, RAM: " + std::to_string(ramUsage) + "KB\n";
-		WriteFile(hConsoleWriteTo_, writeString.c_str(), static_cast<uint32_t>(writeString.size()), reinterpret_cast<LPDWORD>(&bytesWritten), nullptr);
+		// Poll information
+		if (inputDebug)
+			toWrite = GetInputInfo();
+		else
+			toWrite = GetUsageInfo();
+
+		// Write to console
+		WriteFile(hConsoleWriteTo_, toWrite.c_str(), static_cast<uint32_t>(toWrite.size()), reinterpret_cast<LPDWORD>(&bytesWritten), nullptr);
 
 		Sleep(3000);
 	}
@@ -96,6 +103,23 @@ Err GameDebugger::UpdateDebuggerProcessInfo()
 	return error_const::SUCCESS;
 }
 
+std::string GameDebugger::GetUsageInfo()
+{
+	const float cpuPercent = resourceViewer_.GetCpuUsage();
+	const int64_t ramUsage = resourceViewer_.GetRamUsage() / 1024;
+
+	// Write to process pipe
+	return std::string("CPU: " + FormatFloat(cpuPercent) + "%, RAM: " + std::to_string(ramUsage) + "KB\n");
+}
+
+std::string GameDebugger::GetInputInfo()
+{
+	const InputState currentState = InputManager::GetInputState();
+
+	std::string gamepadBtn = std::bitset<32>(currentState.Gamepads[0].State.BtnState).to_string();
+	return gamepadBtn;
+}
+
 std::string GameDebugger::FormatFloat(const float number)
 {
 	std::ostringstream outStream;
@@ -103,8 +127,12 @@ std::string GameDebugger::FormatFloat(const float number)
 	return outStream.str();
 }
 
+
 std::atomic<bool> GameDebugger::runDebugger_ = false;
+
 std::string GameDebugger::debuggerExePath_ = "binaries/game/debugger.exe";
 HANDLE GameDebugger::hConsoleWriteTo_;
 PROCESS_INFORMATION GameDebugger::debugConsoleInfo_;
 PROCESS_INFORMATION GameDebugger::gameInfo_;
+
+ProcessResourceViewer GameDebugger::resourceViewer_;

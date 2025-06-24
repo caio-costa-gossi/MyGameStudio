@@ -12,7 +12,7 @@ private:
 	static Err UpdateGameProcessStatus();
 
 public:
-	static Err RunGame();
+	static Err RunGame(bool inputDebug = false);
 	static Err QuitGame();
 
 	static Err SetGameRunning(const PROCESS_INFORMATION& gameProcess);

@@ -186,6 +186,9 @@
     <ClInclude Include="DIEventLayer.h">
       <Filter>Runtime Managers\Input\InputLayer</Filter>
     </ClInclude>
+    <ClInclude Include="Win32PipeManager.h">
+      <Filter>Helpers\System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssetRuntimeManager.cpp">
@@ -286,6 +289,9 @@
     </ClCompile>
     <ClCompile Include="Event.cpp">
       <Filter>Event Management</Filter>
+    </ClCompile>
+    <ClCompile Include="Win32PipeManager.cpp">
+      <Filter>Helpers\System</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

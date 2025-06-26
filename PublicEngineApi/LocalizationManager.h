@@ -81,4 +81,5 @@ namespace string_const
     const auto G_CANCELED_BY_USER = "canceled_by_user";
     const auto G_ASSETDB_CLEARED = "assetdb_cleared";
     const auto G_ASSET_DELETION_SUCCESS = "asset_deletion_success";
+    const auto G_USE_RUN = "use_run";
 }

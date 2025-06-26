@@ -200,9 +200,29 @@ public:
 class RunGameCommand : public Command
 {
 public:
-	Err ExecuteCommand(uint8_t argc, char** argn, char** argv) override
+	Err ExecuteCommand(const uint8_t argc, char** argn, char** argv) override
 	{
-		Err err = GameRuntimeTestManager::RunGame(enums::input_debug);
+		if (argc > 1)
+		{
+			PrintUsage(string_const::G_USE_RUN);
+			return error_const::SUCCESS;
+		}
+
+		// Get debug type
+		enums::GameDebugType debugType;
+
+		if (argc == 0)
+			debugType = enums::no_debug_from_child;
+		else if (ArgnExists(argc, argn, "dinput"))
+			debugType = enums::input_debug;
+		else
+		{
+			PrintUsage(string_const::G_USE_RUN);
+			return error_const::SUCCESS;
+		}
+
+		// Execute
+		Err err = GameRuntimeTestManager::RunGame(debugType);
 		if (err.Code())
 			ConsoleManager::PrintError(err.Message());
 

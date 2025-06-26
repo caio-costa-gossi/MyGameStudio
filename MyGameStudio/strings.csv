@@ -35,3 +35,4 @@ string_not_number,Argumento passado não é um número válido,Argument is not a
 canceled_by_user,Operação cancelada pelo usuário,Operation canceled by user,Opération annulée par l'utilisateur
 assetdb_cleared,Base de recursos apagada com sucesso,Asset database cleared successfully,Base de ressources effacée avec succès
 asset_deletion_success,Recurso apagado com sucesso,Asset deleted successfully,Ressource supprimée avec succès
+use_run,"run [dinput]","run [dinput]","run [dinput]"

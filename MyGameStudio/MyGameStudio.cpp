@@ -1,13 +1,7 @@
 #include "ConsoleManager.h"
 #include "EngineCoreManager.h"
 #include "Err.h"
-#include "InputManager.h"
-#include "TestWindowCreator.h"
 
-void MyCallback(const CallbackData* data)
-{
-	std::cout << data->Event.ToString();
-}
 
 int main()
 {

@@ -24,6 +24,7 @@
     <ClInclude Include="AssetDatabase.h" />
     <ClInclude Include="AssetRuntimeManager.h" />
     <ClInclude Include="CallbackData.h" />
+    <ClInclude Include="Counter.h" />
     <ClInclude Include="CsvParser.h" />
     <ClInclude Include="DIEventLayer.h" />
     <ClInclude Include="DILayer.h" />

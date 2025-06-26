@@ -1,4 +1,5 @@
 #pragma once
+#include "Counter.h"
 #include "Err.h"
 #include "Timeline.h"
 
@@ -8,6 +9,8 @@ private:
 	static bool loopRunning_;
 	static bool debug_;
 	static Timeline mainGameTimeline_;
+
+	static Counter debugFrameCounter_;
 
 	static Err UpdateGame();
 

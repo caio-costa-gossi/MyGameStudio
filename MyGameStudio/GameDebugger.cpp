@@ -65,7 +65,7 @@ void GameDebugger::Run()
 		// Write to console
 		WriteFile(hConsoleWriteTo_, toWrite.c_str(), static_cast<uint32_t>(toWrite.size()), reinterpret_cast<LPDWORD>(&bytesWritten), nullptr);
 
-		Sleep(500);
+		Sleep(80);
 	}
 }
 

@@ -158,4 +158,4 @@ bool MasterLoopManager::loopRunning_;
 bool MasterLoopManager::debug_ = false;
 Timeline MasterLoopManager::mainGameTimeline_;
 
-Counter MasterLoopManager::debugFrameCounter_ = Counter(10);
+Counter MasterLoopManager::debugFrameCounter_ = Counter(2);

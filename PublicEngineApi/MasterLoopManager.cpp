@@ -14,7 +14,7 @@ Err MasterLoopManager::Run()
 
 	while (loopRunning_)
 	{
-		if (debug_ && debugFrameCounter_.CurValue == 0)
+		if (debug_)
 		{
 			Err err = GameDebuggerChild::SendInfo();
 			if (err.Code())
@@ -22,8 +22,6 @@ Err MasterLoopManager::Run()
 		}
 		
 		UpdateGame();
-
-		debugFrameCounter_.Increment();
 
 		Sleep(50);
 	}
@@ -157,5 +155,3 @@ Err MasterLoopManager::Stop()
 bool MasterLoopManager::loopRunning_;
 bool MasterLoopManager::debug_ = false;
 Timeline MasterLoopManager::mainGameTimeline_;
-
-Counter MasterLoopManager::debugFrameCounter_ = Counter(2);

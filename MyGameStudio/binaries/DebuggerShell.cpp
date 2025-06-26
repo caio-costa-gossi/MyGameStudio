@@ -2,7 +2,9 @@
 #include <string>
 #include <Windows.h>
 
-static void ClearConsole()
+static uint32_t bytesLastWritten = 0;
+
+static void ClearConsole(const uint32_t bytesToWrite)
 {
 	const HANDLE hOutput = GetStdHandle(STD_OUTPUT_HANDLE);
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -10,12 +12,16 @@ static void ClearConsole()
 	if (!GetConsoleScreenBufferInfo(hOutput, &csbi))
 		return;
 
-	const DWORD consoleSize = csbi.dwSize.X * csbi.dwSize.Y;
-	DWORD charsWritten;
+	if (bytesLastWritten != bytesToWrite)
+	{
+		DWORD charsWritten;
+		FillConsoleOutputCharacterA(hOutput, ' ', 1024, {0,0}, &charsWritten);
+		FillConsoleOutputAttribute(hOutput, csbi.wAttributes, 1024, {0,0}, &charsWritten);
+	}
 
-	FillConsoleOutputCharacterA(hOutput, ' ', consoleSize, { 0,0 }, &charsWritten);
-	FillConsoleOutputAttribute(hOutput, csbi.wAttributes, consoleSize, { 0,0 }, &charsWritten);
 	SetConsoleCursorPosition(hOutput, { 0,0 });
+
+	bytesLastWritten = bytesToWrite;
 }
 
 int main()
@@ -28,7 +34,7 @@ int main()
 	while (true)
 	{
 		ReadFile(hInput, buffer, sizeof(buffer) - 1, reinterpret_cast<LPDWORD>(&bytesRead), nullptr);
-		ClearConsole();
+		ClearConsole(bytesRead);
 		std::cout.write(buffer, bytesRead);
 	}
 

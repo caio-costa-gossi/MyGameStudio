@@ -10,8 +10,6 @@ private:
 	static bool debug_;
 	static Timeline mainGameTimeline_;
 
-	static Counter debugFrameCounter_;
-
 	static Err UpdateGame();
 
 public:

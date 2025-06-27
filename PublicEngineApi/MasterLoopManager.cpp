@@ -18,7 +18,7 @@ Err MasterLoopManager::Run()
 		{
 			Err err = GameDebuggerChild::SendInfo();
 			if (err.Code())
-				return err;
+				GameConsoleManager::PrintError(err);
 		}
 		
 		UpdateGame();

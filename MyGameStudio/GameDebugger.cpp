@@ -80,6 +80,10 @@ Err GameDebugger::Shutdown()
 
 	runDebugger_ = false;
 
+	err = Win32PipeManager::ClosePipeHandle();
+	if (err.Code())
+		return err;
+
 	err = EndDebuggerProcess();
 	if (err.Code())
 		return err;

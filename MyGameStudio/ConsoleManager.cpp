@@ -82,6 +82,11 @@ void ConsoleManager::PrintError(const std::string& message)
 	Print(message, enums::ConsoleMessageType::error);
 }
 
+void ConsoleManager::PrintError(const Err& err)
+{
+	Print(err.Message(), enums::ConsoleMessageType::error);
+}
+
 void ConsoleManager::PrintWarning(const std::string& message)
 {
 	Print(message, enums::ConsoleMessageType::warning);

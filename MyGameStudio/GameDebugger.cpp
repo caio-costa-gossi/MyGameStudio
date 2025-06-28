@@ -80,9 +80,12 @@ Err GameDebugger::Shutdown()
 
 	runDebugger_ = false;
 
-	err = Win32PipeManager::ClosePipeHandle();
-	if (err.Code())
-		return err;
+	if (debugType_ != enums::no_debug_from_child)
+	{
+		err = Win32PipeManager::ClosePipeHandle();
+		if (err.Code())
+			return err;
+	}
 
 	err = EndDebuggerProcess();
 	if (err.Code())

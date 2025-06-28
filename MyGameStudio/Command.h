@@ -222,7 +222,11 @@ public:
 		}
 
 		// Execute
-		Err err = GameRuntimeTestManager::RunGame(debugType);
+		Err err = AssetImportationManager::ReimportScripts();
+		if (err.Code())
+			ConsoleManager::PrintError(err.Message());
+		
+		err = GameRuntimeTestManager::RunGame(debugType);
 		if (err.Code())
 			ConsoleManager::PrintError(err.Message());
 

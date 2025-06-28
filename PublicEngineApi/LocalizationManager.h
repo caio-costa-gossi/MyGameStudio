@@ -82,4 +82,6 @@ namespace string_const
     const auto G_ASSETDB_CLEARED = "assetdb_cleared";
     const auto G_ASSET_DELETION_SUCCESS = "asset_deletion_success";
     const auto G_USE_RUN = "use_run";
+    const auto G_RUN_REIMPORT = "run_reimport";
+    const auto G_REIMPORT_PROGRESS = "reimport_progress";
 }

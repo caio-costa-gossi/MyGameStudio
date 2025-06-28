@@ -39,5 +39,6 @@ public:
 	static void PrintInfo(const std::string& message);
 	static void PrintWarning(const std::string& message);
 	static void PrintError(const std::string& message);
+	static void PrintError(const Err& err);
 	static void PrintCritical(const std::string& message);
 };

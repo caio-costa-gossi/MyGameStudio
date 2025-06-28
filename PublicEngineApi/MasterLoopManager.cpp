@@ -4,6 +4,7 @@
 #include "GameDebuggerChild.h"
 #include "GameObjectManager.h"
 #include "InputManager.h"
+#include "NumericUtils.h"
 #include "PhysicsManager.h"
 #include "RenderingManager.h"
 #include "TestWindowCreator.h"
@@ -34,7 +35,10 @@ Err MasterLoopManager::Startup(const int argc, char** argv)
 	// Main game timeline
 	mainGameTimeline_ = Timeline(timeline::MICROSECOND);
 
-	if (argc > 1)
+	if (argc < 3)
+		return error_const::GAME_INIT_INVALID_PARAMS;
+
+	if (argc > 3)
 		debug_ = true;
 
 	Err err = GameConsoleManager::Startup();
@@ -55,7 +59,16 @@ Err MasterLoopManager::Startup(const int argc, char** argv)
 	}
 
 	// Test window creator for input handling
-	err = TestWindowCreator::Startup();
+	int32_t useSdl, deadzone;
+	err = NumericUtils::StringToInt(argv[1], useSdl);
+	if (err.Code())
+		GameConsoleManager::PrintError("Invalid parameter value passed to 'useSdl'. Defaulting to 0.");
+
+	err = NumericUtils::StringToInt(argv[2], deadzone);
+	if (err.Code())
+		GameConsoleManager::PrintError("Invalid parameter value passed to 'deadzone'. Defaulting to 0.");
+
+	err = TestWindowCreator::Startup(static_cast<bool>(useSdl), deadzone);
 	if (err.Code())
 		GameConsoleManager::PrintError(err);
 

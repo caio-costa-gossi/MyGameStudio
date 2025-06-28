@@ -6,17 +6,21 @@
 #include "GameConsoleManager.h"
 #include "InputManager.h"
 #include "InputState.h"
+#include "NumericUtils.h"
 #include "Win32PipeManager.h"
 
 Err GameDebuggerChild::InitDebuggerPipe(const int argc, char** argv)
 {
-	if (argc <= 2)
+	if (argc <= 4)
 		return error_const::INVALID_PARAMETERS;
 
-	debugType_ = static_cast<enums::GameDebugType>(std::strtol(argv[1], nullptr, 10));
+	int32_t debugType;
+	NumericUtils::StringToInt(argv[3], debugType);
+	debugType_ = static_cast<enums::GameDebugType>(static_cast<uint8_t>(debugType));
+
 	GameConsoleManager::PrintInfo("Debug initialized. DebugType selected: " + std::to_string(debugType_));
 
-	const std::string pipeName = argv[2];
+	const std::string pipeName = argv[4];
 	GameConsoleManager::PrintInfo("Debug pipe name: " + pipeName);
 
 	const HANDLE hPipe = Win32PipeManager::GetPipeHandleFromName(pipeName);

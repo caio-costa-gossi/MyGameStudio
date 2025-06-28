@@ -17,7 +17,7 @@ private:
 	static Err CreateTestWindow();
 
 public:
-	static Err Startup();
+	static Err Startup(bool useSdl = true, int32_t deadzone = 2500);
 	static Err Run();
 	static Err Update();
 	static Err Shutdown();

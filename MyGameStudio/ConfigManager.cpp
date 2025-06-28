@@ -19,7 +19,7 @@ const char* ConfigManager::GetConfig(const char* config)
 	if (string != nullptr)
 		return string;
 
-	return "Config N/A";
+	return "ConfigN/A";
 }
 
 const char* ConfigManager::GetConfigForObject(const char* object, const char* config)

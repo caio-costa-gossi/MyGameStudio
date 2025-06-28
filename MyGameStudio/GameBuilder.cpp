@@ -77,7 +77,12 @@ Err GameBuilder::RunGame(const enums::GameDebugType debugType)
 
 	for (int i = 0; i < 2; ++i)
 	{
+		// .exe path
 		runCmd_ = "\"" + buildDir_ + possibleExePaths[i] + projectName_ + ".exe\"";
+
+		// arguments
+		runCmd_ += " " + std::string(ConfigManager::GetConfig("input_use_sdl"));
+		runCmd_ += " " + std::string(ConfigManager::GetConfig("input_deadzone"));
 		if (debugType != enums::no_debug_from_child)
 		{
 			runCmd_ += " " + std::to_string(debugType) + " DebugPipe";

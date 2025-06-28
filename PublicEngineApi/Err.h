@@ -67,6 +67,8 @@ namespace error_const
 	const auto INPUT_KEYBOARD_POLL_FAIL = Err("Failed to poll from keyboard", 139);
 	const auto INPUT_JOYSTICK_POLL_FAIL = Err("Failed to poll from joystick", 140);
 	const auto INPUT_SDL_EVENT_NULL = Err("SDL Input Event array is null", 141);
+	const auto STRING_NOT_NUM = Err("String passed is not a number", 150);
+	const auto GAME_INIT_INVALID_PARAMS = Err("Invalid parameters passed to game initialization", 170);
 
 	constexpr auto DB_ERROR_CODE = 10;
 	constexpr auto ZIP_ERROR_CODE = 11;

@@ -23,13 +23,13 @@ Err TestWindowCreator::CreateTestWindow()
 	return error_const::SUCCESS;
 }
 
-Err TestWindowCreator::Startup()
+Err TestWindowCreator::Startup(const bool useSdl, const int32_t deadzone)
 {
 	Err err = CreateTestWindow();
 	if (err.Code())
 		return err;
 
-	err = InputManager::Startup(hWindow_, 2500, false);
+	err = InputManager::Startup(hWindow_, deadzone, useSdl);
 	if (err.Code())
 		return err;
 

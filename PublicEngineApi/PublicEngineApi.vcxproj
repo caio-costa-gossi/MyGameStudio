@@ -91,6 +91,7 @@
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="LocalizationManager.cpp" />
     <ClCompile Include="MasterLoopManager.cpp" />
+    <ClCompile Include="MVector.cpp" />
     <ClCompile Include="NumericUtils.cpp" />
     <ClCompile Include="PhysicsManager.cpp" />
     <ClCompile Include="ProcessResourceViewer.cpp" />

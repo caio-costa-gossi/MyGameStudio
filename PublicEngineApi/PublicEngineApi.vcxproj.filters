@@ -305,5 +305,8 @@
     <ClCompile Include="GameDebuggerChild.cpp">
       <Filter>Runtime Managers\Debug</Filter>
     </ClCompile>
+    <ClCompile Include="MVector.cpp">
+      <Filter>Data Structures</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

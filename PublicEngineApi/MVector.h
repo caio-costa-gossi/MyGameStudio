@@ -1,6 +1,10 @@
 #pragma once
 #include <cstdint>
 
+struct Vec3F;
+struct Vec3I64;
+struct Vec3U64;
+
 struct Vec2U64
 {
 	uint64_t X;
@@ -29,6 +33,9 @@ struct Vec2U64
 	Vec2U64 operator*=(const uint64_t scalar) { X *= scalar; Y *= scalar; return *this; }
 	Vec2U64 operator/(const uint64_t scalar) const { return { X / scalar, Y / scalar }; }
 	Vec2U64 operator/=(const uint64_t scalar) { X /= scalar; Y /= scalar; return *this; }
+
+	// Conversion
+	operator Vec3U64() const;
 };
 
 struct Vec3U64
@@ -61,11 +68,8 @@ struct Vec3U64
 	Vec3U64 operator/(const uint64_t scalar) const { return { X / scalar, Y / scalar, Z / scalar }; }
 	Vec3U64 operator/=(const uint64_t scalar) { X /= scalar; Y /= scalar; Z /= scalar; return *this; }
 
-	// Sum & Subtraction with Vec2
-	Vec3U64 operator+(const Vec2U64& other) const { return { X + other.X, Y + other.Y, Z }; }
-	Vec3U64 operator-(const Vec2U64& other) const { return { X - other.X, Y - other.Y, Z }; }
-	Vec3U64 operator+=(const Vec2U64& other) { X += other.X; Y += other.Y; return *this; }
-	Vec3U64 operator-=(const Vec2U64& other) { X -= other.X; Y -= other.Y; return *this; }
+	// Conversion
+	operator Vec2U64() const { return { X,Y }; }
 };
 
 struct Vec2I64
@@ -96,6 +100,9 @@ struct Vec2I64
 	Vec2I64 operator*=(const int64_t scalar) { X *= scalar; Y *= scalar; return *this; }
 	Vec2I64 operator/(const int64_t scalar) const { return { X / scalar, Y / scalar }; }
 	Vec2I64 operator/=(const int64_t scalar) { X /= scalar; Y /= scalar; return *this; }
+
+	// Conversion
+	operator Vec3I64() const;
 };
 
 struct Vec3I64
@@ -128,11 +135,8 @@ struct Vec3I64
 	Vec3I64 operator/(const int64_t scalar) const { return { X / scalar, Y / scalar, Z / scalar }; }
 	Vec3I64 operator/=(const int64_t scalar) { X /= scalar; Y /= scalar; Z /= scalar; return *this; }
 
-	// Sum & Subtraction with Vec2
-	Vec3I64 operator+(const Vec2I64& other) const { return { X + other.X, Y + other.Y, Z }; }
-	Vec3I64 operator-(const Vec2I64& other) const { return { X - other.X, Y - other.Y, Z }; }
-	Vec3I64 operator+=(const Vec2I64& other) { X += other.X; Y += other.Y; return *this; }
-	Vec3I64 operator-=(const Vec2I64& other) { X -= other.X; Y -= other.Y; return *this; }
+	// Conversion
+	operator Vec2I64() const { return { X,Y }; }
 };
 
 struct Vec2F
@@ -163,6 +167,9 @@ struct Vec2F
 	Vec2F operator*=(const float scalar) { X *= scalar; Y *= scalar; return *this; }
 	Vec2F operator/(const float scalar) const { return { X / scalar, Y / scalar }; }
 	Vec2F operator/=(const float scalar) { X /= scalar; Y /= scalar; return *this; }
+
+	// Conversion
+	operator Vec3F() const;
 };
 
 struct Vec3F
@@ -195,9 +202,6 @@ struct Vec3F
 	Vec3F operator/(const float scalar) const { return { X / scalar, Y / scalar, Z / scalar }; }
 	Vec3F operator/=(const float scalar) { X /= scalar; Y /= scalar; Z /= scalar; return *this; }
 
-	// Sum & Subtraction with Vec2
-	Vec3F operator+(const Vec2F& other) const { return { X + other.X, Y + other.Y, Z }; }
-	Vec3F operator-(const Vec2F& other) const { return { X - other.X, Y - other.Y, Z }; }
-	Vec3F operator+=(const Vec2F& other) { X += other.X; Y += other.Y; return *this; }
-	Vec3F operator-=(const Vec2F& other) { X -= other.X; Y -= other.Y; return *this; }
+	// Conversion
+	operator Vec2F() const { return { X,Y }; }
 };

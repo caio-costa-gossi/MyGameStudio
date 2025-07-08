@@ -66,6 +66,11 @@ void GameDebugger::Run()
 		WriteFile(hConsoleWriteTo_, toWrite.c_str(), static_cast<uint32_t>(toWrite.size()), reinterpret_cast<LPDWORD>(&bytesWritten), nullptr);
 
 		Sleep(45);
+
+		// Verify if game is still running
+		GameRuntimeTestManager::UpdateGameProcessStatus();
+		if (!GameRuntimeTestManager::IsGameRunning())
+			Shutdown();
 	}
 }
 

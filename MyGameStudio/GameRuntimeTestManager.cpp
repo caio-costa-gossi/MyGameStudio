@@ -48,11 +48,6 @@ Err GameRuntimeTestManager::QuitGame()
 	if (!isGameRunning_)
 		return error_const::GAME_NOT_RUNNING;
 
-	// End debugger thread
-	err = GameDebugger::Shutdown();
-	if (err.Code())
-		return err;
-
 	// End game process
 	EndGameProcess();
 

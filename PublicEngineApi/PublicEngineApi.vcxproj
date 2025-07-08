@@ -69,6 +69,7 @@
     <ClInclude Include="TestWindowCreator.h" />
     <ClInclude Include="Timeline.h" />
     <ClInclude Include="Win32PipeManager.h" />
+    <ClInclude Include="WindowManager.h" />
     <ClInclude Include="ZipFile.h" />
   </ItemGroup>
   <ItemGroup>
@@ -107,6 +108,7 @@
     <ClCompile Include="TestWindowCreator.cpp" />
     <ClCompile Include="Timeline.cpp" />
     <ClCompile Include="Win32PipeManager.cpp" />
+    <ClCompile Include="WindowManager.cpp" />
     <ClCompile Include="ZipFile.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

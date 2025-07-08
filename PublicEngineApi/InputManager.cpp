@@ -3,9 +3,12 @@
 #include "DILayer.h"
 #include "GameConsoleManager.h"
 #include "SDLInputLayer.h"
+#include "WindowManager.h"
 
 Err InputManager::Startup(const HWND hWindow, const int32_t deadzone, const bool usingSdl)
 {
+	usingSdl_ = usingSdl;
+
 	// Define input layer
 	if (usingSdl)
 		inputLayer_ = new SDLInputLayer();
@@ -20,8 +23,14 @@ Err InputManager::Startup(const HWND hWindow, const int32_t deadzone, const bool
 	return error_const::SUCCESS;
 }
 
-Err InputManager::Update(const SDL_Event* eventList, const uint32_t numEvent)
+Err InputManager::Update()
 {
+	uint32_t numEvent = 0;
+	const SDL_Event* eventList = nullptr;
+
+	if (usingSdl_)
+		eventList = WindowManager::GetEventList(numEvent);
+
 	Err err = inputLayer_->Update(eventList, numEvent);
 	if (err.Code())
 		return err;
@@ -51,3 +60,4 @@ const InputState& InputManager::GetInputState()
 
 
 InputLayer* InputManager::inputLayer_ = nullptr;
+bool InputManager::usingSdl_ = false;

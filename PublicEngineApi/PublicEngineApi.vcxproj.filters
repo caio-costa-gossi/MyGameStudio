@@ -198,6 +198,9 @@
     <ClInclude Include="Counter.h">
       <Filter>Data Structures</Filter>
     </ClInclude>
+    <ClInclude Include="WindowManager.h">
+      <Filter>Runtime Managers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssetRuntimeManager.cpp">
@@ -307,6 +310,9 @@
     </ClCompile>
     <ClCompile Include="MVector.cpp">
       <Filter>Data Structures</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowManager.cpp">
+      <Filter>Runtime Managers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

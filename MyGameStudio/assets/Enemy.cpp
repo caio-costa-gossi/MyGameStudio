@@ -26,16 +26,16 @@ public:
 			switch (event.GamepadButton.Button)
 			{
 			case gamepad_button_dpad_up:
-				speed_ = {0,-1};
+				speed_ += {0,-1};
 				break;
 			case gamepad_button_dpad_down:
-				speed_ = {0,1};
+				speed_ += {0,1};
 				break;
 			case gamepad_button_dpad_left:
-				speed_ = {-1,0};
+				speed_ += {-1,0};
 				break;
 			case gamepad_button_dpad_right:
-				speed_ = {1,0};
+				speed_ += {1,0};
 				break;
 			default:
 				break;

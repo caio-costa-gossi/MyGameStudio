@@ -10,12 +10,13 @@ private:
 	static PROCESS_INFORMATION gameProcessInformation_;
 
 	static Err EndGameProcess();
-	static Err UpdateGameProcessStatus();
 
 public:
 	static Err RunGame(enums::GameDebugType debugType = enums::no_debug_from_child);
 	static Err QuitGame();
 
 	static Err SetGameRunning(const PROCESS_INFORMATION& gameProcess);
+
+	static Err UpdateGameProcessStatus();
 	static bool IsGameRunning();
 };

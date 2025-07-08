@@ -69,9 +69,11 @@ namespace error_const
 	const auto INPUT_SDL_EVENT_NULL = Err("SDL Input Event array is null", 141);
 	const auto STRING_NOT_NUM = Err("String passed is not a number", 150);
 	const auto GAME_INIT_INVALID_PARAMS = Err("Invalid parameters passed to game initialization", 170);
+	const auto GAME_EXIT_REQUEST = Err("Game exit requested", 500);
 
 	constexpr auto DB_ERROR_CODE = 10;
 	constexpr auto ZIP_ERROR_CODE = 11;
 	constexpr auto ASSET_IMPORTATION_ERROR_CODE = 12;
 	constexpr auto SDL_ERROR_CODE = 140;
+	constexpr auto EXIT_REQUEST_CODE = 500;
 }

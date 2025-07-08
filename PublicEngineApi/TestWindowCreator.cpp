@@ -36,49 +36,6 @@ Err TestWindowCreator::Startup(const bool useSdl, const int32_t deadzone)
 	return error_const::SUCCESS;
 }
 
-Err TestWindowCreator::Run()
-{
-	bool testWindowRunning = true;
-
-	while (testWindowRunning)
-	{
-		SDL_Event event;
-
-		while (SDL_PollEvent(&event))
-		{
-			// Collect input events
-			if (event.type >= 0x300 && event.type < 0x700)
-			{
-				inputEventList_.push_back(event);
-				continue;
-			}
-
-			// Handle other events
-			switch (event.type)
-			{
-
-			case SDL_EVENT_QUIT:
-			case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
-				testWindowRunning = false;
-				break;
-			default:
-				break;
-			}
-		}
-
-		Err err = InputManager::Update(inputEventList_.data(), static_cast<uint32_t>(inputEventList_.size()));
-		if (err.Code())
-			return err;
-
-		inputEventList_.clear();
-
-		// Cap 20 FPS
-		Sleep(50);
-	}
-
-	return error_const::SUCCESS;
-}
-
 Err TestWindowCreator::Update()
 {
 	SDL_Event event;
@@ -104,7 +61,7 @@ Err TestWindowCreator::Update()
 		}
 	}
 
-	Err err = InputManager::Update(inputEventList_.data(), static_cast<uint32_t>(inputEventList_.size()));
+	Err err = InputManager::Update();
 	if (err.Code())
 		return err;
 

@@ -8,6 +8,7 @@
 #include "PhysicsManager.h"
 #include "RenderingManager.h"
 #include "TestWindowCreator.h"
+#include "WindowManager.h"
 
 Err MasterLoopManager::Run()
 {
@@ -58,7 +59,12 @@ Err MasterLoopManager::Startup(const int argc, char** argv)
 			return err;
 	}
 
-	// Test window creator for input handling
+	// Window Manager
+	err = WindowManager::Startup();
+	if (err.Code())
+		return err;
+
+	// Input Manager
 	int32_t useSdl, deadzone;
 	err = NumericUtils::StringToInt(argv[1], useSdl);
 	if (err.Code())
@@ -68,13 +74,9 @@ Err MasterLoopManager::Startup(const int argc, char** argv)
 	if (err.Code())
 		GameConsoleManager::PrintError("Invalid parameter value passed to 'deadzone'. Defaulting to 0.");
 
-	err = TestWindowCreator::Startup(static_cast<bool>(useSdl), deadzone);
+	err = InputManager::Startup(WindowManager::GetWindowHandle(), deadzone, static_cast<bool>(useSdl));
 	if (err.Code())
 		GameConsoleManager::PrintError(err);
-
-	/*err = InputManager::Startup(nullptr);
-	if (err.Code())
-		GameConsoleManager::PrintError(err);*/
 
 	GameConsoleManager::PrintInfo("Starting GameObjectManager...");
 	err = GameObjectManager::Get().Startup();
@@ -109,11 +111,11 @@ Err MasterLoopManager::Shutdown()
 
 	// Shutdown subsystems
 
-	/*Err err = InputManager::Shutdown();
+	Err err = WindowManager::Shutdown();
 	if (err.Code())
-		GameConsoleManager::PrintError(err);*/
+		GameConsoleManager::PrintError(err);
 
-	Err err = TestWindowCreator::Shutdown();
+	err = InputManager::Shutdown();
 	if (err.Code())
 		GameConsoleManager::PrintError(err);
 
@@ -149,8 +151,11 @@ Err MasterLoopManager::UpdateGame()
 	mainGameTimeline_.UpdateLastTime();
 
 	// Update subsystems
-	TestWindowCreator::Update();
-	//InputManager::Update();
+	Err err = WindowManager::Update();
+	if (err.Code() == error_const::EXIT_REQUEST_CODE)
+		loopRunning_ = false;
+
+	InputManager::Update();
 	GameObjectManager::Get().Update(mainGameTimeline_.GetDelta());
 	PhysicsManager::Update();
 	AnimationManager::Update();

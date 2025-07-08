@@ -34,6 +34,17 @@ public:
 		return error_const::SUCCESS;
 	}
 
+	static Err StringToUInt32Hex(const char* string, uint32_t& returnValue)
+	{
+		char* endParsing = nullptr;
+		returnValue = std::strtoul(string, &endParsing, 16);
+
+		if (endParsing == string)
+			return error_const::STRING_NOT_NUM;
+
+		return error_const::SUCCESS;
+	}
+
 	static Err StringToInt32(const char* string, int32_t& returnValue)
 	{
 		char* endParsing = nullptr;

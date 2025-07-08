@@ -228,10 +228,10 @@ public:
 		}
 			
 		// Get active channel mask
-		uint32_t activeChannelMask = 0xFFFF;
+		uint32_t activeChannelMask = 0xFFFFFFFF;
 		if (ArgnExists(argc, argn, "ch"))
 		{
-			Err err = NumericUtils::StringToUInt32(GetArg(argc, argn, argv, "ch"), activeChannelMask);
+			Err err = NumericUtils::StringToUInt32Hex(GetArg(argc, argn, argv, "ch"), activeChannelMask);
 			if (err.Code())
 				return err;
 		}

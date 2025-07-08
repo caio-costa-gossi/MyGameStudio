@@ -46,7 +46,7 @@ void GameConsoleManager::PrintWarning(const std::string& msg, const enums::Conso
 
 void GameConsoleManager::PrintError(const std::string& msg, const enums::ConsoleMessageSender sender)
 {
-	if (minLevel_ > enums::ConsoleMessageType::warning)
+	if (minLevel_ > enums::ConsoleMessageType::error)
 		return;
 
 	if ((channelMask_ & 1 << static_cast<uint8_t>(sender)) != 0)

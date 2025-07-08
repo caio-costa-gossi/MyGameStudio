@@ -6,7 +6,7 @@
 #include "GameBuilder.h"
 #include "GameDebugger.h"
 
-Err GameRuntimeTestManager::RunGame(const enums::GameDebugType debugType, const enums::ConsoleMessageType minLevel, const uint32_t activeChannelMask)
+Err GameRuntimeTestManager::RunGame(const enums::GameDebugType debugType, const enums::ConsoleMessageType minLevel, const uint32_t disableChannelMask)
 {
 	// Check if game is running already
 	Err err = UpdateGameProcessStatus();
@@ -22,7 +22,7 @@ Err GameRuntimeTestManager::RunGame(const enums::GameDebugType debugType, const 
 		return err;
 
 	// Run game
-	err = GameBuilder::RunGame(debugType, minLevel, activeChannelMask);
+	err = GameBuilder::RunGame(debugType, minLevel, disableChannelMask);
 	if (err.Code())
 		return err;
 

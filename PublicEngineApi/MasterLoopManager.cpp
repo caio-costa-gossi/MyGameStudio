@@ -42,7 +42,7 @@ Err MasterLoopManager::Startup(const int argc, char** argv)
 	if (argc > 5)
 		debug_ = true;
 
-	Err err = GameConsoleManager::Startup(argv[static_cast<uint8_t>(enums::GameExeArguments::verbosity_level)], argv[static_cast<uint8_t>(enums::GameExeArguments::active_log_channels)]);
+	Err err = GameConsoleManager::Startup(argv[static_cast<uint8_t>(enums::GameExeArguments::verbosity_level)], argv[static_cast<uint8_t>(enums::GameExeArguments::disable_log_channels)]);
 	if (err.Code())
 	{
 		std::cout << error_const::CONSOLE_MANAGER_STARTUP_FAIL.Message();

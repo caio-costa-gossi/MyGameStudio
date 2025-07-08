@@ -43,6 +43,9 @@
     <Filter Include="Runtime Managers\Debug">
       <UniqueIdentifier>{39ffeb47-2635-4c96-95fc-a4d6d23ff957}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Wrappers">
+      <UniqueIdentifier>{b825e31e-c7dd-4a01-9c57-fb4d1d17e7cd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetRuntimeManager.h">
@@ -201,6 +204,9 @@
     <ClInclude Include="WindowManager.h">
       <Filter>Runtime Managers</Filter>
     </ClInclude>
+    <ClInclude Include="Debug.h">
+      <Filter>Wrappers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssetRuntimeManager.cpp">
@@ -313,6 +319,9 @@
     </ClCompile>
     <ClCompile Include="WindowManager.cpp">
       <Filter>Runtime Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug.cpp">
+      <Filter>Wrappers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

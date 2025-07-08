@@ -13,10 +13,10 @@ private:
 	static uint32_t channelMask_;
 	static enums::ConsoleMessageType minLevel_;
 
-	static Err ParseArgs(const char* minLevelArg, const char* channelMaskArg, enums::ConsoleMessageType& minLevel, uint32_t& activeChannelMask);
+	static Err ParseArgs(const char* minLevelArg, const char* channelMaskArg, enums::ConsoleMessageType& minLevel, uint32_t& disableChannelMask);
 
 public:
-	static Err Startup(const char* minLevelArg, const char* channelMaskArg);
+	static Err Startup(const char* minLevelArg, const char* disableChannelArg);
 
 	static void PrintInfo(const std::string& msg, enums::ConsoleMessageSender sender = enums::ConsoleMessageSender::undefined);
 	static void PrintWarning(const std::string& msg, enums::ConsoleMessageSender sender = enums::ConsoleMessageSender::undefined);

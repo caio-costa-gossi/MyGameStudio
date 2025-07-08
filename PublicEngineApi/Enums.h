@@ -65,7 +65,7 @@ namespace enums
 		use_sdl,
 		deadzone,
 		verbosity_level,
-		active_log_channels,
+		disable_log_channels,
 		debug_info_type,
 		debug_pipe_name
 	};

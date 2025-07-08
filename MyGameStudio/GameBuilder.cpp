@@ -62,7 +62,7 @@ Err GameBuilder::BuildGame()
 	return error_const::SUCCESS;
 }
 
-Err GameBuilder::RunGame(const enums::GameDebugType debugType, enums::ConsoleMessageType minSeverity, uint32_t activeChannelMask)
+Err GameBuilder::RunGame(const enums::GameDebugType debugType, enums::ConsoleMessageType minSeverity, uint32_t disableChannelMask)
 {
 	// Check if game is running already
 	if (GameRuntimeTestManager::IsGameRunning())
@@ -84,7 +84,7 @@ Err GameBuilder::RunGame(const enums::GameDebugType debugType, enums::ConsoleMes
 		runCmd_ += " " + std::string(ConfigManager::GetConfig("input_use_sdl"));
 		runCmd_ += " " + std::string(ConfigManager::GetConfig("input_deadzone"));
 		runCmd_ += " " + std::to_string(static_cast<uint8_t>(minSeverity));
-		runCmd_ += " " + std::to_string(activeChannelMask);
+		runCmd_ += " " + std::to_string(disableChannelMask);
 
 		if (debugType != enums::no_debug_from_child)
 			runCmd_ += " " + std::to_string(debugType) + " DebugPipe";

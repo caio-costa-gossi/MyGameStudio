@@ -2,10 +2,10 @@
 #include <iostream>
 #include "NumericUtils.h"
 
-Err GameConsoleManager::Startup(const char* minLevelArg, const char* channelMaskArg)
+Err GameConsoleManager::Startup(const char* minLevelArg, const char* disableChannelArg)
 {
 	hConsole_ = GetStdHandle(STD_OUTPUT_HANDLE);
-	ParseArgs(minLevelArg, channelMaskArg, minLevel_, channelMask_);
+	ParseArgs(minLevelArg, disableChannelArg, minLevel_, channelMask_);
 
 	PrintInfo("Game console manager started with verbosity = " + std::to_string(static_cast<uint8_t>(minLevel_)) + " and channelMask = " + std::to_string(channelMask_), enums::ConsoleMessageSender::console);
 
@@ -17,7 +17,7 @@ void GameConsoleManager::PrintInfo(const std::string& msg, const enums::ConsoleM
 	if (minLevel_ > enums::ConsoleMessageType::info)
 		return;
 
-	if ((channelMask_ & 1 << static_cast<uint8_t>(sender)) == 0)
+	if ((channelMask_ & 1 << static_cast<uint8_t>(sender)) != 0)
 		return;
 
 	SetConsoleTextAttribute(hConsole_, FOREGROUND_GREEN | FOREGROUND_INTENSITY);
@@ -33,7 +33,7 @@ void GameConsoleManager::PrintWarning(const std::string& msg, const enums::Conso
 	if (minLevel_ > enums::ConsoleMessageType::warning)
 		return;
 
-	if ((channelMask_ & 1 << static_cast<uint8_t>(sender)) == 0)
+	if ((channelMask_ & 1 << static_cast<uint8_t>(sender)) != 0)
 		return;
 
 	SetConsoleTextAttribute(hConsole_, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY);
@@ -49,7 +49,7 @@ void GameConsoleManager::PrintError(const std::string& msg, const enums::Console
 	if (minLevel_ > enums::ConsoleMessageType::warning)
 		return;
 
-	if ((channelMask_ & 1 << static_cast<uint8_t>(sender)) == 0)
+	if ((channelMask_ & 1 << static_cast<uint8_t>(sender)) != 0)
 		return;
 
 	SetConsoleTextAttribute(hConsole_, FOREGROUND_RED | FOREGROUND_INTENSITY);
@@ -65,7 +65,7 @@ void GameConsoleManager::PrintError(const Err& err, const enums::ConsoleMessageS
 	if (minLevel_ > enums::ConsoleMessageType::error)
 		return;
 
-	if ((channelMask_ & 1 << static_cast<uint8_t>(sender)) == 0)
+	if ((channelMask_ & 1 << static_cast<uint8_t>(sender)) != 0)
 		return;
 
 	std::cout << "[" + std::string(enums::MessageSenderToString(sender)) + "] ";
@@ -77,7 +77,7 @@ void GameConsoleManager::PrintCritical(const std::string& msg, const enums::Cons
 	if (minLevel_ > enums::ConsoleMessageType::critical_error)
 		return;
 
-	if ((channelMask_ & 1 << static_cast<uint8_t>(sender)) == 0)
+	if ((channelMask_ & 1 << static_cast<uint8_t>(sender)) != 0)
 		return;
 
 	SetConsoleTextAttribute(hConsole_, FOREGROUND_RED | FOREGROUND_INTENSITY);
@@ -93,7 +93,7 @@ void GameConsoleManager::PrintSimple(const std::string& msg, const enums::Consol
 	std::cout << msg << "\n";
 }
 
-Err GameConsoleManager::ParseArgs(const char* minLevelArg, const char* channelMaskArg, enums::ConsoleMessageType& minLevel, uint32_t& activeChannelMask)
+Err GameConsoleManager::ParseArgs(const char* minLevelArg, const char* channelMaskArg, enums::ConsoleMessageType& minLevel, uint32_t& disableChannelMask)
 {
 	uint8_t minLevelInt;
 	Err err = NumericUtils::StringToUInt8(minLevelArg, minLevelInt);
@@ -102,7 +102,7 @@ Err GameConsoleManager::ParseArgs(const char* minLevelArg, const char* channelMa
 
 	minLevel = static_cast<enums::ConsoleMessageType>(minLevelInt);
 
-	err = NumericUtils::StringToUInt32(channelMaskArg, activeChannelMask);
+	err = NumericUtils::StringToUInt32(channelMaskArg, disableChannelMask);
 	if (err.Code())
 		return err;
 
@@ -112,4 +112,4 @@ Err GameConsoleManager::ParseArgs(const char* minLevelArg, const char* channelMa
 
 HANDLE GameConsoleManager::hConsole_;
 enums::ConsoleMessageType GameConsoleManager::minLevel_ = enums::ConsoleMessageType::info;
-uint32_t GameConsoleManager::channelMask_ = 0xFFFF;
+uint32_t GameConsoleManager::channelMask_ = 0;

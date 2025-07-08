@@ -20,7 +20,7 @@ Err MasterLoopManager::Run()
 		{
 			Err err = GameDebuggerChild::SendInfo();
 			if (err.Code())
-				GameConsoleManager::PrintError(err);
+				GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::debugger);
 		}
 		
 		UpdateGame();
@@ -36,13 +36,13 @@ Err MasterLoopManager::Startup(const int argc, char** argv)
 	// Main game timeline
 	mainGameTimeline_ = Timeline(timeline::MICROSECOND);
 
-	if (argc < 3)
+	if (argc < 5)
 		return error_const::GAME_INIT_INVALID_PARAMS;
 
-	if (argc > 3)
+	if (argc > 5)
 		debug_ = true;
 
-	Err err = GameConsoleManager::Startup();
+	Err err = GameConsoleManager::Startup(argv[static_cast<uint8_t>(enums::GameExeArguments::verbosity_level)], argv[static_cast<uint8_t>(enums::GameExeArguments::active_log_channels)]);
 	if (err.Code())
 	{
 		std::cout << error_const::CONSOLE_MANAGER_STARTUP_FAIL.Message();
@@ -65,29 +65,29 @@ Err MasterLoopManager::Startup(const int argc, char** argv)
 		return err;
 
 	// Input Manager
-	err = InputManager::Startup(WindowManager::GetWindowHandle(), argv[2], argv[1]);
+	err = InputManager::Startup(WindowManager::GetWindowHandle(), argv[static_cast<uint8_t>(enums::GameExeArguments::deadzone)], argv[static_cast<uint8_t>(enums::GameExeArguments::use_sdl)]);
 	if (err.Code())
-		GameConsoleManager::PrintError(err);
+		GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::input);
 
 	GameConsoleManager::PrintInfo("Starting GameObjectManager...");
 	err = GameObjectManager::Get().Startup();
 	if (err.Code())
-		GameConsoleManager::PrintError(err);
+		GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::object);
 
 	GameConsoleManager::PrintInfo("Starting PhysicsManager...");
 	err = PhysicsManager::Startup();
 	if (err.Code())
-		GameConsoleManager::PrintError(err);
+		GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::physics);
 
 	GameConsoleManager::PrintInfo("Starting AnimationManager...");
 	err = AnimationManager::Startup();
 	if (err.Code())
-		GameConsoleManager::PrintError(err);
+		GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::animation);
 
 	GameConsoleManager::PrintInfo("Starting RenderingManager...");
 	err = RenderingManager::Startup();
 	if (err.Code())
-		GameConsoleManager::PrintError(err);
+		GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::render);
 
 	// Start time
 	mainGameTimeline_.Start();
@@ -104,34 +104,34 @@ Err MasterLoopManager::Shutdown()
 
 	Err err = WindowManager::Shutdown();
 	if (err.Code())
-		GameConsoleManager::PrintError(err);
+		GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::window);
 
 	err = InputManager::Shutdown();
 	if (err.Code())
-		GameConsoleManager::PrintError(err);
+		GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::input);
 
 	if (debug_)
 	{
 		err = GameDebuggerChild::Shutdown();
 		if (err.Code())
-			GameConsoleManager::PrintError(err);
+			GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::debugger);
 	}
 
 	err = GameObjectManager::Get().Shutdown();
 	if (err.Code())
-		GameConsoleManager::PrintError(err);
+		GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::object);
 
 	err = PhysicsManager::Shutdown();
 	if (err.Code())
-		GameConsoleManager::PrintError(err);
+		GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::physics);
 
 	err = AnimationManager::Shutdown();
 	if (err.Code())
-		GameConsoleManager::PrintError(err);
+		GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::animation);
 
 	err = RenderingManager::Shutdown();
 	if (err.Code())
-		GameConsoleManager::PrintError(err);
+		GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::render);
 
 	return error_const::SUCCESS;
 }

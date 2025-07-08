@@ -59,12 +59,41 @@ namespace enums
 		save_to_game
 	};
 
+	enum class GameExeArguments : uint8_t
+	{
+		exe_path = 0,
+		use_sdl,
+		deadzone,
+		verbosity_level,
+		active_log_channels,
+		debug_info_type,
+		debug_pipe_name
+	};
+
 	enum class ConsoleMessageType : uint8_t
 	{
 		info,
 		warning,
 		error,
 		critical_error
+	};
+
+	enum class ConsoleMessageSender : uint8_t
+	{
+		undefined,
+		game,
+		console,
+		loop,
+		object,
+		window,
+		debugger,
+		localization,
+		io,
+		input,
+		render,
+		physics,
+		animation,
+		aux
 	};
 
 	enum GameDebugType : uint8_t
@@ -113,5 +142,42 @@ namespace enums
 		ASSET_TYPES
 		#undef X
 		return AssetType::undefined;
+	}
+
+	inline const char* MessageSenderToString(const enums::ConsoleMessageSender sender)
+	{
+		switch (sender)
+		{
+		case enums::ConsoleMessageSender::undefined:
+			return "UNDEFINED";
+		case enums::ConsoleMessageSender::game:
+			return "GAME";
+		case enums::ConsoleMessageSender::console:
+			return "CONSOLE MANAGER";
+		case enums::ConsoleMessageSender::loop:
+			return "LOOP MANAGER";
+		case enums::ConsoleMessageSender::object:
+			return "OBJECT MANAGER";
+		case enums::ConsoleMessageSender::window:
+			return "WINDOW MANAGER";
+		case enums::ConsoleMessageSender::debugger:
+			return "DEBUGGER";
+		case enums::ConsoleMessageSender::localization:
+			return "LOCALIZATION";
+		case enums::ConsoleMessageSender::io:
+			return "IO";
+		case enums::ConsoleMessageSender::input:
+			return "INPUT";
+		case enums::ConsoleMessageSender::render:
+			return "RENDER";
+		case enums::ConsoleMessageSender::physics:
+			return "PHYSICS";
+		case enums::ConsoleMessageSender::animation:
+			return "ANIMATION";
+		case enums::ConsoleMessageSender::aux:
+			return "AUXILIARY";
+		default:
+			return "NAME NOT FOUND";
+		}
 	}
 }

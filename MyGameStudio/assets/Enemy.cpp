@@ -10,7 +10,7 @@ private:
 public:
 	void Update(uint64_t delta) override
 	{
-		GameConsoleManager::PrintInfo("EnemyPos: (" + std::to_string(pos_.X) + "," + std::to_string(pos_.Y) + ")");
+		//GameConsoleManager::PrintInfo("EnemyPos: (" + std::to_string(pos_.X) + "," + std::to_string(pos_.Y) + ")");
 		pos_ += speed_ * (delta >> 10);
 	}
 

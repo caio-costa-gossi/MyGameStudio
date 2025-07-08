@@ -104,7 +104,7 @@ uint8_t* ImageProcessor::GenerateDdsFile(const std::vector<Mipmap>& compressedMi
 
 	for (const Mipmap& m : compressedMipmaps)
 	{
-		totalBinSize += m.DataSize;
+		totalBinSize += static_cast<uint32_t>(m.DataSize);
 	}
 
 	resultSize = sizeof(DdsHeader) + totalBinSize;

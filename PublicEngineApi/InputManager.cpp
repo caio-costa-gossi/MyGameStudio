@@ -73,13 +73,13 @@ Err InputManager::ParseInputArgs(const char* useSdlArg, const char* deadzoneArg,
 {
 	int32_t useSdlInt;
 
-	Err err = NumericUtils::StringToInt(useSdlArg, useSdlInt);
+	Err err = NumericUtils::StringToInt32(useSdlArg, useSdlInt);
 	if (err.Code())
 		GameConsoleManager::PrintError("Invalid parameter value passed to 'useSdl'. Defaulting to 0.");
 
 	useSdl = static_cast<bool>(useSdlInt);
 
-	err = NumericUtils::StringToInt(deadzoneArg, deadzone);
+	err = NumericUtils::StringToInt32(deadzoneArg, deadzone);
 	if (err.Code())
 		GameConsoleManager::PrintError("Invalid parameter value passed to 'deadzone'. Defaulting to 0.");
 

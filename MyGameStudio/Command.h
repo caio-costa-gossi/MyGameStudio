@@ -9,6 +9,7 @@
 #include "GameRuntimeTestManager.h"
 #include "InputWindow.h"
 #include "LocalizationManager.h"
+#include "NumericUtils.h"
 #include "StringUtils.h"
 #include "SystemPathHelper.h"
 #include "Table.h"
@@ -202,23 +203,37 @@ class RunGameCommand : public Command
 public:
 	Err ExecuteCommand(const uint8_t argc, char** argn, char** argv) override
 	{
-		if (argc > 1)
+		if (argc > 3)
 		{
 			PrintUsage(string_const::G_USE_RUN);
 			return error_const::SUCCESS;
 		}
 
 		// Get debug type
-		enums::GameDebugType debugType;
-
-		if (argc == 0)
-			debugType = enums::no_debug_from_child;
-		else if (ArgnExists(argc, argn, "dinput"))
+		enums::GameDebugType debugType = enums::no_debug_from_child;
+		if (ArgnExists(argc, argn, "dinput"))
 			debugType = enums::input_debug;
-		else
+
+		// Get verbosity level
+		enums::ConsoleMessageType minLevel = enums::ConsoleMessageType::info;
+		if (ArgnExists(argc, argn, "v"))
 		{
-			PrintUsage(string_const::G_USE_RUN);
-			return error_const::SUCCESS;
+			uint8_t verbosity;
+
+			Err err = NumericUtils::StringToUInt8(GetArg(argc, argn, argv, "v"), verbosity);
+			if (err.Code())
+				return err;
+
+			minLevel = static_cast<enums::ConsoleMessageType>(verbosity);
+		}
+			
+		// Get active channel mask
+		uint32_t activeChannelMask = 0xFFFF;
+		if (ArgnExists(argc, argn, "ch"))
+		{
+			Err err = NumericUtils::StringToUInt32(GetArg(argc, argn, argv, "ch"), activeChannelMask);
+			if (err.Code())
+				return err;
 		}
 
 		// Execute
@@ -226,7 +241,7 @@ public:
 		if (err.Code())
 			ConsoleManager::PrintError(err.Message());
 		
-		err = GameRuntimeTestManager::RunGame(debugType);
+		err = GameRuntimeTestManager::RunGame(debugType, minLevel, activeChannelMask);
 		if (err.Code())
 			ConsoleManager::PrintError(err.Message());
 

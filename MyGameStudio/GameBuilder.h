@@ -28,5 +28,5 @@ private:
 public:
 	static Err Configure();
 	static Err BuildGame();
-	static Err RunGame(enums::GameDebugType debugType);
+	static Err RunGame(enums::GameDebugType debugType, enums::ConsoleMessageType minSeverity, uint32_t activeChannelMask);
 };

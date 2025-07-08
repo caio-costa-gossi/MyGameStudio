@@ -62,7 +62,7 @@ Err GameBuilder::BuildGame()
 	return error_const::SUCCESS;
 }
 
-Err GameBuilder::RunGame(const enums::GameDebugType debugType)
+Err GameBuilder::RunGame(const enums::GameDebugType debugType, enums::ConsoleMessageType minSeverity, uint32_t activeChannelMask)
 {
 	// Check if game is running already
 	if (GameRuntimeTestManager::IsGameRunning())
@@ -83,10 +83,11 @@ Err GameBuilder::RunGame(const enums::GameDebugType debugType)
 		// arguments
 		runCmd_ += " " + std::string(ConfigManager::GetConfig("input_use_sdl"));
 		runCmd_ += " " + std::string(ConfigManager::GetConfig("input_deadzone"));
+		runCmd_ += " " + std::to_string(static_cast<uint8_t>(minSeverity));
+		runCmd_ += " " + std::to_string(activeChannelMask);
+
 		if (debugType != enums::no_debug_from_child)
-		{
 			runCmd_ += " " + std::to_string(debugType) + " DebugPipe";
-		}
 
 		ConsoleManager::PrintInfo("Executing '" + runCmd_ + "'...");
 		const CreateTerminalInfo info = { runCmd_, "Game Terminal", scrX / 2, scrY / 2, scrX / 2, scrY / 2 };

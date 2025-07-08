@@ -65,16 +65,7 @@ Err MasterLoopManager::Startup(const int argc, char** argv)
 		return err;
 
 	// Input Manager
-	int32_t useSdl, deadzone;
-	err = NumericUtils::StringToInt(argv[1], useSdl);
-	if (err.Code())
-		GameConsoleManager::PrintError("Invalid parameter value passed to 'useSdl'. Defaulting to 0.");
-
-	err = NumericUtils::StringToInt(argv[2], deadzone);
-	if (err.Code())
-		GameConsoleManager::PrintError("Invalid parameter value passed to 'deadzone'. Defaulting to 0.");
-
-	err = InputManager::Startup(WindowManager::GetWindowHandle(), deadzone, static_cast<bool>(useSdl));
+	err = InputManager::Startup(WindowManager::GetWindowHandle(), argv[2], argv[1]);
 	if (err.Code())
 		GameConsoleManager::PrintError(err);
 

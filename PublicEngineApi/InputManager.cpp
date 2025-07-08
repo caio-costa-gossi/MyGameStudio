@@ -2,24 +2,32 @@
 #include <windows.h>
 #include "DILayer.h"
 #include "GameConsoleManager.h"
+#include "NumericUtils.h"
 #include "SDLInputLayer.h"
 #include "WindowManager.h"
 
-Err InputManager::Startup(const HWND hWindow, const int32_t deadzone, const bool usingSdl)
+Err InputManager::Startup(const HWND hWindow, const char* deadzoneArg, const char* usingSdlArg)
 {
 	if (!WindowManager::IsInit())
 		return error_const::WINDOW_MANAGER_NOT_STARTED;
 
-	usingSdl_ = usingSdl;
+	// Parse string args
+	int32_t deadzone;
+	bool useSdl;
+	Err err = ParseInputArgs(usingSdlArg, deadzoneArg, useSdl, deadzone);
+	if (err.Code())
+		return err;
+
+	usingSdl_ = useSdl;
 
 	// Define input layer
-	if (usingSdl)
+	if (useSdl)
 		inputLayer_ = new SDLInputLayer();
 	else
 		inputLayer_ = new DILayer();
 
 	// Startup instance
-	Err err = inputLayer_->Startup(hWindow, deadzone);
+	err = inputLayer_->Startup(hWindow, deadzone);
 	if (err.Code())
 		return err;
 
@@ -59,6 +67,23 @@ Err InputManager::SubForInputEvent(const Subscription& sub)
 const InputState& InputManager::GetInputState()
 {
 	return inputLayer_->GetInputState();
+}
+
+Err InputManager::ParseInputArgs(const char* useSdlArg, const char* deadzoneArg, bool& useSdl, int32_t& deadzone)
+{
+	int32_t useSdlInt;
+
+	Err err = NumericUtils::StringToInt(useSdlArg, useSdlInt);
+	if (err.Code())
+		GameConsoleManager::PrintError("Invalid parameter value passed to 'useSdl'. Defaulting to 0.");
+
+	useSdl = static_cast<bool>(useSdlInt);
+
+	err = NumericUtils::StringToInt(deadzoneArg, deadzone);
+	if (err.Code())
+		GameConsoleManager::PrintError("Invalid parameter value passed to 'deadzone'. Defaulting to 0.");
+
+	return error_const::SUCCESS;
 }
 
 

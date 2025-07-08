@@ -29,7 +29,7 @@ Err TestWindowCreator::Startup(const bool useSdl, const int32_t deadzone)
 	if (err.Code())
 		return err;
 
-	err = InputManager::Startup(hWindow_, deadzone, useSdl);
+	err = InputManager::Startup(hWindow_, "2500", "1");
 	if (err.Code())
 		return err;
 

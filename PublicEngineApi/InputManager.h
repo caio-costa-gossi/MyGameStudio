@@ -10,8 +10,10 @@ private:
 	static InputLayer* inputLayer_;
 	static bool usingSdl_;
 
+	static Err ParseInputArgs(const char* useSdlArg, const char* deadzoneArg, bool& useSdl, int32_t& deadzone);
+
 public:
-	static Err Startup(HWND hWindow, int32_t deadzone = 500, bool usingSdl = true);
+	static Err Startup(HWND hWindow, const char* deadzoneArg, const char* usingSdlArg);
 	static Err Update();
 	static Err Shutdown();
 

@@ -12,6 +12,8 @@ private:
 
 	static std::vector<SDL_Event> inputEventList_;
 
+	static bool isInit_;
+
 public:
 	static Err Startup();
 	static Err Update();
@@ -19,4 +21,6 @@ public:
 
 	static HWND GetWindowHandle();
 	static SDL_Event* GetEventList(uint32_t& eventCount);
+
+	static bool IsInit();
 };

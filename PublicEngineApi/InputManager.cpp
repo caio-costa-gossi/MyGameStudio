@@ -7,6 +7,9 @@
 
 Err InputManager::Startup(const HWND hWindow, const int32_t deadzone, const bool usingSdl)
 {
+	if (!WindowManager::IsInit())
+		return error_const::WINDOW_MANAGER_NOT_STARTED;
+
 	usingSdl_ = usingSdl;
 
 	// Define input layer

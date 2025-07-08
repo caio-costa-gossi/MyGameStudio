@@ -1,6 +1,5 @@
 #include "GameConsoleManager.h"
 #include <iostream>
-
 #include "NumericUtils.h"
 
 Err GameConsoleManager::Startup(const char* minLevelArg, const char* channelMaskArg)
@@ -15,6 +14,12 @@ Err GameConsoleManager::Startup(const char* minLevelArg, const char* channelMask
 
 void GameConsoleManager::PrintInfo(const std::string& msg, const enums::ConsoleMessageSender sender)
 {
+	if (minLevel_ > enums::ConsoleMessageType::info)
+		return;
+
+	if ((channelMask_ & 1 << static_cast<uint8_t>(sender)) == 0)
+		return;
+
 	SetConsoleTextAttribute(hConsole_, FOREGROUND_GREEN | FOREGROUND_INTENSITY);
 	std::cout << "[INFO]";
 	std::cout << "[" + std::string(enums::MessageSenderToString(sender)) + "] ";
@@ -25,6 +30,12 @@ void GameConsoleManager::PrintInfo(const std::string& msg, const enums::ConsoleM
 
 void GameConsoleManager::PrintWarning(const std::string& msg, const enums::ConsoleMessageSender sender)
 {
+	if (minLevel_ > enums::ConsoleMessageType::warning)
+		return;
+
+	if ((channelMask_ & 1 << static_cast<uint8_t>(sender)) == 0)
+		return;
+
 	SetConsoleTextAttribute(hConsole_, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY);
 	std::cout << "[WARNING]";
 	std::cout << "[" + std::string(enums::MessageSenderToString(sender)) + "] ";
@@ -35,6 +46,12 @@ void GameConsoleManager::PrintWarning(const std::string& msg, const enums::Conso
 
 void GameConsoleManager::PrintError(const std::string& msg, const enums::ConsoleMessageSender sender)
 {
+	if (minLevel_ > enums::ConsoleMessageType::warning)
+		return;
+
+	if ((channelMask_ & 1 << static_cast<uint8_t>(sender)) == 0)
+		return;
+
 	SetConsoleTextAttribute(hConsole_, FOREGROUND_RED | FOREGROUND_INTENSITY);
 	std::cout << "[ERROR]";
 	std::cout << "[" + std::string(enums::MessageSenderToString(sender)) + "] ";
@@ -45,12 +62,24 @@ void GameConsoleManager::PrintError(const std::string& msg, const enums::Console
 
 void GameConsoleManager::PrintError(const Err& err, const enums::ConsoleMessageSender sender)
 {
+	if (minLevel_ > enums::ConsoleMessageType::error)
+		return;
+
+	if ((channelMask_ & 1 << static_cast<uint8_t>(sender)) == 0)
+		return;
+
 	std::cout << "[" + std::string(enums::MessageSenderToString(sender)) + "] ";
 	PrintError("Error code: " + std::to_string(err.Code()) + " - '" + err.Message() + "'");
 }
 
 void GameConsoleManager::PrintCritical(const std::string& msg, const enums::ConsoleMessageSender sender)
 {
+	if (minLevel_ > enums::ConsoleMessageType::critical_error)
+		return;
+
+	if ((channelMask_ & 1 << static_cast<uint8_t>(sender)) == 0)
+		return;
+
 	SetConsoleTextAttribute(hConsole_, FOREGROUND_RED | FOREGROUND_INTENSITY);
 	std::cout << "[CRITICAL ERROR]";
 	std::cout << "[" + std::string(enums::MessageSenderToString(sender)) + "] ";

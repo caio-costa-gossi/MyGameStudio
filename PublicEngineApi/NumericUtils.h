@@ -26,15 +26,11 @@ public:
 	static Err StringToUInt32(const char* string, uint32_t& returnValue)
 	{
 		char* endParsing = nullptr;
-		const int32_t val = std::strtol(string, &endParsing, 10);
+		returnValue = std::strtoul(string, &endParsing, 10);
 
 		if (endParsing == string)
 			return error_const::STRING_NOT_NUM;
 
-		if (val < 0)
-			return error_const::INTEGER_OUT_OF_BOUNDS;
-
-		returnValue = static_cast<uint32_t>(val);
 		return error_const::SUCCESS;
 	}
 

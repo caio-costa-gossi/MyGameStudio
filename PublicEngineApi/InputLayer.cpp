@@ -18,7 +18,7 @@ Err InputLayer::FireEvents()
 	{
 		Err err = eventDispatcher_.FireEvent(event);
 		if (err.Code())
-			GameConsoleManager::PrintError(err);
+			GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::input);
 	}
 
 	eventsToFlush_.clear();

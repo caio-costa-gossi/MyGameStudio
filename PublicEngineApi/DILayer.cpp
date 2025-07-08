@@ -37,7 +37,7 @@ Err DILayer::Startup(const HWND hWindow, const int32_t deadzone)
 		device_ = &joystick;
 
 		if (FAILED(joystick.Data->EnumObjects(EnumObjectsCallback, nullptr, DIDFT_ALL)))
-			GameConsoleManager::PrintError("Failed to enumerate objects");
+			GameConsoleManager::PrintError("Failed to enumerate objects", enums::ConsoleMessageSender::input);
 	}
 
 	currentState_.GamepadCount = static_cast<uint8_t>(joysticks_.size());
@@ -75,7 +75,7 @@ Err DILayer::Startup(const HWND hWindow, const int32_t deadzone)
 
 		if (FAILED(result))
 		{
-			GameConsoleManager::PrintError(error_const::INPUT_JOYSTICK_ACQUIRE_FAIL.Message());
+			GameConsoleManager::PrintError(error_const::INPUT_JOYSTICK_ACQUIRE_FAIL.Message(), enums::ConsoleMessageSender::input);
 			isJoystickActive_ = false;
 			break;
 		}
@@ -83,13 +83,13 @@ Err DILayer::Startup(const HWND hWindow, const int32_t deadzone)
 
 	if (FAILED(mouse_.Data->Acquire()))
 	{
-		GameConsoleManager::PrintError(error_const::INPUT_MOUSE_ACQUIRE_FAIL.Message());
+		GameConsoleManager::PrintError(error_const::INPUT_MOUSE_ACQUIRE_FAIL.Message(), enums::ConsoleMessageSender::input);
 		isMouseActive_ = false;
 	}
 
 	if (FAILED(keyboard_.Data->Acquire()))
 	{
-		GameConsoleManager::PrintError(error_const::INPUT_KEYBOARD_ACQUIRE_FAIL.Message());
+		GameConsoleManager::PrintError(error_const::INPUT_KEYBOARD_ACQUIRE_FAIL.Message(), enums::ConsoleMessageSender::input);
 		isKeyboardActive_ = false;
 	}
 
@@ -110,14 +110,14 @@ Err DILayer::Update(const SDL_Event* eventList, uint32_t numEvent)
 	{
 		err = UpdateKeyboard();
 		if (err.Code())
-			GameConsoleManager::PrintError(err.Message());
+			GameConsoleManager::PrintError(err.Message(), enums::ConsoleMessageSender::input);
 	}
 
 	if (isMouseActive_)
 	{
 		err = UpdateMouse();
 		if (err.Code())
-			GameConsoleManager::PrintError(err.Message());
+			GameConsoleManager::PrintError(err.Message(), enums::ConsoleMessageSender::input);
 	}
 
 	if (isJoystickActive_)
@@ -126,7 +126,7 @@ Err DILayer::Update(const SDL_Event* eventList, uint32_t numEvent)
 		{
 			err = UpdateJoystick(i);
 			if (err.Code())
-				GameConsoleManager::PrintError(err.Message());
+				GameConsoleManager::PrintError(err.Message(), enums::ConsoleMessageSender::input);
 		}
 	}
 

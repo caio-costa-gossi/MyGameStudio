@@ -5,6 +5,7 @@
 #include "Enums.h"
 #include "Err.h"
 
+
 class GameConsoleManager
 {
 private:

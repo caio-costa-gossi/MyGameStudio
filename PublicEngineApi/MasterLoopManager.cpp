@@ -69,22 +69,22 @@ Err MasterLoopManager::Startup(const int argc, char** argv)
 	if (err.Code())
 		GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::input);
 
-	GameConsoleManager::PrintInfo("Starting GameObjectManager...");
+	GameConsoleManager::PrintInfo("Starting GameObjectManager...", enums::ConsoleMessageSender::loop);
 	err = GameObjectManager::Get().Startup();
 	if (err.Code())
 		GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::object);
 
-	GameConsoleManager::PrintInfo("Starting PhysicsManager...");
+	GameConsoleManager::PrintInfo("Starting PhysicsManager...", enums::ConsoleMessageSender::loop);
 	err = PhysicsManager::Startup();
 	if (err.Code())
 		GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::physics);
 
-	GameConsoleManager::PrintInfo("Starting AnimationManager...");
+	GameConsoleManager::PrintInfo("Starting AnimationManager...", enums::ConsoleMessageSender::loop);
 	err = AnimationManager::Startup();
 	if (err.Code())
 		GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::animation);
 
-	GameConsoleManager::PrintInfo("Starting RenderingManager...");
+	GameConsoleManager::PrintInfo("Starting RenderingManager...", enums::ConsoleMessageSender::loop);
 	err = RenderingManager::Startup();
 	if (err.Code())
 		GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::render);

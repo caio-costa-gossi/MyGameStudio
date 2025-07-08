@@ -52,21 +52,21 @@ Err SDLInputLayer::Update(const SDL_Event* eventList, const uint32_t numEvent)
 		{
 			err = UpdateGamepads(event);
 			if (err.Code())
-				GameConsoleManager::PrintError(err.Message());
+				GameConsoleManager::PrintError(err.Message(), enums::ConsoleMessageSender::input);
 		}
 
 		if (isKeyboardActive_)
 		{
 			err = UpdateKeyboard(event);
 			if (err.Code())
-				GameConsoleManager::PrintError(err.Message());
+				GameConsoleManager::PrintError(err.Message(), enums::ConsoleMessageSender::input);
 		}
 
 		if (isMouseActive_)
 		{
 			err = UpdateMouse(event);
 			if (err.Code())
-				GameConsoleManager::PrintError(err.Message());
+				GameConsoleManager::PrintError(err.Message(), enums::ConsoleMessageSender::input);
 		}
 	}
 
@@ -94,7 +94,7 @@ Err SDLInputLayer::StartupGamepads()
 	if (gamepadCount <= 0)
 	{
 		isGamepadActive_ = false;
-		GameConsoleManager::PrintInfo("No gamepads detected. Disabling gamepad input...");
+		GameConsoleManager::PrintInfo("No gamepads detected. Disabling gamepad input...", enums::ConsoleMessageSender::input);
 		return error_const::SUCCESS;
 	}
 
@@ -108,7 +108,7 @@ Err SDLInputLayer::StartupGamepads()
 
 		if (newSdlGamepad == nullptr)
 		{
-			GameConsoleManager::PrintInfo("Failure to open gamepad " + std::to_string(i) + ": " + SDL_GetError());
+			GameConsoleManager::PrintInfo("Failure to open gamepad " + std::to_string(i) + ": " + SDL_GetError(), enums::ConsoleMessageSender::input);
 			continue;
 		}
 
@@ -121,7 +121,7 @@ Err SDLInputLayer::StartupGamepads()
 		// Translate ID to index
 		idToIndex_[static_cast<uint8_t>(gamepadList[i])] = i;
 
-		GameConsoleManager::PrintInfo("Added " + std::string(newGamepad.Name));
+		GameConsoleManager::PrintInfo("Added " + std::string(newGamepad.Name), enums::ConsoleMessageSender::input);
 	}
 
 	return error_const::SUCCESS;

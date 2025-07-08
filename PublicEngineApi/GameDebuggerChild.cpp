@@ -18,10 +18,10 @@ Err GameDebuggerChild::InitDebuggerPipe(const int argc, char** argv)
 	NumericUtils::StringToInt32(argv[static_cast<uint8_t>(enums::GameExeArguments::debug_info_type)], debugType);
 	debugType_ = static_cast<enums::GameDebugType>(static_cast<uint8_t>(debugType));
 
-	GameConsoleManager::PrintInfo("Debug initialized. DebugType selected: " + std::to_string(debugType_));
+	GameConsoleManager::PrintInfo("Debug initialized. DebugType selected: " + std::to_string(debugType_), enums::ConsoleMessageSender::debugger);
 
 	const std::string pipeName = argv[static_cast<uint8_t>(enums::GameExeArguments::debug_pipe_name)];
-	GameConsoleManager::PrintInfo("Debug pipe name: " + pipeName);
+	GameConsoleManager::PrintInfo("Debug pipe name: " + pipeName, enums::ConsoleMessageSender::debugger);
 
 	const HANDLE hPipe = Win32PipeManager::GetPipeHandleFromName(pipeName);
 

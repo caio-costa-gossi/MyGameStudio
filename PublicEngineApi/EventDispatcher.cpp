@@ -21,7 +21,7 @@ Err EventDispatcher::FireEvent(Event& event)
 
 		Err err = it->ExecuteCallback(data);
 		if (err.Code())
-			GameConsoleManager::PrintError(err);
+			GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::event);
 
 		// Check OneShot
 		if (it->IsOneShot())

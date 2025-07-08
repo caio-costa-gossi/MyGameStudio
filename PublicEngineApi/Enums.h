@@ -80,20 +80,21 @@ namespace enums
 
 	enum class ConsoleMessageSender : uint8_t
 	{
-		undefined,
-		game,
-		console,
-		loop,
-		object,
-		window,
-		debugger,
-		localization,
-		io,
-		input,
-		render,
-		physics,
-		animation,
-		aux
+		undefined = 0,
+		game = 1,
+		console = 2,
+		loop = 3,
+		object = 4,
+		window = 5,
+		debugger = 6,
+		event = 7,
+		localization = 8,
+		io = 9,
+		input = 10,
+		render = 11,
+		physics = 12,
+		animation = 13,
+		aux = 14
 	};
 
 	enum GameDebugType : uint8_t
@@ -153,15 +154,17 @@ namespace enums
 		case enums::ConsoleMessageSender::game:
 			return "GAME";
 		case enums::ConsoleMessageSender::console:
-			return "CONSOLE MANAGER";
+			return "CONSOLE";
 		case enums::ConsoleMessageSender::loop:
-			return "LOOP MANAGER";
+			return "LOOP";
 		case enums::ConsoleMessageSender::object:
-			return "OBJECT MANAGER";
+			return "OBJECTS";
 		case enums::ConsoleMessageSender::window:
-			return "WINDOW MANAGER";
+			return "WINDOW";
 		case enums::ConsoleMessageSender::debugger:
 			return "DEBUGGER";
+		case enums::ConsoleMessageSender::event:
+			return "EVENTS";
 		case enums::ConsoleMessageSender::localization:
 			return "LOCALIZATION";
 		case enums::ConsoleMessageSender::io:

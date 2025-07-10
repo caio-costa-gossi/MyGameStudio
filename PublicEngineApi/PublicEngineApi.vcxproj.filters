@@ -135,7 +135,7 @@
     <ClInclude Include="SystemFileHelper.h">
       <Filter>Helpers\System</Filter>
     </ClInclude>
-    <ClInclude Include="TestWindowCreator.h">
+    <ClInclude Include="TestDrawer.h">
       <Filter>Testing</Filter>
     </ClInclude>
     <ClInclude Include="InputManager.h">
@@ -284,7 +284,7 @@
     <ClCompile Include="SystemFileHelper.cpp">
       <Filter>Helpers\System</Filter>
     </ClCompile>
-    <ClCompile Include="TestWindowCreator.cpp">
+    <ClCompile Include="TestDrawer.cpp">
       <Filter>Testing</Filter>
     </ClCompile>
     <ClCompile Include="InputManager.cpp">

@@ -3,7 +3,7 @@
 #include "NumericUtils.h"
 #include <bitset>
 
-#undef max()
+#undef max
 
 Err SDLInputLayer::Startup(HWND hWindow, const int32_t deadzone)
 {

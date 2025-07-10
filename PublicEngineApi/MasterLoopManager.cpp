@@ -4,10 +4,8 @@
 #include "GameDebuggerChild.h"
 #include "GameObjectManager.h"
 #include "InputManager.h"
-#include "NumericUtils.h"
 #include "PhysicsManager.h"
 #include "RenderingManager.h"
-#include "TestWindowCreator.h"
 #include "WindowManager.h"
 
 Err MasterLoopManager::Run()

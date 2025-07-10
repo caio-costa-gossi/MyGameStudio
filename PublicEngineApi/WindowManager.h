@@ -20,6 +20,7 @@ public:
 	static Err Shutdown();
 
 	static HWND GetWindowHandle();
+	static SDL_Window* GetSdlWindow();
 	static SDL_Event* GetEventList(uint32_t& eventCount);
 
 	static bool IsInit();

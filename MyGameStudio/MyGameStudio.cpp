@@ -1,6 +1,7 @@
 #include "ConsoleManager.h"
 #include "EngineCoreManager.h"
 #include "Err.h"
+#include "TestDrawer.h"
 
 
 int main()
@@ -17,32 +18,25 @@ int main()
 		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
 	}
 
-	ConsoleManager::RunConsole();
+	//ConsoleManager::RunConsole();
 
-	/*err = TestWindowCreator::Startup();
+	err = TestDrawer::Startup();
 	if (err.Code() != 0)
 	{
 		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
 	}
 
-	Subscription sub = Subscription(MyCallback, event_class_gamepad);
-	err = InputManager::SubForInputEvent(sub);
+	err = TestDrawer::Run();
 	if (err.Code() != 0)
 	{
 		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
 	}
 
-	err = TestWindowCreator::Run();
+	err = TestDrawer::Shutdown();
 	if (err.Code() != 0)
 	{
 		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
 	}
-
-	err = TestWindowCreator::Shutdown();
-	if (err.Code() != 0)
-	{
-		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
-	}*/
 
 	err = EngineCoreManager::Shutdown();
 	if (err.Code() != 0)

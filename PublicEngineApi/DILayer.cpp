@@ -5,7 +5,7 @@
 #include "DILayerMapping.h"
 #include "GameConsoleManager.h"
 
-#undef max()
+#undef max
 #define DI_WHEEL_BASE_VEL 120
 
 Err DILayer::Startup(const HWND hWindow, const int32_t deadzone)

@@ -176,6 +176,11 @@ Err TestDrawer::Draw()
 	return error_const::SUCCESS;
 }
 
+void TestDrawer::ResizeViewport(const int32_t w, const int32_t h)
+{
+	glViewport(0, 0, w, h);
+}
+
 
 SDL_Window* TestDrawer::gameWindow_ = nullptr;
 bool TestDrawer::running_ = false;

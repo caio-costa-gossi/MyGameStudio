@@ -10,9 +10,16 @@ private:
 	static SDL_Window* window_;
 	static HWND hWindow_;
 
+	static int32_t winWidth_;
+	static int32_t winHeight_;
+	static int32_t winPosX_;
+	static int32_t winPosY_;
+
 	static std::vector<SDL_Event> inputEventList_;
 
 	static bool isInit_;
+
+	static Err UpdateWindowInfo();
 
 public:
 	static Err Startup();

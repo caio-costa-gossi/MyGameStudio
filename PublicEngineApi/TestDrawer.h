@@ -28,4 +28,6 @@ public:
 	static Err Startup();
 	static Err Run();
 	static Err Shutdown();
+
+	static void ResizeViewport(int32_t w, int32_t h);
 };

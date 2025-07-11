@@ -1,5 +1,7 @@
 #include "WindowManager.h"
 
+#include "TestDrawer.h"
+
 Err WindowManager::Startup()
 {
 	// Init subsystem and create window
@@ -7,10 +9,13 @@ Err WindowManager::Startup()
 		return Err(SDL_GetError(), error_const::SDL_ERROR_CODE);
 
 	window_ = SDL_CreateWindow("My Game", 640, 480, SDL_WINDOW_INPUT_FOCUS | SDL_WINDOW_MOUSE_FOCUS | SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED | SDL_WINDOW_OPENGL);
-	SDL_WarpMouseInWindow(window_, 0, 0);
-
 	if (window_ == nullptr)
 		return Err(SDL_GetError(), error_const::SDL_ERROR_CODE);
+
+	SDL_WarpMouseInWindow(window_, 0, 0);
+	Err err = UpdateWindowInfo();
+	if (err.Code())
+		return err;
 
 	// Get window handle
 	const SDL_PropertiesID winProperties = SDL_GetWindowProperties(window_);
@@ -39,6 +44,11 @@ Err WindowManager::Update()
 		// Handle other events
 		switch (event.type)
 		{
+		case SDL_EVENT_WINDOW_RESIZED:
+		case SDL_EVENT_WINDOW_MOVED:
+			UpdateWindowInfo();
+			TestDrawer::ResizeViewport(winWidth_, winHeight_);
+			break;
 
 		case SDL_EVENT_QUIT:
 		case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
@@ -59,6 +69,14 @@ Err WindowManager::Shutdown()
 	return error_const::SUCCESS;
 }
 
+Err WindowManager::UpdateWindowInfo()
+{
+	SDL_GetWindowSize(window_, &winWidth_, &winHeight_);
+	SDL_GetWindowPosition(window_, &winPosX_, &winPosY_);
+
+	return error_const::SUCCESS;
+}
+
 SDL_Window* WindowManager::GetSdlWindow()
 {
 	return window_;
@@ -71,16 +89,12 @@ HWND WindowManager::GetWindowHandle()
 
 int32_t WindowManager::GetWindowHeight()
 {
-	int32_t h, w;
-	SDL_GetWindowSize(window_, &w, &h);
-	return h;
+	return winHeight_;
 }
 
 int32_t WindowManager::GetWindowWidth()
 {
-	int32_t h, w;
-	SDL_GetWindowSize(window_, &w, &h);
-	return w;
+	return winHeight_;
 }
 
 SDL_Event* WindowManager::GetEventList(uint32_t& eventCount)
@@ -98,5 +112,11 @@ bool WindowManager::IsInit()
 
 SDL_Window* WindowManager::window_ = nullptr;
 HWND WindowManager::hWindow_ = nullptr;
+
+int32_t WindowManager::winWidth_ = 0;
+int32_t WindowManager::winHeight_ = 0;
+int32_t WindowManager::winPosX_ = 0;
+int32_t WindowManager::winPosY_ = 0;
+
 std::vector<SDL_Event> WindowManager::inputEventList_ = std::vector<SDL_Event>();
 bool WindowManager::isInit_ = false;

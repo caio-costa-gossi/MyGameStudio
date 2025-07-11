@@ -4,6 +4,8 @@
 #include <Windows.h>
 #include <SDL3/SDL.h>
 #include <vector>
+#include <glad/glad.h>
+
 #include "Err.h"
 
 class TestDrawer
@@ -11,8 +13,16 @@ class TestDrawer
 private:
 	static bool running_;
 	static SDL_GLContext glContext_;
+	static SDL_Window* gameWindow_;
+
+	static double counter_;
+	static GLuint shaderProgram_;
+	static GLuint vao_;
 
 	static Err InitRenderer();
+
+	static Err SetupShader();
+	static Err Draw();
 
 public:
 	static Err Startup();

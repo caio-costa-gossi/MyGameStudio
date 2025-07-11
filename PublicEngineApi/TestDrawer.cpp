@@ -91,6 +91,9 @@ Err TestDrawer::InitRenderer()
 		return Err("Failed to initialize GLAD", error_const::SDL_RENDER_ERROR_CODE);
 	}
 
+	// Set viewport
+	glViewport(0, 0, WindowManager::GetWindowWidth(), WindowManager::GetWindowHeight());
+
 	return error_const::SUCCESS;
 }
 

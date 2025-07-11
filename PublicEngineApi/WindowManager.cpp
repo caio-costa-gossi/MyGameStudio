@@ -6,7 +6,7 @@ Err WindowManager::Startup()
 	if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS))
 		return Err(SDL_GetError(), error_const::SDL_ERROR_CODE);
 
-	window_ = SDL_CreateWindow("My Game", 640, 480, SDL_WINDOW_INPUT_FOCUS | SDL_WINDOW_MOUSE_FOCUS | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
+	window_ = SDL_CreateWindow("My Game", 640, 480, SDL_WINDOW_INPUT_FOCUS | SDL_WINDOW_MOUSE_FOCUS | SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED | SDL_WINDOW_OPENGL);
 	SDL_WarpMouseInWindow(window_, 0, 0);
 
 	if (window_ == nullptr)
@@ -67,6 +67,20 @@ SDL_Window* WindowManager::GetSdlWindow()
 HWND WindowManager::GetWindowHandle()
 {
 	return hWindow_;
+}
+
+int32_t WindowManager::GetWindowHeight()
+{
+	int32_t h, w;
+	SDL_GetWindowSize(window_, &w, &h);
+	return h;
+}
+
+int32_t WindowManager::GetWindowWidth()
+{
+	int32_t h, w;
+	SDL_GetWindowSize(window_, &w, &h);
+	return w;
 }
 
 SDL_Event* WindowManager::GetEventList(uint32_t& eventCount)

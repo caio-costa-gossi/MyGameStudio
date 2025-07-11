@@ -21,6 +21,9 @@ public:
 
 	static HWND GetWindowHandle();
 	static SDL_Window* GetSdlWindow();
+	static int32_t GetWindowHeight();
+	static int32_t GetWindowWidth();
+
 	static SDL_Event* GetEventList(uint32_t& eventCount);
 
 	static bool IsInit();

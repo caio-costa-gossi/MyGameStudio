@@ -50,6 +50,7 @@
     <ClInclude Include="KeyboardEvent.h" />
     <ClInclude Include="LocalizationManager.h" />
     <ClInclude Include="MasterLoopManager.h" />
+    <ClInclude Include="Mesh.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="MouseButtonEvent.h" />
     <ClInclude Include="MouseMoveEvent.h" />

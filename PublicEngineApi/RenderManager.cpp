@@ -63,35 +63,6 @@ Err RenderManager::InitRenderer()
 
 Err RenderManager::SetupShader()
 {
-	// Vertex data
-	float vertices[] = {
-	 0.5f,  0.5f, 0.0f,  // top right
-	 0.5f, -0.5f, 0.0f,  // bottom right
-	-0.5f, -0.5f, 0.0f,  // bottom left
-	-0.5f,  0.5f, 0.0f   // top left 
-	};
-
-	uint32_t indices[] = {  // note that we start from 0!
-		0, 1, 3,   // first triangle
-		1, 2, 3    // second triangle
-	};
-
-	// Setup Vertex Array Object
-	glGenVertexArrays(1, &vao_);
-	glBindVertexArray(vao_);
-
-	// Setup Vertex Buffer Object
-	uint32_t VBO;
-	glGenBuffers(1, &VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	// Setup Element Buffer Object
-	uint32_t ebo;
-	glGenBuffers(1, &ebo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
 	// Vertex Shader
 	const uint32_t vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	Err err = LoadCompileSource("shaders/MyShader.vert", vertexShader);
@@ -110,7 +81,27 @@ Err RenderManager::SetupShader()
 	if (err.Code())
 		return err;
 
-	glUseProgram(shaderProgram_);
+	return error_const::SUCCESS;
+}
+
+Err RenderManager::AddObject(const Mesh& mesh)
+{
+	// Setup Vertex Array Object
+	uint32_t newVao;
+	glGenVertexArrays(1, &newVao);
+	glBindVertexArray(newVao);
+
+	// Setup Vertex Buffer Object
+	uint32_t vbo;
+	glGenBuffers(1, &vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, static_cast<int32_t>(mesh.VertexCount * sizeof(float) * 3), mesh.VertexList, GL_STATIC_DRAW);
+
+	// Setup Element Buffer Object
+	uint32_t ebo;
+	glGenBuffers(1, &ebo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<int32_t>(mesh.IndexCount * sizeof(uint32_t)), mesh.IndexList, GL_STATIC_DRAW);
 
 	// Define vertex attribute layout
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
@@ -121,6 +112,10 @@ Err RenderManager::SetupShader()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
+	// Save Mesh data & VAO Index
+	meshes_.emplace_back(mesh);
+	vertexAttributeConfigs_[newVao] = static_cast<uint32_t>(meshes_.size() - 1);
+
 	return error_const::SUCCESS;
 }
 
@@ -130,9 +125,13 @@ Err RenderManager::Draw()
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glUseProgram(shaderProgram_);
-	glBindVertexArray(vao_);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
+	for (uint32_t attributeConfig = 0; attributeConfig < vertexAttributeConfigs_.size(); ++attributeConfig)
+	{
+		glBindVertexArray(attributeConfig);
+		glDrawElements(GL_TRIANGLES, static_cast<int32_t>(meshes_[vertexAttributeConfigs_[attributeConfig]].IndexCount), GL_UNSIGNED_INT, nullptr);
+	}
+	
 	SDL_GL_SwapWindow(gameWindow_);
 
 	return error_const::SUCCESS;
@@ -195,6 +194,7 @@ void RenderManager::ResizeViewport(const int32_t w, const int32_t h)
 
 SDL_Window* RenderManager::gameWindow_ = nullptr;
 SDL_GLContext RenderManager::glContext_;
+uint32_t RenderManager::shaderProgram_;
 
-GLuint RenderManager::shaderProgram_;
-GLuint RenderManager::vao_;
+std::unordered_map<uint32_t,uint32_t> RenderManager::vertexAttributeConfigs_ = std::unordered_map<uint32_t, uint32_t>();
+std::vector<Mesh> RenderManager::meshes_ = std::vector<Mesh>();

@@ -5,7 +5,7 @@
 #include "GameObjectManager.h"
 #include "InputManager.h"
 #include "PhysicsManager.h"
-#include "RenderingManager.h"
+#include "RenderManager.h"
 #include "WindowManager.h"
 
 Err MasterLoopManager::Run()
@@ -83,7 +83,7 @@ Err MasterLoopManager::Startup(const int argc, char** argv)
 		GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::animation);
 
 	GameConsoleManager::PrintInfo("Starting RenderingManager...", enums::ConsoleMessageSender::loop);
-	err = RenderingManager::Startup();
+	err = RenderManager::Startup();
 	if (err.Code())
 		GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::render);
 
@@ -127,7 +127,7 @@ Err MasterLoopManager::Shutdown()
 	if (err.Code())
 		GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::animation);
 
-	err = RenderingManager::Shutdown();
+	err = RenderManager::Shutdown();
 	if (err.Code())
 		GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::render);
 
@@ -148,7 +148,7 @@ Err MasterLoopManager::UpdateGame()
 	GameObjectManager::Get().Update(mainGameTimeline_.GetDelta());
 	PhysicsManager::Update();
 	AnimationManager::Update();
-	RenderingManager::Update();
+	RenderManager::Update();
 
 	return error_const::SUCCESS;
 }

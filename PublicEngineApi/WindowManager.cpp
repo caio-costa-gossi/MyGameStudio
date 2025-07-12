@@ -1,5 +1,6 @@
 #include "WindowManager.h"
 
+#include "RenderManager.h"
 #include "TestDrawer.h"
 
 Err WindowManager::Startup()
@@ -47,7 +48,7 @@ Err WindowManager::Update()
 		case SDL_EVENT_WINDOW_RESIZED:
 		case SDL_EVENT_WINDOW_MOVED:
 			UpdateWindowInfo();
-			TestDrawer::ResizeViewport(winWidth_, winHeight_);
+			RenderManager::ResizeViewport(winWidth_, winHeight_);
 			break;
 
 		case SDL_EVENT_QUIT:

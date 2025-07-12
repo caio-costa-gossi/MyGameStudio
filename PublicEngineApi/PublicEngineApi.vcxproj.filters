@@ -46,6 +46,9 @@
     <Filter Include="Wrappers">
       <UniqueIdentifier>{b825e31e-c7dd-4a01-9c57-fb4d1d17e7cd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Runtime Managers\Render">
+      <UniqueIdentifier>{5653966c-4446-4e4d-936a-deec2f28fd5e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetRuntimeManager.h">
@@ -58,9 +61,6 @@
       <Filter>Runtime Managers</Filter>
     </ClInclude>
     <ClInclude Include="PhysicsManager.h">
-      <Filter>Runtime Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderingManager.h">
       <Filter>Runtime Managers</Filter>
     </ClInclude>
     <ClInclude Include="AnimationManager.h">
@@ -207,6 +207,9 @@
     <ClInclude Include="Debug.h">
       <Filter>Wrappers</Filter>
     </ClInclude>
+    <ClInclude Include="RenderManager.h">
+      <Filter>Runtime Managers\Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssetRuntimeManager.cpp">
@@ -219,9 +222,6 @@
       <Filter>Runtime Managers</Filter>
     </ClCompile>
     <ClCompile Include="PhysicsManager.cpp">
-      <Filter>Runtime Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderingManager.cpp">
       <Filter>Runtime Managers</Filter>
     </ClCompile>
     <ClCompile Include="AnimationManager.cpp">
@@ -322,6 +322,9 @@
     </ClCompile>
     <ClCompile Include="Debug.cpp">
       <Filter>Wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderManager.cpp">
+      <Filter>Runtime Managers\Render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

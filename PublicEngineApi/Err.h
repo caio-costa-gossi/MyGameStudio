@@ -78,4 +78,6 @@ namespace error_const
 	constexpr auto SDL_ERROR_CODE = 400;
 	constexpr auto SDL_RENDER_ERROR_CODE = 401;
 	constexpr auto EXIT_REQUEST_CODE = 500;
+	constexpr auto SHADER_COMPILATION_ERROR_CODE = 600;
+	constexpr auto SHADER_LINKING_ERROR_CODE = 601;
 }

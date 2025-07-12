@@ -5,6 +5,8 @@
 
 #include <glad/glad.h>
 
+#include "SystemFileHelper.h"
+
 Err TestDrawer::Startup()
 {
 	Err err = GameConsoleManager::Startup("0", "0");
@@ -32,7 +34,10 @@ Err TestDrawer::Run()
 {
 	Err err = SetupShader();
 	if (err.Code())
-		return err;
+	{
+		GameConsoleManager::PrintCritical(err.Message(), enums::ConsoleMessageSender::render);
+		return error_const::SUCCESS;
+	}
 
 	running_ = true;
 
@@ -99,65 +104,63 @@ Err TestDrawer::InitRenderer()
 
 Err TestDrawer::SetupShader()
 {
-	const char* vertexShaderSource = R"(
-    #version 330 core
-    layout(location = 0) in vec2 aPos;
-    void main() {
-        gl_Position = vec4(aPos, 0.0, 1.0);
-    }
-	)";
-
-	const char* fragmentShaderSource = R"(
-    #version 330 core
-    out vec4 FragColor;
-    void main() {
-        FragColor = vec4(1.0, 0.3, 0.2, 1.0); // Red-ish color
-    }
-	)";
-
-	// Compile vertex shader
-	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShader, 1, &vertexShaderSource, nullptr);
-	glCompileShader(vertexShader);
-
-	// Compile fragment shader
-	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShader, 1, &fragmentShaderSource, nullptr);
-	glCompileShader(fragmentShader);
-
-	// Create shader program
-	shaderProgram_ = glCreateProgram();
-	glAttachShader(shaderProgram_, vertexShader);
-	glAttachShader(shaderProgram_, fragmentShader);
-	glLinkProgram(shaderProgram_);
-
-	// Clean up shaders (they’re in the program now)
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
-
 	// Vertex data
 	float vertices[] = {
-		 0.0f,  0.5f,
-		-0.5f, -0.5f,
-		 0.5f, -0.5f
+	 0.5f,  0.5f, 0.0f,  // top right
+	 0.5f, -0.5f, 0.0f,  // bottom right
+	-0.5f, -0.5f, 0.0f,  // bottom left
+	-0.5f,  0.5f, 0.0f   // top left 
 	};
 
-	// Setup VAO and VBO
-	GLuint VBO;
-	glGenVertexArrays(1, &vao_);
-	glGenBuffers(1, &VBO);
+	uint32_t indices[] = {  // note that we start from 0!
+		0, 1, 3,   // first triangle
+		1, 2, 3    // second triangle
+	};
 
+	// Setup Vertex Array Object
+	glGenVertexArrays(1, &vao_);
 	glBindVertexArray(vao_);
+
+	// Setup Vertex Buffer Object
+	uint32_t VBO;
+	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	// Describe vertex layout
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+	// Setup Element Buffer Object
+	uint32_t ebo;
+	glGenBuffers(1, &ebo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	// Vertex Shader
+	const uint32_t vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	Err err = LoadCompileSource("shaders/MyShader.vert", vertexShader);
+	if (err.Code())
+		return err;
+
+	// Fragment Shader
+	const uint32_t fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	err = LoadCompileSource("shaders/MyShader.frag", fragmentShader);
+	if (err.Code())
+		return err;
+
+	// Linking Shaders and Building Program
+	shaderProgram_ = glCreateProgram();
+	err = AttachLinkShaders(shaderProgram_, vertexShader, fragmentShader);
+	if (err.Code())
+		return err;
+
+	glUseProgram(shaderProgram_);
+
+	// Define vertex attribute layout
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
 	glEnableVertexAttribArray(0);
 
-	// Unbind to be safe
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	// Unbind VAO & VBO
 	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	return error_const::SUCCESS;
 }
@@ -169,12 +172,61 @@ Err TestDrawer::Draw()
 
 	glUseProgram(shaderProgram_);
 	glBindVertexArray(vao_);
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
 	SDL_GL_SwapWindow(gameWindow_);
 
 	return error_const::SUCCESS;
 }
+
+Err TestDrawer::LoadCompileSource(const char* sourcePath, const uint32_t shaderId)
+{
+	std::string vertexShaderSource;
+	Err err = SystemFileHelper::ReadFileString(sourcePath, vertexShaderSource);
+	if (err.Code())
+		return err;
+
+	const char* vertexSource = vertexShaderSource.data();
+	glShaderSource(shaderId, 1, &vertexSource, nullptr);
+	glCompileShader(shaderId);
+
+	int success;
+	glGetShaderiv(shaderId, GL_COMPILE_STATUS, &success);
+
+	if (!success)
+	{
+		char infoLog[512];
+		glGetShaderInfoLog(shaderId, 512, nullptr, infoLog);
+		return Err(infoLog, error_const::SHADER_COMPILATION_ERROR_CODE);
+	}
+
+	return error_const::SUCCESS;
+}
+
+Err TestDrawer::AttachLinkShaders(const uint32_t shaderProgram, const uint32_t vertexShader, const uint32_t fragShader)
+{
+	// Attach and link shaders
+	glAttachShader(shaderProgram, vertexShader);
+	glAttachShader(shaderProgram, fragShader);
+	glLinkProgram(shaderProgram);
+
+	// Delete shader objects
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragShader);
+
+	// Check if successful
+	int success;
+	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+	if (!success)
+	{
+		char infoLog[512];
+		glGetProgramInfoLog(shaderProgram, 512, nullptr, infoLog);
+		return Err(infoLog, error_const::SHADER_LINKING_ERROR_CODE);
+	}
+
+	return error_const::SUCCESS;
+}
+
 
 void TestDrawer::ResizeViewport(const int32_t w, const int32_t h)
 {

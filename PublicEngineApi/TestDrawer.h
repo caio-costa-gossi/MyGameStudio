@@ -24,6 +24,9 @@ private:
 	static Err SetupShader();
 	static Err Draw();
 
+	static Err LoadCompileSource(const char* sourcePath, uint32_t shaderId);
+	static Err AttachLinkShaders(uint32_t shaderProgram, uint32_t vertexShader, uint32_t fragShader);
+
 public:
 	static Err Startup();
 	static Err Run();

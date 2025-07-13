@@ -3,7 +3,6 @@
 #include "Color.h"
 #include "Enums.h"
 #include "GameConsoleManager.h"
-#include "SystemFileHelper.h"
 #include "WindowManager.h"
 
 Err RenderManager::Startup()
@@ -67,21 +66,11 @@ Err RenderManager::InitRenderer()
 
 Err RenderManager::SetupShader()
 {
-	// Vertex Shader
-	const uint32_t vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	Err err = LoadCompileSource("shaders/MyShader.vert", vertexShader);
+	Err err = shader_.Init("shaders/MyShader.vert", "shaders/MyShader.frag");
 	if (err.Code())
 		return err;
 
-	// Fragment Shader
-	const uint32_t fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	err = LoadCompileSource("shaders/MyShader.frag", fragmentShader);
-	if (err.Code())
-		return err;
-
-	// Linking Shaders and Building Program
-	shaderProgram_ = glCreateProgram();
-	err = AttachLinkShaders(shaderProgram_, vertexShader, fragmentShader);
+	err = shader_.Build();
 	if (err.Code())
 		return err;
 
@@ -99,7 +88,7 @@ Err RenderManager::AddObject(const Mesh& mesh)
 	uint32_t vbo;
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, static_cast<int32_t>(mesh.VertexCount * sizeof(float) * 3), mesh.VertexList, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, static_cast<int32_t>(mesh.VertexCount * sizeof(float) * 6), mesh.VertexList, GL_STATIC_DRAW);
 
 	// Setup Element Buffer Object
 	uint32_t ebo;
@@ -108,8 +97,13 @@ Err RenderManager::AddObject(const Mesh& mesh)
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<int32_t>(mesh.IndexCount * sizeof(uint32_t)), mesh.IndexList, GL_STATIC_DRAW);
 
 	// Define vertex attribute layout
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+	// Position
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), nullptr);
 	glEnableVertexAttribArray(0);
+
+	// Color
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*) (3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
 
 	// Unbind VAO & VBO
 	glBindVertexArray(0);
@@ -128,7 +122,7 @@ Err RenderManager::Draw()
 	glClearColor(1.0f, 1.0f, 0, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	glUseProgram(shaderProgram_);
+	shader_.Use();
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	UpdateUniforms();
@@ -144,54 +138,6 @@ Err RenderManager::Draw()
 	return error_const::SUCCESS;
 }
 
-Err RenderManager::LoadCompileSource(const char* sourcePath, const uint32_t shaderId)
-{
-	std::string vertexShaderSource;
-	Err err = SystemFileHelper::ReadFileString(sourcePath, vertexShaderSource);
-	if (err.Code())
-		return err;
-
-	const char* vertexSource = vertexShaderSource.data();
-	glShaderSource(shaderId, 1, &vertexSource, nullptr);
-	glCompileShader(shaderId);
-
-	int success;
-	glGetShaderiv(shaderId, GL_COMPILE_STATUS, &success);
-
-	if (!success)
-	{
-		char infoLog[512];
-		glGetShaderInfoLog(shaderId, 512, nullptr, infoLog);
-		return Err(infoLog, error_const::SHADER_COMPILATION_ERROR_CODE);
-	}
-
-	return error_const::SUCCESS;
-}
-
-Err RenderManager::AttachLinkShaders(const uint32_t shaderProgram, const uint32_t vertexShader, const uint32_t fragShader)
-{
-	// Attach and link shaders
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragShader);
-	glLinkProgram(shaderProgram);
-
-	// Delete shader objects
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragShader);
-
-	// Check if successful
-	int success;
-	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-	if (!success)
-	{
-		char infoLog[512];
-		glGetProgramInfoLog(shaderProgram, 512, nullptr, infoLog);
-		return Err(infoLog, error_const::SHADER_LINKING_ERROR_CODE);
-	}
-
-	return error_const::SUCCESS;
-}
-
 Err RenderManager::UpdateUniforms()
 {
 	const float elapsed = static_cast<float>(renderTime_.GetElapsed());
@@ -199,7 +145,7 @@ Err RenderManager::UpdateUniforms()
 
 	const ColorRgba newColor = { abs(sin(elapsed / 1100.0f)), abs(cos(elapsed / 1333.0f)), abs(sin(elapsed / 999.0f)), 1};
 
-	const int32_t uniformOurColor = glGetUniformLocation(shaderProgram_, "ourColor");
+	const int32_t uniformOurColor = glGetUniformLocation(shader_.GetId(), "ourColor");
 	glUniform4f(uniformOurColor, newColor.R, newColor.G, newColor.B, newColor.A);
 
 	return error_const::SUCCESS;
@@ -213,7 +159,7 @@ void RenderManager::ResizeViewport(const int32_t w, const int32_t h)
 
 SDL_Window* RenderManager::gameWindow_ = nullptr;
 SDL_GLContext RenderManager::glContext_;
-uint32_t RenderManager::shaderProgram_;
+Shader RenderManager::shader_;
 
 std::unordered_map<uint32_t,uint32_t> RenderManager::vertexAttributeConfigs_ = std::unordered_map<uint32_t, uint32_t>();
 std::vector<Mesh> RenderManager::meshes_ = std::vector<Mesh>();

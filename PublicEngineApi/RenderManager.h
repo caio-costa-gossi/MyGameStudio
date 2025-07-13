@@ -8,6 +8,7 @@
 
 #include "Err.h"
 #include "Mesh.h"
+#include "Shader.h"
 #include "Timeline.h"
 
 class RenderManager
@@ -15,7 +16,7 @@ class RenderManager
 private:
 	static SDL_GLContext glContext_;
 	static SDL_Window* gameWindow_;
-	static uint32_t shaderProgram_;
+	static Shader shader_;
 
 	static std::unordered_map<uint32_t, uint32_t> vertexAttributeConfigs_;
 	static std::vector<Mesh> meshes_;
@@ -27,8 +28,6 @@ private:
 
 	static Err Draw();
 
-	static Err LoadCompileSource(const char* sourcePath, uint32_t shaderId);
-	static Err AttachLinkShaders(uint32_t shaderProgram, uint32_t vertexShader, uint32_t fragShader);
 	static Err UpdateUniforms();
 
 public:

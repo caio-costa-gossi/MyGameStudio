@@ -213,6 +213,9 @@
     <ClInclude Include="Mesh.h">
       <Filter>Runtime Managers\Render</Filter>
     </ClInclude>
+    <ClInclude Include="Color.h">
+      <Filter>Runtime Managers\Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssetRuntimeManager.cpp">
@@ -327,6 +330,9 @@
       <Filter>Wrappers</Filter>
     </ClCompile>
     <ClCompile Include="RenderManager.cpp">
+      <Filter>Runtime Managers\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Color.cpp">
       <Filter>Runtime Managers\Render</Filter>
     </ClCompile>
   </ItemGroup>

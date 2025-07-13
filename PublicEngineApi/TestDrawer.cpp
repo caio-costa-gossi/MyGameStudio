@@ -29,14 +29,28 @@ Err TestDrawer::Startup()
 	-0.5f,  0.5f, 0.0f   // top left 
 	};
 
+	float vertices2[] = {
+	 0.75f,  0.75f, 0.5f,  // top right
+	 0.75f, -0.25f, 0.25f,  // bottom right
+	-0.25f, -0.25f, 1.0f,  // bottom left
+	-0.25f,  0.75f, 0.0f   // top left 
+	};
+
 	uint32_t indices[] = {  // note that we start from 0!
 		0, 1, 3,   // first triangle
 		1, 2, 3    // second triangle
 	};
 
+	uint32_t indices2[] = {  // note that we start from 0!
+		0, 1, 3,   // first triangle
+		1, 2, 3    // second triangle
+	};
+
 	const Mesh mesh = { vertices, 4, indices, 6 };
+	//const Mesh mesh2 = { vertices2, 4, indices2, 6 };
 
 	err = RenderManager::AddObject(mesh);
+	//err = RenderManager::AddObject(mesh2);
 	if (err.Code())
 		return err;
 

@@ -24,6 +24,7 @@
     <ClInclude Include="AssetDatabase.h" />
     <ClInclude Include="AssetRuntimeManager.h" />
     <ClInclude Include="CallbackData.h" />
+    <ClInclude Include="Color.h" />
     <ClInclude Include="Counter.h" />
     <ClInclude Include="CsvParser.h" />
     <ClInclude Include="Debug.h" />
@@ -79,6 +80,7 @@
     <ClCompile Include="Asset.cpp" />
     <ClCompile Include="AssetDatabase.cpp" />
     <ClCompile Include="AssetRuntimeManager.cpp" />
+    <ClCompile Include="Color.cpp" />
     <ClCompile Include="CsvParser.cpp" />
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="DIEventLayer.cpp" />

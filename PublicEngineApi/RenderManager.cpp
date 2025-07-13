@@ -1,4 +1,6 @@
 #include "RenderManager.h"
+
+#include "Color.h"
 #include "Enums.h"
 #include "GameConsoleManager.h"
 #include "SystemFileHelper.h"
@@ -6,6 +8,8 @@
 
 Err RenderManager::Startup()
 {
+	renderTime_.Start();
+
 	gameWindow_ = WindowManager::GetSdlWindow();
 
 	Err err = InitRenderer();
@@ -125,6 +129,9 @@ Err RenderManager::Draw()
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glUseProgram(shaderProgram_);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+	UpdateUniforms();
 
 	for (uint32_t attributeConfig = 0; attributeConfig < vertexAttributeConfigs_.size(); ++attributeConfig)
 	{
@@ -185,6 +192,18 @@ Err RenderManager::AttachLinkShaders(const uint32_t shaderProgram, const uint32_
 	return error_const::SUCCESS;
 }
 
+Err RenderManager::UpdateUniforms()
+{
+	const float elapsed = static_cast<float>(renderTime_.GetElapsed());
+	GameConsoleManager::PrintInfo(std::to_string(elapsed), enums::ConsoleMessageSender::render);
+
+	const ColorRgba newColor = { abs(sin(elapsed / 1100.0f)), abs(cos(elapsed / 1333.0f)), abs(sin(elapsed / 999.0f)), 1};
+
+	const int32_t uniformOurColor = glGetUniformLocation(shaderProgram_, "ourColor");
+	glUniform4f(uniformOurColor, newColor.R, newColor.G, newColor.B, newColor.A);
+
+	return error_const::SUCCESS;
+}
 
 void RenderManager::ResizeViewport(const int32_t w, const int32_t h)
 {
@@ -198,3 +217,5 @@ uint32_t RenderManager::shaderProgram_;
 
 std::unordered_map<uint32_t,uint32_t> RenderManager::vertexAttributeConfigs_ = std::unordered_map<uint32_t, uint32_t>();
 std::vector<Mesh> RenderManager::meshes_ = std::vector<Mesh>();
+
+Timeline RenderManager::renderTime_ = Timeline(timeline::MILLISECOND);

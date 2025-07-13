@@ -24,6 +24,11 @@ public:
 	Err Build() const;
 	void Use() const;
 
+	void SetUniform(const char* uniformName, float val) const;
+	void SetUniform(const char* uniformName, float val1, float val2) const;
+	void SetUniform(const char* uniformName, float val1, float val2, float val3) const;
+	void SetUniform(const char* uniformName, float val1, float val2, float val3, float val4) const;
+
 	int32_t GetId() const;
 	bool IsInit() const;
 };

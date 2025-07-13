@@ -3,6 +3,7 @@
 #include "Color.h"
 #include "Enums.h"
 #include "GameConsoleManager.h"
+#include "MVector.h"
 #include "WindowManager.h"
 
 Err RenderManager::Startup()
@@ -141,12 +142,8 @@ Err RenderManager::Draw()
 Err RenderManager::UpdateUniforms()
 {
 	const float elapsed = static_cast<float>(renderTime_.GetElapsed());
-	GameConsoleManager::PrintInfo(std::to_string(elapsed), enums::ConsoleMessageSender::render);
-
-	const ColorRgba newColor = { abs(sin(elapsed / 1100.0f)), abs(cos(elapsed / 1333.0f)), abs(sin(elapsed / 999.0f)), 1};
-
-	const int32_t uniformOurColor = glGetUniformLocation(shader_.GetId(), "ourColor");
-	glUniform4f(uniformOurColor, newColor.R, newColor.G, newColor.B, newColor.A);
+	const Vec3F posOffset = { sin(elapsed / 1000), 0, 0 };
+	shader_.SetUniform("posOffset", posOffset.X, posOffset.Y, posOffset.Z);
 
 	return error_const::SUCCESS;
 }

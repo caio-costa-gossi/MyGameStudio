@@ -121,3 +121,27 @@ Err Shader::AttachLinkShaders() const
 
 	return error_const::SUCCESS;
 }
+
+void Shader::SetUniform(const char* uniformName, const float val) const
+{
+	const int32_t uniformId = glGetUniformLocation(glProgramId_, uniformName);
+	glUniform1f(uniformId, val);
+}
+
+void Shader::SetUniform(const char* uniformName, const float val1, const float val2) const
+{
+	const int32_t uniformId = glGetUniformLocation(glProgramId_, uniformName);
+	glUniform2f(uniformId, val1, val2);
+}
+
+void Shader::SetUniform(const char* uniformName, const float val1, const float val2, const float val3) const
+{
+	const int32_t uniformId = glGetUniformLocation(glProgramId_, uniformName);
+	glUniform3f(uniformId, val1, val2, val3);
+}
+
+void Shader::SetUniform(const char* uniformName, const float val1, const float val2, const float val3, const float val4) const
+{
+	const int32_t uniformId = glGetUniformLocation(glProgramId_, uniformName);
+	glUniform4f(uniformId, val1, val2, val3, val4);
+}

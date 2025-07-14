@@ -72,6 +72,7 @@
     <ClInclude Include="Subscription.h" />
     <ClInclude Include="TestDrawer.h" />
     <ClInclude Include="Timeline.h" />
+    <ClInclude Include="Vertex.h" />
     <ClInclude Include="Win32PipeManager.h" />
     <ClInclude Include="WindowManager.h" />
     <ClInclude Include="ZipFile.h" />
@@ -114,6 +115,7 @@
     <ClCompile Include="Subscription.cpp" />
     <ClCompile Include="TestDrawer.cpp" />
     <ClCompile Include="Timeline.cpp" />
+    <ClCompile Include="Vertex.cpp" />
     <ClCompile Include="Win32PipeManager.cpp" />
     <ClCompile Include="WindowManager.cpp" />
     <ClCompile Include="ZipFile.cpp" />

@@ -89,7 +89,7 @@ Err RenderManager::AddObject(const Mesh& mesh)
 	uint32_t vbo;
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, static_cast<int32_t>(mesh.VertexCount * sizeof(float) * 6), mesh.VertexList, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, static_cast<int32_t>(mesh.VertexCount * sizeof(float) * 8), mesh.VertexList, GL_STATIC_DRAW);
 
 	// Setup Element Buffer Object
 	uint32_t ebo;
@@ -99,11 +99,11 @@ Err RenderManager::AddObject(const Mesh& mesh)
 
 	// Define vertex attribute layout
 	// Position
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), nullptr);
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 8 * sizeof(float), nullptr);
 	glEnableVertexAttribArray(0);
 
 	// Color
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*) (3 * sizeof(float)));
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*) (4 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
 	// Unbind VAO & VBO

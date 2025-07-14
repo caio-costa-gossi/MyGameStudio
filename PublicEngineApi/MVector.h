@@ -205,3 +205,39 @@ struct Vec3F
 	// Conversion
 	operator Vec2F() const { return { X,Y }; }
 };
+
+struct Vec4F
+{
+	float X;
+	float Y;
+	float Z;
+	float W;
+
+	// Constructors & destructor
+	Vec4F() : X(0), Y(0), Z(0), W(0) {}
+	Vec4F(const float x, const float y, const float z, const float w) : X(x), Y(y), Z(z), W(w) {}
+	Vec4F(const Vec4F& other) { X = other.X; Y = other.Y; Z = other.Z; W = other.W; }
+	Vec4F(Vec4F&& other) noexcept { X = other.X; Y = other.Y; Z = other.Z; W = other.W; }
+
+	~Vec4F() = default;
+
+	// Assignment
+	Vec4F& operator=(const Vec4F& other) = default;
+	Vec4F& operator=(Vec4F&& other) = default;
+
+	// Sum & Subtraction
+	Vec4F operator+(const Vec4F& other) const { return { X + other.X, Y + other.Y, Z + other.Z, W + other.W }; }
+	Vec4F operator-(const Vec4F& other) const { return { X - other.X, Y - other.Y, Z - other.Z, W - other.W }; }
+	Vec4F operator+=(const Vec4F& other) { X += other.X; Y += other.Y; Z += other.Z; W += other.W; return *this; }
+	Vec4F operator-=(const Vec4F& other) { X -= other.X; Y -= other.Y; Z -= other.Z; W -= other.W; return *this; }
+
+	// Multiplication & Division
+	Vec4F operator*(const float scalar) const { return { X * scalar, Y * scalar, Z * scalar, W * scalar }; }
+	Vec4F operator*=(const float scalar) { X *= scalar; Y *= scalar; Z *= scalar; W *= scalar; return *this; }
+	Vec4F operator/(const float scalar) const { return { X / scalar, Y / scalar, Z / scalar, W / scalar }; }
+	Vec4F operator/=(const float scalar) { X /= scalar; Y /= scalar; Z /= scalar; W /= scalar; return *this; }
+
+	// Conversion
+	operator Vec2F() const { return { X,Y }; }
+	operator Vec3F() const { return { X,Y,Z }; }
+};

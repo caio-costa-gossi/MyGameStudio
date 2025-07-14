@@ -3,7 +3,6 @@
 
 #include <unordered_map>
 #include <vector>
-#include <glad/glad.h>
 #include <SDL3/SDL.h>
 
 #include "Err.h"
@@ -29,6 +28,7 @@ private:
 	static Err Draw();
 
 	static Err UpdateUniforms();
+	static Err GenerateTexture();
 
 public:
 	static Err Startup();

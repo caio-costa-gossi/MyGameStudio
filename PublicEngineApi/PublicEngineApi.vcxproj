@@ -43,6 +43,8 @@
     <ClInclude Include="GameObjectManager.h" />
     <ClInclude Include="GamepadAxisEvent.h" />
     <ClInclude Include="GamepadButtonEvent.h" />
+    <ClInclude Include="Image.h" />
+    <ClInclude Include="ImageLoader.h" />
     <ClInclude Include="InputState.h" />
     <ClInclude Include="InputLayer.h" />
     <ClInclude Include="InputManager.h" />
@@ -95,6 +97,8 @@
     <ClCompile Include="GameDebuggerChild.cpp" />
     <ClCompile Include="GameObjectFactory.cpp" />
     <ClCompile Include="GameObjectManager.cpp" />
+    <ClCompile Include="Image.cpp" />
+    <ClCompile Include="ImageLoader.cpp" />
     <ClCompile Include="InputLayer.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="LocalizationManager.cpp" />

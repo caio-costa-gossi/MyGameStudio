@@ -1,8 +1,11 @@
 #include "RenderManager.h"
 
+#include <glad/glad.h>
 #include "Color.h"
 #include "Enums.h"
 #include "GameConsoleManager.h"
+#include "Image.h"
+#include "ImageLoader.h"
 #include "MVector.h"
 #include "WindowManager.h"
 
@@ -62,6 +65,10 @@ Err RenderManager::InitRenderer()
 	// Set viewport
 	glViewport(0, 0, WindowManager::GetWindowWidth(), WindowManager::GetWindowHeight());
 
+	Err err = GenerateTexture();
+	if (err.Code())
+		return err;
+
 	return error_const::SUCCESS;
 }
 
@@ -89,7 +96,7 @@ Err RenderManager::AddObject(const Mesh& mesh)
 	uint32_t vbo;
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, static_cast<int32_t>(mesh.VertexCount * sizeof(float) * 8), mesh.VertexList, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, static_cast<int32_t>(mesh.VertexCount * sizeof(float) * 10), mesh.VertexList, GL_STATIC_DRAW);
 
 	// Setup Element Buffer Object
 	uint32_t ebo;
@@ -99,12 +106,16 @@ Err RenderManager::AddObject(const Mesh& mesh)
 
 	// Define vertex attribute layout
 	// Position
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 8 * sizeof(float), nullptr);
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 10 * sizeof(float), nullptr);
 	glEnableVertexAttribArray(0);
 
 	// Color
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*) (4 * sizeof(float)));
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 10 * sizeof(float), (void*) (4 * sizeof(float)));
 	glEnableVertexAttribArray(1);
+
+	// TextCoord
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 10 * sizeof(float), (void*) (8 * sizeof(float)));
+	glEnableVertexAttribArray(2);
 
 	// Unbind VAO & VBO
 	glBindVertexArray(0);
@@ -151,6 +162,22 @@ Err RenderManager::UpdateUniforms()
 void RenderManager::ResizeViewport(const int32_t w, const int32_t h)
 {
 	glViewport(0, 0, w, h);
+}
+
+Err RenderManager::GenerateTexture()
+{
+	const auto myImage = Image("assets/container.jpg");
+
+	if (myImage.Data == nullptr)
+		return error_const::FILE_NOT_FOUND;
+
+	uint32_t textureId;
+	glGenTextures(1, &textureId);
+	glBindTexture(GL_TEXTURE_2D, textureId);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, myImage.Width, myImage.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, myImage.Data);
+	glGenerateMipmap(GL_TEXTURE_2D);
+
+	return error_const::SUCCESS;
 }
 
 

@@ -4,7 +4,6 @@
 #include "ImageLoader.h"
 #include "ZipFile.h"
 
-#undef LoadImage
 
 Err AssetRuntimeManager::Startup()
 {
@@ -32,7 +31,7 @@ uint8_t* AssetRuntimeManager::LoadAsset(const uint32_t assetId)
 	return assetData_[assetId].get();
 }
 
-Image* AssetRuntimeManager::LoadImage(const uint32_t assetId)
+Image* AssetRuntimeManager::LoadImg(const uint32_t assetId)
 {
 	if (imageData_.find(assetId) != imageData_.end())
 		return &imageData_[assetId];

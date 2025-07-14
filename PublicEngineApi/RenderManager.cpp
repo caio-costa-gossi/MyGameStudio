@@ -1,6 +1,8 @@
 #include "RenderManager.h"
 
 #include <glad/glad.h>
+
+#include "AssetRuntimeManager.h"
 #include "Color.h"
 #include "Enums.h"
 #include "GameConsoleManager.h"
@@ -166,6 +168,8 @@ void RenderManager::ResizeViewport(const int32_t w, const int32_t h)
 
 Err RenderManager::GenerateTexture()
 {
+	Image* newImage = AssetRuntimeManager::LoadImg(46);
+
 	const auto myImage = Image("assets/container.jpg");
 
 	if (myImage.Data == nullptr)
@@ -174,7 +178,7 @@ Err RenderManager::GenerateTexture()
 	uint32_t textureId;
 	glGenTextures(1, &textureId);
 	glBindTexture(GL_TEXTURE_2D, textureId);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, myImage.Width, myImage.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, myImage.Data);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, newImage->Width, newImage->Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, newImage->Data);
 	glGenerateMipmap(GL_TEXTURE_2D);
 
 	return error_const::SUCCESS;

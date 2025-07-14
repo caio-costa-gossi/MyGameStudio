@@ -23,6 +23,9 @@ Err Texture::Init(const uint32_t assetId)
 
 void Texture::Use() const
 {
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	glBindTexture(GL_TEXTURE_2D, textureId_);
 }
 

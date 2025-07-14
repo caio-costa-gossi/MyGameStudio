@@ -8,6 +8,7 @@ struct Image
 	int32_t Channels;
 	uint8_t* Data = nullptr;
 
+	Image() = default;
 	explicit Image(const char* filepath);
 	explicit Image(const uint8_t* imageBuffer, int32_t bufferLen);
 	~Image();

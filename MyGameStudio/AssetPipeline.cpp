@@ -157,7 +157,7 @@ uint8_t* AssetPipeline::ProcessAsset(Asset& assetMetadata, std::string& errMsg, 
 	switch (assetMetadata.Type)
 	{
 	case enums::AssetType::image:
-		returnBuffer = ImageProcessor::ProcessImage(assetMetadata, resultSize);
+		returnBuffer = ImageProcessor::MinimalProcessing(assetMetadata, resultSize);
 		break;
 	case enums::AssetType::mesh3d:
 		returnBuffer = MeshProcessor::ProcessMesh(assetMetadata, resultSize, errMsg);
@@ -224,7 +224,7 @@ std::string AssetPipeline::GetTargetExtension(const enums::AssetType type)
 	switch(type)
 	{
 	case enums::AssetType::image:
-		return ".dds";
+		return ".png";
 	case enums::AssetType::audio:
 		return ".mp3";
 	case enums::AssetType::video:

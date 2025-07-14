@@ -52,7 +52,6 @@ Image* AssetRuntimeManager::LoadImage(const uint32_t assetId)
 		return nullptr;
 
 	// Decompress with stbi_image and save to imageData_
-	int32_t width, height, channels;
 	imageData_[assetId] = Image(compressedBuffer, static_cast<int32_t>(asset.ProductSize));
 
 	// Deallocate compressed data

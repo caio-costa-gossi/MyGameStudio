@@ -17,6 +17,19 @@ uint8_t* ImageProcessor::DecompressImageRgba8(const char* filepath, int* x, int*
 	return stbi_load(filepath, x, y, channels, 4);
 }
 
+Err ImageProcessor::LoadRawFile(const char* filepath, uint8_t* resultBuffer, const uint32_t& resultSize)
+{
+	std::ifstream file(filepath, std::ios::binary);
+
+	if (!file.is_open())
+		return error_const::ERROR_OPEN_FILE;
+
+	file.seekg(0, std::ios::beg);
+	file.read(reinterpret_cast<char*>(resultBuffer), resultSize);
+
+	return error_const::SUCCESS;
+}
+
 uint8_t* ImageProcessor::PadRaw(const uint8_t* src, const uint64_t srcX, const uint64_t srcY, const uint64_t destX, const uint64_t destY)
 {
 	uint8_t* paddedBuffer = new uint8_t[destX * destY * 4];
@@ -158,6 +171,23 @@ uint8_t* ImageProcessor::ProcessImage(const Asset& metadata, uint64_t& resultSiz
 
 	ConsoleManager::Print(std::string(LocalizationManager::GetLocalizedString(string_const::G_ASSET_IMPORT)) + "100%", enums::ConsoleMessageType::info);
 	return finalProduct;
+}
+
+uint8_t* ImageProcessor::MinimalProcessing(const Asset& metadata, uint64_t& resultSize)
+{
+	uint8_t* resultBuffer = new uint8_t[metadata.SourceSize];
+
+	Err err = LoadRawFile(metadata.SourceLocation.c_str(), resultBuffer, static_cast<uint32_t>(metadata.SourceSize));
+	if (err.Code())
+	{
+		delete[] resultBuffer;
+		return nullptr;
+	}
+
+	resultSize = metadata.SourceSize;
+
+	ConsoleManager::Print(std::string(LocalizationManager::GetLocalizedString(string_const::G_ASSET_IMPORT)) + "100%", enums::ConsoleMessageType::info);
+	return resultBuffer;
 }
 
 uint64_t ImageProcessor::NextPoT(uint64_t x)

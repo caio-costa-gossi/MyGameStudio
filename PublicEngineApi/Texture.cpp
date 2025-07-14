@@ -8,7 +8,7 @@ Texture::Texture()
 
 Err Texture::Init(const char* filename)
 {
-	
+	return error_const::SUCCESS;
 }
 
 void Texture::Use() const

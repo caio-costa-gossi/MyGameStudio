@@ -44,6 +44,8 @@ class ImageProcessor
 {
 private:
 	static uint8_t* DecompressImageRgba8(const char* filepath, int* x, int* y, int* channels);
+	static Err LoadRawFile(const char* filepath, uint8_t* resultBuffer, const uint32_t& resultSize);
+
 	static void GenerateMipmaps(std::vector<Mipmap>& mipmaps, uint64_t paddedX, uint64_t paddedY, uint8_t* paddedBuffer);
 	static void CompressMipmaps(const std::vector<Mipmap>& mipmaps, std::vector<Mipmap>& compressedMipmaps);
 	static uint8_t* GenerateDdsFile(const std::vector<Mipmap>& compressedMipmaps, uint64_t originalX, uint64_t originalY, uint64_t& resultSize);
@@ -54,4 +56,5 @@ private:
 
 public:
 	static uint8_t* ProcessImage(const Asset& metadata, uint64_t& resultSize);
+	static uint8_t* MinimalProcessing(const Asset& metadata, uint64_t& resultSize);
 };

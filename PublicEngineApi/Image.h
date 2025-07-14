@@ -9,6 +9,7 @@ struct Image
 	uint8_t* Data = nullptr;
 
 	explicit Image(const char* filepath);
+	explicit Image(const uint8_t* imageBuffer, int32_t bufferLen);
 	~Image();
 	Image(const Image& other) = delete;
 	Image(Image&& other) noexcept;

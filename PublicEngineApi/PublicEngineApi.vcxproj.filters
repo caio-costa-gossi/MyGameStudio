@@ -231,6 +231,9 @@
     <ClInclude Include="Image.h">
       <Filter>Helpers\Image</Filter>
     </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Runtime Managers\Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssetRuntimeManager.cpp">
@@ -361,6 +364,9 @@
     </ClCompile>
     <ClCompile Include="Image.cpp">
       <Filter>Helpers\Image</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Runtime Managers\Render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -7,6 +7,11 @@ Image::Image(const char* filepath)
 	Data = ImageLoader::Load(filepath, Width, Height, Channels);
 }
 
+Image::Image(const uint8_t* imageBuffer, const int32_t bufferLen)
+{
+	Data = ImageLoader::LoadFromMemory(imageBuffer, bufferLen, Width, Height, Channels);
+}
+
 Image::~Image()
 {
 	if (Data != nullptr)

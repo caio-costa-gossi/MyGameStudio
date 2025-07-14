@@ -8,7 +8,10 @@
 #include "Err.h"
 #include "Mesh.h"
 #include "Shader.h"
+#include "Texture.h"
 #include "Timeline.h"
+
+using TextureList = std::unordered_map<uint32_t, Texture>;
 
 class RenderManager
 {
@@ -18,6 +21,7 @@ private:
 	static Shader shader_;
 
 	static std::unordered_map<uint32_t, uint32_t> vertexAttributeConfigs_;
+	static TextureList textures_;
 	static std::vector<Mesh> meshes_;
 
 	static Timeline renderTime_;
@@ -28,13 +32,13 @@ private:
 	static Err Draw();
 
 	static Err UpdateUniforms();
-	static Err GenerateTexture();
+	static Err AddTexture(uint32_t assetId);
 
 public:
 	static Err Startup();
 	static Err Update();
 	static Err Shutdown();
 
-	static Err AddObject(const Mesh& mesh);
+	static Err AddMesh(const Mesh& mesh);
 	static void ResizeViewport(int32_t w, int32_t h);
 };

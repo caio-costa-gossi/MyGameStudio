@@ -34,9 +34,9 @@ Err TestDrawer::Startup()
 		1, 2, 3   
 	};
 
-	const Mesh mesh = { vertices, 4, indices, 6 };
+	const Mesh mesh = { vertices, 4, indices, 6, 46 };
 
-	err = RenderManager::AddObject(mesh);
+	err = RenderManager::AddMesh(mesh);
 	if (err.Code())
 		return err;
 

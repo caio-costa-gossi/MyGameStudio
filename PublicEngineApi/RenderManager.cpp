@@ -68,10 +68,6 @@ Err RenderManager::InitRenderer()
 	// Set viewport
 	glViewport(0, 0, WindowManager::GetWindowWidth(), WindowManager::GetWindowHeight());
 
-	Err err = GenerateTexture();
-	if (err.Code())
-		return err;
-
 	return error_const::SUCCESS;
 }
 
@@ -88,7 +84,7 @@ Err RenderManager::SetupShader()
 	return error_const::SUCCESS;
 }
 
-Err RenderManager::AddObject(const Mesh& mesh)
+Err RenderManager::AddMesh(const Mesh& mesh)
 {
 	// Setup Vertex Array Object
 	uint32_t newVao;
@@ -129,6 +125,14 @@ Err RenderManager::AddObject(const Mesh& mesh)
 	meshes_.emplace_back(mesh);
 	vertexAttributeConfigs_[newVao] = static_cast<uint32_t>(meshes_.size() - 1);
 
+	// Save mesh texture in a new Texture if necessary
+	if (textures_.find(mesh.TextureAssetId) == textures_.end())
+	{
+		Err err = AddTexture(mesh.TextureAssetId);
+		if (err.Code())
+			return err;
+	}
+
 	return error_const::SUCCESS;
 }
 
@@ -144,6 +148,8 @@ Err RenderManager::Draw()
 
 	for (uint32_t attributeConfig = 0; attributeConfig < vertexAttributeConfigs_.size(); ++attributeConfig)
 	{
+		textures_[meshes_[vertexAttributeConfigs_[attributeConfig]].TextureAssetId].Use();
+
 		glBindVertexArray(attributeConfig);
 		glDrawElements(GL_TRIANGLES, static_cast<int32_t>(meshes_[vertexAttributeConfigs_[attributeConfig]].IndexCount), GL_UNSIGNED_INT, nullptr);
 	}
@@ -167,15 +173,15 @@ void RenderManager::ResizeViewport(const int32_t w, const int32_t h)
 	glViewport(0, 0, w, h);
 }
 
-Err RenderManager::GenerateTexture()
+Err RenderManager::AddTexture(const uint32_t assetId)
 {
-	Texture myTexture;
+	Texture newTexture;
 
-	Err err = myTexture.Init(46);
+	Err err = newTexture.Init(assetId);
 	if (err.Code())
 		GameConsoleManager::PrintError(err.Message(), enums::ConsoleMessageSender::render);
-	else
-		myTexture.Use();
+
+	textures_[assetId] = newTexture;
 
 	return error_const::SUCCESS;
 }
@@ -186,6 +192,8 @@ SDL_GLContext RenderManager::glContext_;
 Shader RenderManager::shader_;
 
 std::unordered_map<uint32_t,uint32_t> RenderManager::vertexAttributeConfigs_ = std::unordered_map<uint32_t, uint32_t>();
+TextureList RenderManager::textures_ = TextureList();
+
 std::vector<Mesh> RenderManager::meshes_ = std::vector<Mesh>();
 
 Timeline RenderManager::renderTime_ = Timeline(timeline::MILLISECOND);

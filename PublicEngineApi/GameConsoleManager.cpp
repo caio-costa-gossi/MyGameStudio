@@ -68,7 +68,7 @@ void GameConsoleManager::PrintError(const Err& err, const enums::ConsoleMessageS
 	if ((channelMask_ & 1 << static_cast<uint8_t>(sender)) != 0)
 		return;
 
-	PrintError("Error code: " + std::to_string(err.Code()) + " - '" + err.Message() + "'");
+	PrintError("Error code: " + std::to_string(err.Code()) + " - '" + err.Message() + "'", sender);
 }
 
 void GameConsoleManager::PrintCritical(const std::string& msg, const enums::ConsoleMessageSender sender)

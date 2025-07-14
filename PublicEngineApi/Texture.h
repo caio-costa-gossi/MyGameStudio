@@ -2,16 +2,19 @@
 #include <cstdint>
 
 #include "Err.h"
+#include "Image.h"
 
 class Texture
 {
 private:
-	int32_t textureId_ = -1;
-	uint32_t assetId_ = -1;
+	uint32_t textureId_ = 0;
+	Image* textureImage_ = nullptr;
+
+	Err InitGlTex();
 
 public:
 	Texture();
-	Err Init(const char* filename);
+	Err Init(uint32_t assetId);
 
 	void Use() const;
 };

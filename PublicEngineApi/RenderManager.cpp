@@ -9,6 +9,7 @@
 #include "Image.h"
 #include "ImageLoader.h"
 #include "MVector.h"
+#include "Texture.h"
 #include "WindowManager.h"
 
 Err RenderManager::Startup()
@@ -168,18 +169,13 @@ void RenderManager::ResizeViewport(const int32_t w, const int32_t h)
 
 Err RenderManager::GenerateTexture()
 {
-	Image* newImage = AssetRuntimeManager::LoadImg(46);
+	Texture myTexture;
 
-	const auto myImage = Image("assets/container.jpg");
-
-	if (myImage.Data == nullptr)
-		return error_const::FILE_NOT_FOUND;
-
-	uint32_t textureId;
-	glGenTextures(1, &textureId);
-	glBindTexture(GL_TEXTURE_2D, textureId);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, newImage->Width, newImage->Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, newImage->Data);
-	glGenerateMipmap(GL_TEXTURE_2D);
+	Err err = myTexture.Init(46);
+	if (err.Code())
+		GameConsoleManager::PrintError(err.Message(), enums::ConsoleMessageSender::render);
+	else
+		myTexture.Use();
 
 	return error_const::SUCCESS;
 }

@@ -94,7 +94,8 @@ namespace enums
 		render = 11,
 		physics = 12,
 		animation = 13,
-		aux = 14
+		aux = 14,
+		asset = 15
 	};
 
 	enum GameDebugType : uint8_t
@@ -179,6 +180,8 @@ namespace enums
 			return "ANIMATION";
 		case enums::ConsoleMessageSender::aux:
 			return "AUXILIARY";
+		case enums::ConsoleMessageSender::asset:
+			return "ASSET";
 		default:
 			return "NAME NOT FOUND";
 		}

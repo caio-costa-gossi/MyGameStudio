@@ -40,7 +40,10 @@ Image* AssetRuntimeManager::LoadImg(const uint32_t assetId)
 	Asset asset;
 	Err err = AssetDatabase::GetAsset(assetId, asset);
 	if (err.Code())
+	{
+		GameConsoleManager::PrintError("AssetID " + std::to_string(assetId) + " could not be loaded. Reason: " + err.Message(), enums::ConsoleMessageSender::asset);
 		return nullptr;
+	}
 
 	// Load compressed image data from zip
 	const ZipFile file(asset.ZipLocation.c_str());
@@ -48,7 +51,11 @@ Image* AssetRuntimeManager::LoadImg(const uint32_t assetId)
 
 	err = file.ReadFile(asset.AssetLocation.c_str(), compressedBuffer, static_cast<int>(asset.ProductSize));
 	if (err.Code())
+	{
+		GameConsoleManager::PrintError("Image '" + asset.Name + "' could not be loaded. Reason: " + err.Message(), enums::ConsoleMessageSender::asset);
+		delete[] compressedBuffer;
 		return nullptr;
+	}
 
 	// Decompress with stbi_image and save to imageData_
 	imageData_[assetId] = Image(compressedBuffer, static_cast<int32_t>(asset.ProductSize));

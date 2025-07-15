@@ -234,6 +234,9 @@
     <ClInclude Include="Texture.h">
       <Filter>Runtime Managers\Render</Filter>
     </ClInclude>
+    <ClInclude Include="MeshInstance.h">
+      <Filter>Runtime Managers\Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssetRuntimeManager.cpp">

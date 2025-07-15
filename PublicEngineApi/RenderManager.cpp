@@ -8,6 +8,7 @@
 #include "GameConsoleManager.h"
 #include "Image.h"
 #include "ImageLoader.h"
+#include "MeshInstance.h"
 #include "MVector.h"
 #include "Texture.h"
 #include "WindowManager.h"
@@ -84,12 +85,64 @@ Err RenderManager::SetupShader()
 	return error_const::SUCCESS;
 }
 
-Err RenderManager::AddMesh(const Mesh& mesh)
+Err RenderManager::AddMesh(const Mesh& mesh, uint32_t& instanceId)
+{
+	const uint32_t meshInstanceId = meshInstanceIdCounter_++;
+	uint32_t newVao;
+
+	Err err = NewAttribObject(mesh, newVao);
+	if (err.Code())
+		return err;
+
+	// Create & save mesh instance
+	MeshInstance newInstance;
+	newInstance.Data = mesh;
+	newInstance.ArrayObjectId = newVao;
+	meshes_[meshInstanceId] = newInstance;
+
+	instanceId = meshInstanceId;
+
+	// Save mesh texture in a new Texture if necessary
+	if (textures_.find(mesh.TextureAssetId) == textures_.end())
+	{
+		err = AddTexture(mesh.TextureAssetId);
+		if (err.Code())
+			return err;
+	}
+
+	return error_const::SUCCESS;
+}
+
+Err RenderManager::Draw()
+{
+	glClearColor(1.0f, 1.0f, 0, 0.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	shader_.Use();
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+	UpdateUniforms();
+
+	for (const auto& pair : meshes_)
+	{
+		textures_[pair.second.Data.TextureAssetId].Use();
+
+		glBindVertexArray(pair.second.ArrayObjectId);
+		glDrawElements(GL_TRIANGLES, static_cast<int32_t>(pair.second.Data.IndexCount), GL_UNSIGNED_INT, nullptr);
+	}
+	
+	SDL_GL_SwapWindow(gameWindow_);
+
+	return error_const::SUCCESS;
+}
+
+Err RenderManager::NewAttribObject(const Mesh& mesh, uint32_t& newVaoId)
 {
 	// Setup Vertex Array Object
 	uint32_t newVao;
 	glGenVertexArrays(1, &newVao);
 	glBindVertexArray(newVao);
+	newVaoId = newVao;
 
 	// Setup Vertex Buffer Object
 	uint32_t vbo;
@@ -109,52 +162,17 @@ Err RenderManager::AddMesh(const Mesh& mesh)
 	glEnableVertexAttribArray(0);
 
 	// Color
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 10 * sizeof(float), (void*) (4 * sizeof(float)));
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 10 * sizeof(float), (void*)(4 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
 	// TextCoord
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 10 * sizeof(float), (void*) (8 * sizeof(float)));
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 10 * sizeof(float), (void*)(8 * sizeof(float)));
 	glEnableVertexAttribArray(2);
 
 	// Unbind VAO & VBO
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-	// Save Mesh data & VAO Index
-	meshes_.emplace_back(mesh);
-	vertexAttributeConfigs_[newVao] = static_cast<uint32_t>(meshes_.size() - 1);
-
-	// Save mesh texture in a new Texture if necessary
-	if (textures_.find(mesh.TextureAssetId) == textures_.end())
-	{
-		Err err = AddTexture(mesh.TextureAssetId);
-		if (err.Code())
-			return err;
-	}
-
-	return error_const::SUCCESS;
-}
-
-Err RenderManager::Draw()
-{
-	glClearColor(1.0f, 1.0f, 0, 0.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
-
-	shader_.Use();
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-	UpdateUniforms();
-
-	for (uint32_t attributeConfig = 0; attributeConfig < vertexAttributeConfigs_.size(); ++attributeConfig)
-	{
-		textures_[meshes_[vertexAttributeConfigs_[attributeConfig]].TextureAssetId].Use();
-
-		glBindVertexArray(attributeConfig);
-		glDrawElements(GL_TRIANGLES, static_cast<int32_t>(meshes_[vertexAttributeConfigs_[attributeConfig]].IndexCount), GL_UNSIGNED_INT, nullptr);
-	}
-	
-	SDL_GL_SwapWindow(gameWindow_);
 
 	return error_const::SUCCESS;
 }
@@ -191,9 +209,8 @@ SDL_Window* RenderManager::gameWindow_ = nullptr;
 SDL_GLContext RenderManager::glContext_;
 Shader RenderManager::shader_;
 
-std::unordered_map<uint32_t,uint32_t> RenderManager::vertexAttributeConfigs_ = std::unordered_map<uint32_t, uint32_t>();
+MeshList RenderManager::meshes_ = MeshList();
 TextureList RenderManager::textures_ = TextureList();
-
-std::vector<Mesh> RenderManager::meshes_ = std::vector<Mesh>();
+uint32_t RenderManager::meshInstanceIdCounter_ = 0;
 
 Timeline RenderManager::renderTime_ = Timeline(timeline::MILLISECOND);

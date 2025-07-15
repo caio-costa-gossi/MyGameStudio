@@ -104,6 +104,14 @@ namespace enums
 		input_debug = 1
 	};
 
+	enum TextureWrapBehavior: uint8_t
+	{
+		repeat = 0,
+		mirror_repeat = 1,
+		clamp_edge = 2,
+		clamp_border = 3
+	};
+
 	// Functions
 
 	inline const char* LanguageToString(Language language)

@@ -237,6 +237,9 @@
     <ClInclude Include="MeshInstance.h">
       <Filter>Runtime Managers\Render</Filter>
     </ClInclude>
+    <ClInclude Include="Drawer.h">
+      <Filter>Runtime Managers\Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssetRuntimeManager.cpp">
@@ -369,6 +372,9 @@
       <Filter>Helpers\Image</Filter>
     </ClCompile>
     <ClCompile Include="Texture.cpp">
+      <Filter>Runtime Managers\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Drawer.cpp">
       <Filter>Runtime Managers\Render</Filter>
     </ClCompile>
   </ItemGroup>

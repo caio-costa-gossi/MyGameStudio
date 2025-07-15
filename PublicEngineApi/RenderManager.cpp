@@ -4,9 +4,9 @@
 
 #include "AssetRuntimeManager.h"
 #include "Color.h"
+#include "Drawer.h"
 #include "Enums.h"
 #include "GameConsoleManager.h"
-#include "Image.h"
 #include "ImageLoader.h"
 #include "MeshInstance.h"
 #include "MVector.h"
@@ -69,6 +69,10 @@ Err RenderManager::InitRenderer()
 	// Set viewport
 	glViewport(0, 0, WindowManager::GetWindowWidth(), WindowManager::GetWindowHeight());
 
+	// Config texture options
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
 	return error_const::SUCCESS;
 }
 
@@ -115,22 +119,8 @@ Err RenderManager::AddMesh(const Mesh& mesh, uint32_t& instanceId)
 
 Err RenderManager::Draw()
 {
-	glClearColor(1.0f, 1.0f, 0, 0.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
-
-	shader_.Use();
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
 	UpdateUniforms();
-
-	for (const auto& pair : meshes_)
-	{
-		textures_[pair.second.Data.TextureAssetId].Use();
-
-		glBindVertexArray(pair.second.ArrayObjectId);
-		glDrawElements(GL_TRIANGLES, static_cast<int32_t>(pair.second.Data.IndexCount), GL_UNSIGNED_INT, nullptr);
-	}
-	
+	Drawer::Draw(shader_, meshes_, textures_);
 	SDL_GL_SwapWindow(gameWindow_);
 
 	return error_const::SUCCESS;

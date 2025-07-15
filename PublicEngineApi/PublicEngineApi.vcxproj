@@ -31,6 +31,7 @@
     <ClInclude Include="DIEventLayer.h" />
     <ClInclude Include="DILayer.h" />
     <ClInclude Include="DILayerMapping.h" />
+    <ClInclude Include="Drawer.h" />
     <ClInclude Include="Enums.h" />
     <ClInclude Include="Err.h" />
     <ClInclude Include="Event.h" />
@@ -91,6 +92,7 @@
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="DIEventLayer.cpp" />
     <ClCompile Include="DILayer.cpp" />
+    <ClCompile Include="Drawer.cpp" />
     <ClCompile Include="Enums.cpp" />
     <ClCompile Include="Err.cpp" />
     <ClCompile Include="Event.cpp" />

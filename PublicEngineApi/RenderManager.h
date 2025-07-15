@@ -2,7 +2,6 @@
 #define SDL_PROP_WINDOW_WIND32_HWND_POINTER
 
 #include <unordered_map>
-#include <vector>
 #include <SDL3/SDL.h>
 
 #include "Err.h"

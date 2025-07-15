@@ -24,17 +24,17 @@ Err TestDrawer::Startup()
 
 	Vertex vertices[4];
 
-	vertices[0] = { {0.5f,  0.5f, 0.0f, 1.0f}, {1.0f, 0.0f, 0.0f, 1.0f}, { 2.0f, 2.0f } };
-	vertices[1] = { { 0.5f, -0.5f, 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f, 1.0f }, { 2.0f, 0.0f } };
+	vertices[0] = { {0.5f,  0.5f, 0.0f, 1.0f}, {1.0f, 0.0f, 0.0f, 1.0f}, { 1.0f, 1.0f } };
+	vertices[1] = { { 0.5f, -0.5f, 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f, 1.0f }, { 1.0f, 0.0f } };
 	vertices[2] = { { -0.5f, -0.5f, 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f, 1.0f }, { 0.0f, 0.0f } };
-	vertices[3] = { { -0.5f,  0.5f, 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 2.0f } };
+	vertices[3] = { { -0.5f,  0.5f, 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 1.0f } };
 
 	uint32_t indices[] = {
 		0, 1, 3,   
 		1, 2, 3   
 	};
 
-	const Mesh mesh = { vertices, 4, indices, 6, 46 };
+	const Mesh mesh = { vertices, 4, indices, 6, 47 };
 	uint32_t newMeshId;
 
 	err = RenderManager::AddMesh(mesh, newMeshId);

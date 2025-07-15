@@ -8,7 +8,7 @@ void Drawer::Draw(const Shader& shader, const MeshList& meshes, const TextureLis
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	shader.Use();
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	SetShaderConfig();
 
 	for (const auto& pair : meshes)
 	{
@@ -62,4 +62,11 @@ void Drawer::SetTextureWrapping(const MeshInstance& mesh)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		break;
 	}
+}
+
+void Drawer::SetShaderConfig()
+{
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 }

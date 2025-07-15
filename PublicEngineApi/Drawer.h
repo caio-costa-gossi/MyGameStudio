@@ -12,6 +12,7 @@ class Drawer
 {
 private:
 	static void SetTextureWrapping(const MeshInstance& mesh);
+	static void SetShaderConfig();
 
 public:
 	static void Draw(const Shader& shader, const MeshList& meshes, const TextureList& textures);

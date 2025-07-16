@@ -4,7 +4,7 @@
 
 struct Vertex
 {
-	Vec4F Pos;
+	Vec3F Pos;
 	ColorRgba Color;
 	Vec2F TexCoord;
 };

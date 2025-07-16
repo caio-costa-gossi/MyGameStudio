@@ -135,7 +135,7 @@ Err RenderManager::NewAttribObject(const Mesh& mesh, uint32_t& newVaoId)
 	uint32_t vbo;
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, static_cast<int32_t>(mesh.VertexCount * sizeof(float) * 10), mesh.VertexList, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, static_cast<int32_t>(mesh.VertexCount * sizeof(Vertex)), mesh.VertexList, GL_STATIC_DRAW);
 
 	// Setup Element Buffer Object
 	uint32_t ebo;
@@ -145,15 +145,15 @@ Err RenderManager::NewAttribObject(const Mesh& mesh, uint32_t& newVaoId)
 
 	// Define vertex attribute layout
 	// Position
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 10 * sizeof(float), nullptr);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
 	glEnableVertexAttribArray(0);
 
 	// Color
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 10 * sizeof(float), (void*)(4 * sizeof(float)));
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
 	// TextCoord
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 10 * sizeof(float), (void*)(8 * sizeof(float)));
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(7 * sizeof(float)));
 	glEnableVertexAttribArray(2);
 
 	// Unbind VAO & VBO

@@ -28,17 +28,21 @@ Err TestDrawer::Startup()
 
 Err TestDrawer::Run()
 {
-	Vertex vertices[4];
+	Vertex* vertices = new Vertex[4];
 
 	vertices[0] = { {0.5f,  0.5f, 0.0f }, {1.0f, 0.0f, 0.0f, 1.0f}, { 1.0f, 1.0f } };
 	vertices[1] = { { 0.5f, -0.5f, 0.0f }, { 0.0f, 1.0f, 0.0f, 1.0f }, { 1.0f, 0.0f } };
 	vertices[2] = { { -0.5f, -0.5f, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f }, { 0.0f, 0.0f } };
 	vertices[3] = { { -0.5f,  0.5f, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 1.0f } };
 
-	uint32_t indices[] = {
-		0, 1, 3,
-		1, 2, 3
-	};
+	uint32_t* indices = new uint32_t[6];
+
+	indices[0] = 0;
+	indices[1] = 1;
+	indices[2] = 3;
+	indices[3] = 1;
+	indices[4] = 2;
+	indices[5] = 3;
 
 	testMesh_ = { 1, vertices, 4, indices, 6, 46 };
 
@@ -46,6 +50,9 @@ Err TestDrawer::Run()
 
 	while (running_)
 	{
+		rotation_ += 0.1f;
+		scale_ += {0.0001f, 0.0001f, 0};
+
 		Err err = WindowManager::Update();
 		if (err.Code() == error_const::EXIT_REQUEST_CODE)
 			running_ = false;
@@ -65,6 +72,9 @@ Err TestDrawer::Run()
 		if (err.Code())
 			GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::render);
 	}
+
+	delete[] indices;
+	delete[] vertices;
 
 	return error_const::SUCCESS;
 }
@@ -92,4 +102,4 @@ Mesh TestDrawer::testMesh_;
 
 float TestDrawer::rotation_ = 0;
 Vec3F TestDrawer::position_ = {0,0,0};
-Vec3F TestDrawer::scale_ = {0,0,0};
+Vec3F TestDrawer::scale_ = {1,1,1};

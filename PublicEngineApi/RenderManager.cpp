@@ -118,7 +118,6 @@ Err RenderManager::RequestRender(const RenderRequest& request)
 
 Err RenderManager::Draw()
 {
-	UpdateUniforms();
 	Drawer::Draw(shader_, renderQueue_, textures_);
 	SDL_GL_SwapWindow(gameWindow_);
 
@@ -162,16 +161,6 @@ Err RenderManager::NewAttribObject(const Mesh& mesh, uint32_t& newVaoId)
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-	return error_const::SUCCESS;
-}
-
-Err RenderManager::UpdateUniforms()
-{
-	const float elapsed = static_cast<float>(renderTime_.GetElapsed());
-
-	Transform transform({ cos(elapsed / 2000), sin(elapsed / 1000), 0.0f }, glm::radians(elapsed / 25), { 0.0, 0.0, 1.0 }, { 0.5, 0.5, 0.5 });
-	shader_.SetUniform("transform", enums::m4x4, transform.GetData(), false);
 
 	return error_const::SUCCESS;
 }

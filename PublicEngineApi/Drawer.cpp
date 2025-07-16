@@ -2,6 +2,8 @@
 #include <SDL3/SDL.h>
 #include <glad/glad.h>
 
+#include "Transform.h"
+
 void Drawer::Draw(const Shader& shader, std::queue<RenderQuery>& queries, const TextureList& textures)
 {
 	glClearColor(1.0f, 1.0f, 0, 0.0f);
@@ -14,6 +16,7 @@ void Drawer::Draw(const Shader& shader, std::queue<RenderQuery>& queries, const 
 	{
 		const RenderQuery& query = queries.front();
 
+		SetShaderUniforms(shader, query);
 		SetTextureWrapping(query.MeshInstance);
 		textures.at(query.MeshInstance.Data->TextureAssetId).Use();
 
@@ -72,4 +75,10 @@ void Drawer::SetShaderConfig()
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+}
+
+void Drawer::SetShaderUniforms(const Shader& shader, const RenderQuery& query)
+{
+	Transform transform(query.GlobalPosition, query.GlobalRotation, query.GlobalRotationAxis, query.GlobalScale);;
+	shader.SetUniform("transform", enums::m4x4, transform.GetData(), false);
 }

@@ -14,6 +14,7 @@ class Drawer
 private:
 	static void SetTextureWrapping(const MeshInstance& mesh);
 	static void SetShaderConfig();
+	static void SetShaderUniforms(const Shader& shader, const RenderQuery& query);
 
 public:
 	static void Draw(const Shader& shader, std::queue<RenderQuery>& queries, const TextureList& textures);

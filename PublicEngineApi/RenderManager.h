@@ -36,7 +36,6 @@ private:
 	static Err Draw();
 
 	static Err NewAttribObject(const Mesh& mesh, uint32_t& newVaoId);
-	static Err UpdateUniforms();
 	static Err AddTexture(uint32_t assetId);
 
 public:

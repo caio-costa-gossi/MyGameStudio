@@ -1,5 +1,8 @@
 #pragma once
 #include <cstdint>
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
 
 struct Vec3F;
 struct Vec3I64;
@@ -170,6 +173,7 @@ struct Vec2F
 
 	// Conversion
 	operator Vec3F() const;
+	operator glm::vec2() const { return { X, Y }; }
 };
 
 struct Vec3F
@@ -204,6 +208,7 @@ struct Vec3F
 
 	// Conversion
 	operator Vec2F() const { return { X,Y }; }
+	operator glm::vec3() const { return { X, Y, Z }; }
 };
 
 struct Vec4F
@@ -240,4 +245,5 @@ struct Vec4F
 	// Conversion
 	operator Vec2F() const { return { X,Y }; }
 	operator Vec3F() const { return { X,Y,Z }; }
+	operator glm::vec4() const { return { X, Y, Z, W }; }
 };

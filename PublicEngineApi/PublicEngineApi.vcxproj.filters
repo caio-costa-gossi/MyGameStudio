@@ -52,6 +52,12 @@
     <Filter Include="Helpers\Image">
       <UniqueIdentifier>{8f647469-6a29-4694-a8c3-c3086ccf71a9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Runtime Managers\Render\Data Structures">
+      <UniqueIdentifier>{7c793df5-ebfa-4be7-a43d-52cb975c3471}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Runtime Managers\Render\OpenGL Wrappers">
+      <UniqueIdentifier>{53e2346f-7535-4627-ba51-628e97b8eca7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetRuntimeManager.h">
@@ -213,31 +219,34 @@
     <ClInclude Include="RenderManager.h">
       <Filter>Runtime Managers\Render</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>Runtime Managers\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Color.h">
-      <Filter>Runtime Managers\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Shader.h">
-      <Filter>Runtime Managers\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Vertex.h">
-      <Filter>Runtime Managers\Render</Filter>
-    </ClInclude>
     <ClInclude Include="ImageLoader.h">
       <Filter>Helpers\Image</Filter>
     </ClInclude>
     <ClInclude Include="Image.h">
       <Filter>Helpers\Image</Filter>
     </ClInclude>
-    <ClInclude Include="Texture.h">
+    <ClInclude Include="Drawer.h">
       <Filter>Runtime Managers\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Color.h">
+      <Filter>Runtime Managers\Render\Data Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Runtime Managers\Render\Data Structures</Filter>
     </ClInclude>
     <ClInclude Include="MeshInstance.h">
-      <Filter>Runtime Managers\Render</Filter>
+      <Filter>Runtime Managers\Render\Data Structures</Filter>
     </ClInclude>
-    <ClInclude Include="Drawer.h">
+    <ClInclude Include="Vertex.h">
+      <Filter>Runtime Managers\Render\Data Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Runtime Managers\Render\OpenGL Wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Runtime Managers\Render\OpenGL Wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
       <Filter>Runtime Managers\Render</Filter>
     </ClInclude>
   </ItemGroup>
@@ -356,25 +365,28 @@
     <ClCompile Include="RenderManager.cpp">
       <Filter>Runtime Managers\Render</Filter>
     </ClCompile>
-    <ClCompile Include="Color.cpp">
-      <Filter>Runtime Managers\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="Shader.cpp">
-      <Filter>Runtime Managers\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="Vertex.cpp">
-      <Filter>Runtime Managers\Render</Filter>
-    </ClCompile>
     <ClCompile Include="ImageLoader.cpp">
       <Filter>Helpers\Image</Filter>
     </ClCompile>
     <ClCompile Include="Image.cpp">
       <Filter>Helpers\Image</Filter>
     </ClCompile>
-    <ClCompile Include="Texture.cpp">
+    <ClCompile Include="Drawer.cpp">
       <Filter>Runtime Managers\Render</Filter>
     </ClCompile>
-    <ClCompile Include="Drawer.cpp">
+    <ClCompile Include="Color.cpp">
+      <Filter>Runtime Managers\Render\Data Structures</Filter>
+    </ClCompile>
+    <ClCompile Include="Vertex.cpp">
+      <Filter>Runtime Managers\Render\Data Structures</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Runtime Managers\Render\OpenGL Wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Runtime Managers\Render\OpenGL Wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
       <Filter>Runtime Managers\Render</Filter>
     </ClCompile>
   </ItemGroup>

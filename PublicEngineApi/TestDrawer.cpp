@@ -4,6 +4,7 @@
 #include "WindowManager.h"
 #include "RenderManager.h"
 
+
 Err TestDrawer::Startup()
 {
 	Err err = GameConsoleManager::Startup("0", "0");
@@ -34,7 +35,7 @@ Err TestDrawer::Startup()
 		1, 2, 3   
 	};
 
-	const Mesh mesh = { vertices, 4, indices, 6, 47 };
+	const Mesh mesh = { vertices, 4, indices, 6, 46 };
 	uint32_t newMeshId;
 
 	err = RenderManager::AddMesh(mesh, newMeshId);

@@ -11,6 +11,7 @@
 #include "MeshInstance.h"
 #include "MVector.h"
 #include "Texture.h"
+#include "Transform.h"
 #include "WindowManager.h"
 
 Err RenderManager::Startup()
@@ -166,8 +167,11 @@ Err RenderManager::NewAttribObject(const Mesh& mesh, uint32_t& newVaoId)
 Err RenderManager::UpdateUniforms()
 {
 	const float elapsed = static_cast<float>(renderTime_.GetElapsed());
-	const Vec3F posOffset = { sin(elapsed / 1000), 0, 0 };
-	shader_.SetUniform("posOffset", posOffset.X, posOffset.Y, posOffset.Z);
+
+	Transform transform({ cos(elapsed / 2000), sin(elapsed / 1000), 0.0f }, glm::radians(elapsed / 25), { 0.0, 0.0, 1.0 }, { 0.5, 0.5, 0.5 });
+
+	uint32_t transformId = glGetUniformLocation(shader_.GetId(), "transform");
+	glUniformMatrix4fv(transformId, 1, GL_FALSE, transform.GetData());
 
 	return error_const::SUCCESS;
 }

@@ -77,6 +77,7 @@
     <ClInclude Include="TestDrawer.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Timeline.h" />
+    <ClInclude Include="Transform.h" />
     <ClInclude Include="Vertex.h" />
     <ClInclude Include="Win32PipeManager.h" />
     <ClInclude Include="WindowManager.h" />
@@ -124,6 +125,7 @@
     <ClCompile Include="TestDrawer.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Timeline.cpp" />
+    <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Vertex.cpp" />
     <ClCompile Include="Win32PipeManager.cpp" />
     <ClCompile Include="WindowManager.cpp" />

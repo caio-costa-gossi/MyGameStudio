@@ -1,4 +1,5 @@
 #pragma once
+#include "Enums.h"
 #include "Err.h"
 
 class Shader
@@ -28,6 +29,7 @@ public:
 	void SetUniform(const char* uniformName, float val1, float val2) const;
 	void SetUniform(const char* uniformName, float val1, float val2, float val3) const;
 	void SetUniform(const char* uniformName, float val1, float val2, float val3, float val4) const;
+	void SetUniform(const char* uniformName, enums::MatrixDim matrixDimension, const float* matrix, bool transpose) const;
 
 	int32_t GetId() const;
 	bool IsInit() const;

@@ -169,9 +169,7 @@ Err RenderManager::UpdateUniforms()
 	const float elapsed = static_cast<float>(renderTime_.GetElapsed());
 
 	Transform transform({ cos(elapsed / 2000), sin(elapsed / 1000), 0.0f }, glm::radians(elapsed / 25), { 0.0, 0.0, 1.0 }, { 0.5, 0.5, 0.5 });
-
-	uint32_t transformId = glGetUniformLocation(shader_.GetId(), "transform");
-	glUniformMatrix4fv(transformId, 1, GL_FALSE, transform.GetData());
+	shader_.SetUniform("transform", enums::m4x4, transform.GetData(), false);
 
 	return error_const::SUCCESS;
 }

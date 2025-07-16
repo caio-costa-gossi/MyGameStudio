@@ -104,12 +104,26 @@ namespace enums
 		input_debug = 1
 	};
 
-	enum TextureWrapBehavior: uint8_t
+	enum TextureWrapBehavior : uint8_t
 	{
 		repeat = 0,
 		mirror_repeat = 1,
 		clamp_edge = 2,
 		clamp_border = 3
+	};
+
+	enum MatrixDim : uint8_t
+	{
+		m1x1 = 1,
+		m2x2 = 2,
+		m3x3 = 3,
+		m4x4 = 4,
+		m2x1 = 5,
+		m1x2 = 6,
+		m2x3 = 7,
+		m3x2 = 8,
+		m3x4 = 9,
+		m4x3 = 10
 	};
 
 	// Functions

@@ -1,6 +1,8 @@
 #include "Shader.h"
 
 #include <glad/glad.h>
+
+#include "Enums.h"
 #include "SystemFileHelper.h"
 
 Err Shader::Init(const char* vShaderPath, const char* fShaderPath, const char* gShaderPath)
@@ -144,4 +146,36 @@ void Shader::SetUniform(const char* uniformName, const float val1, const float v
 {
 	const int32_t uniformId = glGetUniformLocation(glProgramId_, uniformName);
 	glUniform4f(uniformId, val1, val2, val3, val4);
+}
+
+void Shader::SetUniform(const char* uniformName, const enums::MatrixDim matrixDimension, const float* matrix, const bool transpose) const
+{
+	const int32_t uniformId = glGetUniformLocation(glProgramId_, uniformName);
+
+	switch (matrixDimension)
+	{
+	case enums::m2x2:
+		glUniformMatrix2fv(uniformId, 1, transpose, matrix);
+		break;
+	case enums::m3x3:
+		glUniformMatrix3fv(uniformId, 1, transpose, matrix);
+		break;
+	case enums::m4x4:
+		glUniformMatrix4fv(uniformId, 1, transpose, matrix);
+		break;
+	case enums::m2x3:
+		glUniformMatrix2x3fv(uniformId, 1, transpose, matrix);
+		break;
+	case enums::m3x2:
+		glUniformMatrix3x2fv(uniformId, 1, transpose, matrix);
+		break;
+	case enums::m4x3:
+		glUniformMatrix4x3fv(uniformId, 1, transpose, matrix);
+		break;
+	case enums::m3x4:
+		glUniformMatrix3x4fv(uniformId, 1, transpose, matrix);
+		break;
+	default:
+		glUniformMatrix3fv(uniformId, 1, transpose, matrix);
+	}
 }

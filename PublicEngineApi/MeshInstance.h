@@ -3,6 +3,6 @@
 
 struct MeshInstance
 {
-	Mesh Data;
-	uint32_t ArrayObjectId;
+	const Mesh* Data = nullptr;
+	uint32_t ArrayObjectId = 0;
 };

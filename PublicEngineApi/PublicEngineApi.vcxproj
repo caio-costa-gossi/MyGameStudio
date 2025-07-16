@@ -40,6 +40,7 @@
     <ClInclude Include="GameDebuggerChild.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObjectFactory.h" />
+    <ClInclude Include="RenderQuery.h" />
     <ClInclude Include="GameObjectMacro.h" />
     <ClInclude Include="GameObjectManager.h" />
     <ClInclude Include="GamepadAxisEvent.h" />
@@ -64,6 +65,7 @@
     <ClInclude Include="NumericUtils.h" />
     <ClInclude Include="PhysicsManager.h" />
     <ClInclude Include="ProcessResourceViewer.h" />
+    <ClInclude Include="RenderRequest.h" />
     <ClInclude Include="SDLInputLayer.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SystemFileHelper.h" />

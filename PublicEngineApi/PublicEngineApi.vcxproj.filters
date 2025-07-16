@@ -22,9 +22,6 @@
     <Filter Include="Helpers\System">
       <UniqueIdentifier>{f667a50e-99a7-49f3-96c8-02e5f7f8fb0d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Object Management">
-      <UniqueIdentifier>{a8f0480f-b6f9-444a-996d-292fd2166725}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Data Structures">
       <UniqueIdentifier>{64b9a90e-2a18-40a9-a3e5-47ef778da323}</UniqueIdentifier>
     </Filter>
@@ -57,6 +54,9 @@
     </Filter>
     <Filter Include="Runtime Managers\Render\OpenGL Wrappers">
       <UniqueIdentifier>{53e2346f-7535-4627-ba51-628e97b8eca7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Runtime Managers\Game Object">
+      <UniqueIdentifier>{a8f0480f-b6f9-444a-996d-292fd2166725}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -124,19 +124,19 @@
       <Filter>Helpers\System</Filter>
     </ClInclude>
     <ClInclude Include="GameObjectManager.h">
-      <Filter>Game Object Management</Filter>
+      <Filter>Runtime Managers\Game Object</Filter>
     </ClInclude>
     <ClInclude Include="GameObject.h">
-      <Filter>Game Object Management</Filter>
+      <Filter>Runtime Managers\Game Object</Filter>
     </ClInclude>
     <ClInclude Include="CallbackData.h">
-      <Filter>Game Object Management</Filter>
+      <Filter>Runtime Managers\Game Object</Filter>
     </ClInclude>
     <ClInclude Include="GameObjectMacro.h">
-      <Filter>Game Object Management</Filter>
+      <Filter>Runtime Managers\Game Object</Filter>
     </ClInclude>
     <ClInclude Include="GameObjectFactory.h">
-      <Filter>Game Object Management</Filter>
+      <Filter>Runtime Managers\Game Object</Filter>
     </ClInclude>
     <ClInclude Include="MVector.h">
       <Filter>Data Structures</Filter>
@@ -249,6 +249,12 @@
     <ClInclude Include="Transform.h">
       <Filter>Runtime Managers\Render</Filter>
     </ClInclude>
+    <ClInclude Include="RenderQuery.h">
+      <Filter>Runtime Managers\Render\Data Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderRequest.h">
+      <Filter>Runtime Managers\Render\Data Structures</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssetRuntimeManager.cpp">
@@ -315,10 +321,10 @@
       <Filter>Helpers\System</Filter>
     </ClCompile>
     <ClCompile Include="GameObjectManager.cpp">
-      <Filter>Game Object Management</Filter>
+      <Filter>Runtime Managers\Game Object</Filter>
     </ClCompile>
     <ClCompile Include="GameObjectFactory.cpp">
-      <Filter>Game Object Management</Filter>
+      <Filter>Runtime Managers\Game Object</Filter>
     </ClCompile>
     <ClCompile Include="SystemFileHelper.cpp">
       <Filter>Helpers\System</Filter>

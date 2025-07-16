@@ -2,7 +2,7 @@
 #include <SDL3/SDL.h>
 #include <glad/glad.h>
 
-void Drawer::Draw(const Shader& shader, const MeshList& meshes, const TextureList& textures)
+void Drawer::Draw(const Shader& shader, std::queue<RenderQuery>& queries, const TextureList& textures)
 {
 	glClearColor(1.0f, 1.0f, 0, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -10,21 +10,24 @@ void Drawer::Draw(const Shader& shader, const MeshList& meshes, const TextureLis
 	shader.Use();
 	SetShaderConfig();
 
-	for (const auto& pair : meshes)
+	while (!queries.empty())
 	{
-		SetTextureWrapping(pair.second);
+		const RenderQuery& query = queries.front();
 
-		textures.at(pair.second.Data.TextureAssetId).Use();
+		SetTextureWrapping(query.MeshInstance);
+		textures.at(query.MeshInstance.Data->TextureAssetId).Use();
 
-		glBindVertexArray(pair.second.ArrayObjectId);
-		glDrawElements(GL_TRIANGLES, static_cast<int32_t>(pair.second.Data.IndexCount), GL_UNSIGNED_INT, nullptr);
+		glBindVertexArray(query.MeshInstance.ArrayObjectId);
+		glDrawElements(GL_TRIANGLES, static_cast<int32_t>(query.MeshInstance.Data->IndexCount), GL_UNSIGNED_INT, nullptr);
+
+		queries.pop();
 	}
 }
 
 void Drawer::SetTextureWrapping(const MeshInstance& mesh)
 {
 	// S (Horizontal)
-	switch (mesh.Data.HorizontalWrap)
+	switch (mesh.Data->HorizontalWrap)
 	{
 	case enums::repeat:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -44,7 +47,7 @@ void Drawer::SetTextureWrapping(const MeshInstance& mesh)
 	}
 
 	// T (Vertical)
-	switch (mesh.Data.VerticalWrap)
+	switch (mesh.Data->VerticalWrap)
 	{
 	case enums::repeat:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);

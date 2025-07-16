@@ -23,6 +23,11 @@ Err TestDrawer::Startup()
 	if (err.Code())
 		return err;
 
+	return error_const::SUCCESS;
+}
+
+Err TestDrawer::Run()
+{
 	Vertex vertices[4];
 
 	vertices[0] = { {0.5f,  0.5f, 0.0f }, {1.0f, 0.0f, 0.0f, 1.0f}, { 1.0f, 1.0f } };
@@ -31,22 +36,12 @@ Err TestDrawer::Startup()
 	vertices[3] = { { -0.5f,  0.5f, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 1.0f } };
 
 	uint32_t indices[] = {
-		0, 1, 3,   
-		1, 2, 3   
+		0, 1, 3,
+		1, 2, 3
 	};
 
-	const Mesh mesh = { vertices, 4, indices, 6, 46 };
-	uint32_t newMeshId;
+	testMesh_ = { 1, vertices, 4, indices, 6, 46 };
 
-	err = RenderManager::AddMesh(mesh, newMeshId);
-	if (err.Code())
-		return err;
-
-	return error_const::SUCCESS;
-}
-
-Err TestDrawer::Run()
-{
 	running_ = true;
 
 	while (running_)
@@ -60,6 +55,11 @@ Err TestDrawer::Run()
 		err = InputManager::Update();
 		if (err.Code())
 			GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::input);
+
+		RenderRequest request = { &testMesh_, position_, rotation_, {0,0,1}, scale_};
+		err = RenderManager::RequestRender(request);
+		if (err.Code())
+			return err;
 
 		err = RenderManager::Update();
 		if (err.Code())
@@ -88,3 +88,8 @@ Err TestDrawer::Shutdown()
 
 
 bool TestDrawer::running_ = false;
+Mesh TestDrawer::testMesh_;
+
+float TestDrawer::rotation_ = 0;
+Vec3F TestDrawer::position_ = {0,0,0};
+Vec3F TestDrawer::scale_ = {0,0,0};

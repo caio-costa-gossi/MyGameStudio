@@ -3,13 +3,12 @@
 #include <glad/glad.h>
 
 #include "AssetRuntimeManager.h"
-#include "Color.h"
 #include "Drawer.h"
 #include "Enums.h"
 #include "GameConsoleManager.h"
-#include "ImageLoader.h"
 #include "MeshInstance.h"
 #include "MVector.h"
+#include "RenderQuery.h"
 #include "Texture.h"
 #include "Transform.h"
 #include "WindowManager.h"
@@ -86,27 +85,30 @@ Err RenderManager::SetupShader()
 	return error_const::SUCCESS;
 }
 
-Err RenderManager::AddMesh(const Mesh& mesh, uint32_t& instanceId)
+Err RenderManager::RequestRender(const RenderRequest& request)
 {
-	const uint32_t meshInstanceId = meshInstanceIdCounter_++;
-	uint32_t newVao;
+	// Create OpenGL Vertex Attribute Object and upload vertex data / use VAO previously created
+	uint32_t vao;
 
-	Err err = NewAttribObject(mesh, newVao);
-	if (err.Code())
-		return err;
+	if (attributeMap_.find(request.Mesh->MeshId) == attributeMap_.end())
+	{
+		Err err = NewAttribObject(*request.Mesh, vao);
+		if (err.Code())
+			return err;
 
-	// Create & save mesh instance
-	MeshInstance newInstance;
-	newInstance.Data = mesh;
-	newInstance.ArrayObjectId = newVao;
-	meshes_[meshInstanceId] = newInstance;
+		attributeMap_[request.Mesh->MeshId] = vao;
+	}
+	else
+		vao = attributeMap_[request.Mesh->MeshId];
 
-	instanceId = meshInstanceId;
+	// Create & save request query
+	RenderQuery newQuery = { {request.Mesh, vao}, request.GlobalPosition, request.GlobalRotation, request.GlobalRotationAxis, request.GlobalScale };
+	renderQueue_.emplace(newQuery);
 
 	// Save mesh texture in a new Texture if necessary
-	if (textures_.find(mesh.TextureAssetId) == textures_.end())
+	if (textures_.find(request.Mesh->TextureAssetId) == textures_.end())
 	{
-		err = AddTexture(mesh.TextureAssetId);
+		Err err = AddTexture(request.Mesh->TextureAssetId);
 		if (err.Code())
 			return err;
 	}
@@ -117,7 +119,7 @@ Err RenderManager::AddMesh(const Mesh& mesh, uint32_t& instanceId)
 Err RenderManager::Draw()
 {
 	UpdateUniforms();
-	Drawer::Draw(shader_, meshes_, textures_);
+	Drawer::Draw(shader_, renderQueue_, textures_);
 	SDL_GL_SwapWindow(gameWindow_);
 
 	return error_const::SUCCESS;
@@ -197,8 +199,8 @@ SDL_Window* RenderManager::gameWindow_ = nullptr;
 SDL_GLContext RenderManager::glContext_;
 Shader RenderManager::shader_;
 
-MeshList RenderManager::meshes_ = MeshList();
+std::queue<RenderQuery> RenderManager::renderQueue_ = std::queue<RenderQuery>();
+AttributeMap RenderManager::attributeMap_ = AttributeMap();
 TextureList RenderManager::textures_ = TextureList();
-uint32_t RenderManager::meshInstanceIdCounter_ = 0;
 
 Timeline RenderManager::renderTime_ = Timeline(timeline::MILLISECOND);

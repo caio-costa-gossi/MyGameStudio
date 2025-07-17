@@ -12,11 +12,12 @@ private:
 
 public:
 	Transform() = default;
+	Transform(const glm::mat4& matrix);
 	Transform(const Vec3F& translation, float rotationDegrees, const Vec3F& rotationAxis, const Vec3F& scale);
 
 	void Translate(const Vec3F& translation);
 	void Rotate(float rotationDegrees, const Vec3F& rotationAxis);
 	void Scale(const Vec3F& scale);
 
-	float* GetData();
+	const float* GetData() const;
 };

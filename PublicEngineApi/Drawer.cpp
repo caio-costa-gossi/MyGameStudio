@@ -21,7 +21,8 @@ void Drawer::Draw(const Shader& shader, std::queue<RenderQuery>& queries, const 
 		textures.at(query.MeshInstance.Data->TextureAssetId).Use();
 
 		glBindVertexArray(query.MeshInstance.ArrayObjectId);
-		glDrawElements(GL_TRIANGLES, static_cast<int32_t>(query.MeshInstance.Data->IndexCount), GL_UNSIGNED_INT, nullptr);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+		//glDrawElements(GL_TRIANGLES, static_cast<int32_t>(query.MeshInstance.Data->IndexCount), GL_UNSIGNED_INT, nullptr);
 
 		queries.pop();
 	}
@@ -79,6 +80,7 @@ void Drawer::SetShaderConfig()
 
 void Drawer::SetShaderUniforms(const Shader& shader, const RenderQuery& query)
 {
-	Transform transform(query.GlobalPosition, query.GlobalRotation, query.GlobalRotationAxis, query.GlobalScale);;
-	shader.SetUniform("transform", enums::m4x4, transform.GetData(), false);
+	shader.SetUniform("model", enums::MatrixDim::m4x4, query.Model.GetData(), false);
+	shader.SetUniform("view", enums::MatrixDim::m4x4, query.View.GetData(), false);
+	shader.SetUniform("projection", enums::MatrixDim::m4x4, query.Projection.GetData(), false);
 }

@@ -102,7 +102,7 @@ Err RenderManager::RequestRender(const RenderRequest& request)
 		vao = attributeMap_[request.Mesh->MeshId];
 
 	// Create & save request query
-	RenderQuery newQuery = { {request.Mesh, vao}, request.GlobalPosition, request.GlobalRotation, request.GlobalRotationAxis, request.GlobalScale };
+	RenderQuery newQuery = { {request.Mesh, vao}, request.Model, request.View, request.Projection };
 	renderQueue_.emplace(newQuery);
 
 	// Save mesh texture in a new Texture if necessary

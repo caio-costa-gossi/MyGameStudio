@@ -2,6 +2,11 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
+Transform::Transform(const glm::mat4& matrix)
+{
+	transform_ = matrix;
+}
+
 Transform::Transform(const Vec3F& translation, const float rotationDegrees, const Vec3F& rotationAxis, const Vec3F& scale)
 {
 	transform_ = glm::translate(transform_, static_cast<glm::vec3>(translation));
@@ -24,7 +29,7 @@ void Transform::Scale(const Vec3F& scale)
 	transform_ = glm::scale(transform_, static_cast<glm::vec3>(scale));
 }
 
-float* Transform::GetData()
+const float* Transform::GetData() const
 {
 	return glm::value_ptr(transform_);
 }

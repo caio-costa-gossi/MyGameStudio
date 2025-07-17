@@ -1,6 +1,7 @@
 #pragma once
 #include "Err.h"
 #include "Mesh.h"
+#include "Timeline.h"
 
 class TestDrawer
 {
@@ -12,6 +13,8 @@ private:
 	static Vec3F scale_;
 
 	static Mesh testMesh_;
+
+	static Timeline time_;
 
 public:
 	static Err Startup();

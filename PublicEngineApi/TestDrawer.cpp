@@ -95,7 +95,10 @@ Err TestDrawer::Run()
 
 	while (running_)
 	{
-		Transform model({ 0,0,0 }, static_cast<float>(time_.GetElapsed()) / 50, { 1,0,0 }, { 1,1,1 });
+		Vec3F worldPos[5] = { {0.0f, 0.0f, 0.0f}, {2.0f, 5.0f, -15.0f}, {-1.5f, -2.2f, -2.5f},
+		{-3.8f, -2.0f, -12.3f}, {2.4f, -0.4f, -3.5f} };
+
+		
 		Transform view({ 0,0,-3.0f }, 0, { 0,0,1 }, { 1,1,1 });
 		Transform projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 
@@ -109,10 +112,15 @@ Err TestDrawer::Run()
 		if (err.Code())
 			GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::input);
 
-		RenderRequest request = { &testMesh_, model, view, projection};
-		err = RenderManager::RequestRender(request);
-		if (err.Code())
-			return err;
+		for (int i = 0; i < 5; ++i)
+		{
+			Transform model(worldPos[i], static_cast<float>(time_.GetElapsed()) / 50, {0.5f,1,0}, {1,1,1});
+
+			RenderRequest request = { &testMesh_, model, view, projection };
+			err = RenderManager::RequestRender(request);
+			if (err.Code())
+				return err;
+		}
 
 		err = RenderManager::Update();
 		if (err.Code())

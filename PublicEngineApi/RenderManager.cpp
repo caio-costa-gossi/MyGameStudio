@@ -69,6 +69,9 @@ Err RenderManager::InitRenderer()
 	// Set viewport
 	glViewport(0, 0, WindowManager::GetWindowWidth(), WindowManager::GetWindowHeight());
 
+	// Enable Z-Testing
+	glEnable(GL_DEPTH_TEST);
+
 	return error_const::SUCCESS;
 }
 

@@ -1,6 +1,7 @@
 #include "TestDrawer.h"
 #include "GameConsoleManager.h"
 #include "InputManager.h"
+#include "NumericUtils.h"
 #include "WindowManager.h"
 #include "RenderManager.h"
 #include "Transform.h"
@@ -91,6 +92,10 @@ Err TestDrawer::Run()
 
 	testMesh_ = { 1, vertices, 36, indices, 6, 47 };
 
+	Vec3F camPos = { 0.0f, 0.0f, 3.0f };
+	Vec3F camTarget = { 0.0f, 0.0f, 0.0f };
+	Vec3F camDirection = NumericUtils::NormalizeVec3(camPos - camTarget);
+
 	running_ = true;
 
 	while (running_)
@@ -99,7 +104,7 @@ Err TestDrawer::Run()
 		{-3.8f, -2.0f, -12.3f}, {2.4f, -0.4f, -3.5f} };
 
 		
-		Transform view({ 0,0,-3.0f }, 0, { 0,0,1 }, { 1,1,1 });
+		Transform view({ 0,sin(static_cast<float>(time_.GetElapsed()) / 3000),-3.0f}, 0, {0,0,1}, {1,1,1});
 		Transform projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 
 		Err err = WindowManager::Update();

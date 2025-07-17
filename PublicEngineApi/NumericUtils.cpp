@@ -16,6 +16,21 @@ bool NumericUtils::FloatEqual(const float a, const float b, const float epsilon)
 	return std::fabs(a - b) < epsilon;
 }
 
+float NumericUtils::QuickRSqrt(const float number)
+{
+	const float half = number * 0.5f;
+	float floatNumber = number;
+	uint32_t intNumber;
+
+	std::memcpy(&intNumber, &floatNumber, sizeof(float));
+	intNumber = 0x5f3759df - (intNumber >> 1);
+
+	std::memcpy(&floatNumber, &intNumber, sizeof(uint32_t));
+	floatNumber = floatNumber * (1.5f - half * floatNumber * floatNumber);
+
+	return floatNumber;
+}
+
 Err NumericUtils::StringToUInt32(const char* string, uint32_t& returnValue)
 {
 
@@ -113,4 +128,12 @@ float NumericUtils::NormalizeF(float input, const float sourceMin, const float s
 	const float normalized = (input - sourceMin) / (sourceMax - sourceMin);
 
 	return normalized;
+}
+
+Vec3F NumericUtils::NormalizeVec3(const Vec3F& vector)
+{
+	const float sqrSum = vector.X * vector.X + vector.Y * vector.Y + vector.Z * vector.Z;
+	const float invLen = QuickRSqrt(sqrSum);
+
+	return vector * invLen;
 }

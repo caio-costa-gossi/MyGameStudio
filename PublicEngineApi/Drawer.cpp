@@ -2,6 +2,7 @@
 #include <SDL3/SDL.h>
 #include <glad/glad.h>
 
+#include "CameraManager.h"
 #include "Transform.h"
 
 void Drawer::Draw(const Shader& shader, std::queue<RenderQuery>& queries, const TextureList& textures)
@@ -81,6 +82,6 @@ void Drawer::SetShaderConfig()
 void Drawer::SetShaderUniforms(const Shader& shader, const RenderQuery& query)
 {
 	shader.SetUniform("model", enums::MatrixDim::m4x4, query.Model.GetData(), false);
-	shader.SetUniform("view", enums::MatrixDim::m4x4, query.Camera->GetView().GetData(), false);
-	shader.SetUniform("projection", enums::MatrixDim::m4x4, query.Camera->GetProjection().GetData(), false);
+	shader.SetUniform("view", enums::MatrixDim::m4x4, CameraManager::GetMainCamera()->GetView().GetData(), false);
+	shader.SetUniform("projection", enums::MatrixDim::m4x4, CameraManager::GetMainCamera()->GetProjection().GetData(), false);
 }

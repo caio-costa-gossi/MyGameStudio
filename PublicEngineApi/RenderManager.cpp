@@ -106,7 +106,7 @@ Err RenderManager::RequestRender(const RenderRequest& request)
 		vao = attributeMap_[request.Mesh->MeshId];
 
 	// Create & save request query
-	RenderQuery newQuery = { {request.Mesh, vao}, request.Model, (request.Camera == nullptr) ? CameraManager::GetMainCamera() : request.Camera };
+	RenderQuery newQuery = { {request.Mesh, vao}, request.Model };
 	renderQueue_.emplace(newQuery);
 
 	// Save mesh texture in a new Texture if necessary

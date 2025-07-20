@@ -1,4 +1,6 @@
 #include "TestDrawer.h"
+
+#include "CameraManager.h"
 #include "GameConsoleManager.h"
 #include "InputManager.h"
 #include "NumericUtils.h"
@@ -20,6 +22,10 @@ Err TestDrawer::Startup()
 		return err;
 
 	err = InputManager::Startup(WindowManager::GetWindowHandle(), "2500", "1");
+	if (err.Code())
+		return err;
+
+	err = CameraManager::Startup();
 	if (err.Code())
 		return err;
 
@@ -97,8 +103,8 @@ Err TestDrawer::Run()
 	const Vec3F worldPos[5] = { {0.0f, 0.0f, 0.0f}, {2.0f, 5.0f, -15.0f}, {-1.5f, -2.2f, -2.5f},
 		{-3.8f, -2.0f, -12.3f}, {2.4f, -0.4f, -3.5f} };
 
-	PerspectiveCamera camera;
-	camera.Init();
+	//PerspectiveCamera camera;
+	//camera.Init();
 
 	running_ = true;
 
@@ -114,11 +120,11 @@ Err TestDrawer::Run()
 		if (err.Code())
 			GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::input);
 
-		err = MoveCameraPos(camera);
+		err = MoveCameraPos();
 		if (err.Code())
 			return err;
 
-		err = MoveCameraDirection(camera);
+		err = MoveCameraDirection();
 		if (err.Code())
 			return err;
 
@@ -130,7 +136,7 @@ Err TestDrawer::Run()
 		{
 			Transform model(worldPos[i], static_cast<float>(time_.GetElapsed()) / 50, {0.5f,1,0}, {1,1,1});
 
-			RenderRequest request = { &testMesh_, model, &camera };
+			RenderRequest request = { &testMesh_, model };
 			err = RenderManager::RequestRender(request);
 			if (err.Code())
 				return err;
@@ -164,47 +170,49 @@ Err TestDrawer::Shutdown()
 	return error_const::SUCCESS;
 }
 
-Err TestDrawer::MoveCameraPos(Camera& camera)
+Err TestDrawer::MoveCameraPos()
 {
 	if (!focus_)
 		return error_const::SUCCESS;
 
 	const InputState state = InputManager::GetInputState();
+	Camera* camera = CameraManager::GetMainCamera();
 
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_w])
-		camera.Move(camera.GetPos() + camera.GetDirection() * 0.01f);
+		camera->Move(camera->GetPos() + camera->GetDirection() * 0.01f);
 
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_s])
-		camera.Move(camera.GetPos() + camera.GetDirection() * -0.01f);
+		camera->Move(camera->GetPos() + camera->GetDirection() * -0.01f);
 
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_a])
-		camera.Move(camera.GetPos() + camera.GetRight() * -0.01f);
+		camera->Move(camera->GetPos() + camera->GetRight() * -0.01f);
 
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_d])
-		camera.Move(camera.GetPos() + camera.GetRight() * 0.01f);
+		camera->Move(camera->GetPos() + camera->GetRight() * 0.01f);
 
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_space])
-		camera.Move(camera.GetPos() + Vec3F(0, 0.01f, 0));
+		camera->Move(camera->GetPos() + Vec3F(0, 0.01f, 0));
 
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_lshift])
-		camera.Move(camera.GetPos() + Vec3F(0, -0.01f, 0));
+		camera->Move(camera->GetPos() + Vec3F(0, -0.01f, 0));
 
 	return error_const::SUCCESS;
 }
 
-Err TestDrawer::MoveCameraDirection(Camera& camera)
+Err TestDrawer::MoveCameraDirection()
 {
 	if (!focus_)
 		return error_const::SUCCESS;
 
 	const InputState state = InputManager::GetInputState();
+	Camera* camera = CameraManager::GetMainCamera();
 
-	camera.ChangeYaw(camera.GetYaw() + state.MouseState.XVel / 5.0f);
+	camera->ChangeYaw(camera->GetYaw() + state.MouseState.XVel / 5.0f);
 
-	float newPitch = camera.GetPitch() - state.MouseState.YVel / 5.0f;
+	float newPitch = camera->GetPitch() - state.MouseState.YVel / 5.0f;
 	newPitch = std::min(newPitch, 89.0f);
 	newPitch = std::max(newPitch, -89.0f);
-	camera.ChangePitch(newPitch);
+	camera->ChangePitch(newPitch);
 
 	return error_const::SUCCESS;
 }

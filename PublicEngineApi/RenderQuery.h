@@ -7,5 +7,5 @@ struct RenderQuery
 {
 	MeshInstance MeshInstance;
 	Transform Model;
-	Camera* Camera = nullptr;
+	const Camera* Camera = nullptr;
 };

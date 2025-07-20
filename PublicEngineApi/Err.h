@@ -71,6 +71,7 @@ namespace error_const
 	const auto STRING_NOT_NUM = Err("String passed is not a number", 150);
 	const auto GAME_INIT_INVALID_PARAMS = Err("Invalid parameters passed to game initialization", 170);
 	const auto RENDER_TEXTURE_INIT_FAIL = Err("Texture initialization failure", 190);
+	const auto RENDER_CAMERA_NOT_FOUND = Err("Camera ID not found", 200);
 	const auto GAME_EXIT_REQUEST = Err("Game exit requested", 500);
 
 	constexpr auto DB_ERROR_CODE = 10;

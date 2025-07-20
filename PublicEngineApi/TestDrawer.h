@@ -18,8 +18,8 @@ private:
 	static Timeline time_;
 	static bool focus_;
 
-	static Err MoveCameraPos(Camera& camera);
-	static Err MoveCameraDirection(Camera& camera);
+	static Err MoveCameraPos();
+	static Err MoveCameraDirection();
 	static Err LockUnlock();
 
 public:

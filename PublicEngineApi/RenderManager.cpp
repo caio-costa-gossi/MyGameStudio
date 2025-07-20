@@ -3,6 +3,7 @@
 #include <glad/glad.h>
 
 #include "AssetRuntimeManager.h"
+#include "CameraManager.h"
 #include "Drawer.h"
 #include "Enums.h"
 #include "GameConsoleManager.h"
@@ -105,7 +106,7 @@ Err RenderManager::RequestRender(const RenderRequest& request)
 		vao = attributeMap_[request.Mesh->MeshId];
 
 	// Create & save request query
-	RenderQuery newQuery = { {request.Mesh, vao}, request.Model, request.Camera };
+	RenderQuery newQuery = { {request.Mesh, vao}, request.Model, (request.Camera == nullptr) ? CameraManager::GetMainCamera() : request.Camera };
 	renderQueue_.emplace(newQuery);
 
 	// Save mesh texture in a new Texture if necessary

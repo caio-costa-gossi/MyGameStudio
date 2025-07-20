@@ -7,5 +7,5 @@ struct RenderRequest
 {
 	const Mesh* Mesh = nullptr;
 	Transform Model;
-	Camera* Camera = nullptr;
+	const Camera* Camera = nullptr;
 };

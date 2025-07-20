@@ -273,6 +273,9 @@
     <ClInclude Include="CameraFactory.h">
       <Filter>Runtime Managers\Render\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="CameraInstance.h">
+      <Filter>Runtime Managers\Render\Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssetRuntimeManager.cpp">
@@ -426,6 +429,9 @@
       <Filter>Runtime Managers\Render\Camera</Filter>
     </ClCompile>
     <ClCompile Include="CameraFactory.cpp">
+      <Filter>Runtime Managers\Render\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraInstance.cpp">
       <Filter>Runtime Managers\Render\Camera</Filter>
     </ClCompile>
   </ItemGroup>

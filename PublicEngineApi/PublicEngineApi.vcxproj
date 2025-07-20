@@ -26,6 +26,7 @@
     <ClInclude Include="CallbackData.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraFactory.h" />
+    <ClInclude Include="CameraInstance.h" />
     <ClInclude Include="OrthoCamera.h" />
     <ClInclude Include="PerspectiveCamera.h" />
     <ClInclude Include="CameraManager.h" />
@@ -97,6 +98,7 @@
     <ClCompile Include="AssetRuntimeManager.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraFactory.cpp" />
+    <ClCompile Include="CameraInstance.cpp" />
     <ClCompile Include="OrthoCamera.cpp" />
     <ClCompile Include="PerspectiveCamera.cpp" />
     <ClCompile Include="CameraManager.cpp" />

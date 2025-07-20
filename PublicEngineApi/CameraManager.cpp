@@ -5,12 +5,19 @@
 Err CameraManager::Startup()
 {
 	defaultCamera_ = CameraFactory::CreatePerspective();
+	isInit_ = true;
+
 	return error_const::SUCCESS;
 }
 
 Err CameraManager::Shutdown()
 {
 	return error_const::SUCCESS;
+}
+
+bool CameraManager::IsInit()
+{
+	return isInit_;
 }
 
 Err CameraManager::CreateOrtho(uint16_t& cameraId, const float leftPlane, const float rightPlane, const float topPlane, const float bottomPlane, const float nearPlane, const float farPlane)
@@ -49,9 +56,19 @@ Camera* CameraManager::GetMainCamera()
 	return mainCamera_;
 }
 
+Camera* CameraManager::GetCamera(const uint16_t cameraId)
+{
+	if (cameraList_.find(cameraId) == cameraList_.end())
+		return nullptr;
+
+	return cameraList_.at(cameraId).get();
+}
+
 
 CameraList CameraManager::cameraList_ = CameraList();
 uint16_t CameraManager::cameraCounter_ = 0;
 
 Camera* CameraManager::mainCamera_ = nullptr;
 std::unique_ptr<Camera> CameraManager::defaultCamera_;
+
+bool CameraManager::isInit_ = false;

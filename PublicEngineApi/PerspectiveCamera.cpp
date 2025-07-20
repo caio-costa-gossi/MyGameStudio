@@ -1,10 +1,12 @@
 #include "PerspectiveCamera.h"
 
+#include "NumericUtils.h"
+
 Err PerspectiveCamera::Init(const float width, const float height, const float fovDegrees, const float nearPlane, const float farPlane)
 {
 	width_ = width;
 	height_ = height;
-	fovRadians_ = glm::radians(fovDegrees);
+	fovRadians_ = NumericUtils::Radians(fovDegrees);
 
 	Camera::nearPlane_ = nearPlane;
 	Camera::farPlane_ = farPlane;

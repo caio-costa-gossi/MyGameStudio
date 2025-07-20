@@ -6,24 +6,34 @@
 
 #undef max
 
-class NumericUtils
+namespace NumericUtils
 {
-public:
-	static uint32_t Bitmask(const uint8_t val);
+	// Constants
+	constexpr float PI = 3.14159265f;
 
-	static bool FloatEqual(float a, float b, float epsilon);
-	static float QuickRSqrt(float number);
+	// Bitmask Functions
+	uint32_t Bitmask(const uint8_t val);
 
-	static Err StringToUInt32(const char* string, uint32_t& returnValue);
-	static Err StringToUInt32Hex(const char* string, uint32_t& returnValue);
-	static Err StringToInt32(const char* string, int32_t& returnValue);
-	static Err StringToUInt8(const char* string, uint8_t& returnValue);
+	// Conversion Functions
+	Err StringToUInt32(const char* string, uint32_t& returnValue);
+	Err StringToUInt32Hex(const char* string, uint32_t& returnValue);
+	Err StringToInt32(const char* string, int32_t& returnValue);
+	Err StringToUInt8(const char* string, uint8_t& returnValue);
 
-	static int32_t MapRange(int32_t input, int32_t sourceMin, int32_t sourceMax, int32_t targetMin, int32_t targetMax);
-	static float MapRangeF(float input, float sourceMin, float sourceMax, float targetMin, float targetMax);
-	static float Normalize(int32_t input, int32_t sourceMin, int32_t sourceMax);
-	static float NormalizeF(float input, float sourceMin, float sourceMax);
+	// General Math Functions
+	int32_t MapRange(int32_t input, int32_t sourceMin, int32_t sourceMax, int32_t targetMin, int32_t targetMax);
+	float MapRangeF(float input, float sourceMin, float sourceMax, float targetMin, float targetMax);
+	float Normalize(int32_t input, int32_t sourceMin, int32_t sourceMax);
+	float NormalizeF(float input, float sourceMin, float sourceMax);
 
-	static Vec3F Normalize(const Vec3F& vector);
-	static Vec3F CrossProduct(const Vec3F& a, const Vec3F& b);
+	bool FloatEqual(float a, float b, float epsilon);
+	float QuickRSqrt(float number);
+
+	// Vector Operations
+	Vec3F Normalize(const Vec3F& vector);
+	Vec3F CrossProduct(const Vec3F& a, const Vec3F& b);
+
+	// Trigonometric Functions
+	float Radians(float degrees);
+	float Degrees(float radians);
 };

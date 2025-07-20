@@ -146,3 +146,13 @@ Vec3F NumericUtils::CrossProduct(const Vec3F& a, const Vec3F& b)
 		a.X * b.Y - a.Y * b.X
 	};
 }
+
+float NumericUtils::Radians(const float degrees)
+{
+	return degrees * PI / 180.0f;
+}
+
+float NumericUtils::Degrees(const float radians)
+{
+	return radians * 180.0f / PI;
+}

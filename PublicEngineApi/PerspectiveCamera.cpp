@@ -11,7 +11,18 @@ Err PerspectiveCamera::Init(const float width, const float height, const float f
 	Camera::nearPlane_ = nearPlane;
 	Camera::farPlane_ = farPlane;
 
-	Camera::view_ = glm::lookAt(static_cast<glm::vec3>(Camera::cameraPos_), static_cast<glm::vec3>(Camera::cameraPos_ + Camera::cameraFront_), static_cast<glm::vec3>(Camera::cameraUp_));
+	Camera::projection_ = glm::perspective(fovRadians_, width_ / height_, nearPlane_, farPlane_);
+
+	Err err = Camera::UpdateView();
+	if (err.Code())
+		return err;
+
+	return error_const::SUCCESS;
+}
+
+Err PerspectiveCamera::ChangeFov(const float newFovDegrees)
+{
+	fovRadians_ = NumericUtils::Radians(newFovDegrees);
 	Camera::projection_ = glm::perspective(fovRadians_, width_ / height_, nearPlane_, farPlane_);
 
 	return error_const::SUCCESS;

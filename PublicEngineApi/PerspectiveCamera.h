@@ -13,4 +13,5 @@ public:
 	PerspectiveCamera() = default;
 
 	Err Init(float width = 800.0f, float height = 600.0f, float fovDegrees = 45.0f, float nearPlane = 0.1f, float farPlane = 100.0f);
+	Err ChangeFov(float newFovDegrees);
 };

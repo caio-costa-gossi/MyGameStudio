@@ -70,6 +70,22 @@ Err WindowManager::Shutdown()
 	return error_const::SUCCESS;
 }
 
+Err WindowManager::SetRelativeMouseMode()
+{
+	SDL_SetWindowRelativeMouseMode(window_, true);
+	isMouseRelative_ = true;
+
+	return error_const::SUCCESS;
+}
+
+Err WindowManager::UnsetRelativeMouseMode()
+{
+	SDL_SetWindowRelativeMouseMode(window_, false);
+	isMouseRelative_ = false;
+
+	return error_const::SUCCESS;
+}
+
 Err WindowManager::UpdateWindowInfo()
 {
 	SDL_GetWindowSize(window_, &winWidth_, &winHeight_);
@@ -109,6 +125,10 @@ bool WindowManager::IsInit()
 	return isInit_;
 }
 
+bool WindowManager::IsMouseRelative()
+{
+	return isMouseRelative_;
+}
 
 
 SDL_Window* WindowManager::window_ = nullptr;
@@ -120,4 +140,6 @@ int32_t WindowManager::winPosX_ = 0;
 int32_t WindowManager::winPosY_ = 0;
 
 std::vector<SDL_Event> WindowManager::inputEventList_ = std::vector<SDL_Event>();
+
 bool WindowManager::isInit_ = false;
+bool WindowManager::isMouseRelative_ = false;

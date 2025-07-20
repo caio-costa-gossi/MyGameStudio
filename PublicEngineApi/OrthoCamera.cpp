@@ -10,8 +10,11 @@ Err OrthoCamera::Init(const float leftPlane, const float rightPlane, const float
 	Camera::farPlane_ = farPlane;
 	Camera::nearPlane_ = nearPlane;
 
-	Camera::view_ = glm::lookAt(static_cast<glm::vec3>(Camera::cameraPos_), static_cast<glm::vec3>(Camera::cameraPos_ + Camera::cameraFront_), static_cast<glm::vec3>(Camera::cameraUp_));
 	Camera::projection_ = glm::ortho(leftPlane, rightPlane, bottomPlane, topPlane, nearPlane, farPlane);
+
+	Err err = Camera::UpdateView();
+	if (err.Code())
+		return err;
 
 	return error_const::SUCCESS;
 }

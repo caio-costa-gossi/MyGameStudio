@@ -81,6 +81,6 @@ void Drawer::SetShaderConfig()
 void Drawer::SetShaderUniforms(const Shader& shader, const RenderQuery& query)
 {
 	shader.SetUniform("model", enums::MatrixDim::m4x4, query.Model.GetData(), false);
-	shader.SetUniform("view", enums::MatrixDim::m4x4, query.View.GetData(), false);
-	shader.SetUniform("projection", enums::MatrixDim::m4x4, query.Projection.GetData(), false);
+	shader.SetUniform("view", enums::MatrixDim::m4x4, query.Camera->GetView().GetData(), false);
+	shader.SetUniform("projection", enums::MatrixDim::m4x4, query.Camera->GetProjection().GetData(), false);
 }

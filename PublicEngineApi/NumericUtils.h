@@ -24,5 +24,6 @@ public:
 	static float Normalize(int32_t input, int32_t sourceMin, int32_t sourceMax);
 	static float NormalizeF(float input, float sourceMin, float sourceMax);
 
-	static Vec3F NormalizeVec3(const Vec3F& vector);
+	static Vec3F Normalize(const Vec3F& vector);
+	static Vec3F CrossProduct(const Vec3F& a, const Vec3F& b);
 };

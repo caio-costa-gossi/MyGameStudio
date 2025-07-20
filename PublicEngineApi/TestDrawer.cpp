@@ -2,6 +2,7 @@
 #include "GameConsoleManager.h"
 #include "InputManager.h"
 #include "NumericUtils.h"
+#include "PerspectiveCamera.h"
 #include "WindowManager.h"
 #include "RenderManager.h"
 #include "Transform.h"
@@ -91,10 +92,9 @@ Err TestDrawer::Run()
 	indices[5] = 3;
 
 	testMesh_ = { 1, vertices, 36, indices, 6, 47 };
-
-	Vec3F camPos = { 0.0f, 0.0f, 3.0f };
-	Vec3F camTarget = { 0.0f, 0.0f, 0.0f };
-	Vec3F camDirection = NumericUtils::NormalizeVec3(camPos - camTarget);
+	PerspectiveCamera camera;
+	camera.Init();
+	camera.Move({ 0,0,5 });
 
 	running_ = true;
 
@@ -102,10 +102,6 @@ Err TestDrawer::Run()
 	{
 		Vec3F worldPos[5] = { {0.0f, 0.0f, 0.0f}, {2.0f, 5.0f, -15.0f}, {-1.5f, -2.2f, -2.5f},
 		{-3.8f, -2.0f, -12.3f}, {2.4f, -0.4f, -3.5f} };
-
-		
-		Transform view({ 0,sin(static_cast<float>(time_.GetElapsed()) / 3000),-3.0f}, 0, {0,0,1}, {1,1,1});
-		Transform projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 
 		Err err = WindowManager::Update();
 		if (err.Code() == error_const::EXIT_REQUEST_CODE)
@@ -121,7 +117,7 @@ Err TestDrawer::Run()
 		{
 			Transform model(worldPos[i], static_cast<float>(time_.GetElapsed()) / 50, {0.5f,1,0}, {1,1,1});
 
-			RenderRequest request = { &testMesh_, model, view, projection };
+			RenderRequest request = { &testMesh_, model, &camera };
 			err = RenderManager::RequestRender(request);
 			if (err.Code())
 				return err;

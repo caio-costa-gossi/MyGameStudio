@@ -130,10 +130,19 @@ float NumericUtils::NormalizeF(float input, const float sourceMin, const float s
 	return normalized;
 }
 
-Vec3F NumericUtils::NormalizeVec3(const Vec3F& vector)
+Vec3F NumericUtils::Normalize(const Vec3F& vector)
 {
 	const float sqrSum = vector.X * vector.X + vector.Y * vector.Y + vector.Z * vector.Z;
 	const float invLen = QuickRSqrt(sqrSum);
 
 	return vector * invLen;
+}
+
+Vec3F NumericUtils::CrossProduct(const Vec3F& a, const Vec3F& b)
+{
+	return {
+		a.Y * b.Z - a.Z * b.Y,
+		a.Z * b.X - a.X * b.Z,
+		a.X * b.Y - a.Y * b.X
+	};
 }

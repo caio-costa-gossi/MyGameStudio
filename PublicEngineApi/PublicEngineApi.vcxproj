@@ -24,6 +24,10 @@
     <ClInclude Include="AssetDatabase.h" />
     <ClInclude Include="AssetRuntimeManager.h" />
     <ClInclude Include="CallbackData.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="OrthoCamera.h" />
+    <ClInclude Include="PerspectiveCamera.h" />
+    <ClInclude Include="CameraManager.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Counter.h" />
     <ClInclude Include="CsvParser.h" />
@@ -90,6 +94,10 @@
     <ClCompile Include="Asset.cpp" />
     <ClCompile Include="AssetDatabase.cpp" />
     <ClCompile Include="AssetRuntimeManager.cpp" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="OrthoCamera.cpp" />
+    <ClCompile Include="PerspectiveCamera.cpp" />
+    <ClCompile Include="CameraManager.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="CsvParser.cpp" />
     <ClCompile Include="Debug.cpp" />

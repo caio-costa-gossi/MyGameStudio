@@ -1,5 +1,5 @@
 #pragma once
-#include "Mesh.h"
+#include "Camera.h"
 #include "MeshInstance.h"
 #include "Transform.h"
 
@@ -7,6 +7,5 @@ struct RenderQuery
 {
 	MeshInstance MeshInstance;
 	Transform Model;
-	Transform View;
-	Transform Projection;
+	Camera* Camera = nullptr;
 };

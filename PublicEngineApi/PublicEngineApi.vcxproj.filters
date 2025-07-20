@@ -58,6 +58,9 @@
     <Filter Include="Runtime Managers\Game Object">
       <UniqueIdentifier>{a8f0480f-b6f9-444a-996d-292fd2166725}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Runtime Managers\Render\Camera">
+      <UniqueIdentifier>{751d931e-d3d9-4035-9781-71e5f575ad31}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetRuntimeManager.h">
@@ -255,6 +258,18 @@
     <ClInclude Include="RenderRequest.h">
       <Filter>Runtime Managers\Render\Data Structures</Filter>
     </ClInclude>
+    <ClInclude Include="PerspectiveCamera.h">
+      <Filter>Runtime Managers\Render\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraManager.h">
+      <Filter>Runtime Managers\Render\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="OrthoCamera.h">
+      <Filter>Runtime Managers\Render\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Runtime Managers\Render\Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssetRuntimeManager.cpp">
@@ -394,6 +409,18 @@
     </ClCompile>
     <ClCompile Include="Transform.cpp">
       <Filter>Runtime Managers\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="PerspectiveCamera.cpp">
+      <Filter>Runtime Managers\Render\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraManager.cpp">
+      <Filter>Runtime Managers\Render\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="OrthoCamera.cpp">
+      <Filter>Runtime Managers\Render\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Runtime Managers\Render\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

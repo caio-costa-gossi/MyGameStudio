@@ -126,6 +126,12 @@ namespace enums
 		m4x3 = 10
 	};
 
+	enum CameraType : uint8_t
+	{
+		orthogonal = 0,
+		perspective = 1
+	};
+
 	// Functions
 
 	inline const char* LanguageToString(Language language)

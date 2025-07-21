@@ -276,6 +276,9 @@
     <ClInclude Include="CameraInstance.h">
       <Filter>Runtime Managers\Render\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="Serialization.h">
+      <Filter>Asset Management</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssetRuntimeManager.cpp">
@@ -433,6 +436,9 @@
     </ClCompile>
     <ClCompile Include="CameraInstance.cpp">
       <Filter>Runtime Managers\Render\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Serialization.cpp">
+      <Filter>Asset Management</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

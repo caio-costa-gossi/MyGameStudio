@@ -1,5 +1,8 @@
 #include "MeshFactory.h"
 
+#define TINYGLTF_IMPLEMENTATION
+#include <tiny_gltf.h>
+
 #include "ConsoleManager.h"
 
 Mesh MeshFactory::CreateMesh(const tinygltf::Model& model)

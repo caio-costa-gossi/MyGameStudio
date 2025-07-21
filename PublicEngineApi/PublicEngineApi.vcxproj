@@ -73,6 +73,7 @@
     <ClInclude Include="ProcessResourceViewer.h" />
     <ClInclude Include="RenderRequest.h" />
     <ClInclude Include="SDLInputLayer.h" />
+    <ClInclude Include="Serialization.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SystemFileHelper.h" />
     <ClInclude Include="SystemPathHelper.h" />
@@ -127,6 +128,7 @@
     <ClCompile Include="PhysicsManager.cpp" />
     <ClCompile Include="ProcessResourceViewer.cpp" />
     <ClCompile Include="SDLInputLayer.cpp" />
+    <ClCompile Include="Serialization.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SystemFileHelper.cpp" />
     <ClCompile Include="SystemPathHelper.cpp" />

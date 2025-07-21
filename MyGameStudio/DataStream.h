@@ -17,6 +17,11 @@ struct DataStream
 		if (initToZero) memset(Data, 0, dataSize);
 	}
 
+	~DataStream()
+	{
+		delete[] Data;
+	}
+
 	Err Write(const uint8_t* source, const uint64_t size)
 	{
 		if (DataPointer >= DataSize) return error_const::BUFFER_OVERFLOW;
@@ -35,5 +40,31 @@ struct DataStream
 		DataPointer += size;
 
 		return error_const::SUCCESS;
+	}
+
+	DataStream(const DataStream& other) = delete;
+	DataStream& operator= (const DataStream& other) = delete;
+
+	DataStream(DataStream&& other) noexcept
+	{
+		DataPointer = other.DataPointer;
+		DataSize = other.DataSize;
+		Data = other.Data;
+
+		other.DataPointer = 0;
+		other.DataSize = 0;
+		other.Data = nullptr;
+	}
+	DataStream& operator=(DataStream&& other) noexcept
+	{
+		DataPointer = other.DataPointer;
+		DataSize = other.DataSize;
+		Data = other.Data;
+
+		other.DataPointer = 0;
+		other.DataSize = 0;
+		other.Data = nullptr;
+
+		return *this;
 	}
 };

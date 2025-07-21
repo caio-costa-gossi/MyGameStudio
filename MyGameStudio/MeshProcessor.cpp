@@ -1,19 +1,22 @@
 #include "MeshProcessor.h"
-#include <sstream>
 
-#define TINYGLTF_IMPLEMENTATION
 #include <set>
-#include <tiny_gltf.h>
+#include <sstream>
 
 #include "ConsoleManager.h"
 #include "LocalizationManager.h"
+#include "MeshFactory.h"
+#include "Serialization.h"
+
+#undef max
+#undef min
 
 uint8_t* MeshProcessor::ProcessMesh(const Asset& metadata, uint64_t& resultSize, std::string& errMsg)
 {
 	tinygltf::TinyGLTF loader;
 	tinygltf::Model model;
 
-	// Mesh pre processing
+	// Mesh pre-processing
 	ConsoleManager::Print(std::string(LocalizationManager::GetLocalizedString(string_const::G_ASSET_IMPORT)) + "0%", enums::ConsoleMessageType::info);
 	loader.LoadBinaryFromFile(&model, &errMsg, nullptr, metadata.SourceLocation);
 
@@ -28,14 +31,16 @@ uint8_t* MeshProcessor::ProcessMesh(const Asset& metadata, uint64_t& resultSize,
 	ConsoleManager::Print(std::string(LocalizationManager::GetLocalizedString(string_const::G_ASSET_IMPORT)) + "40%", enums::ConsoleMessageType::info);
 	CompressIndices(model);
 
-	ConsoleManager::Print(std::string(LocalizationManager::GetLocalizedString(string_const::G_ASSET_IMPORT)) + "80%", enums::ConsoleMessageType::info);
+	ConsoleManager::Print(std::string(LocalizationManager::GetLocalizedString(string_const::G_ASSET_IMPORT)) + "60%", enums::ConsoleMessageType::info);
 	Triangulate(model);
 
 	// Mesh importation
-	Mesh myMesh = MeshFactory::CreateMesh(model);
+	ConsoleManager::Print(std::string(LocalizationManager::GetLocalizedString(string_const::G_ASSET_IMPORT)) + "80%", enums::ConsoleMessageType::info);
+	const Mesh mesh = MeshFactory::CreateMesh(model);
 
+	// Mesh serialization
 	ConsoleManager::Print(std::string(LocalizationManager::GetLocalizedString(string_const::G_ASSET_IMPORT)) + "100%", enums::ConsoleMessageType::info);
-	return GetFileBuffer(loader, model, resultSize);
+	return Serialization::SerializeMesh(mesh).Data;
 }
 
 uint8_t* MeshProcessor::GetFileBuffer(tinygltf::TinyGLTF& loader, const tinygltf::Model& model, uint64_t& resultSize)

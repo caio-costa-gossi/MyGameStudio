@@ -158,6 +158,10 @@ Err AssetDatabase::CheckTables()
 	if (error.Code())
 		return error;
 
+	error = db_.ExecuteNonQuery(createGameObjectTableQuery_);
+	if (error.Code())
+		return error;
+
 	return error_const::SUCCESS;
 }
 
@@ -194,3 +198,7 @@ auto AssetDatabase::createAssetsTableQuery_ =
 auto AssetDatabase::createAssetDependenciesTableQuery_ = 
 "CREATE TABLE IF NOT EXISTS AssetDependencies "
 "(AssetId INTEGER, DependsOn INTEGER, PRIMARY KEY(AssetId, DependsOn));";
+
+auto AssetDatabase::createGameObjectTableQuery_ =
+"CREATE TABLE IF NOT EXISTS GameObjects "
+"(GameObjectId INTEGER PRIMARY KEY AUTOINCREMENT, ScriptPath TEXT, MeshAssetId INTEGER, TextureAssetId INTEGER);";

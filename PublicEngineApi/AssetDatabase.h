@@ -10,6 +10,7 @@ private:
 	static const char* assetDbFilename_;
 	static const char* createAssetsTableQuery_;
 	static const char* createAssetDependenciesTableQuery_;
+	static const char* createGameObjectTableQuery_;
 
 	static Err CheckTables();
 	static Err DeleteAssetDependencies(uint32_t assetId);

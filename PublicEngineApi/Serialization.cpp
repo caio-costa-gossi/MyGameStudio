@@ -2,13 +2,14 @@
 
 #include "../MyGameStudio/DataStream.h"
 
-DataStream Serialization::SerializeMesh(const Mesh& mesh)
+DataStream Serialization::SerializeMesh(const Mesh& mesh, uint64_t& resultSize)
 {
 	uint64_t objectSize = sizeof(mesh.TextureAssetId) + sizeof(mesh.IndexCount) + sizeof(mesh.MeshId) + sizeof(mesh.VertexCount);
 	objectSize += sizeof(mesh.HorizontalWrap) + sizeof(mesh.VerticalWrap);
 	objectSize += mesh.IndexCount * sizeof(mesh.IndexList.get()[0]);
 	objectSize += mesh.VertexCount * sizeof(mesh.VertexList.get()[0]);
 
+	resultSize = objectSize;
 	DataStream stream(objectSize);
 
 	stream.Write(reinterpret_cast<const uint8_t*>(&mesh.TextureAssetId), sizeof(mesh.TextureAssetId));

@@ -230,7 +230,7 @@ std::string AssetPipeline::GetTargetExtension(const enums::AssetType type)
 	case enums::AssetType::video:
 		return ".mp4";
 	case enums::AssetType::mesh3d:
-		return ".glb";
+		return ".mesh";
 	case enums::AssetType::script:
 		return ".cpp";
 	case enums::AssetType::header:

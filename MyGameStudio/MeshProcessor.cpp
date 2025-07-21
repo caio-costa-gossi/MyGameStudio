@@ -40,7 +40,12 @@ uint8_t* MeshProcessor::ProcessMesh(const Asset& metadata, uint64_t& resultSize,
 
 	// Mesh serialization
 	ConsoleManager::Print(std::string(LocalizationManager::GetLocalizedString(string_const::G_ASSET_IMPORT)) + "100%", enums::ConsoleMessageType::info);
-	return Serialization::SerializeMesh(mesh).Data;
+
+	const DataStream stream = Serialization::SerializeMesh(mesh, resultSize);
+	uint8_t* meshData = new uint8_t[resultSize];
+	memcpy_s(meshData, resultSize, stream.Data, resultSize);
+
+	return meshData;
 }
 
 uint8_t* MeshProcessor::GetFileBuffer(tinygltf::TinyGLTF& loader, const tinygltf::Model& model, uint64_t& resultSize)

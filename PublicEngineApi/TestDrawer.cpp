@@ -98,7 +98,7 @@ Err TestDrawer::Run()
 	indices[4] = 2;
 	indices[5] = 3;
 
-	testMesh_ = { 1, vertices, 36, indices, 6, 47 };
+	testMesh_ = { 1, std::unique_ptr<Vertex[]>(vertices), 36, std::unique_ptr<uint32_t[]>(indices), 6, 47 };
 
 	const Vec3F worldPos[5] = { {0.0f, 0.0f, 0.0f}, {2.0f, 5.0f, -15.0f}, {-1.5f, -2.2f, -2.5f},
 		{-3.8f, -2.0f, -12.3f}, {2.4f, -0.4f, -3.5f} };

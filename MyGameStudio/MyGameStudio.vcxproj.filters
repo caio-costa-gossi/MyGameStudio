@@ -101,6 +101,9 @@
     <ClCompile Include="AssetImportationManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
+    <ClCompile Include="MeshFactory.cpp">
+      <Filter>Asset Management</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HashTable.h">
@@ -171,6 +174,9 @@
     </ClInclude>
     <ClInclude Include="AssetImportationManager.h">
       <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshFactory.h">
+      <Filter>Asset Management</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

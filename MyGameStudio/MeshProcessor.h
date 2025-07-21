@@ -4,6 +4,9 @@
 #include "Err.h"
 #include <tiny_gltf.h>
 
+#include "Mesh.h"
+#include "MeshFactory.h"
+
 class MeshProcessor
 {
 private:

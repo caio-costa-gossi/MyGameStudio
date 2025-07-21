@@ -73,6 +73,8 @@ namespace error_const
 	const auto RENDER_TEXTURE_INIT_FAIL = Err("Texture initialization failure", 190);
 	const auto RENDER_CAMERA_NOT_FOUND = Err("Camera ID not found", 200);
 	const auto RENDER_CAMERA_MANAGER_NOT_INIT = Err("The camera manager was not initialized", 201);
+	const auto IMPORT_INVALID_MESH = Err("Mesh contains invalid attributes", 220);
+	const auto IMPORT_INVALID_PRIMITIVE = Err("Mesh primitive contains invalid attributes", 221);
 	const auto GAME_EXIT_REQUEST = Err("Game exit requested", 500);
 
 	constexpr auto DB_ERROR_CODE = 10;

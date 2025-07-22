@@ -85,15 +85,19 @@ Err MeshFactory::GetVertices(const tinygltf::Model& model, const tinygltf::Primi
 	const tinygltf::BufferView vertexBufferView = model.bufferViews[vertexAccessor.bufferView];
 	const tinygltf::Buffer vertexBuffer = model.buffers[vertexBufferView.buffer];
 
-	const float* vertexData = reinterpret_cast<float*>(vertexBuffer.data[vertexAccessor.byteOffset + vertexBufferView.byteOffset]);
+	const size_t offset = vertexAccessor.byteOffset + vertexBufferView.byteOffset;
+	const size_t stride = vertexBufferView.byteStride ? vertexBufferView.byteStride : 3 * sizeof(float);
+
 	for (uint32_t i = 0; i < vertexAccessor.count; ++i)
 	{
+		const float* vertexData = reinterpret_cast<const float*>(vertexBuffer.data.data() + offset + stride * i);
+
 		Vertex newVertex;
 
 		newVertex.Color = { 255,255,255,255 };
-		newVertex.Pos.X = vertexBuffer.data[i * 3 + 0];
-		newVertex.Pos.Y = vertexBuffer.data[i * 3 + 1];
-		newVertex.Pos.Z = vertexBuffer.data[i * 3 + 2];
+		newVertex.Pos.X = vertexData[0];
+		newVertex.Pos.Y = vertexData[1];
+		newVertex.Pos.Z = vertexData[2];
 
 		vertices[i] = newVertex;
 	}

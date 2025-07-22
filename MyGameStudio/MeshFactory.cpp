@@ -68,19 +68,6 @@ Mesh MeshFactory::CreateMesh(const tinygltf::Model& model, const Asset& meshMeta
 			if (err.Code())
 				ConsoleManager::PrintWarning(err.Message());
 
-			/*ConsoleManager::PrintInfo("Mesh vertices: ");
-			for (uint32_t i = 0; i < newMesh.VertexCount; ++i)
-			{
-				Vertex vertex = newMesh.VertexList.get()[i];
-				ConsoleManager::PrintInfo(std::to_string(vertex.Pos.X) + "," + std::to_string(vertex.Pos.Y) + "," + std::to_string(vertex.Pos.Z));
-			}
-
-			for (uint32_t i = 0; i < newMesh.IndexCount; ++i)
-			{
-				uint32_t index = newMesh.IndexList.get()[i];
-				ConsoleManager::PrintInfo(std::to_string(index));
-			}*/
-
 			return newMesh;
 		}
 	}

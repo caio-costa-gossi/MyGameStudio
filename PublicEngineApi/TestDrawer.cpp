@@ -43,7 +43,7 @@ Err TestDrawer::Startup()
 Err TestDrawer::Run()
 {
 	uint64_t meshSize;
-	const uint8_t* meshBinaryData = AssetRuntimeManager::LoadAsset(50, meshSize);
+	const uint8_t* meshBinaryData = AssetRuntimeManager::LoadAsset(58, meshSize);
 	testMesh_ = Serialization::DesserializeMesh(meshBinaryData, meshSize);
 
 	/*GameConsoleManager::PrintInfo("Mesh vertices: ");
@@ -59,10 +59,10 @@ Err TestDrawer::Run()
 		GameConsoleManager::PrintInfo(std::to_string(index));
 	}*/
 
-	const Vec3F worldPos[5] = { {0.0f, 0.0f, 0.0f}, {2.0f, 5.0f, -15.0f}, {-1.5f, -2.2f, -2.5f},
-		{-3.8f, -2.0f, -12.3f}, {2.4f, -0.4f, -3.5f} };
+	/*const Vec3F worldPos[5] = { {0.0f, 0.0f, 0.0f}, {2.0f, 5.0f, -15.0f}, {-1.5f, -2.2f, -2.5f},
+		{-3.8f, -2.0f, -12.3f}, {2.4f, -0.4f, -3.5f} };*/
 
-	//const Vec3F worldPos[1] = { {0.0f, 0.0f, 0.0f} };
+	const Vec3F worldPos[1] = { {0.0f, 0.0f, 0.0f} };
 
 	CameraInstance camera(enums::perspective, 0.1f, 1000.0f, 800.0f, 400.0f);
 	camera.Use();

@@ -1,5 +1,6 @@
 #include "AssetDatabase.h"
 #include "LocalizationManager.h"
+#include "../MyGameStudio/ConsoleManager.h"
 
 Err AssetDatabase::Startup()
 {
@@ -60,8 +61,36 @@ Err AssetDatabase::GetAsset(const uint32_t assetId, Asset& returnValue, const bo
 	return error_const::SUCCESS;
 }
 
+Err AssetDatabase::GetAssetBySrcLocation(const std::string& srcLocation, Asset& returnValue)
+{
+	const std::vector<Asset> foundAssets = db_.ExecuteQuery<Asset>(std::string("SELECT * FROM Assets WHERE SourceLocation = '" + srcLocation + "';").c_str());
+
+	if (foundAssets.empty())
+		return error_const::ASSET_NOT_FOUND;
+
+	returnValue = foundAssets[0];
+
+	return error_const::SUCCESS;
+}
+
 Err AssetDatabase::RegisterAsset(Asset& asset)
 {
+	// Check if asset already exists
+	Asset existingAsset;
+	Err err = GetAssetBySrcLocation(asset.SourceLocation, existingAsset);
+	if (err.Code() == 0)
+	{
+		ConsoleManager::PrintWarning("Asset was already imported before. Overwritting...");
+
+		asset.Id = existingAsset.Id;
+		err = UpdateAsset(asset);
+		if (err.Code())
+			return err;
+
+		return error_const::SUCCESS;
+	}
+
+	// Register
 	const std::string sqlStatement("INSERT INTO Assets (Name, Extension, Type, SourceSize, ProductSize, SourceLocation, ZipLocation, AssetLocation, LastModifiedDate, CheckModifications) VALUES ('" + 
 		asset.Name + "','" +
 		asset.Extension + "','" +

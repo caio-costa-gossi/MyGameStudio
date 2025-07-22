@@ -55,6 +55,7 @@ namespace error_const
 	const auto TERMINAL_PIPE_OPEN_FAILURE = Err("Terminal communication pipeline was not created successfully", 111);
 	const auto STR_TO_INT_FAIL = Err("String passed is not a valid number", 112);
 	const auto ASSET_NOT_FOUND = Err("Asset not found", 120);
+	const auto ASSET_ALREADY_EXISTS = Err("Asset already exists", 121);
 	const auto INPUT_MOD_INIT_FAIL = Err("DInput interface initialization failure", 130);
 	const auto INPUT_ENUM_FAIL = Err("Input enumeration failure", 131);
 	const auto INPUT_CREATE_FAIL = Err("Input creation failure", 132);

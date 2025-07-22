@@ -279,7 +279,7 @@ Err MeshFactory::SaveTexture(uint32_t& textureAssetId, const uint8_t* imageData,
 	Asset imageAsset;
 	imageAsset.Name = imageName;
 	imageAsset.Type = enums::AssetType::image;
-	imageAsset.SourceLocation = "imported-from-glb";
+	imageAsset.SourceLocation = meshMetadata.SourceLocation + "-texture";
 	imageAsset.SourceSize = imageSize;
 	imageAsset.AssetLocation = imageName;
 	imageAsset.ProductSize = pngSize;

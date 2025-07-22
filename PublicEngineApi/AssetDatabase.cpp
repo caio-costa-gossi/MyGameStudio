@@ -80,7 +80,7 @@ Err AssetDatabase::RegisterAsset(Asset& asset)
 	Err err = GetAssetBySrcLocation(asset.SourceLocation, existingAsset);
 	if (err.Code() == 0)
 	{
-		ConsoleManager::PrintWarning("Asset was already imported before. Overwritting...");
+		ConsoleManager::PrintWarning("Asset '" + asset.Name + "' was already imported before from source '" + existingAsset.SourceLocation + "'. Overwritting...");
 
 		asset.Id = existingAsset.Id;
 		err = UpdateAsset(asset);

@@ -22,7 +22,7 @@ public:
 
 	static std::vector<Asset> GetAssets();
 	static Err GetAsset(uint32_t assetId, Asset& returnValue, bool addDependencies = true);
-	static Err RegisterAsset(const Asset& asset);
+	static Err RegisterAsset(Asset& asset);
 	static Err UpdateAsset(const Asset& asset);
 	static Err DeleteAsset(uint32_t assetId);
 

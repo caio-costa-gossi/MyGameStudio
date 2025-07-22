@@ -8,10 +8,12 @@
 
 #include "Asset.h"
 #include "AssetDatabase.h"
+#include "ConfigManager.h"
 #include "ConsoleManager.h"
 #include "DataStream.h"
 #include "Image.h"
 #include "ImageLoader.h"
+#include "SystemPathHelper.h"
 #include "ZipFile.h"
 
 Mesh MeshFactory::CreateMesh(const tinygltf::Model& model, const Asset& meshMetadata)
@@ -26,6 +28,9 @@ Mesh MeshFactory::CreateMesh(const tinygltf::Model& model, const Asset& meshMeta
 				continue;
 			}
 
+			Mesh newMesh;
+
+			// Vertices
 			std::unique_ptr<Vertex[]> vertexData;
 			uint32_t vertexCount;
 
@@ -36,6 +41,10 @@ Mesh MeshFactory::CreateMesh(const tinygltf::Model& model, const Asset& meshMeta
 				continue;
 			}
 
+			newMesh.VertexCount = vertexCount;
+			newMesh.VertexList = std::move(vertexData);
+
+			// Indices
 			std::unique_ptr<uint32_t[]> indexData;
 			uint32_t indexCount;
 
@@ -46,18 +55,18 @@ Mesh MeshFactory::CreateMesh(const tinygltf::Model& model, const Asset& meshMeta
 				continue;
 			}
 
-			Mesh newMesh;
-
-			err = GetTexture(model, primitive, meshMetadata, newMesh.TextureAssetId);
-			if (err.Code())
-			{
-				ConsoleManager::PrintWarning(err.Message());
-			}
-			
-			newMesh.VertexCount = vertexCount;
-			newMesh.VertexList = std::move(vertexData);
 			newMesh.IndexCount = indexCount;
 			newMesh.IndexList = std::move(indexData);
+
+			// Texture coordinates
+			err = GetTexCoords(model, primitive, newMesh);
+			if (err.Code())
+				ConsoleManager::PrintWarning(err.Message());
+
+			// Texture
+			err = GetTexture(model, primitive, meshMetadata, newMesh.TextureAssetId);
+			if (err.Code())
+				ConsoleManager::PrintWarning(err.Message());
 
 			/*ConsoleManager::PrintInfo("Mesh vertices: ");
 			for (uint32_t i = 0; i < newMesh.VertexCount; ++i)
@@ -116,6 +125,53 @@ Err MeshFactory::GetVertices(const tinygltf::Model& model, const tinygltf::Primi
 		newVertex.Pos.Z = vertexData[2];
 
 		vertices[i] = newVertex;
+	}
+
+	return error_const::SUCCESS;
+}
+
+Err MeshFactory::GetTexCoords(const tinygltf::Model& model, const tinygltf::Primitive& primitive, Mesh& mesh)
+{
+	const tinygltf::Material material = model.materials[primitive.material];
+	const tinygltf::TextureInfo textureInfo = material.pbrMetallicRoughness.baseColorTexture;
+
+	const std::string texCoord = "TEXCOORD_" + std::to_string(textureInfo.texCoord);
+
+	if (primitive.attributes.find(texCoord) == primitive.attributes.end())
+	{
+		ConsoleManager::PrintWarning("Texture coordinates (" + texCoord + ") not found for primitive.");
+		return error_const::IMPORT_INVALID_TEXCOORDS;
+	}
+
+	const tinygltf::Accessor texCoordAccessor = model.accessors[primitive.attributes.at(texCoord)];
+
+	if (texCoordAccessor.componentType != TINYGLTF_COMPONENT_TYPE_FLOAT)
+	{
+		ConsoleManager::PrintWarning("Invalid texture coordinates component data type (" + std::to_string(texCoordAccessor.componentType) + "). Skipping texture coordinates importation...");
+		return error_const::IMPORT_INVALID_TEXCOORDS;
+	}
+
+	if (texCoordAccessor.type != TINYGLTF_TYPE_VEC2)
+	{
+		ConsoleManager::PrintWarning("Invalid texture coordinates data type (" + std::to_string(texCoordAccessor.type) + "). Skipping texture coordinates importation...");
+		return error_const::IMPORT_INVALID_TEXCOORDS;
+	}
+
+	const tinygltf::BufferView texCoordBufferView = model.bufferViews[texCoordAccessor.bufferView];
+	const tinygltf::Buffer texCoordBuffer = model.buffers[texCoordBufferView.buffer];
+
+	const size_t texCoordCount = texCoordAccessor.count;
+	const size_t offset = texCoordAccessor.byteOffset + texCoordBufferView.byteOffset;
+	const size_t stride = texCoordBufferView.byteStride ? texCoordBufferView.byteStride : 2 * sizeof(float);
+
+	const uint8_t* data = (texCoordBuffer.data.data() + offset);
+
+	for (size_t vertex = 0; vertex < texCoordCount; ++vertex)
+	{
+		const float* coordinates = reinterpret_cast<const float*>(&data[vertex * stride]);
+
+		mesh.VertexList[vertex].TexCoord.X = coordinates[0];
+		mesh.VertexList[vertex].TexCoord.Y = coordinates[1];
 	}
 
 	return error_const::SUCCESS;
@@ -181,15 +237,12 @@ Err MeshFactory::GetTexture(const tinygltf::Model& model, const tinygltf::Primit
 	std::string imageType = textureImage.mimeType;
 	enums::ImageFormat format;
 
-	switch (imageType)
-	{
-	case "image/png":
+	if (imageType == "image/png")
 		format = enums::png;
-		break;
-	case "image/jpeg":
+	else if (imageType == "image/jpeg")
 		format = enums::jpeg;
-		break;
-	default:
+	else
+	{
 		ConsoleManager::PrintWarning("Texture image type unsupported (" + imageType + "). Skipping texture importation...");
 		return error_const::IMPORT_INVALID_TEXTURE;
 	}
@@ -224,16 +277,21 @@ Err MeshFactory::SaveTexture(uint32_t& textureAssetId, const uint8_t* imageData,
 	}
 
 	// Save PNG
-	const char* zipFile = "test.zip";
+	std::string assetDir = ConfigManager::GetConfig("asset_dir");
+	SystemPathHelper::WinSeparatorToUnix(assetDir);
+	const std::string zipPath = SystemPathHelper::RemoveRelativeSlash(assetDir) + SystemPathHelper::GetUnixSeparator() + "test.zip";
+
 	const std::string imageName = meshMetadata.Name + "_texture.png";
 
-	const ZipFile file(zipFile);
+	const ZipFile file(zipPath.c_str());
 	Err err = file.AddFile(pngData, pngSize, imageName.c_str());
 	if (err.Code())
 		return err;
 
 	// Register new asset
 	Asset imageAsset;
+	imageAsset.Name = imageName;
+	imageAsset.Type = enums::AssetType::image;
 	imageAsset.SourceLocation = "imported-from-glb";
 	imageAsset.SourceSize = imageSize;
 	imageAsset.AssetLocation = imageName;

@@ -36,19 +36,7 @@ uint8_t* MeshProcessor::ProcessMesh(const Asset& metadata, uint64_t& resultSize,
 
 	// Mesh importation
 	ConsoleManager::Print(std::string(LocalizationManager::GetLocalizedString(string_const::G_ASSET_IMPORT)) + "80%", enums::ConsoleMessageType::info);
-	const Mesh mesh = MeshFactory::CreateMesh(model);
-
-	for (uint32_t i = 0; i < mesh.VertexCount; ++i)
-	{
-		Vertex vertex = mesh.VertexList.get()[i];
-		ConsoleManager::PrintInfo(std::to_string(vertex.Pos.X) + "," + std::to_string(vertex.Pos.Y) + "," + std::to_string(vertex.Pos.Z));
-	}
-
-	for (uint32_t i = 0; i < mesh.IndexCount; ++i)
-	{
-		uint32_t index = mesh.IndexList.get()[i];
-		ConsoleManager::PrintInfo(std::to_string(index));
-	}
+	const Mesh mesh = MeshFactory::CreateMesh(model, metadata);
 
 	// Mesh serialization
 	ConsoleManager::Print(std::string(LocalizationManager::GetLocalizedString(string_const::G_ASSET_IMPORT)) + "100%", enums::ConsoleMessageType::info);

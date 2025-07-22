@@ -76,6 +76,7 @@ namespace error_const
 	const auto IMPORT_INVALID_MESH = Err("Mesh contains invalid attributes", 220);
 	const auto IMPORT_INVALID_PRIMITIVE = Err("Mesh primitive contains invalid attributes", 221);
 	const auto IMPORT_INVALID_TEXTURE = Err("Texture contain invalid or unsupported data", 222);
+	const auto IMPORT_INVALID_TEXCOORDS = Err("Invalid texture coordinates for primitive", 223);
 	const auto GAME_EXIT_REQUEST = Err("Game exit requested", 500);
 
 	constexpr auto DB_ERROR_CODE = 10;

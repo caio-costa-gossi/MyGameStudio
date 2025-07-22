@@ -60,7 +60,7 @@ Err AssetDatabase::GetAsset(const uint32_t assetId, Asset& returnValue, const bo
 	return error_const::SUCCESS;
 }
 
-Err AssetDatabase::RegisterAsset(const Asset& asset)
+Err AssetDatabase::RegisterAsset(Asset& asset)
 {
 	const std::string sqlStatement("INSERT INTO Assets (Name, Extension, Type, SourceSize, ProductSize, SourceLocation, ZipLocation, AssetLocation, LastModifiedDate, CheckModifications) VALUES ('" + 
 		asset.Name + "','" +
@@ -84,6 +84,7 @@ Err AssetDatabase::RegisterAsset(const Asset& asset)
 		return error_const::INTEGER_OUT_OF_BOUNDS;
 
 	const int32_t newAssetId = static_cast<int32_t>(newAssetId64);
+	asset.Id = newAssetId;
 
 	error = RegisterAssetDependencies(asset.DependsOnAssets, newAssetId);
 	if (error.Code())

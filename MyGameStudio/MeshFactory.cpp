@@ -91,9 +91,9 @@ Err MeshFactory::GetVertices(const tinygltf::Model& model, const tinygltf::Primi
 		Vertex newVertex;
 
 		newVertex.Color = { 255,255,255,255 };
-		newVertex.Pos.X = vertexBuffer.data[i * 3 + 1];
-		newVertex.Pos.Y = vertexBuffer.data[i * 3 + 2];
-		newVertex.Pos.Z = vertexBuffer.data[i * 3 + 3];
+		newVertex.Pos.X = vertexBuffer.data[i * 3 + 0];
+		newVertex.Pos.Y = vertexBuffer.data[i * 3 + 1];
+		newVertex.Pos.Z = vertexBuffer.data[i * 3 + 2];
 
 		vertices[i] = newVertex;
 	}

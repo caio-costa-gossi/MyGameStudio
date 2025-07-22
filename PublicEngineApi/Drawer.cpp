@@ -22,8 +22,7 @@ void Drawer::Draw(const Shader& shader, std::queue<RenderQuery>& queries, const 
 		textures.at(query.MeshInstance.Data->TextureAssetId).Use();
 
 		glBindVertexArray(query.MeshInstance.ArrayObjectId);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-		//glDrawElements(GL_TRIANGLES, static_cast<int32_t>(query.MeshInstance.Data->IndexCount), GL_UNSIGNED_INT, nullptr);
+		glDrawElements(GL_TRIANGLES, static_cast<int32_t>(query.MeshInstance.Data->IndexCount), GL_UNSIGNED_INT, nullptr);
 
 		queries.pop();
 	}

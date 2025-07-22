@@ -1,5 +1,6 @@
 #include "TestDrawer.h"
 
+#include "AssetRuntimeManager.h"
 #include "CameraInstance.h"
 #include "CameraManager.h"
 #include "GameConsoleManager.h"
@@ -7,6 +8,7 @@
 #include "NumericUtils.h"
 #include "WindowManager.h"
 #include "RenderManager.h"
+#include "Serialization.h"
 #include "Transform.h"
 
 #undef min
@@ -40,70 +42,82 @@ Err TestDrawer::Startup()
 
 Err TestDrawer::Run()
 {
-	Vertex* vertices = new Vertex[36];
+	/*Vertex* vertices = new Vertex[8];
 
-	/*vertices[0] = { {0.5f,  0.5f, 0.0f }, {1.0f, 0.0f, 0.0f, 1.0f}, { 1.0f, 1.0f } };
-	vertices[1] = { { 0.5f, -0.5f, 0.0f }, { 0.0f, 1.0f, 0.0f, 1.0f }, { 1.0f, 0.0f } };
-	vertices[2] = { { -0.5f, -0.5f, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f }, { 0.0f, 0.0f } };
-	vertices[3] = { { -0.5f,  0.5f, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 1.0f } };*/
+	vertices[0] = { {-0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} }; // bottom, low left
+	vertices[1] = { {0.5f, -0.5f, -0.5f},  {1.0f, 1.0f, 1.0f, 1.0f}, {1.0f, 0.0f} }; // bottom, low right
+	vertices[2] = { {0.5f,  0.5f, -0.5f},  {1.0f, 1.0f, 1.0f, 1.0f}, {1.0f, 1.0f} }; // bottom, up right
+	vertices[3] = { {-0.5f,  0.5f, -0.5f}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} }; // bottom, up left
 
-	vertices[0] = { {-0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} };
-	vertices[1] = { {0.5f, -0.5f, -0.5f},  {1.0f, 1.0f, 1.0f, 1.0f}, {1.0f, 0.0f} };
-	vertices[2] = { {0.5f,  0.5f, -0.5f},  {1.0f, 1.0f, 1.0f, 1.0f}, {1.0f, 1.0f} };
-	vertices[3] = { {0.5f,  0.5f, -0.5f},  {1.0f, 1.0f, 1.0f, 1.0f}, {1.0f, 1.0f} };
-	vertices[4] = { {-0.5f,  0.5f, -0.5f}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} };
-	vertices[5] = { {-0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} };
+	vertices[4] = { {-0.5f, -0.5f,  0.5f}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} }; // top, low left
+	vertices[5] = { {0.5f, -0.5f,  0.5f},  {1.0f, 1.0f, 1.0f, 1.0f}, {1.0f, 0.0f} }; // top, low right
+	vertices[6] = { {0.5f,  0.5f,  0.5f},  {1.0f, 1.0f, 1.0f, 1.0f}, {1.0f, 1.0f} }; // top, up right
+	vertices[7] = { {-0.5f,  0.5f,  0.5f},{1.0f, 1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} }; // top, up left
 
-	vertices[6] = { {-0.5f, -0.5f,  0.5f}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} };
-	vertices[7] = { {0.5f, -0.5f,  0.5f}, {1.0f, 1.0f, 1.0f, 1.0f}, {1.0f, 0.0f} };
-	vertices[8] = { {0.5f,  0.5f,  0.5f}, {1.0f, 1.0f, 1.0f, 1.0f}, {1.0f, 1.0f} };
-	vertices[9] = { {0.5f,  0.5f,  0.5f}, {1.0f, 1.0f, 1.0f, 1.0f}, {1.0f, 1.0f} };
-	vertices[10] = { {-0.5f,  0.5f,  0.5f}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} };
-	vertices[11] = { {-0.5f, -0.5f,  0.5f}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} };
+	uint32_t* indices = new uint32_t[36];
 
-	vertices[12] = { {-0.5f,  0.5f,  0.5f}, {1.0f, 1.0f, 1.0f, 1.0f}, {1.0f, 0.0f} };
-	vertices[13] = { {-0.5f,  0.5f, -0.5f}, {1.0f, 1.0f, 1.0f, 1.0f}, {1.0f, 1.0f} };
-	vertices[14] = { {-0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} };
-	vertices[15] = { {-0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} };
-	vertices[16] = { {-0.5f, -0.5f,  0.5f}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} };
-	vertices[17] = { {-0.5f,  0.5f,  0.5f}, {1.0f, 1.0f, 1.0f, 1.0f}, {1.0f, 0.0f} };
+	indices[0] = 4;
+	indices[1] = 5;
+	indices[2] = 6;
+	indices[3] = 4;
+	indices[4] = 6;
+	indices[5] = 7;
+	indices[6] = 0;
+	indices[7] = 2;
+	indices[8] = 1;
+	indices[9] = 0;
+	indices[10] = 3;
+	indices[11] = 2;
+	indices[12] = 0;
+	indices[13] = 4;
+	indices[14] = 7;
+	indices[15] = 0;
+	indices[16] = 7;
+	indices[17] = 3;
+	indices[18] = 1;
+	indices[19] = 2;
+	indices[20] = 6;
+	indices[21] = 1;
+	indices[22] = 6;
+	indices[23] = 5;
+	indices[24] = 0;
+	indices[25] = 1;
+	indices[26] = 5;
+	indices[27] = 0;
+	indices[28] = 5;
+	indices[29] = 4;
+	indices[30] = 3;
+	indices[31] = 7;
+	indices[32] = 6;
+	indices[33] = 3;
+	indices[34] = 6;
+	indices[35] = 2;
 
-	vertices[18] = { {0.5f,  0.5f,  0.5f}, {1.0f, 1.0f, 1.0f, 1.0f}, {1.0f, 0.0f} };
-	vertices[19] = { {0.5f,  0.5f, -0.5f}, {1.0f, 1.0f, 1.0f, 1.0f}, {1.0f, 1.0f} };
-	vertices[20] = { {0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} };
-	vertices[21] = { {0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} };
-	vertices[22] = { {0.5f, -0.5f,  0.5f}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} };
-	vertices[23] = { {0.5f,  0.5f,  0.5f}, {1.0f, 1.0f, 1.0f, 1.0f}, {1.0f, 0.0f} };
+	testMesh_ = { 1, std::unique_ptr<Vertex[]>(vertices), 8, std::unique_ptr<uint32_t[]>(indices), 36, 47 };*/
 
-	vertices[24] = { {-0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} };
-	vertices[25] = { {0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f, 1.0f}, {1.0f, 1.0f} };
-	vertices[26] = { {0.5f, -0.5f,  0.5f}, {1.0f, 1.0f, 1.0f, 1.0f}, {1.0f, 0.0f} };
-	vertices[27] = { {0.5f, -0.5f,  0.5f}, {1.0f, 1.0f, 1.0f, 1.0f}, {1.0f, 0.0f} };
-	vertices[28] = { {-0.5f, -0.5f,  0.5f}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} };
-	vertices[29] = { {-0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} };
+	uint64_t meshSize;
+	const uint8_t* meshBinaryData = AssetRuntimeManager::LoadAsset(49, meshSize);
+	testMesh_ = Serialization::DesserializeMesh(meshBinaryData, meshSize);
 
-	vertices[30] = { {-0.5f,  0.5f, -0.5f}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} };
-	vertices[31] = { {0.5f,  0.5f, -0.5f}, {1.0f, 1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}, };
-	vertices[32] = { {0.5f,  0.5f,  0.5f}, {1.0f, 1.0f, 1.0f, 1.0f}, {1.0f, 0.0f},};
-	vertices[33] = {{0.5f,  0.5f,  0.5f}, {1.0f, 1.0f, 1.0f, 1.0f}, {1.0f, 0.0f},};
-	vertices[34] = {{-0.5f,  0.5f,  0.5f}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.0f, 0.0f}};
-	vertices[35] = {{-0.5f,  0.5f, -0.5f}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}};
+	GameConsoleManager::PrintInfo("Mesh vertices: ");
+	for (uint32_t i = 0; i < testMesh_.VertexCount; ++i)
+	{
+		Vertex vertex = testMesh_.VertexList.get()[i];
+		GameConsoleManager::PrintInfo(std::to_string(vertex.Pos.X) + "," + std::to_string(vertex.Pos.Y) + "," + std::to_string(vertex.Pos.Z));
+	}
 
-	uint32_t* indices = new uint32_t[6];
+	for (uint32_t i = 0; i < testMesh_.IndexCount; ++i)
+	{
+		uint32_t index = testMesh_.IndexList.get()[i];
+		GameConsoleManager::PrintInfo(std::to_string(index));
+	}
 
-	indices[0] = 0;
-	indices[1] = 1;
-	indices[2] = 3;
-	indices[3] = 1;
-	indices[4] = 2;
-	indices[5] = 3;
+	/*const Vec3F worldPos[5] = { {0.0f, 0.0f, 0.0f}, {2.0f, 5.0f, -15.0f}, {-1.5f, -2.2f, -2.5f},
+		{-3.8f, -2.0f, -12.3f}, {2.4f, -0.4f, -3.5f} };*/
 
-	testMesh_ = { 1, std::unique_ptr<Vertex[]>(vertices), 36, std::unique_ptr<uint32_t[]>(indices), 6, 47 };
+	const Vec3F worldPos[1] = { {0.0f, 0.0f, 0.0f} };
 
-	const Vec3F worldPos[5] = { {0.0f, 0.0f, 0.0f}, {2.0f, 5.0f, -15.0f}, {-1.5f, -2.2f, -2.5f},
-		{-3.8f, -2.0f, -12.3f}, {2.4f, -0.4f, -3.5f} };
-
-	CameraInstance camera;
+	CameraInstance camera(enums::perspective, 0.1f, 10000);
 	camera.Use();
 
 	running_ = true;
@@ -147,9 +161,6 @@ Err TestDrawer::Run()
 			GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::render);
 	}
 
-	delete[] indices;
-	delete[] vertices;
-
 	return error_const::SUCCESS;
 }
 
@@ -178,22 +189,22 @@ Err TestDrawer::MoveCameraPos(CameraInstance& camera)
 	const InputState state = InputManager::GetInputState();
 
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_w])
-		camera.Move(camera.GetPos() + camera.GetDirection() * 0.01f);
+		camera.Move(camera.GetPos() + camera.GetDirection() * 1.0f);
 
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_s])
-		camera.Move(camera.GetPos() + camera.GetDirection() * -0.01f);
+		camera.Move(camera.GetPos() + camera.GetDirection() * -1.0f);
 
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_a])
-		camera.Move(camera.GetPos() + camera.GetRight() * -0.01f);
+		camera.Move(camera.GetPos() + camera.GetRight() * -1.0f);
 
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_d])
-		camera.Move(camera.GetPos() + camera.GetRight() * 0.01f);
+		camera.Move(camera.GetPos() + camera.GetRight() * 1.0f);
 
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_space])
-		camera.Move(camera.GetPos() + Vec3F(0, 0.01f, 0));
+		camera.Move(camera.GetPos() + Vec3F(0, 1.0f, 0));
 
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_lshift])
-		camera.Move(camera.GetPos() + Vec3F(0, -0.01f, 0));
+		camera.Move(camera.GetPos() + Vec3F(0, -1.0f, 0));
 
 	return error_const::SUCCESS;
 }

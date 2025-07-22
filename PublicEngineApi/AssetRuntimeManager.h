@@ -16,6 +16,6 @@ private:
 
 public:
 	static Err Startup();
-	static uint8_t* LoadAsset(uint32_t assetId);
+	static uint8_t* LoadAsset(uint32_t assetId, uint64_t& assetSize);
 	static Image* LoadImg(uint32_t assetId);
 };

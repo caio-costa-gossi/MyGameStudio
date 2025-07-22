@@ -10,7 +10,7 @@ Err AssetRuntimeManager::Startup()
 	return error_const::SUCCESS;
 }
 
-uint8_t* AssetRuntimeManager::LoadAsset(const uint32_t assetId)
+uint8_t* AssetRuntimeManager::LoadAsset(const uint32_t assetId, uint64_t& assetSize)
 {
 	if (assetData_[assetId].get() != nullptr)
 		return assetData_[assetId].get();
@@ -19,6 +19,8 @@ uint8_t* AssetRuntimeManager::LoadAsset(const uint32_t assetId)
 	Err err = AssetDatabase::GetAsset(assetId, asset);
 	if (err.Code())
 		return nullptr;
+
+	assetSize = asset.ProductSize;
 
 	const ZipFile file(asset.ZipLocation.c_str());
 	auto pFileContent = std::make_unique<uint8_t[]>(asset.ProductSize);

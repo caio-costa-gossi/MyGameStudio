@@ -279,6 +279,9 @@
     <ClInclude Include="Serialization.h">
       <Filter>Asset Management</Filter>
     </ClInclude>
+    <ClInclude Include="DataReader.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssetRuntimeManager.cpp">

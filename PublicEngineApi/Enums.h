@@ -132,6 +132,12 @@ namespace enums
 		perspective = 1
 	};
 
+	enum ImageFormat : uint8_t
+	{
+		png = 0,
+		jpeg = 1
+	};
+
 	// Functions
 
 	inline const char* LanguageToString(Language language)

@@ -3,9 +3,18 @@
 #define TINYGLTF_IMPLEMENTATION
 #include <tiny_gltf.h>
 
-#include "ConsoleManager.h"
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include <stb_image_write.h>
 
-Mesh MeshFactory::CreateMesh(const tinygltf::Model& model)
+#include "Asset.h"
+#include "AssetDatabase.h"
+#include "ConsoleManager.h"
+#include "DataStream.h"
+#include "Image.h"
+#include "ImageLoader.h"
+#include "ZipFile.h"
+
+Mesh MeshFactory::CreateMesh(const tinygltf::Model& model, const Asset& meshMetadata)
 {
 	for (const tinygltf::Mesh& mesh : model.meshes)
 	{
@@ -38,6 +47,13 @@ Mesh MeshFactory::CreateMesh(const tinygltf::Model& model)
 			}
 
 			Mesh newMesh;
+
+			err = GetTexture(model, primitive, meshMetadata, newMesh.TextureAssetId);
+			if (err.Code())
+			{
+				ConsoleManager::PrintWarning(err.Message());
+			}
+			
 			newMesh.VertexCount = vertexCount;
 			newMesh.VertexList = std::move(vertexData);
 			newMesh.IndexCount = indexCount;
@@ -142,6 +158,94 @@ Err MeshFactory::GetIndices(const tinygltf::Model& model, const tinygltf::Primit
 			return {};
 		}
 	}
+
+	return error_const::SUCCESS;
+}
+
+Err MeshFactory::GetTexture(const tinygltf::Model& model, const tinygltf::Primitive& primitive, const Asset& meshMetadata, uint32_t& textureAssetId)
+{
+	const tinygltf::Material material = model.materials[primitive.material];
+	const tinygltf::TextureInfo textureInfo = material.pbrMetallicRoughness.baseColorTexture;
+	const tinygltf::Texture texture = model.textures[textureInfo.index];
+	const tinygltf::Image textureImage = model.images[texture.source];
+	const tinygltf::BufferView textureBufferView = model.bufferViews[textureImage.bufferView];
+	const tinygltf::Buffer textureBuffer = model.buffers[textureBufferView.buffer];
+
+	if (textureImage.bits != 8)
+	{
+		ConsoleManager::PrintWarning("Texture bit depth is not supported (" + std::to_string(textureImage.bits) + "). Texture will not be imported.");
+		return error_const::IMPORT_INVALID_TEXTURE;
+	}
+
+	const size_t imageSize = textureBufferView.byteLength;
+	std::string imageType = textureImage.mimeType;
+	enums::ImageFormat format;
+
+	switch (imageType)
+	{
+	case "image/png":
+		format = enums::png;
+		break;
+	case "image/jpeg":
+		format = enums::jpeg;
+		break;
+	default:
+		ConsoleManager::PrintWarning("Texture image type unsupported (" + imageType + "). Skipping texture importation...");
+		return error_const::IMPORT_INVALID_TEXTURE;
+	}
+
+	const size_t pixelSize = textureImage.component;
+	const size_t offset = textureBufferView.byteOffset;
+	const size_t stride = textureBufferView.byteStride ? textureBufferView.byteStride : sizeof(uint8_t);;
+
+	const uint8_t* imageData = (textureBuffer.data.data() + offset);
+
+	DataStream imageStream(imageSize);
+	for (uint64_t byte = 0; byte < imageSize; byte += stride)
+		imageStream.Write(&imageData[byte], sizeof(uint8_t));
+
+	Err err = SaveTexture(textureAssetId, imageStream.Data, imageSize, format, meshMetadata);
+	if (err.Code())
+		return err;
+
+	return error_const::SUCCESS;
+}
+
+Err MeshFactory::SaveTexture(uint32_t& textureAssetId, const uint8_t* imageData, const uint64_t imageSize, const enums::ImageFormat format, const Asset& meshMetadata)
+{
+	const uint8_t* pngData = imageData;
+	int32_t pngSize = static_cast<int32_t>(imageSize);
+
+	// Convert JPEG to PNG
+	if (format == enums::jpeg)
+	{
+		const Image jpgRawImage(imageData, static_cast<int32_t>(imageSize));
+		pngData = stbi_write_png_to_mem(jpgRawImage.Data, jpgRawImage.Channels, jpgRawImage.Width, jpgRawImage.Height, jpgRawImage.Channels, &pngSize);
+	}
+
+	// Save PNG
+	const char* zipFile = "test.zip";
+	const std::string imageName = meshMetadata.Name + "_texture.png";
+
+	const ZipFile file(zipFile);
+	Err err = file.AddFile(pngData, pngSize, imageName.c_str());
+	if (err.Code())
+		return err;
+
+	// Register new asset
+	Asset imageAsset;
+	imageAsset.SourceLocation = "imported-from-glb";
+	imageAsset.SourceSize = imageSize;
+	imageAsset.AssetLocation = imageName;
+	imageAsset.ProductSize = pngSize;
+	imageAsset.ZipLocation = "assets/test.zip";
+	imageAsset.Extension = "png";
+
+	err = AssetDatabase::RegisterAsset(imageAsset);
+	if (err.Code())
+		return err;
+
+	textureAssetId = imageAsset.Id;
 
 	return error_const::SUCCESS;
 }

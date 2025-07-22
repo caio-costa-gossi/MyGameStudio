@@ -42,64 +42,11 @@ Err TestDrawer::Startup()
 
 Err TestDrawer::Run()
 {
-	/*Vertex* vertices = new Vertex[8];
-
-	vertices[0] = { {-0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} }; // bottom, low left
-	vertices[1] = { {0.5f, -0.5f, -0.5f},  {1.0f, 1.0f, 1.0f, 1.0f}, {1.0f, 0.0f} }; // bottom, low right
-	vertices[2] = { {0.5f,  0.5f, -0.5f},  {1.0f, 1.0f, 1.0f, 1.0f}, {1.0f, 1.0f} }; // bottom, up right
-	vertices[3] = { {-0.5f,  0.5f, -0.5f}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} }; // bottom, up left
-
-	vertices[4] = { {-0.5f, -0.5f,  0.5f}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} }; // top, low left
-	vertices[5] = { {0.5f, -0.5f,  0.5f},  {1.0f, 1.0f, 1.0f, 1.0f}, {1.0f, 0.0f} }; // top, low right
-	vertices[6] = { {0.5f,  0.5f,  0.5f},  {1.0f, 1.0f, 1.0f, 1.0f}, {1.0f, 1.0f} }; // top, up right
-	vertices[7] = { {-0.5f,  0.5f,  0.5f},{1.0f, 1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} }; // top, up left
-
-	uint32_t* indices = new uint32_t[36];
-
-	indices[0] = 4;
-	indices[1] = 5;
-	indices[2] = 6;
-	indices[3] = 4;
-	indices[4] = 6;
-	indices[5] = 7;
-	indices[6] = 0;
-	indices[7] = 2;
-	indices[8] = 1;
-	indices[9] = 0;
-	indices[10] = 3;
-	indices[11] = 2;
-	indices[12] = 0;
-	indices[13] = 4;
-	indices[14] = 7;
-	indices[15] = 0;
-	indices[16] = 7;
-	indices[17] = 3;
-	indices[18] = 1;
-	indices[19] = 2;
-	indices[20] = 6;
-	indices[21] = 1;
-	indices[22] = 6;
-	indices[23] = 5;
-	indices[24] = 0;
-	indices[25] = 1;
-	indices[26] = 5;
-	indices[27] = 0;
-	indices[28] = 5;
-	indices[29] = 4;
-	indices[30] = 3;
-	indices[31] = 7;
-	indices[32] = 6;
-	indices[33] = 3;
-	indices[34] = 6;
-	indices[35] = 2;
-
-	testMesh_ = { 1, std::unique_ptr<Vertex[]>(vertices), 8, std::unique_ptr<uint32_t[]>(indices), 36, 47 };*/
-
 	uint64_t meshSize;
-	const uint8_t* meshBinaryData = AssetRuntimeManager::LoadAsset(49, meshSize);
+	const uint8_t* meshBinaryData = AssetRuntimeManager::LoadAsset(50, meshSize);
 	testMesh_ = Serialization::DesserializeMesh(meshBinaryData, meshSize);
 
-	GameConsoleManager::PrintInfo("Mesh vertices: ");
+	/*GameConsoleManager::PrintInfo("Mesh vertices: ");
 	for (uint32_t i = 0; i < testMesh_.VertexCount; ++i)
 	{
 		Vertex vertex = testMesh_.VertexList.get()[i];
@@ -110,14 +57,14 @@ Err TestDrawer::Run()
 	{
 		uint32_t index = testMesh_.IndexList.get()[i];
 		GameConsoleManager::PrintInfo(std::to_string(index));
-	}
+	}*/
 
-	/*const Vec3F worldPos[5] = { {0.0f, 0.0f, 0.0f}, {2.0f, 5.0f, -15.0f}, {-1.5f, -2.2f, -2.5f},
-		{-3.8f, -2.0f, -12.3f}, {2.4f, -0.4f, -3.5f} };*/
+	const Vec3F worldPos[5] = { {0.0f, 0.0f, 0.0f}, {2.0f, 5.0f, -15.0f}, {-1.5f, -2.2f, -2.5f},
+		{-3.8f, -2.0f, -12.3f}, {2.4f, -0.4f, -3.5f} };
 
-	const Vec3F worldPos[1] = { {0.0f, 0.0f, 0.0f} };
+	//const Vec3F worldPos[1] = { {0.0f, 0.0f, 0.0f} };
 
-	CameraInstance camera(enums::perspective, 0.1f, 10000);
+	CameraInstance camera(enums::perspective, 0.1f, 1000.0f, 800.0f, 400.0f);
 	camera.Use();
 
 	running_ = true;
@@ -149,6 +96,7 @@ Err TestDrawer::Run()
 		for (int i = 0; i < 5; ++i)
 		{
 			Transform model(worldPos[i], static_cast<float>(time_.GetElapsed()) / 50, {0.5f,1,0}, {1,1,1});
+			//Transform model(worldPos[i], 0, { 0,0,1 }, { 1,1,1 });
 
 			RenderRequest request = { &testMesh_, model };
 			err = RenderManager::RequestRender(request);
@@ -189,22 +137,22 @@ Err TestDrawer::MoveCameraPos(CameraInstance& camera)
 	const InputState state = InputManager::GetInputState();
 
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_w])
-		camera.Move(camera.GetPos() + camera.GetDirection() * 1.0f);
+		camera.Move(camera.GetPos() + camera.GetDirection() * 0.01f);
 
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_s])
-		camera.Move(camera.GetPos() + camera.GetDirection() * -1.0f);
+		camera.Move(camera.GetPos() + camera.GetDirection() * -0.01f);
 
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_a])
-		camera.Move(camera.GetPos() + camera.GetRight() * -1.0f);
+		camera.Move(camera.GetPos() + camera.GetRight() * -0.01f);
 
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_d])
-		camera.Move(camera.GetPos() + camera.GetRight() * 1.0f);
+		camera.Move(camera.GetPos() + camera.GetRight() * 0.01f);
 
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_space])
-		camera.Move(camera.GetPos() + Vec3F(0, 1.0f, 0));
+		camera.Move(camera.GetPos() + Vec3F(0, 0.01f, 0));
 
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_lshift])
-		camera.Move(camera.GetPos() + Vec3F(0, -1.0f, 0));
+		camera.Move(camera.GetPos() + Vec3F(0, -0.01f, 0));
 
 	return error_const::SUCCESS;
 }

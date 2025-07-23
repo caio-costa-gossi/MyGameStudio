@@ -14,10 +14,13 @@ public:
 	Transform() = default;
 	Transform(const glm::mat4& matrix);
 	Transform(const Vec3F& translation, float rotationDegrees, const Vec3F& rotationAxis, const Vec3F& scale);
+	Transform(const float* matrixVal);
 
 	void Translate(const Vec3F& translation);
 	void Rotate(float rotationDegrees, const Vec3F& rotationAxis);
 	void Scale(const Vec3F& scale);
 
 	const float* GetData() const;
+
+	Transform operator*(const Transform& other) const;
 };

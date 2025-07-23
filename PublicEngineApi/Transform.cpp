@@ -14,6 +14,11 @@ Transform::Transform(const Vec3F& translation, const float rotationDegrees, cons
 	transform_ = glm::scale(transform_, static_cast<glm::vec3>(scale));
 }
 
+Transform::Transform(const float* matrixVal)
+{
+	transform_ = glm::make_mat4(matrixVal);
+}
+
 void Transform::Translate(const Vec3F& translation)
 {
 	transform_ = glm::translate(transform_, static_cast<glm::vec3>(translation));
@@ -32,4 +37,9 @@ void Transform::Scale(const Vec3F& scale)
 const float* Transform::GetData() const
 {
 	return glm::value_ptr(transform_);
+}
+
+Transform Transform::operator*(const Transform& other) const
+{
+	return { transform_ * other.transform_ };
 }

@@ -43,13 +43,13 @@ Err TestDrawer::Startup()
 Err TestDrawer::Run()
 {
 	uint64_t meshSize;
-	const uint8_t* meshBinaryData = AssetRuntimeManager::LoadAsset(58, meshSize);
+	const uint8_t* meshBinaryData = AssetRuntimeManager::LoadAsset(64, meshSize);
 	testMesh_ = Serialization::DesserializeMesh(meshBinaryData, meshSize);
 
-	const Vec3F worldPos[5] = { {0.0f, 0.0f, 0.0f}, {2.0f, 5.0f, -15.0f}, {-1.5f, -2.2f, -2.5f},
-		{-3.8f, -2.0f, -12.3f}, {2.4f, -0.4f, -3.5f} };
+	//const Vec3F worldPos[5] = { {0.0f, 0.0f, 0.0f}, {2.0f, 5.0f, -15.0f}, {-1.5f, -2.2f, -2.5f},
+	//	{-3.8f, -2.0f, -12.3f}, {2.4f, -0.4f, -3.5f} };
 
-	//const Vec3F worldPos[1] = { {0.0f, 0.0f, 0.0f} };
+	const Vec3F worldPos[1] = { {0.0f, 0.0f, 0.0f} };
 
 	CameraInstance camera(enums::perspective, 0.1f, 1000.0f, 800.0f, 400.0f);
 	camera.Use();
@@ -82,8 +82,8 @@ Err TestDrawer::Run()
 
 		for (int i = 0; i < 5; ++i)
 		{
-			Transform model(worldPos[i], static_cast<float>(time_.GetElapsed()) / 50, {0.5f,1,0}, {1,1,1});
-			//Transform model(worldPos[i], 0, { 0,0,1 }, { 1,1,1 });
+			//Transform model(worldPos[i], static_cast<float>(time_.GetElapsed()) / 50, {0.5f,1,0}, {1,1,1});
+			Transform model(worldPos[i], 0, { 0,0,1 }, { 1,1,1 });
 
 			RenderRequest request = { &testMesh_, model };
 			err = RenderManager::RequestRender(request);

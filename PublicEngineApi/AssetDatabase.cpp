@@ -1,4 +1,6 @@
 #include "AssetDatabase.h"
+
+#include "GameConsoleManager.h"
 #include "LocalizationManager.h"
 #include "../MyGameStudio/ConsoleManager.h"
 
@@ -80,7 +82,7 @@ Err AssetDatabase::RegisterAsset(Asset& asset)
 	Err err = GetAssetBySrcLocation(asset.SourceLocation, existingAsset);
 	if (err.Code() == 0)
 	{
-		ConsoleManager::PrintWarning("Asset '" + asset.Name + "' was already imported before from source '" + existingAsset.SourceLocation + "'. Overwritting...");
+		GameConsoleManager::PrintWarning("Asset '" + asset.Name + "' was already imported before from source '" + existingAsset.SourceLocation + "'. Overwritting...", enums::ConsoleMessageSender::asset);
 
 		asset.Id = existingAsset.Id;
 		err = UpdateAsset(asset);

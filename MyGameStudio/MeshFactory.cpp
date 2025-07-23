@@ -207,6 +207,8 @@ Err MeshFactory::GetIndices(const tinygltf::Model& model, const tinygltf::Primit
 
 Err MeshFactory::GetTexture(const tinygltf::Model& model, const tinygltf::Primitive& primitive, const Asset& meshMetadata, uint32_t& textureAssetId)
 {
+	ConsoleManager::PrintInfo("Extracting texture '" + meshMetadata.Name + "_texture.png' from model...");
+
 	const tinygltf::Material material = model.materials[primitive.material];
 	const tinygltf::TextureInfo textureInfo = material.pbrMetallicRoughness.baseColorTexture;
 	const tinygltf::Texture texture = model.textures[textureInfo.index];

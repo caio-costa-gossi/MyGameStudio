@@ -9,8 +9,11 @@ private:
 	static std::string cmakePath_;
 	static std::string srcDir_;
 	static std::string buildDir_;
+
 	static std::string includeDir_;
 	static std::string libDir_;
+	static std::string externIncludeDir_;
+	static std::string externLibDir_;
 
 	static std::string projectName_;
 	static std::string projectVersion_;

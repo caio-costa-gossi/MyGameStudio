@@ -16,8 +16,11 @@ Err GameBuilder::Configure()
 	cmakePath_ = workingDir_ + ConfigManager::GetConfig("cmake_path");
 	srcDir_ = workingDir_ + ConfigManager::GetConfig("game_source_dir");
 	buildDir_ = workingDir_ + ConfigManager::GetConfig("game_build_dir");
+
 	includeDir_ = workingDir_ + ConfigManager::GetConfig("include_dir");
 	libDir_ = workingDir_ + ConfigManager::GetConfig("lib_dir");
+	externIncludeDir_ = workingDir_ + ConfigManager::GetConfig("extern_include_dir");
+	externLibDir_ = workingDir_ + ConfigManager::GetConfig("extern_lib_dir");
 
 	projectName_ = ConfigManager::GetConfig("game_name");
 	projectVersion_ = ConfigManager::GetConfig("game_version");
@@ -124,6 +127,8 @@ Err GameBuilder::CreateCMakeLists()
 	ReplaceInString(templateText, "@cpp_standard", cppStandard_);
 	ReplaceInString(templateText, "@include_dir", includeDir_);
 	ReplaceInString(templateText, "@lib_dir", libDir_);
+	ReplaceInString(templateText, "@extern_include_dir", externIncludeDir_);
+	ReplaceInString(templateText, "@extern_lib_dir", externLibDir_);
 	SystemPathHelper::WinSeparatorToUnix(templateText);
 
 	targetFile << templateText;
@@ -158,8 +163,11 @@ std::string GameBuilder::workingDir_;
 std::string GameBuilder::cmakePath_;
 std::string GameBuilder::srcDir_;
 std::string GameBuilder::buildDir_;
+
 std::string GameBuilder::includeDir_;
 std::string GameBuilder::libDir_;
+std::string GameBuilder::externIncludeDir_;
+std::string GameBuilder::externLibDir_;
 
 std::string GameBuilder::projectName_;
 std::string GameBuilder::projectVersion_;

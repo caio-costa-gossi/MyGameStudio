@@ -6,15 +6,17 @@ project(@project_name VERSION @version)
 
 file(GLOB CPP_SOURCE_FILES *.cpp)
 file(GLOB LIB_FILES "@lib_dir/*.lib")
+file(GLOB EXTERN_LIB_FILES "@extern_lib_dir/*.lib")
 
 set(CMAKE_CXX_STANDARD @cpp_standard)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 add_executable(@project_name ${CPP_SOURCE_FILES})
 
-target_link_libraries(@project_name PUBLIC ${LIB_FILES})
+target_link_libraries(@project_name PUBLIC ${LIB_FILES} ${EXTERN_LIB_FILES})
 
 target_include_directories(@project_name PUBLIC
                            "${CMAKE_SOURCE_DIR}"
 						   "@include_dir"
+						   "@extern_include_dir"
                            )

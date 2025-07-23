@@ -7,6 +7,7 @@
 #include "ConsoleManager.h"
 #include "FileManager.h"
 #include "GameBuilder.h"
+#include "GameConsoleManager.h"
 #include "LocalizationManager.h"
 
 Err EngineCoreManager::Startup()
@@ -32,6 +33,10 @@ Err EngineCoreManager::Startup()
 	err = ConsoleManager::Startup();
 	if (err.Code())
 		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
+
+	err = GameConsoleManager::Startup("0", "0");
+	if (err.Code())
+		ConsoleManager::PrintError(err.Message());
 
 	err = AssetDatabase::Startup();
 	if (err.Code())

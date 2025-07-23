@@ -1,6 +1,5 @@
 #include "ImageLoader.h"
 
-#define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
 constexpr uint8_t DESIRED_CHANNELS = 4;

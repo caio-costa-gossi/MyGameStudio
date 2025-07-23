@@ -21,7 +21,7 @@ uint8_t* MeshProcessor::ProcessMesh(const Asset& metadata, uint64_t& resultSize,
 	loader.LoadBinaryFromFile(&model, &errMsg, nullptr, metadata.SourceLocation);
 
 	ConsoleManager::Print(std::string(LocalizationManager::GetLocalizedString(string_const::G_ASSET_IMPORT)) + "20%", enums::ConsoleMessageType::info);
-	Err error = VerifyModel(model);
+	/*Err error = VerifyModel(model);
 	if (error.Code())
 	{
 		errMsg = LocalizationManager::GetLocalizedString(string_const::G_NOT_TRIANGULATED);
@@ -32,7 +32,7 @@ uint8_t* MeshProcessor::ProcessMesh(const Asset& metadata, uint64_t& resultSize,
 	CompressIndices(model);
 
 	ConsoleManager::Print(std::string(LocalizationManager::GetLocalizedString(string_const::G_ASSET_IMPORT)) + "60%", enums::ConsoleMessageType::info);
-	Triangulate(model);
+	Triangulate(model);*/
 
 	// Mesh importation
 	ConsoleManager::Print(std::string(LocalizationManager::GetLocalizedString(string_const::G_ASSET_IMPORT)) + "80%", enums::ConsoleMessageType::info);

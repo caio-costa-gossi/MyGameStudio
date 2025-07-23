@@ -30,6 +30,9 @@
     <Filter Include="GameRuntimeTest">
       <UniqueIdentifier>{e7137fcd-fdff-447e-b948-8e82756c7462}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Asset Management\Mesh">
+      <UniqueIdentifier>{07640134-c58c-4c61-8cef-0e191a238c63}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MyGameStudio.cpp">
@@ -71,9 +74,6 @@
     <ClCompile Include="DataStream.cpp">
       <Filter>Containers</Filter>
     </ClCompile>
-    <ClCompile Include="MeshProcessor.cpp">
-      <Filter>Asset Management</Filter>
-    </ClCompile>
     <ClCompile Include="Table.cpp">
       <Filter>Containers</Filter>
     </ClCompile>
@@ -101,8 +101,14 @@
     <ClCompile Include="AssetImportationManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
+    <ClCompile Include="VertexExtractor.cpp">
+      <Filter>Asset Management\Mesh</Filter>
+    </ClCompile>
     <ClCompile Include="MeshFactory.cpp">
-      <Filter>Asset Management</Filter>
+      <Filter>Asset Management\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshProcessor.cpp">
+      <Filter>Asset Management\Mesh</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -145,9 +151,6 @@
     <ClInclude Include="DdsHeader.h">
       <Filter>Asset Management</Filter>
     </ClInclude>
-    <ClInclude Include="MeshProcessor.h">
-      <Filter>Asset Management</Filter>
-    </ClInclude>
     <ClInclude Include="Table.h">
       <Filter>Containers</Filter>
     </ClInclude>
@@ -175,8 +178,14 @@
     <ClInclude Include="AssetImportationManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
+    <ClInclude Include="VertexExtractor.h">
+      <Filter>Asset Management\Mesh</Filter>
+    </ClInclude>
     <ClInclude Include="MeshFactory.h">
-      <Filter>Asset Management</Filter>
+      <Filter>Asset Management\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshProcessor.h">
+      <Filter>Asset Management\Mesh</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

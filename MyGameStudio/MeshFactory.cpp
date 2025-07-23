@@ -1,8 +1,5 @@
 #include "MeshFactory.h"
 
-#define TINYGLTF_IMPLEMENTATION
-#include <tiny_gltf.h>
-
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include <stb_image_write.h>
 
@@ -14,11 +11,20 @@
 #include "Image.h"
 #include "ImageLoader.h"
 #include "SystemPathHelper.h"
+#include "VertexExtractor.h"
 #include "ZipFile.h"
 
 Mesh MeshFactory::CreateMesh(const tinygltf::Model& model, const Asset& meshMetadata)
 {
-	for (const tinygltf::Mesh& mesh : model.meshes)
+	Mesh newMesh;
+	std::unique_ptr<Vertex[]> vertexData;
+	uint64_t vertexCount;
+
+	Err err = VertexExtractor::ExtractVertices(model, vertexData, vertexCount);
+	if (err.Code())
+		ConsoleManager::PrintError(err);
+
+	/*for (const tinygltf::Mesh& mesh : model.meshes)
 	{
 		for (const tinygltf::Primitive& primitive : mesh.primitives)
 		{
@@ -28,11 +34,10 @@ Mesh MeshFactory::CreateMesh(const tinygltf::Model& model, const Asset& meshMeta
 				continue;
 			}
 
-			Mesh newMesh;
+			
 
 			// Vertices
-			std::unique_ptr<Vertex[]> vertexData;
-			uint32_t vertexCount;
+			
 
 			Err err = GetVertices(model, primitive, vertexData, vertexCount);
 			if (err.Code())
@@ -73,7 +78,9 @@ Mesh MeshFactory::CreateMesh(const tinygltf::Model& model, const Asset& meshMeta
 	}
 
 	ConsoleManager::PrintError("No suitable primitives found in mesh. Mesh will be invalid.");
-	return { };
+	return { };*/
+
+	return newMesh;
 }
 
 Err MeshFactory::GetVertices(const tinygltf::Model& model, const tinygltf::Primitive& primitive, std::unique_ptr<Vertex[]>& vertices, uint32_t& count)

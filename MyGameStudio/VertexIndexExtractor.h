@@ -15,22 +15,25 @@ private:
 	uint32_t* indexList_ = nullptr;
 
 	std::stack<Transform> transforms_ = std::stack<Transform>();;
-	uint64_t vCounter_ = 0;
-	uint64_t totalVertexCount_ = 0;
+
+	uint32_t iCounter_ = 0;
+	uint32_t vCounter_ = 0;
+	uint32_t totalVertexCount_ = 0;
+	uint32_t totalIndexCount_ = 0;
 	
-	Err CountVertices();
-	Err CountVerticesNode(const tinygltf::Node& node);
+	Err CountVerticesIndices();
+	Err CountVerticesIndicesNode(const tinygltf::Node& node);
 
-	Err ExtractAllVertices();
-	Err ExtractVerticesNode(const tinygltf::Node& node);
+	Err ExtractAllVerticesIndices();
+	Err ExtractVerticesIndicesNode(const tinygltf::Node& node);
 
-	Err ExtractIndices();
+	Err CopyVerticesIndicesBuffer(const tinygltf::Mesh& mesh, const Transform& transform);
+	Err ExtractIndices(const tinygltf::Primitive& primitive);
 
 	Err StackNodeTransform(const tinygltf::Node& node);
-	Err CopyVerticesBuffer(const tinygltf::Mesh& mesh, const Transform& transform);
 
 public:
 	explicit VertexIndexExtractor(tinygltf::Model model);
 
-	Err ExtractVertices(std::unique_ptr<Vertex[]>& vertices, uint64_t& vertexCount, std::unique_ptr<uint32_t>& indices, uint64_t& indexCount);
+	Err ExtractVerticesIndices(std::unique_ptr<Vertex[]>& vertices, uint64_t& vertexCount, std::unique_ptr<uint32_t>& indices, uint64_t& indexCount);
 };

@@ -7,34 +7,38 @@
 VertexIndexExtractor::VertexIndexExtractor(tinygltf::Model model) :
 	model_(std::move(model)) { }
 
-Err VertexIndexExtractor::ExtractVertices(std::unique_ptr<Vertex[]>& vertices, uint64_t& vertexCount, std::unique_ptr<uint32_t>& indices, uint64_t& indexCount)
+Err VertexIndexExtractor::ExtractVerticesIndices(std::unique_ptr<Vertex[]>& vertices, uint64_t& vertexCount, std::unique_ptr<uint32_t>& indices, uint64_t& indexCount)
 {
 	// Get vertex count
-	Err err = CountVertices();
+	Err err = CountVerticesIndices();
 	if (err.Code())
 		return err;
 
-	// Prepare vertex buffer
+	// Prepare vertex & index buffer
 	vertices = std::make_unique<Vertex[]>(totalVertexCount_);
 	vertexList_ = vertices.get();
 
+	indices = std::make_unique<uint32_t>(totalIndexCount_);
+	indexList_ = indices.get();
+
 	// Start extraction
-	err = ExtractAllVertices();
+	err = ExtractAllVerticesIndices();
 	if (err.Code())
 		return err;
 
 	vertexCount = totalVertexCount_;
+	indexCount = totalIndexCount_;
 
 	return error_const::SUCCESS;
 }
 
-Err VertexIndexExtractor::CountVertices()
+Err VertexIndexExtractor::CountVerticesIndices()
 {
 	const tinygltf::Scene& scene = model_.scenes[model_.defaultScene];
 
 	for (const uint32_t nodeId : scene.nodes)
 	{
-		Err err = CountVerticesNode(model_.nodes[nodeId]);
+		Err err = CountVerticesIndicesNode(model_.nodes[nodeId]);
 		if (err.Code())
 			return err;
 	}
@@ -42,7 +46,7 @@ Err VertexIndexExtractor::CountVertices()
 	return error_const::SUCCESS;
 }
 
-Err VertexIndexExtractor::CountVerticesNode(const tinygltf::Node& node)
+Err VertexIndexExtractor::CountVerticesIndicesNode(const tinygltf::Node& node)
 {
 	// Calculate node vertex count
 	if (node.mesh < 0)
@@ -61,14 +65,17 @@ Err VertexIndexExtractor::CountVerticesNode(const tinygltf::Node& node)
 			continue;
 		}
 
-		const tinygltf::Accessor& accessor = model_.accessors[primitive.attributes.at("POSITION")];
-		totalVertexCount_ += accessor.count;
+		const tinygltf::Accessor& vertexAccessor = model_.accessors[primitive.attributes.at("POSITION")];
+		const tinygltf::Accessor& indexAccessor = model_.accessors[primitive.indices];
+
+		totalVertexCount_ += vertexAccessor.count;
+		totalIndexCount_ += indexAccessor.count;
 	}
 
 	// Go through children
 	for (const uint32_t childId : node.children)
 	{
-		Err err = CountVerticesNode(model_.nodes[childId]);
+		Err err = CountVerticesIndicesNode(model_.nodes[childId]);
 		if (err.Code())
 			ConsoleManager::PrintWarning("Error processing node vertex count: " + err.Message());
 	}
@@ -76,13 +83,13 @@ Err VertexIndexExtractor::CountVerticesNode(const tinygltf::Node& node)
 	return error_const::SUCCESS;
 }
 
-Err VertexIndexExtractor::ExtractAllVertices()
+Err VertexIndexExtractor::ExtractAllVerticesIndices()
 {
 	const tinygltf::Scene& scene = model_.scenes[model_.defaultScene];
 
 	for (const uint32_t nodeId : scene.nodes)
 	{
-		Err err = ExtractVerticesNode(model_.nodes[nodeId]);
+		Err err = ExtractVerticesIndicesNode(model_.nodes[nodeId]);
 		if (err.Code())
 			return err;
 	}
@@ -90,7 +97,7 @@ Err VertexIndexExtractor::ExtractAllVertices()
 	return error_const::SUCCESS;
 }
 
-Err VertexIndexExtractor::ExtractVerticesNode(const tinygltf::Node& node)
+Err VertexIndexExtractor::ExtractVerticesIndicesNode(const tinygltf::Node& node)
 {
 	// Stack transform matrix
 	Err err = StackNodeTransform(node);
@@ -106,14 +113,14 @@ Err VertexIndexExtractor::ExtractVerticesNode(const tinygltf::Node& node)
 		temp.pop();
 	}
 
-	err = CopyVerticesBuffer(model_.meshes[node.mesh], transform);
+	err = CopyVerticesIndicesBuffer(model_.meshes[node.mesh], transform);
 	if (err.Code())
 		return err;
 
 	// Go through children
 	for (const uint32_t childId : node.children)
 	{
-		err = ExtractVerticesNode(model_.nodes[childId]);
+		err = ExtractVerticesIndicesNode(model_.nodes[childId]);
 		if (err.Code())
 			ConsoleManager::PrintWarning("Error processing node vertex count: " + err.Message());
 	}
@@ -141,7 +148,7 @@ Err VertexIndexExtractor::StackNodeTransform(const tinygltf::Node& node)
 	return error_const::SUCCESS;
 }
 
-Err VertexIndexExtractor::CopyVerticesBuffer(const tinygltf::Mesh& mesh, const Transform& transform)
+Err VertexIndexExtractor::CopyVerticesIndicesBuffer(const tinygltf::Mesh& mesh, const Transform& transform)
 {
 	for (const tinygltf::Primitive& primitive : mesh.primitives)
 	{
@@ -189,10 +196,60 @@ Err VertexIndexExtractor::CopyVerticesBuffer(const tinygltf::Mesh& mesh, const T
 		}
 
 		// Add indices based on vCounter_
-
+		Err err = ExtractIndices(primitive);
+		if (err.Code())
+			return err;
 
 		vCounter_ += verticesInPrimitive;
 	}
+
+	return error_const::SUCCESS;
+}
+
+Err VertexIndexExtractor::ExtractIndices(const tinygltf::Primitive& primitive)
+{
+	const tinygltf::Accessor indexAccessor = model_.accessors[primitive.indices];
+
+	if (indexAccessor.type != TINYGLTF_TYPE_SCALAR)
+	{
+		ConsoleManager::PrintWarning("Primitive index data type is invalid. Skipping...");
+		return error_const::SUCCESS;
+	}
+
+	const uint64_t count = static_cast<uint32_t>(indexAccessor.count);
+	if (iCounter_ + count > totalIndexCount_)
+	{
+		ConsoleManager::PrintWarning("Primitive indices will overflow indices buffer. Skipping...");
+		return error_const::SUCCESS;
+	}
+
+	const tinygltf::BufferView indexBufferView = model_.bufferViews[indexAccessor.bufferView];
+	const tinygltf::Buffer indexBuffer = model_.buffers[indexBufferView.buffer];
+	const uint32_t byteOffset = static_cast<uint32_t>(indexAccessor.byteOffset + indexBufferView.byteOffset);
+
+	const uint8_t* dataPtr = &indexBuffer.data[byteOffset];
+
+	// Go through indices, with indexOffset on the indexList and vertexOffset on the index value
+	for (size_t i = 0; i < indexAccessor.count; ++i)
+	{
+		switch (indexAccessor.componentType)
+		{
+		case TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE:
+			indexList_[iCounter_ + i] = vCounter_ + *(dataPtr + i);
+			break;
+		case TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT:
+			indexList_[iCounter_ + i] = vCounter_ + *(reinterpret_cast<const uint16_t*>(dataPtr + i * sizeof(uint16_t)));
+			break;
+		case TINYGLTF_COMPONENT_TYPE_UNSIGNED_INT:
+			indexList_[iCounter_ + i] = vCounter_ + *(reinterpret_cast<const uint32_t*>(dataPtr + i * sizeof(uint32_t)));
+			break;
+		default:
+			ConsoleManager::PrintWarning("Unsupported index component type: " + std::to_string(indexAccessor.componentType));
+			return error_const::SUCCESS;
+		}
+	}
+
+	iCounter_ += count;
 
 	return error_const::SUCCESS;
 }

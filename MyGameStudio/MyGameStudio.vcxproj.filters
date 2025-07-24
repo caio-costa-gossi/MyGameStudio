@@ -110,6 +110,9 @@
     <ClCompile Include="MeshProcessor.cpp">
       <Filter>Asset Management\Mesh</Filter>
     </ClCompile>
+    <ClCompile Include="TextureExtractor.cpp">
+      <Filter>Asset Management\Mesh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HashTable.h">
@@ -185,6 +188,9 @@
       <Filter>Asset Management\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="MeshProcessor.h">
+      <Filter>Asset Management\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureExtractor.h">
       <Filter>Asset Management\Mesh</Filter>
     </ClInclude>
   </ItemGroup>

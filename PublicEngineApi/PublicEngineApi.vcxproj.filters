@@ -282,6 +282,9 @@
     <ClInclude Include="DataReader.h">
       <Filter>Helpers</Filter>
     </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Runtime Managers\Render\Data Structures</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssetRuntimeManager.cpp">

@@ -10,6 +10,13 @@ struct DataStream
 	uint64_t DataPointer;
 	uint64_t DataSize;
 
+	DataStream()
+	{
+		Data = nullptr;
+		DataPointer = 0;
+		DataSize = 0;
+	}
+
 	explicit DataStream(const uint64_t dataSize, const bool initToZero = true) : DataSize(dataSize)
 	{
 		Data = new uint8_t[dataSize];
@@ -20,6 +27,16 @@ struct DataStream
 	~DataStream()
 	{
 		delete[] Data;
+	}
+
+	Err InitStream(const uint64_t dataSize, const bool initToZero = true)
+	{
+		DataSize = dataSize;
+		Data = new uint8_t[dataSize];
+		DataPointer = 0;
+		if (initToZero) memset(Data, 0, dataSize);
+
+		return error_const::SUCCESS;
 	}
 
 	Err Write(const uint8_t* source, const uint64_t size)

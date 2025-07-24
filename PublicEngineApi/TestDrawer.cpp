@@ -10,6 +10,9 @@
 #include "RenderManager.h"
 #include "Serialization.h"
 #include "Transform.h"
+#include "ZipFile.h"
+
+#include <fstream>
 
 #undef min
 
@@ -43,7 +46,7 @@ Err TestDrawer::Startup()
 Err TestDrawer::Run()
 {
 	uint64_t meshSize;
-	const uint8_t* meshBinaryData = AssetRuntimeManager::LoadAsset(64, meshSize);
+	const uint8_t* meshBinaryData = AssetRuntimeManager::LoadAsset(60, meshSize);
 	testMesh_ = Serialization::DesserializeMesh(meshBinaryData, meshSize);
 
 	//const Vec3F worldPos[5] = { {0.0f, 0.0f, 0.0f}, {2.0f, 5.0f, -15.0f}, {-1.5f, -2.2f, -2.5f},

@@ -177,6 +177,7 @@
     <ClCompile Include="StringId.cpp" />
     <ClCompile Include="StringUtils.cpp" />
     <ClCompile Include="Table.cpp" />
+    <ClCompile Include="TextureExtractor.cpp" />
     <ClCompile Include="UserScriptProcessor.cpp" />
     <ClCompile Include="VertexIndexExtractor.cpp" />
   </ItemGroup>
@@ -204,6 +205,7 @@
     <ClInclude Include="StringId.h" />
     <ClInclude Include="StringUtils.h" />
     <ClInclude Include="Table.h" />
+    <ClInclude Include="TextureExtractor.h" />
     <ClInclude Include="UserScriptProcessor.h" />
     <ClInclude Include="VertexIndexExtractor.h" />
   </ItemGroup>

@@ -28,6 +28,7 @@
     <ClInclude Include="CameraFactory.h" />
     <ClInclude Include="CameraInstance.h" />
     <ClInclude Include="DataReader.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="OrthoCamera.h" />
     <ClInclude Include="PerspectiveCamera.h" />
     <ClInclude Include="CameraManager.h" />

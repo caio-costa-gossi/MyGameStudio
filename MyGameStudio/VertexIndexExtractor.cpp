@@ -1,6 +1,7 @@
 #include "VertexIndexExtractor.h"
 
 #include <tiny_gltf.h>
+#include <glm/gtc/quaternion.hpp>
 
 #include "ConsoleManager.h"
 
@@ -118,7 +119,7 @@ Err VertexIndexExtractor::ExtractVerticesIndicesNode(const tinygltf::Node& node)
 	std::stack<Transform> temp = transforms_;
 	while (!temp.empty())
 	{
-		transform = transform * temp.top();
+		transform = temp.top() * transform;
 		temp.pop();
 	}
 
@@ -134,25 +135,56 @@ Err VertexIndexExtractor::ExtractVerticesIndicesNode(const tinygltf::Node& node)
 			ConsoleManager::PrintWarning("Error processing node vertex count: " + err.Message());
 	}
 
+	transforms_.pop();
+
 	return error_const::SUCCESS;
 }
 
 Err VertexIndexExtractor::StackNodeTransform(const tinygltf::Node& node)
 {
-	if (!node.matrix.empty() && node.matrix.size() != 16)
-		return error_const::IMPORT_INVALID_TRANSFORM;
-
-	if (node.matrix.empty())
+	if (node.translation.empty() && node.rotation.empty() && node.scale.empty())
 		return error_const::SUCCESS;
 
-	float matrixVal[16] {};
-	for (uint8_t i = 0; i < 16; ++i)
+	Transform newTransform;
+
+	if (node.translation.size() == 3)
 	{
-		matrixVal[i] = static_cast<float>(node.matrix[i]);
+		const Vec3F translation = {
+			static_cast<float>(node.translation[0]),
+			static_cast<float>(node.translation[1]),
+			static_cast<float>(node.translation[2])
+		};
+
+		newTransform.Translate(translation);
 	}
 
-	auto transform = Transform(matrixVal);
-	transforms_.emplace(transform);
+	if (node.rotation.size() == 4)
+	{
+		const glm::quat rotation = {
+			static_cast<float>(node.rotation[3]),
+			static_cast<float>(node.rotation[0]),
+			static_cast<float>(node.rotation[1]),
+			static_cast<float>(node.rotation[2])
+		};
+
+		const glm::vec3 axis = glm::axis(rotation);
+		const float angle = glm::degrees(glm::angle(rotation));
+
+		newTransform.Rotate(angle, axis);
+	}
+
+	if (node.scale.size() == 3)
+	{
+		const Vec3F scale = {
+			static_cast<float>(node.scale[0]),
+			static_cast<float>(node.scale[1]),
+			static_cast<float>(node.scale[2])
+		};
+
+		newTransform.Scale(scale);
+	}
+
+	transforms_.emplace(newTransform);
 
 	return error_const::SUCCESS;
 }

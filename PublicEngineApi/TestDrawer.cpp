@@ -83,7 +83,7 @@ Err TestDrawer::Run()
 		for (int i = 0; i < 5; ++i)
 		{
 			//Transform model(worldPos[i], static_cast<float>(time_.GetElapsed()) / 50, {0.5f,1,0}, {1,1,1});
-			Transform model(worldPos[i], 0, { 0,0,1 }, { 1,1,1 });
+			Transform model(worldPos[i], 0, { 0,0,1 }, { 0.1f,0.1f,0.1f });
 
 			RenderRequest request = { &testMesh_, model };
 			err = RenderManager::RequestRender(request);

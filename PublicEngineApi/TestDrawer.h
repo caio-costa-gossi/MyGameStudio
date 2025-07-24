@@ -13,8 +13,6 @@ private:
 	static Vec3F position_;
 	static Vec3F scale_;
 
-	static Mesh testMesh_;
-
 	static Timeline time_;
 	static bool focus_;
 

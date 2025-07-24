@@ -5,6 +5,7 @@
 
 struct Model
 {
+	uint32_t ModelId = 0;
 	uint32_t MeshCount = 0;
 	std::unique_ptr<Mesh[]> Meshes;
 };

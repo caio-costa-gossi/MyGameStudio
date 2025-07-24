@@ -1,9 +1,9 @@
 #pragma once
-#include "Mesh.h"
+#include "Model.h"
 #include "Transform.h"
 
 struct RenderRequest
 {
-	const Mesh* Mesh = nullptr;
-	Transform Model;
+	const Model* Model = nullptr;
+	Transform Transform;
 };

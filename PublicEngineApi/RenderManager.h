@@ -7,14 +7,13 @@
 
 #include "Err.h"
 #include "Mesh.h"
-#include "MeshInstance.h"
 #include "RenderQuery.h"
 #include "RenderRequest.h"
 #include "Shader.h"
 #include "Texture.h"
 #include "Timeline.h"
 
-using AttributeMap = std::unordered_map<uint32_t, uint32_t>;
+using AttributeMap = std::unordered_map<uint32_t, std::vector<uint32_t>>;
 using TextureList = std::unordered_map<uint32_t, Texture>;
 
 class RenderManager

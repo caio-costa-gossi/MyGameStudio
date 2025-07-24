@@ -47,7 +47,17 @@ Err TestDrawer::Run()
 {
 	uint64_t meshSize;
 	const uint8_t* meshBinaryData = AssetRuntimeManager::LoadAsset(60, meshSize);
-	testMesh_ = Serialization::DesserializeMesh(meshBinaryData, meshSize);
+	Mesh mesh1 = Serialization::DesserializeMesh(meshBinaryData, meshSize);
+
+	const uint8_t* meshBinaryData2 = AssetRuntimeManager::LoadAsset(65, meshSize);
+	Mesh mesh2 = Serialization::DesserializeMesh(meshBinaryData2, meshSize);
+
+	Model model;
+	model.MeshCount = 2;
+	model.ModelId = 0;
+	model.Meshes = std::make_unique<Mesh[]>(2);
+	model.Meshes[0] = std::move(mesh1);
+	model.Meshes[1] = std::move(mesh2);
 
 	//const Vec3F worldPos[5] = { {0.0f, 0.0f, 0.0f}, {2.0f, 5.0f, -15.0f}, {-1.5f, -2.2f, -2.5f},
 	//	{-3.8f, -2.0f, -12.3f}, {2.4f, -0.4f, -3.5f} };
@@ -85,10 +95,10 @@ Err TestDrawer::Run()
 
 		for (int i = 0; i < 5; ++i)
 		{
-			//Transform model(worldPos[i], static_cast<float>(time_.GetElapsed()) / 50, {0.5f,1,0}, {1,1,1});
-			Transform model(worldPos[i], 0, { 0,0,1 }, { 0.1f,0.1f,0.1f });
+			//Transform transform(worldPos[i], static_cast<float>(time_.GetElapsed()) / 50, {0.5f,1,0}, {1,1,1});
+			Transform transform(worldPos[i], 0, { 0,0,1 }, { 1.0f,1.0f,1.0f });
 
-			RenderRequest request = { &testMesh_, model };
+			RenderRequest request = { &model, transform };
 			err = RenderManager::RequestRender(request);
 			if (err.Code())
 				return err;
@@ -190,7 +200,6 @@ Err TestDrawer::LockUnlock()
 
 
 bool TestDrawer::running_ = false;
-Mesh TestDrawer::testMesh_;
 
 float TestDrawer::rotation_ = -55.0f;
 Vec3F TestDrawer::position_ = {0,0,0};

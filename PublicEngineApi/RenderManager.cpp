@@ -8,7 +8,6 @@
 #include "Enums.h"
 #include "GameConsoleManager.h"
 #include "MeshInstance.h"
-#include "MVector.h"
 #include "RenderQuery.h"
 #include "Texture.h"
 #include "Transform.h"
@@ -91,30 +90,47 @@ Err RenderManager::SetupShader()
 
 Err RenderManager::RequestRender(const RenderRequest& request)
 {
-	// Create OpenGL Vertex Attribute Object and upload vertex data / use VAO previously created
-	uint32_t vao;
-
-	if (attributeMap_.find(request.Mesh->MeshId) == attributeMap_.end())
+	// Create OpenGL Vertex Attribute Object and upload vertex data saving it in a list / use VAO list previously created
+	if (attributeMap_.find(request.Model->ModelId) == attributeMap_.end())
 	{
-		Err err = NewAttribObject(*request.Mesh, vao);
-		if (err.Code())
-			return err;
+		std::vector<uint32_t> vaoList;
 
-		attributeMap_[request.Mesh->MeshId] = vao;
+		for (uint32_t i = 0; i < request.Model->MeshCount; ++i)
+		{
+			uint32_t vao;
+
+			Err err = NewAttribObject(request.Model->Meshes[i], vao);
+			if (err.Code())
+				return err;
+
+			vaoList.push_back(vao);
+
+			RenderQuery newQuery = { {&request.Model->Meshes[i], vao}, request.Transform};
+			renderQueue_.emplace(newQuery);
+		}
+
+		attributeMap_[request.Model->ModelId] = vaoList;
 	}
 	else
-		vao = attributeMap_[request.Mesh->MeshId];
-
-	// Create & save request query
-	RenderQuery newQuery = { {request.Mesh, vao}, request.Model };
-	renderQueue_.emplace(newQuery);
-
-	// Save mesh texture in a new Texture if necessary
-	if (textures_.find(request.Mesh->TextureAssetId) == textures_.end())
 	{
-		Err err = AddTexture(request.Mesh->TextureAssetId);
-		if (err.Code())
-			return err;
+		const std::vector<uint32_t>& vaoList = attributeMap_[request.Model->ModelId];
+
+		for (uint32_t i = 0; i < request.Model->MeshCount; ++i)
+		{
+			RenderQuery newQuery = { {&request.Model->Meshes[i], vaoList[i]}, request.Transform};
+			renderQueue_.emplace(newQuery);
+		}
+	}
+
+	// Preload texture from meshes
+	for (uint32_t i = 0; i < request.Model->MeshCount; ++i)
+	{
+		if (textures_.find(request.Model->Meshes[i].TextureAssetId) == textures_.end())
+		{
+			Err err = AddTexture(request.Model->Meshes[i].TextureAssetId);
+			if (err.Code())
+				GameConsoleManager::PrintError(err);
+		}
 	}
 
 	return error_const::SUCCESS;

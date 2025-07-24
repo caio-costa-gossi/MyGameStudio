@@ -11,74 +11,27 @@
 #include "Image.h"
 #include "ImageLoader.h"
 #include "SystemPathHelper.h"
-#include "VertexExtractor.h"
+#include "VertexIndexExtractor.h"
 #include "ZipFile.h"
 
 Mesh MeshFactory::CreateMesh(const tinygltf::Model& model, const Asset& meshMetadata)
 {
 	Mesh newMesh;
-	std::unique_ptr<Vertex[]> vertexData;
-	uint64_t vertexCount;
+	auto extractor = VertexIndexExtractor(model);
 
-	Err err = VertexExtractor::ExtractVertices(model, vertexData, vertexCount);
+	std::unique_ptr<Vertex[]> vertexData;
+	std::unique_ptr<uint32_t[]> indexData;
+	uint32_t vertexCount;
+	uint32_t indexCount;
+
+	Err err = extractor.ExtractVerticesIndices(vertexData, vertexCount, indexData, indexCount);
 	if (err.Code())
 		ConsoleManager::PrintError(err);
 
-	/*for (const tinygltf::Mesh& mesh : model.meshes)
-	{
-		for (const tinygltf::Primitive& primitive : mesh.primitives)
-		{
-			if (primitive.mode != TINYGLTF_MODE_TRIANGLES)
-			{
-				ConsoleManager::PrintWarning("Mesh mode is not TRIANGLES. Skipping primitive...");
-				continue;
-			}
-
-			
-
-			// Vertices
-			
-
-			Err err = GetVertices(model, primitive, vertexData, vertexCount);
-			if (err.Code())
-			{
-				ConsoleManager::PrintWarning(err.Message());
-				continue;
-			}
-
-			newMesh.VertexCount = vertexCount;
-			newMesh.VertexList = std::move(vertexData);
-
-			// Indices
-			std::unique_ptr<uint32_t[]> indexData;
-			uint32_t indexCount;
-
-			err = GetIndices(model, primitive, indexData, indexCount);
-			if (err.Code())
-			{
-				ConsoleManager::PrintWarning(err.Message());
-				continue;
-			}
-
-			newMesh.IndexCount = indexCount;
-			newMesh.IndexList = std::move(indexData);
-
-			// Texture coordinates
-			err = GetTexCoords(model, primitive, newMesh);
-			if (err.Code())
-				ConsoleManager::PrintWarning(err.Message());
-
-			// Texture
-			err = GetTexture(model, primitive, meshMetadata, newMesh.TextureAssetId);
-			if (err.Code())
-				ConsoleManager::PrintWarning(err.Message());
-
-			return newMesh;
-		}
-	}
-
-	ConsoleManager::PrintError("No suitable primitives found in mesh. Mesh will be invalid.");
-	return { };*/
+	newMesh.VertexCount = vertexCount;
+	newMesh.VertexList = std::move(vertexData);
+	newMesh.IndexCount = indexCount;
+	newMesh.IndexList = std::move(indexData);
 
 	return newMesh;
 }

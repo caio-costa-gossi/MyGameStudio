@@ -7,7 +7,7 @@
 VertexIndexExtractor::VertexIndexExtractor(tinygltf::Model model) :
 	model_(std::move(model)) { }
 
-Err VertexIndexExtractor::ExtractVerticesIndices(std::unique_ptr<Vertex[]>& vertices, uint64_t& vertexCount, std::unique_ptr<uint32_t>& indices, uint64_t& indexCount)
+Err VertexIndexExtractor::ExtractVerticesIndices(std::unique_ptr<Vertex[]>& vertices, uint32_t& vertexCount, std::unique_ptr<uint32_t[]>& indices, uint32_t& indexCount)
 {
 	// Get vertex count
 	Err err = CountVerticesIndices();
@@ -18,7 +18,7 @@ Err VertexIndexExtractor::ExtractVerticesIndices(std::unique_ptr<Vertex[]>& vert
 	vertices = std::make_unique<Vertex[]>(totalVertexCount_);
 	vertexList_ = vertices.get();
 
-	indices = std::make_unique<uint32_t>(totalIndexCount_);
+	indices = std::make_unique<uint32_t[]>(totalIndexCount_);
 	indexList_ = indices.get();
 
 	// Start extraction

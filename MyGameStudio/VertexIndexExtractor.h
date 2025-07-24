@@ -35,5 +35,5 @@ private:
 public:
 	explicit VertexIndexExtractor(tinygltf::Model model);
 
-	Err ExtractVerticesIndices(std::unique_ptr<Vertex[]>& vertices, uint64_t& vertexCount, std::unique_ptr<uint32_t>& indices, uint64_t& indexCount);
+	Err ExtractVerticesIndices(std::unique_ptr<Vertex[]>& vertices, uint32_t& vertexCount, std::unique_ptr<uint32_t[]>& indices, uint32_t& indexCount);
 };

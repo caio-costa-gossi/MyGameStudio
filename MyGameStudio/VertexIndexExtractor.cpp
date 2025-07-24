@@ -10,6 +10,7 @@ VertexIndexExtractor::VertexIndexExtractor(tinygltf::Model model) :
 Err VertexIndexExtractor::ExtractVerticesIndices(std::unique_ptr<Vertex[]>& vertices, uint32_t& vertexCount, std::unique_ptr<uint32_t[]>& indices, uint32_t& indexCount)
 {
 	// Get vertex count
+	ConsoleManager::PrintInfo("Counting vertices and indices...");
 	Err err = CountVerticesIndices();
 	if (err.Code())
 		return err;
@@ -89,6 +90,8 @@ Err VertexIndexExtractor::ExtractAllVerticesIndices()
 
 	for (const uint32_t nodeId : scene.nodes)
 	{
+		ConsoleManager::PrintInfo("Processing node " + std::to_string(nodeId) + "...");
+
 		Err err = ExtractVerticesIndicesNode(model_.nodes[nodeId]);
 		if (err.Code())
 			return err;
@@ -99,6 +102,12 @@ Err VertexIndexExtractor::ExtractAllVerticesIndices()
 
 Err VertexIndexExtractor::ExtractVerticesIndicesNode(const tinygltf::Node& node)
 {
+	if (node.mesh < 0)
+	{
+		ConsoleManager::PrintWarning("Node mesh index < 0");
+		return error_const::SUCCESS;
+	}
+
 	// Stack transform matrix
 	Err err = StackNodeTransform(node);
 	if (err.Code())

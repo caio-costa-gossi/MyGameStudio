@@ -101,7 +101,7 @@
     <ClCompile Include="AssetImportationManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
-    <ClCompile Include="VertexExtractor.cpp">
+    <ClCompile Include="VertexIndexExtractor.cpp">
       <Filter>Asset Management\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="MeshFactory.cpp">
@@ -178,7 +178,7 @@
     <ClInclude Include="AssetImportationManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
-    <ClInclude Include="VertexExtractor.h">
+    <ClInclude Include="VertexIndexExtractor.h">
       <Filter>Asset Management\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="MeshFactory.h">

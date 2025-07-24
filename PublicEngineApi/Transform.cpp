@@ -43,3 +43,9 @@ Transform Transform::operator*(const Transform& other) const
 {
 	return { transform_ * other.transform_ };
 }
+
+Vec3F Transform::operator*(const Vec3F& vector) const
+{
+	glm::vec4 result = transform_ * glm::vec4(vector.X, vector.Y, vector.Z, 1.0f);
+	return { result.x, result.y, result.z };
+}

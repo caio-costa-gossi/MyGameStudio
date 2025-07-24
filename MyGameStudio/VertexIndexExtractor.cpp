@@ -1,35 +1,40 @@
-#include "VertexExtractor.h"
+#include "VertexIndexExtractor.h"
 
 #include <tiny_gltf.h>
 
 #include "ConsoleManager.h"
 
-Err VertexExtractor::ExtractVertices(const tinygltf::Model& model, std::unique_ptr<Vertex[]>& vertices, uint64_t& vertexCount)
+VertexIndexExtractor::VertexIndexExtractor(tinygltf::Model model) :
+	model_(std::move(model)) { }
+
+Err VertexIndexExtractor::ExtractVertices(std::unique_ptr<Vertex[]>& vertices, uint64_t& vertexCount, std::unique_ptr<uint32_t>& indices, uint64_t& indexCount)
 {
 	// Get vertex count
-	uint64_t totalVertexCount = 0;
-	Err err = CountVertices(model, totalVertexCount);
+	Err err = CountVertices();
 	if (err.Code())
 		return err;
 
 	// Prepare vertex buffer
-	vertices = std::make_unique<Vertex[]>(totalVertexCount);
+	vertices = std::make_unique<Vertex[]>(totalVertexCount_);
+	vertexList_ = vertices.get();
 
 	// Start extraction
-	err = ExtractAllVertices(model, vertices.get(), vertexCount);
+	err = ExtractAllVertices();
 	if (err.Code())
 		return err;
+
+	vertexCount = totalVertexCount_;
 
 	return error_const::SUCCESS;
 }
 
-Err VertexExtractor::CountVertices(const tinygltf::Model& model, uint64_t& vertexCount)
+Err VertexIndexExtractor::CountVertices()
 {
-	const tinygltf::Scene& scene = model.scenes[model.defaultScene];
+	const tinygltf::Scene& scene = model_.scenes[model_.defaultScene];
 
 	for (const uint32_t nodeId : scene.nodes)
 	{
-		Err err = CountVerticesNode(model, model.nodes[nodeId], vertexCount);
+		Err err = CountVerticesNode(model_.nodes[nodeId]);
 		if (err.Code())
 			return err;
 	}
@@ -37,7 +42,7 @@ Err VertexExtractor::CountVertices(const tinygltf::Model& model, uint64_t& verte
 	return error_const::SUCCESS;
 }
 
-Err VertexExtractor::CountVerticesNode(const tinygltf::Model& model, const tinygltf::Node& node, uint64_t& vertexCount)
+Err VertexIndexExtractor::CountVerticesNode(const tinygltf::Node& node)
 {
 	// Calculate node vertex count
 	if (node.mesh < 0)
@@ -46,7 +51,7 @@ Err VertexExtractor::CountVerticesNode(const tinygltf::Model& model, const tinyg
 		return error_const::SUCCESS;
 	}
 
-	const tinygltf::Mesh& mesh = model.meshes[node.mesh];
+	const tinygltf::Mesh& mesh = model_.meshes[node.mesh];
 
 	for (const tinygltf::Primitive& primitive : mesh.primitives)
 	{
@@ -56,14 +61,14 @@ Err VertexExtractor::CountVerticesNode(const tinygltf::Model& model, const tinyg
 			continue;
 		}
 
-		const tinygltf::Accessor& accessor = model.accessors[primitive.attributes.at("POSITION")];
-		vertexCount += accessor.count;
+		const tinygltf::Accessor& accessor = model_.accessors[primitive.attributes.at("POSITION")];
+		totalVertexCount_ += accessor.count;
 	}
 
 	// Go through children
 	for (const uint32_t childId : node.children)
 	{
-		Err err = CountVerticesNode(model, model.nodes[childId], vertexCount);
+		Err err = CountVerticesNode(model_.nodes[childId]);
 		if (err.Code())
 			ConsoleManager::PrintWarning("Error processing node vertex count: " + err.Message());
 	}
@@ -71,13 +76,13 @@ Err VertexExtractor::CountVerticesNode(const tinygltf::Model& model, const tinyg
 	return error_const::SUCCESS;
 }
 
-Err VertexExtractor::ExtractAllVertices(const tinygltf::Model& model, Vertex* vertexList, const uint64_t vertexCount)
+Err VertexIndexExtractor::ExtractAllVertices()
 {
-	const tinygltf::Scene& scene = model.scenes[model.defaultScene];
+	const tinygltf::Scene& scene = model_.scenes[model_.defaultScene];
 
 	for (const uint32_t nodeId : scene.nodes)
 	{
-		Err err = ExtractVerticesNode(model, model.nodes[nodeId], vertexList, vertexCount);
+		Err err = ExtractVerticesNode(model_.nodes[nodeId]);
 		if (err.Code())
 			return err;
 	}
@@ -85,7 +90,7 @@ Err VertexExtractor::ExtractAllVertices(const tinygltf::Model& model, Vertex* ve
 	return error_const::SUCCESS;
 }
 
-Err VertexExtractor::ExtractVerticesNode(const tinygltf::Model& model, const tinygltf::Node& node, Vertex* vertexList, const uint64_t vertexCount)
+Err VertexIndexExtractor::ExtractVerticesNode(const tinygltf::Node& node)
 {
 	// Stack transform matrix
 	Err err = StackNodeTransform(node);
@@ -101,14 +106,14 @@ Err VertexExtractor::ExtractVerticesNode(const tinygltf::Model& model, const tin
 		temp.pop();
 	}
 
-	err = CopyVerticesBuffer(model, model.meshes[node.mesh], transform, vertexList, vertexCount);
+	err = CopyVerticesBuffer(model_.meshes[node.mesh], transform);
 	if (err.Code())
 		return err;
 
 	// Go through children
 	for (const uint32_t childId : node.children)
 	{
-		err = ExtractVerticesNode(model, model.nodes[childId], vertexList, vertexCount);
+		err = ExtractVerticesNode(model_.nodes[childId]);
 		if (err.Code())
 			ConsoleManager::PrintWarning("Error processing node vertex count: " + err.Message());
 	}
@@ -116,7 +121,7 @@ Err VertexExtractor::ExtractVerticesNode(const tinygltf::Model& model, const tin
 	return error_const::SUCCESS;
 }
 
-Err VertexExtractor::StackNodeTransform(const tinygltf::Node& node)
+Err VertexIndexExtractor::StackNodeTransform(const tinygltf::Node& node)
 {
 	if (!node.matrix.empty() && node.matrix.size() != 16)
 		return error_const::IMPORT_INVALID_TRANSFORM;
@@ -136,7 +141,7 @@ Err VertexExtractor::StackNodeTransform(const tinygltf::Node& node)
 	return error_const::SUCCESS;
 }
 
-Err VertexExtractor::CopyVerticesBuffer(const tinygltf::Model& model, const tinygltf::Mesh& mesh, const Transform& transform, Vertex* vertexList, const uint64_t vertexCount)
+Err VertexIndexExtractor::CopyVerticesBuffer(const tinygltf::Mesh& mesh, const Transform& transform)
 {
 	for (const tinygltf::Primitive& primitive : mesh.primitives)
 	{
@@ -146,7 +151,7 @@ Err VertexExtractor::CopyVerticesBuffer(const tinygltf::Model& model, const tiny
 			continue;
 		}
 
-		const tinygltf::Accessor vertexAccessor = model.accessors[primitive.attributes.at("POSITION")];
+		const tinygltf::Accessor vertexAccessor = model_.accessors[primitive.attributes.at("POSITION")];
 		if (vertexAccessor.type != TINYGLTF_TYPE_VEC3 || vertexAccessor.componentType != TINYGLTF_COMPONENT_TYPE_FLOAT)
 		{
 			ConsoleManager::PrintWarning("Component type is not float or data type is not vec3. Skipping primitive...");
@@ -154,14 +159,14 @@ Err VertexExtractor::CopyVerticesBuffer(const tinygltf::Model& model, const tiny
 		}
 
 		const uint32_t verticesInPrimitive = static_cast<uint32_t>(vertexAccessor.count);
-		if (verticesInPrimitive + vCounter_ > vertexCount)
+		if (verticesInPrimitive + vCounter_ > totalVertexCount_)
 		{
 			ConsoleManager::PrintWarning("VertexCount from primitive will exceed allocated space. Skipping...");
 			continue;
 		}
 
-		const tinygltf::BufferView vertexBufferView = model.bufferViews[vertexAccessor.bufferView];
-		const tinygltf::Buffer vertexBuffer = model.buffers[vertexBufferView.buffer];
+		const tinygltf::BufferView vertexBufferView = model_.bufferViews[vertexAccessor.bufferView];
+		const tinygltf::Buffer vertexBuffer = model_.buffers[vertexBufferView.buffer];
 
 		const size_t offset = vertexAccessor.byteOffset + vertexBufferView.byteOffset;
 		const size_t stride = vertexBufferView.byteStride ? vertexBufferView.byteStride : 3 * sizeof(float);
@@ -177,17 +182,17 @@ Err VertexExtractor::CopyVerticesBuffer(const tinygltf::Model& model, const tiny
 			newVertex.Pos.Y = vertexData[1];
 			newVertex.Pos.Z = vertexData[2];
 
-			// APPLY TRANSFORM
+			// Apply transform & add value to vertexList
+			newVertex.Pos = transform * newVertex.Pos;
 
-			vertexList[vCounter_ + i] = newVertex;
+			vertexList_[vCounter_ + i] = newVertex;
 		}
+
+		// Add indices based on vCounter_
+
 
 		vCounter_ += verticesInPrimitive;
 	}
 
 	return error_const::SUCCESS;
 }
-
-
-std::stack<Transform> VertexExtractor::transforms_ = std::stack<Transform>();
-uint64_t VertexExtractor::vCounter_ = 0;

@@ -178,7 +178,7 @@
     <ClCompile Include="StringUtils.cpp" />
     <ClCompile Include="Table.cpp" />
     <ClCompile Include="UserScriptProcessor.cpp" />
-    <ClCompile Include="VertexExtractor.cpp" />
+    <ClCompile Include="VertexIndexExtractor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AsciiDrawer.h" />
@@ -205,7 +205,7 @@
     <ClInclude Include="StringUtils.h" />
     <ClInclude Include="Table.h" />
     <ClInclude Include="UserScriptProcessor.h" />
-    <ClInclude Include="VertexExtractor.h" />
+    <ClInclude Include="VertexIndexExtractor.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

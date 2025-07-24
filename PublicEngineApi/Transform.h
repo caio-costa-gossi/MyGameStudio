@@ -23,4 +23,5 @@ public:
 	const float* GetData() const;
 
 	Transform operator*(const Transform& other) const;
+	Vec3F operator*(const Vec3F& vector) const;
 };

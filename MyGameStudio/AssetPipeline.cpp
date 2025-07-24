@@ -15,22 +15,21 @@ Err AssetPipeline::ImportAsset(const char* filepath, Asset& importedAsset, const
 	SystemPathHelper::WinSeparatorToUnix(stdFilepath);
 
 	// Load file and get metadata
-	Asset newAsset = GetAssetMetadata(stdFilepath.c_str());
-	if (newAsset.SourceSize == 0)
+	Err err = GetAssetMetadata(stdFilepath.c_str(), importedAsset);
+	if (importedAsset.SourceSize == 0)
 		return error_const::FILE_NOT_FOUND;
+	if (err.Code())
+		return err;
 
 	// Load full file and process
 	std::string errMsg;
-	const uint8_t* resultBuffer = ProcessAsset(newAsset, errMsg, ctrlFlag);
+	const uint8_t* resultBuffer = ProcessAsset(importedAsset, errMsg, ctrlFlag);
 
 	if (resultBuffer == nullptr)
 		return Err(errMsg, error_const::ASSET_IMPORTATION_ERROR_CODE);
 
 	// Save result to .zip
-	SaveResult(newAsset, resultBuffer);
-
-	// Return asset metadata
-	importedAsset = newAsset;
+	SaveResult(importedAsset, resultBuffer);
 
 	// Delete result buffer and return
 	delete[] resultBuffer;
@@ -66,29 +65,23 @@ Err AssetPipeline::SaveFile(const char* filepath, const uint8_t* fileBuffer, con
 	return error_const::SUCCESS;
 }
 
-Asset AssetPipeline::GetAssetMetadata(const char* filepath)
+Err AssetPipeline::GetAssetMetadata(const char* filepath, Asset& asset)
 {
-	Asset asset;
 	const auto metadataFileBuffer = std::make_unique<uint8_t[]>(10);
 
-	asset.Id = 0;
 	asset.SourceLocation = filepath;
 	asset.Name = SystemPathHelper::GetFileName(filepath);
 	asset.Extension = SystemPathHelper::GetFileExtension(asset.Name);
 
-	int64_t fileSize = LoadFile(filepath, metadataFileBuffer.get(), 10);
+	const int64_t fileSize = LoadFile(filepath, metadataFileBuffer.get(), 10);
 
 	if (fileSize < 0)
-	{
-		asset.SourceSize = 0;
-		asset.Type = enums::AssetType::undefined;
-		return asset;
-	}
+		return error_const::FILE_NOT_FOUND;
 
 	asset.SourceSize = fileSize;
 	asset.Type = GetAssetType(metadataFileBuffer.get(), 10, asset.Extension);
 
-	return asset;
+	return error_const::SUCCESS;
 }
 
 Err AssetPipeline::SaveResult(Asset& assetMetadata, const uint8_t* assetData)

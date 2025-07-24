@@ -351,6 +351,8 @@ Err VertexIndexExtractor::InitMeshes()
 		Mesh* mesh = &meshList_[info.MeshIndex];
 		mesh->VertexList = std::make_unique<Vertex[]>(info.TotalVertexCount);
 		mesh->IndexList = std::make_unique<uint32_t[]>(info.TotalIndexCount);
+		mesh->VertexCount = info.TotalVertexCount;
+		mesh->IndexCount = info.TotalIndexCount;
 
 		info.VertexList = mesh->VertexList.get();
 		info.IndexList = mesh->IndexList.get();

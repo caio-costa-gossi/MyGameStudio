@@ -5,7 +5,7 @@
 class AssetPipeline
 {
 private:
-	static Asset GetAssetMetadata(const char* filepath);
+	static Err GetAssetMetadata(const char* filepath, Asset& asset);
 	static uint8_t* ProcessAsset(Asset& assetMetadata, std::string& errMsg, bool ctrlFlag = false);
 
 	static Err SaveResult(Asset& assetMetadata, const uint8_t* assetData);

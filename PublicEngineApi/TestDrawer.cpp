@@ -45,19 +45,9 @@ Err TestDrawer::Startup()
 
 Err TestDrawer::Run()
 {
-	uint64_t meshSize;
-	const uint8_t* meshBinaryData = AssetRuntimeManager::LoadAsset(60, meshSize);
-	Mesh mesh1 = Serialization::DesserializeMesh(meshBinaryData, meshSize);
-
-	const uint8_t* meshBinaryData2 = AssetRuntimeManager::LoadAsset(65, meshSize);
-	Mesh mesh2 = Serialization::DesserializeMesh(meshBinaryData2, meshSize);
-
-	Model model;
-	model.MeshCount = 2;
-	model.ModelId = 0;
-	model.Meshes = std::make_unique<Mesh[]>(2);
-	model.Meshes[0] = std::move(mesh1);
-	model.Meshes[1] = std::move(mesh2);
+	uint64_t modelSize;
+	const uint8_t* meshBinaryData = AssetRuntimeManager::LoadAsset(66, modelSize);
+	Model model = Serialization::DesserializeModel(meshBinaryData, modelSize);
 
 	//const Vec3F worldPos[5] = { {0.0f, 0.0f, 0.0f}, {2.0f, 5.0f, -15.0f}, {-1.5f, -2.2f, -2.5f},
 	//	{-3.8f, -2.0f, -12.3f}, {2.4f, -0.4f, -3.5f} };

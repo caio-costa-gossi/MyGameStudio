@@ -76,6 +76,8 @@ DataStream Serialization::SerializeModel(const Model& model, uint64_t& resultSiz
 	for (uint32_t i = 0; i < model.MeshCount; ++i)
 		modelStream.Write(meshData[i].Data, offsets[i]);
 
+	resultSize = totalModelSize;
+
 	return modelStream;
 }
 

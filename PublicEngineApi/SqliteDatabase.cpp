@@ -25,6 +25,25 @@ Err SqliteDatabase::CloseDb()
 	return error_const::SUCCESS;
 }
 
+Err SqliteDatabase::ExecuteQuerySingleValue(const char* sqlStatement, int32_t& value) const
+{
+	if (!isDbOpen_)
+		return error_const::DB_CLOSED;
+
+	sqlite3_stmt* stmt = nullptr;
+
+	if (sqlite3_prepare_v2(database_, sqlStatement, -1, &stmt, nullptr))
+		return Err("Error preparing statement for DB query!", error_const::DB_ERROR_CODE);
+
+	if (sqlite3_step(stmt) == SQLITE_DONE)
+		return Err("No entries found in the table", error_const::DB_ERROR_CODE);
+
+	value = sqlite3_column_int(stmt, 0);
+	sqlite3_finalize(stmt);
+
+	return error_const::SUCCESS;
+}
+
 Err SqliteDatabase::ExecuteNonQuery(const char* sqlStatement) const
 {
 	if (!isDbOpen_)

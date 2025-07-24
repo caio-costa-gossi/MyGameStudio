@@ -16,6 +16,7 @@ public:
 
 	Err OpenDb(const char* filename);
 	Err CloseDb();
+	Err ExecuteQuerySingleValue(const char* sqlStatement, int32_t& value) const;
 	Err ExecuteNonQuery(const char* sqlStatement) const;
 	Err ExecuteInsert(const char* insertStatement, int64_t& rowId) const;
 

@@ -10,26 +10,32 @@ VertexIndexExtractor::VertexIndexExtractor(tinygltf::Model model) :
 
 Err VertexIndexExtractor::ExtractVerticesIndices(std::unique_ptr<Mesh[]>& meshList, uint32_t& meshCount)
 {
-	// Get vertex count
-	ConsoleManager::PrintInfo("Counting vertices and indices...");
-	Err err = CountVerticesIndices();
+	// Get mesh count
+	ConsoleManager::PrintInfo("Counting meshes...");
+	Err err = CountMeshes();
 	if (err.Code())
 		return err;
 
-	// Prepare vertex & index buffer
-	vertices = std::make_unique<Vertex[]>(totalVertexCount_);
-	vertexList_ = vertices.get();
+	meshList = std::make_unique<Mesh[]>(totalMeshCount_);
+	meshList_ = meshList.get();
+	meshCount = totalMeshCount_;
 
-	indices = std::make_unique<uint32_t[]>(totalIndexCount_);
-	indexList_ = indices.get();
+	// Get vertex count
+	ConsoleManager::PrintInfo("Counting vertices and indices for each mesh...");
+	err = CountVerticesIndices();
+	if (err.Code())
+		return err;
+
+	// Init for each mesh
+	ConsoleManager::PrintInfo("Initializing meshes...");
+	err = InitMeshes();
+	if (err.Code())
+		return err;
 
 	// Start extraction
 	err = ExtractAllVerticesIndices();
 	if (err.Code())
 		return err;
-
-	vertexCount = totalVertexCount_;
-	indexCount = totalIndexCount_;
 
 	return error_const::SUCCESS;
 }
@@ -69,9 +75,10 @@ Err VertexIndexExtractor::CountVerticesIndicesNode(const tinygltf::Node& node)
 
 		const tinygltf::Accessor& vertexAccessor = model_.accessors[primitive.attributes.at("POSITION")];
 		const tinygltf::Accessor& indexAccessor = model_.accessors[primitive.indices];
+		const uint32_t primitiveTexId = GetPrimitiveTextureId(primitive);
 
-		totalVertexCount_ += vertexAccessor.count;
-		totalIndexCount_ += indexAccessor.count;
+		meshInfo_[primitiveTexId].TotalVertexCount += static_cast<uint32_t>(vertexAccessor.count);
+		meshInfo_[primitiveTexId].TotalIndexCount += static_cast<uint32_t>(indexAccessor.count);
 	}
 
 	// Go through children
@@ -85,8 +92,33 @@ Err VertexIndexExtractor::CountVerticesIndicesNode(const tinygltf::Node& node)
 	return error_const::SUCCESS;
 }
 
-Err VertexIndexExtractor::CountTextures()
+Err VertexIndexExtractor::CountMeshes()
 {
+	for (const tinygltf::Mesh& mesh : model_.meshes) 
+	{
+		for (const tinygltf::Primitive& primitive : mesh.primitives) 
+		{
+			const int32_t primitiveTexId = GetPrimitiveTextureId(primitive);
+			if (primitiveTexId < 0)
+				continue;
+
+			if (meshInfo_.find(primitiveTexId) != meshInfo_.end())
+				continue;
+
+			meshInfo_[primitiveTexId] = {
+				nullptr,
+				nullptr,
+				0,
+				0,
+				0,
+				0,
+				totalMeshCount_
+			};
+
+			totalMeshCount_++;
+		}
+	}
+
 	return error_const::SUCCESS;
 }
 
@@ -198,6 +230,7 @@ Err VertexIndexExtractor::CopyVerticesIndicesBuffer(const tinygltf::Mesh& mesh, 
 {
 	for (const tinygltf::Primitive& primitive : mesh.primitives)
 	{
+		// Check if primitive has POSITION and if accessor is in correct format
 		if (primitive.attributes.find("POSITION") == primitive.attributes.end())
 		{
 			ConsoleManager::PrintWarning("POSITION attribute not found. Skipping primitive...");
@@ -211,8 +244,15 @@ Err VertexIndexExtractor::CopyVerticesIndicesBuffer(const tinygltf::Mesh& mesh, 
 			continue;
 		}
 
+		// Get correct mesh aux info
+		const int32_t primitiveTexId = GetPrimitiveTextureId(primitive);
+		if (primitiveTexId < 0)
+			continue;
+
+		MeshAuxInfo& info = meshInfo_[primitiveTexId];
+
 		const uint32_t verticesInPrimitive = static_cast<uint32_t>(vertexAccessor.count);
-		if (verticesInPrimitive + vCounter_ > totalVertexCount_)
+		if (verticesInPrimitive + info.VCounter > info.TotalVertexCount)
 		{
 			ConsoleManager::PrintWarning("VertexCount from primitive will exceed allocated space. Skipping...");
 			continue;
@@ -235,27 +275,28 @@ Err VertexIndexExtractor::CopyVerticesIndicesBuffer(const tinygltf::Mesh& mesh, 
 			newVertex.Pos.Y = vertexData[1];
 			newVertex.Pos.Z = vertexData[2];
 
-			// Apply transform & add value to vertexList
+			// Apply transform & add value to info.VertexList (mesh specific vertex list)
 			newVertex.Pos = transform * newVertex.Pos;
 
-			vertexList_[vCounter_ + i] = newVertex;
+			info.VertexList[info.VCounter + i] = newVertex;
 		}
 
-		// Add indices based on vCounter_
-		Err err = ExtractIndices(primitive);
+		// Add indices based on info.VCounter (mesh specific VCounter)
+		Err err = ExtractIndices(primitive, info);
 		if (err.Code())
 			return err;
 
-		vCounter_ += verticesInPrimitive;
+		info.VCounter += verticesInPrimitive;
 	}
 
 	return error_const::SUCCESS;
 }
 
-Err VertexIndexExtractor::ExtractIndices(const tinygltf::Primitive& primitive)
+Err VertexIndexExtractor::ExtractIndices(const tinygltf::Primitive& primitive, MeshAuxInfo& info)
 {
 	const tinygltf::Accessor indexAccessor = model_.accessors[primitive.indices];
 
+	// Check if index type is valid
 	if (indexAccessor.type != TINYGLTF_TYPE_SCALAR)
 	{
 		ConsoleManager::PrintWarning("Primitive index data type is invalid. Skipping...");
@@ -263,7 +304,7 @@ Err VertexIndexExtractor::ExtractIndices(const tinygltf::Primitive& primitive)
 	}
 
 	const uint64_t count = static_cast<uint32_t>(indexAccessor.count);
-	if (iCounter_ + count > totalIndexCount_)
+	if (info.ICounter + count > info.TotalIndexCount)
 	{
 		ConsoleManager::PrintWarning("Primitive indices will overflow indices buffer. Skipping...");
 		return error_const::SUCCESS;
@@ -281,13 +322,13 @@ Err VertexIndexExtractor::ExtractIndices(const tinygltf::Primitive& primitive)
 		switch (indexAccessor.componentType)
 		{
 		case TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE:
-			indexList_[iCounter_ + i] = vCounter_ + *(dataPtr + i);
+			info.IndexList[info.ICounter + i] = info.VCounter + *(dataPtr + i);
 			break;
 		case TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT:
-			indexList_[iCounter_ + i] = vCounter_ + *(reinterpret_cast<const uint16_t*>(dataPtr + i * sizeof(uint16_t)));
+			info.IndexList[info.ICounter + i] = info.VCounter + *(reinterpret_cast<const uint16_t*>(dataPtr + i * sizeof(uint16_t)));
 			break;
 		case TINYGLTF_COMPONENT_TYPE_UNSIGNED_INT:
-			indexList_[iCounter_ + i] = vCounter_ + *(reinterpret_cast<const uint32_t*>(dataPtr + i * sizeof(uint32_t)));
+			info.IndexList[info.ICounter + i] = info.VCounter + *(reinterpret_cast<const uint32_t*>(dataPtr + i * sizeof(uint32_t)));
 			break;
 		default:
 			ConsoleManager::PrintWarning("Unsupported index component type: " + std::to_string(indexAccessor.componentType));
@@ -295,7 +336,38 @@ Err VertexIndexExtractor::ExtractIndices(const tinygltf::Primitive& primitive)
 		}
 	}
 
-	iCounter_ += count;
+	info.ICounter += static_cast<uint32_t>(count);
 
 	return error_const::SUCCESS;
+}
+
+Err VertexIndexExtractor::InitMeshes()
+{
+	// Go through each texture ID, get the respective mesh index, init the mesh pointers and store a reference in the aux struct
+	for (std::pair<const uint32_t, MeshAuxInfo>& pair : meshInfo_)
+	{
+		MeshAuxInfo& info = pair.second;
+
+		Mesh* mesh = &meshList_[info.MeshIndex];
+		mesh->VertexList = std::make_unique<Vertex[]>(info.TotalVertexCount);
+		mesh->IndexList = std::make_unique<uint32_t[]>(info.TotalIndexCount);
+
+		info.VertexList = mesh->VertexList.get();
+		info.IndexList = mesh->IndexList.get();
+	}
+
+	return error_const::SUCCESS;
+}
+
+int32_t VertexIndexExtractor::GetPrimitiveTextureId(const tinygltf::Primitive& primitive) const
+{
+	if (primitive.material < 0 || primitive.material >= static_cast<int32_t>(model_.materials.size()))
+		return -1;
+
+	const tinygltf::Material& material = model_.materials[primitive.material];
+
+	if (material.pbrMetallicRoughness.baseColorTexture.index < 0)
+		return -1;
+		
+	return material.pbrMetallicRoughness.baseColorTexture.index;
 }

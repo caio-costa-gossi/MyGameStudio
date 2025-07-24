@@ -203,9 +203,18 @@ Err AssetDatabase::FindAssetId(const char* sourceLocation, uint32_t& assetId)
 	if (error.Code() != error_const::ASSET_NOT_FOUND.Code())
 		return error;
 
-	error = db_.ExecuteQuerySingle(getNextAssetIdQuery_, assetId);
+	int32_t returnId;
+	error = db_.ExecuteQuerySingleValue(getNextAssetIdQuery_, returnId);
 	if (error.Code())
 		return error;
+
+	if (returnId < 0)
+	{
+		GameConsoleManager::PrintWarning("Asset ID returned was less than zero.");
+		returnId = 0;
+	}
+
+	assetId = static_cast<uint32_t>(returnId);
 
 	return error_const::SUCCESS;
 }

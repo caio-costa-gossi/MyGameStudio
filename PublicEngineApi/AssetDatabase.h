@@ -11,6 +11,7 @@ private:
 	static const char* createAssetsTableQuery_;
 	static const char* createAssetDependenciesTableQuery_;
 	static const char* createGameObjectTableQuery_;
+	static const char* getNextAssetIdQuery_;
 
 	static Err CheckTables();
 	static Err DeleteAssetDependencies(uint32_t assetId);
@@ -26,6 +27,8 @@ public:
 	static Err RegisterAsset(Asset& asset);
 	static Err UpdateAsset(const Asset& asset);
 	static Err DeleteAsset(uint32_t assetId);
+
+	static Err FindAssetId(const char* sourceLocation, uint32_t& assetId);
 
 	static Err ClearAllTables();
 };

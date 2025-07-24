@@ -1,24 +1,24 @@
-#include "MeshProcessor.h"
+#include "ModelProcessor.h"
 
 #include <set>
 #include <sstream>
 
 #include "ConsoleManager.h"
 #include "LocalizationManager.h"
-#include "MeshFactory.h"
+#include "ModelFactory.h"
 #include "Serialization.h"
 
 #undef max
 #undef min
 
-uint8_t* MeshProcessor::ProcessMesh(const Asset& metadata, uint64_t& resultSize, std::string& errMsg)
+uint8_t* ModelProcessor::ProcessModel(const Asset& metadata, uint64_t& resultSize, std::string& errMsg)
 {
 	tinygltf::TinyGLTF loader;
-	tinygltf::Model model;
+	tinygltf::Model gltfModel;
 
 	// Mesh pre-processing
 	ConsoleManager::Print(std::string(LocalizationManager::GetLocalizedString(string_const::G_ASSET_IMPORT)) + "0%", enums::ConsoleMessageType::info);
-	loader.LoadBinaryFromFile(&model, &errMsg, nullptr, metadata.SourceLocation);
+	loader.LoadBinaryFromFile(&gltfModel, &errMsg, nullptr, metadata.SourceLocation);
 
 	ConsoleManager::Print(std::string(LocalizationManager::GetLocalizedString(string_const::G_ASSET_IMPORT)) + "20%", enums::ConsoleMessageType::info);
 	/*Err error = VerifyModel(model);
@@ -34,21 +34,21 @@ uint8_t* MeshProcessor::ProcessMesh(const Asset& metadata, uint64_t& resultSize,
 	ConsoleManager::Print(std::string(LocalizationManager::GetLocalizedString(string_const::G_ASSET_IMPORT)) + "60%", enums::ConsoleMessageType::info);
 	Triangulate(model);*/
 
-	// Mesh importation
+	// Model importation
 	ConsoleManager::Print(std::string(LocalizationManager::GetLocalizedString(string_const::G_ASSET_IMPORT)) + "80%", enums::ConsoleMessageType::info);
-	const Mesh mesh = MeshFactory::CreateMesh(model, metadata);
+	const Model model = ModelFactory::CreateModel(gltfModel, metadata);
 
-	// Mesh serialization
+	// Model serialization
 	ConsoleManager::Print(std::string(LocalizationManager::GetLocalizedString(string_const::G_ASSET_IMPORT)) + "100%", enums::ConsoleMessageType::info);
 
-	const DataStream stream = Serialization::SerializeMesh(mesh, resultSize);
-	uint8_t* meshData = new uint8_t[resultSize];
-	memcpy_s(meshData, resultSize, stream.Data, resultSize);
+	const DataStream stream = Serialization::SerializeModel(model, resultSize);
+	uint8_t* modelData = new uint8_t[resultSize];
+	memcpy_s(modelData, resultSize, stream.Data, resultSize);
 
-	return meshData;
+	return modelData;
 }
 
-uint8_t* MeshProcessor::GetFileBuffer(tinygltf::TinyGLTF& loader, const tinygltf::Model& model, uint64_t& resultSize)
+uint8_t* ModelProcessor::GetFileBuffer(tinygltf::TinyGLTF& loader, const tinygltf::Model& model, uint64_t& resultSize)
 {
 	std::ostringstream outputStream;
 	loader.WriteGltfSceneToStream(&model, outputStream, true, true);
@@ -61,7 +61,7 @@ uint8_t* MeshProcessor::GetFileBuffer(tinygltf::TinyGLTF& loader, const tinygltf
 	return resultBuffer;
 }
 
-Err MeshProcessor::VerifyModel(const tinygltf::Model& model)
+Err ModelProcessor::VerifyModel(const tinygltf::Model& model)
 {
 	for (const tinygltf::Mesh& mesh : model.meshes)
 	{
@@ -73,7 +73,7 @@ Err MeshProcessor::VerifyModel(const tinygltf::Model& model)
 	return error_const::SUCCESS;
 }
 
-Err MeshProcessor::Triangulate(tinygltf::Model& model)
+Err ModelProcessor::Triangulate(tinygltf::Model& model)
 {
 	for (tinygltf::Mesh& mesh : model.meshes)
 	{
@@ -148,7 +148,7 @@ Err MeshProcessor::Triangulate(tinygltf::Model& model)
 	return error_const::SUCCESS;
 }
 
-Err MeshProcessor::CompressIndices(tinygltf::Model& model)
+Err ModelProcessor::CompressIndices(tinygltf::Model& model)
 {
 	for (tinygltf::Mesh& mesh : model.meshes)
 	{
@@ -205,7 +205,7 @@ Err MeshProcessor::CompressIndices(tinygltf::Model& model)
 	return error_const::SUCCESS;
 }
 
-void MeshProcessor::ChangeBuffer(std::vector<uint8_t>& oldData, const uint64_t oldDataByteCount, const std::vector<uint8_t>& newData, const size_t initialOffset, tinygltf::Model& model)
+void ModelProcessor::ChangeBuffer(std::vector<uint8_t>& oldData, const uint64_t oldDataByteCount, const std::vector<uint8_t>& newData, const size_t initialOffset, tinygltf::Model& model)
 {
 	const size_t oldDataSize = oldDataByteCount;
 	const size_t newDataSize = newData.size();
@@ -245,7 +245,7 @@ void MeshProcessor::ChangeBuffer(std::vector<uint8_t>& oldData, const uint64_t o
 	}
 }
 
-size_t MeshProcessor::GetComponentTypeSize(const int componentType)
+size_t ModelProcessor::GetComponentTypeSize(const int componentType)
 {
 	switch (componentType)
 	{

@@ -3,7 +3,7 @@
 #include "AssetDatabase.h"
 #include "ConfigManager.h"
 #include "ImageProcessor.h"
-#include "MeshProcessor.h"
+#include "ModelProcessor.h"
 #include "SystemPathHelper.h"
 #include "UserScriptProcessor.h"
 #include "ZipFile.h"
@@ -160,7 +160,7 @@ uint8_t* AssetPipeline::ProcessAsset(Asset& assetMetadata, std::string& errMsg, 
 		returnBuffer = ImageProcessor::MinimalProcessing(assetMetadata, resultSize);
 		break;
 	case enums::AssetType::mesh3d:
-		returnBuffer = MeshProcessor::ProcessMesh(assetMetadata, resultSize, errMsg);
+		returnBuffer = ModelProcessor::ProcessModel(assetMetadata, resultSize, errMsg);
 		break;
 	case enums::AssetType::script:
 		returnBuffer = UserScriptProcessor::ProcessScript(assetMetadata, resultSize, ctrlFlag);

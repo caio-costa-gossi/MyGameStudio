@@ -5,8 +5,9 @@
 #include "Asset.h"
 #include "Err.h"
 #include "Mesh.h"
+#include "Model.h"
 
-class MeshFactory
+class ModelFactory
 {
 private:
 	static Err GetVertices(const tinygltf::Model& model, const tinygltf::Primitive& primitive, std::unique_ptr<Vertex[]>& vertices, uint32_t& count);
@@ -17,5 +18,5 @@ private:
 	static Err SaveTexture(uint32_t& textureAssetId, const uint8_t* imageData, uint64_t imageSize, enums::ImageFormat format, const Asset& meshMetadata);
 
 public:
-	static Mesh CreateMesh(const tinygltf::Model& model, const Asset& meshMetadata);
+	static Model CreateModel(const tinygltf::Model& model, const Asset& modelMetadata);
 };

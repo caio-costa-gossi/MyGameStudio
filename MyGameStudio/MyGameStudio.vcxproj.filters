@@ -30,7 +30,7 @@
     <Filter Include="GameRuntimeTest">
       <UniqueIdentifier>{e7137fcd-fdff-447e-b948-8e82756c7462}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Asset Management\Mesh">
+    <Filter Include="Asset Management\Model">
       <UniqueIdentifier>{07640134-c58c-4c61-8cef-0e191a238c63}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -102,16 +102,16 @@
       <Filter>Managers</Filter>
     </ClCompile>
     <ClCompile Include="VertexIndexExtractor.cpp">
-      <Filter>Asset Management\Mesh</Filter>
+      <Filter>Asset Management\Model</Filter>
     </ClCompile>
-    <ClCompile Include="MeshFactory.cpp">
-      <Filter>Asset Management\Mesh</Filter>
+    <ClCompile Include="ModelFactory.cpp">
+      <Filter>Asset Management\Model</Filter>
     </ClCompile>
-    <ClCompile Include="MeshProcessor.cpp">
-      <Filter>Asset Management\Mesh</Filter>
+    <ClCompile Include="ModelProcessor.cpp">
+      <Filter>Asset Management\Model</Filter>
     </ClCompile>
     <ClCompile Include="TextureExtractor.cpp">
-      <Filter>Asset Management\Mesh</Filter>
+      <Filter>Asset Management\Model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -182,16 +182,16 @@
       <Filter>Managers</Filter>
     </ClInclude>
     <ClInclude Include="VertexIndexExtractor.h">
-      <Filter>Asset Management\Mesh</Filter>
+      <Filter>Asset Management\Model</Filter>
     </ClInclude>
-    <ClInclude Include="MeshFactory.h">
-      <Filter>Asset Management\Mesh</Filter>
+    <ClInclude Include="ModelFactory.h">
+      <Filter>Asset Management\Model</Filter>
     </ClInclude>
-    <ClInclude Include="MeshProcessor.h">
-      <Filter>Asset Management\Mesh</Filter>
+    <ClInclude Include="ModelProcessor.h">
+      <Filter>Asset Management\Model</Filter>
     </ClInclude>
     <ClInclude Include="TextureExtractor.h">
-      <Filter>Asset Management\Mesh</Filter>
+      <Filter>Asset Management\Model</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

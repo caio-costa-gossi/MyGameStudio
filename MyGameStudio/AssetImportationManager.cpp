@@ -14,7 +14,12 @@ Err AssetImportationManager::ImportAsset(const char* filepath, const bool ctrlFl
 {
 	Asset newAsset;
 
-	Err err = AssetPipeline::ImportAsset(filepath, newAsset, ctrlFlag);
+	// Find if asset was previously imported. If so, return its ID. Else, return the asset future ID
+	Err err = AssetDatabase::FindAssetId(filepath, newAsset.Id);
+	if (err.Code())
+		return err;
+
+	err = AssetPipeline::ImportAsset(filepath, newAsset, ctrlFlag);
 	if (err.Code())
 		return err;
 

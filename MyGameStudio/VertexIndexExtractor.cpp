@@ -8,7 +8,7 @@
 VertexIndexExtractor::VertexIndexExtractor(tinygltf::Model model) :
 	model_(std::move(model)) { }
 
-Err VertexIndexExtractor::ExtractVerticesIndices(std::unique_ptr<Vertex[]>& vertices, uint32_t& vertexCount, std::unique_ptr<uint32_t[]>& indices, uint32_t& indexCount)
+Err VertexIndexExtractor::ExtractVerticesIndices(std::unique_ptr<Mesh[]>& meshList, uint32_t& meshCount)
 {
 	// Get vertex count
 	ConsoleManager::PrintInfo("Counting vertices and indices...");
@@ -82,6 +82,11 @@ Err VertexIndexExtractor::CountVerticesIndicesNode(const tinygltf::Node& node)
 			ConsoleManager::PrintWarning("Error processing node vertex count: " + err.Message());
 	}
 
+	return error_const::SUCCESS;
+}
+
+Err VertexIndexExtractor::CountTextures()
+{
 	return error_const::SUCCESS;
 }
 

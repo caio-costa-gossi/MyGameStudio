@@ -1,4 +1,4 @@
-#include "MeshFactory.h"
+#include "ModelFactory.h"
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include <stb_image_write.h>
@@ -14,29 +14,26 @@
 #include "VertexIndexExtractor.h"
 #include "ZipFile.h"
 
-Mesh MeshFactory::CreateMesh(const tinygltf::Model& model, const Asset& meshMetadata)
+Model ModelFactory::CreateModel(const tinygltf::Model& model, const Asset& modelMetadata)
 {
-	Mesh newMesh;
+	Model newModel;
 	auto extractor = VertexIndexExtractor(model);
 
-	std::unique_ptr<Vertex[]> vertexData;
-	std::unique_ptr<uint32_t[]> indexData;
-	uint32_t vertexCount;
-	uint32_t indexCount;
+	std::unique_ptr<Mesh[]> meshData;
+	uint32_t meshCount;
 
-	Err err = extractor.ExtractVerticesIndices(vertexData, vertexCount, indexData, indexCount);
+	Err err = extractor.ExtractVerticesIndices(meshData, meshCount);
 	if (err.Code())
 		ConsoleManager::PrintError(err);
 
-	newMesh.VertexCount = vertexCount;
-	newMesh.VertexList = std::move(vertexData);
-	newMesh.IndexCount = indexCount;
-	newMesh.IndexList = std::move(indexData);
+	newModel.ModelId = modelMetadata.Id;
+	newModel.MeshCount = meshCount;
+	newModel.Meshes = std::move(meshData);
 
-	return newMesh;
+	return newModel;
 }
 
-Err MeshFactory::GetVertices(const tinygltf::Model& model, const tinygltf::Primitive& primitive, std::unique_ptr<Vertex[]>& vertices, uint32_t& count)
+Err ModelFactory::GetVertices(const tinygltf::Model& model, const tinygltf::Primitive& primitive, std::unique_ptr<Vertex[]>& vertices, uint32_t& count)
 {
 	if (primitive.attributes.find("POSITION") == primitive.attributes.end())
 	{
@@ -77,7 +74,7 @@ Err MeshFactory::GetVertices(const tinygltf::Model& model, const tinygltf::Primi
 	return error_const::SUCCESS;
 }
 
-Err MeshFactory::GetTexCoords(const tinygltf::Model& model, const tinygltf::Primitive& primitive, Mesh& mesh)
+Err ModelFactory::GetTexCoords(const tinygltf::Model& model, const tinygltf::Primitive& primitive, Mesh& mesh)
 {
 	const tinygltf::Material material = model.materials[primitive.material];
 	const tinygltf::TextureInfo textureInfo = material.pbrMetallicRoughness.baseColorTexture;
@@ -124,7 +121,7 @@ Err MeshFactory::GetTexCoords(const tinygltf::Model& model, const tinygltf::Prim
 	return error_const::SUCCESS;
 }
 
-Err MeshFactory::GetIndices(const tinygltf::Model& model, const tinygltf::Primitive& primitive, std::unique_ptr<uint32_t[]>& indices, uint32_t& count)
+Err ModelFactory::GetIndices(const tinygltf::Model& model, const tinygltf::Primitive& primitive, std::unique_ptr<uint32_t[]>& indices, uint32_t& count)
 {
 	const tinygltf::Accessor indexAccessor = model.accessors[primitive.indices];
 
@@ -165,7 +162,7 @@ Err MeshFactory::GetIndices(const tinygltf::Model& model, const tinygltf::Primit
 	return error_const::SUCCESS;
 }
 
-Err MeshFactory::GetTexture(const tinygltf::Model& model, const tinygltf::Primitive& primitive, const Asset& meshMetadata, uint32_t& textureAssetId)
+Err ModelFactory::GetTexture(const tinygltf::Model& model, const tinygltf::Primitive& primitive, const Asset& meshMetadata, uint32_t& textureAssetId)
 {
 	ConsoleManager::PrintInfo("Extracting texture '" + meshMetadata.Name + "_texture.png' from model...");
 
@@ -213,7 +210,7 @@ Err MeshFactory::GetTexture(const tinygltf::Model& model, const tinygltf::Primit
 	return error_const::SUCCESS;
 }
 
-Err MeshFactory::SaveTexture(uint32_t& textureAssetId, const uint8_t* imageData, const uint64_t imageSize, const enums::ImageFormat format, const Asset& meshMetadata)
+Err ModelFactory::SaveTexture(uint32_t& textureAssetId, const uint8_t* imageData, const uint64_t imageSize, const enums::ImageFormat format, const Asset& meshMetadata)
 {
 	const uint8_t* pngData = imageData;
 	int32_t pngSize = static_cast<int32_t>(imageSize);

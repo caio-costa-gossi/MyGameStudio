@@ -82,6 +82,12 @@ Err AssetDatabase::RegisterAsset(Asset& asset)
 	Err err = GetAssetBySrcLocation(asset.SourceLocation, existingAsset);
 	if (err.Code() == 0)
 	{
+		if (asset.Id != existingAsset.Id)
+		{
+			GameConsoleManager::PrintCritical("Asset ID conflicts with existing ID of same asset. This can potentially cause rendering errors. Cancelling registration...");
+			return error_const::GENERIC_EXCEPTION;
+		}
+
 		GameConsoleManager::PrintWarning("Asset '" + asset.Name + "' was already imported before from source '" + existingAsset.SourceLocation + "'. Overwritting...", enums::ConsoleMessageSender::asset);
 
 		asset.Id = existingAsset.Id;
@@ -93,18 +99,34 @@ Err AssetDatabase::RegisterAsset(Asset& asset)
 	}
 
 	// Register
-	const std::string sqlStatement("INSERT INTO Assets (Name, Extension, Type, SourceSize, ProductSize, SourceLocation, ZipLocation, AssetLocation, LastModifiedDate, CheckModifications) VALUES ('" + 
-		asset.Name + "','" +
-		asset.Extension + "','" +
-		enums::AssetTypeToString(asset.Type) + "'," +
-		std::to_string(asset.SourceSize) + "," +
-		std::to_string(asset.ProductSize) + ",'" +
-		asset.SourceLocation + "','" +
-		asset.ZipLocation + "','" +
-		asset.AssetLocation + "','" +
-		asset.LastModifiedDate + "'," +
-		std::to_string(asset.CheckModifications) + ");"
-	);
+	std::string sqlStatement;
+	if (asset.Id == 0)
+		sqlStatement = std::string("INSERT INTO Assets (Name, Extension, Type, SourceSize, ProductSize, SourceLocation, ZipLocation, AssetLocation, LastModifiedDate, CheckModifications) VALUES ('" +
+			asset.Name + "','" +
+			asset.Extension + "','" +
+			enums::AssetTypeToString(asset.Type) + "'," +
+			std::to_string(asset.SourceSize) + "," +
+			std::to_string(asset.ProductSize) + ",'" +
+			asset.SourceLocation + "','" +
+			asset.ZipLocation + "','" +
+			asset.AssetLocation + "','" +
+			asset.LastModifiedDate + "'," +
+			std::to_string(asset.CheckModifications) + ");"
+		);
+	else
+		sqlStatement = std::string("INSERT INTO Assets (Id, Name, Extension, Type, SourceSize, ProductSize, SourceLocation, ZipLocation, AssetLocation, LastModifiedDate, CheckModifications) VALUES (" +
+			std::to_string(asset.Id) + ",'" + 
+			asset.Name + "','" +
+			asset.Extension + "','" +
+			enums::AssetTypeToString(asset.Type) + "'," +
+			std::to_string(asset.SourceSize) + "," +
+			std::to_string(asset.ProductSize) + ",'" +
+			asset.SourceLocation + "','" +
+			asset.ZipLocation + "','" +
+			asset.AssetLocation + "','" +
+			asset.LastModifiedDate + "'," +
+			std::to_string(asset.CheckModifications) + ");"
+		);
 
 	int64_t newAssetId64;
 	Err error = db_.ExecuteInsert(sqlStatement.c_str(), newAssetId64);
@@ -115,7 +137,8 @@ Err AssetDatabase::RegisterAsset(Asset& asset)
 		return error_const::INTEGER_OUT_OF_BOUNDS;
 
 	const int32_t newAssetId = static_cast<int32_t>(newAssetId64);
-	asset.Id = newAssetId;
+	if (asset.Id == 0)
+		asset.Id = newAssetId;
 
 	error = RegisterAssetDependencies(asset.DependsOnAssets, newAssetId);
 	if (error.Code())
@@ -161,6 +184,26 @@ Err AssetDatabase::DeleteAsset(const uint32_t assetId)
 		return error;
 
 	error = DeleteAssetDependencies(assetId);
+	if (error.Code())
+		return error;
+
+	return error_const::SUCCESS;
+}
+
+Err AssetDatabase::FindAssetId(const char* sourceLocation, uint32_t& assetId)
+{
+	// If the asset already exists, return its ID. Else, return the highest ID + 1
+	Asset existingAsset;
+	Err error = GetAssetBySrcLocation(sourceLocation, existingAsset);
+	if (error.Code() == 0)
+	{
+		assetId = existingAsset.Id;
+		return error_const::SUCCESS;
+	}
+	if (error.Code() != error_const::ASSET_NOT_FOUND.Code())
+		return error;
+
+	error = db_.ExecuteQuerySingle(getNextAssetIdQuery_, assetId);
 	if (error.Code())
 		return error;
 
@@ -234,3 +277,6 @@ auto AssetDatabase::createAssetDependenciesTableQuery_ =
 auto AssetDatabase::createGameObjectTableQuery_ =
 "CREATE TABLE IF NOT EXISTS GameObjects "
 "(GameObjectId INTEGER PRIMARY KEY AUTOINCREMENT, ScriptPath TEXT, MeshAssetId INTEGER, TextureAssetId INTEGER);";
+
+auto AssetDatabase::getNextAssetIdQuery_ =
+"SELECT IFNULL(MAX(Id), 0) + 1 FROM Assets;";

@@ -4,7 +4,7 @@
 #include "Err.h"
 #include <tiny_gltf.h>
 
-class MeshProcessor
+class ModelProcessor
 {
 private:
 	static Err CompressIndices(tinygltf::Model& model);
@@ -17,5 +17,5 @@ private:
 	static size_t GetComponentTypeSize(int componentType);
 
 public:
-	static uint8_t* ProcessMesh(const Asset& metadata, uint64_t& resultSize, std::string& errMsg);
+	static uint8_t* ProcessModel(const Asset& metadata, uint64_t& resultSize, std::string& errMsg);
 };

@@ -1,8 +1,5 @@
 #include "ModelFactory.h"
 
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include <stb_image_write.h>
-
 #include "Asset.h"
 #include "AssetDatabase.h"
 #include "ConfigManager.h"
@@ -23,7 +20,7 @@ Model ModelFactory::CreateModel(const tinygltf::Model& model, const Asset& model
 	uint32_t meshCount;
 
 	// Extract all model information from .glb, import all texture images
-	Err err = extractor.ExtractVerticesIndices(meshData, meshCount);
+	Err err = extractor.ExtractVerticesIndices(meshData, meshCount, modelMetadata);
 	if (err.Code())
 		ConsoleManager::PrintError(err);
 
@@ -219,13 +216,6 @@ Err ModelFactory::SaveTexture(uint32_t& textureAssetId, const uint8_t* imageData
 {
 	const uint8_t* pngData = imageData;
 	int32_t pngSize = static_cast<int32_t>(imageSize);
-
-	// Convert JPEG to PNG
-	if (format == enums::jpeg)
-	{
-		const Image jpgRawImage(imageData, static_cast<int32_t>(imageSize));
-		pngData = stbi_write_png_to_mem(jpgRawImage.Data, jpgRawImage.Channels, jpgRawImage.Width, jpgRawImage.Height, jpgRawImage.Channels, &pngSize);
-	}
 
 	// Save PNG
 	std::string assetDir = ConfigManager::GetConfig("asset_dir");

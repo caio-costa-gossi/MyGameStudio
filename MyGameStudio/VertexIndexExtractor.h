@@ -3,6 +3,7 @@
 #include <stack>
 #include <tiny_gltf.h>
 
+#include "Asset.h"
 #include "Err.h"
 #include "Mesh.h"
 #include "Transform.h"
@@ -75,5 +76,5 @@ private:
 public:
 	explicit VertexIndexExtractor(tinygltf::Model model);
 
-	Err ExtractVerticesIndices(std::unique_ptr<Mesh[]>& meshList, uint32_t& meshCount);
+	Err ExtractVerticesIndices(std::unique_ptr<Mesh[]>& meshList, uint32_t& meshCount, const Asset& modelMetadata);;
 };

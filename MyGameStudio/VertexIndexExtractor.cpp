@@ -9,7 +9,7 @@
 VertexIndexExtractor::VertexIndexExtractor(tinygltf::Model model) :
 	model_(std::move(model)) { }
 
-Err VertexIndexExtractor::ExtractVerticesIndices(std::unique_ptr<Mesh[]>& meshList, uint32_t& meshCount)
+Err VertexIndexExtractor::ExtractVerticesIndices(std::unique_ptr<Mesh[]>& meshList, uint32_t& meshCount, const Asset& modelMetadata)
 {
 	// Get mesh count
 	ConsoleManager::PrintInfo("Counting meshes...");
@@ -33,8 +33,13 @@ Err VertexIndexExtractor::ExtractVerticesIndices(std::unique_ptr<Mesh[]>& meshLi
 	if (err.Code())
 		return err;
 
-	// Start extraction
+	// Start extraction of vertices and indices
 	err = ExtractAllVerticesIndices();
+	if (err.Code())
+		return err;
+
+	// Import textures as assets
+	err = TextureExtractor::ProcessTextureImages(model_, meshList_, meshInfo_, modelMetadata);
 	if (err.Code())
 		return err;
 
@@ -76,7 +81,7 @@ Err VertexIndexExtractor::CountVerticesIndicesNode(const tinygltf::Node& node)
 
 		const tinygltf::Accessor& vertexAccessor = model_.accessors[primitive.attributes.at("POSITION")];
 		const tinygltf::Accessor& indexAccessor = model_.accessors[primitive.indices];
-		const uint32_t primitiveTexId = GetPrimitiveMaterialId(primitive);
+		const int32_t primitiveTexId = GetPrimitiveMaterialId(primitive);
 
 		meshInfo_[primitiveTexId].TotalVertexCount += static_cast<uint32_t>(vertexAccessor.count);
 		meshInfo_[primitiveTexId].TotalIndexCount += static_cast<uint32_t>(indexAccessor.count);

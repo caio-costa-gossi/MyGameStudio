@@ -4,6 +4,7 @@
 #include <glm/gtc/quaternion.hpp>
 
 #include "ConsoleManager.h"
+#include "TextureExtractor.h"
 
 VertexIndexExtractor::VertexIndexExtractor(tinygltf::Model model) :
 	model_(std::move(model)) { }
@@ -75,7 +76,7 @@ Err VertexIndexExtractor::CountVerticesIndicesNode(const tinygltf::Node& node)
 
 		const tinygltf::Accessor& vertexAccessor = model_.accessors[primitive.attributes.at("POSITION")];
 		const tinygltf::Accessor& indexAccessor = model_.accessors[primitive.indices];
-		const uint32_t primitiveTexId = GetPrimitiveTextureId(primitive);
+		const uint32_t primitiveTexId = GetPrimitiveMaterialId(primitive);
 
 		meshInfo_[primitiveTexId].TotalVertexCount += static_cast<uint32_t>(vertexAccessor.count);
 		meshInfo_[primitiveTexId].TotalIndexCount += static_cast<uint32_t>(indexAccessor.count);
@@ -98,20 +99,19 @@ Err VertexIndexExtractor::CountMeshes()
 	{
 		for (const tinygltf::Primitive& primitive : mesh.primitives) 
 		{
-			const int32_t primitiveTexId = GetPrimitiveTextureId(primitive);
-			if (primitiveTexId < 0)
+			const int32_t primitiveMatId = GetPrimitiveMaterialId(primitive);
+
+			if (meshInfo_.find(primitiveMatId) != meshInfo_.end())
 				continue;
 
-			if (meshInfo_.find(primitiveTexId) != meshInfo_.end())
-				continue;
-
-			meshInfo_[primitiveTexId] = {
+			meshInfo_[primitiveMatId] = {
 				nullptr,
 				nullptr,
 				0,
 				0,
 				0,
 				0,
+				{ },
 				totalMeshCount_
 			};
 
@@ -230,6 +230,10 @@ Err VertexIndexExtractor::CopyVerticesIndicesBuffer(const tinygltf::Mesh& mesh, 
 {
 	for (const tinygltf::Primitive& primitive : mesh.primitives)
 	{
+		// Get correct mesh aux info & properties
+		const int32_t primitiveMatId = GetPrimitiveMaterialId(primitive);
+		MeshAuxInfo& info = meshInfo_[primitiveMatId];
+
 		// Check if primitive has POSITION and if accessor is in correct format
 		if (primitive.attributes.find("POSITION") == primitive.attributes.end())
 		{
@@ -237,19 +241,12 @@ Err VertexIndexExtractor::CopyVerticesIndicesBuffer(const tinygltf::Mesh& mesh, 
 			continue;
 		}
 
-		const tinygltf::Accessor vertexAccessor = model_.accessors[primitive.attributes.at("POSITION")];
+		const tinygltf::Accessor& vertexAccessor = model_.accessors[primitive.attributes.at("POSITION")];
 		if (vertexAccessor.type != TINYGLTF_TYPE_VEC3 || vertexAccessor.componentType != TINYGLTF_COMPONENT_TYPE_FLOAT)
 		{
 			ConsoleManager::PrintWarning("Component type is not float or data type is not vec3. Skipping primitive...");
 			continue;
 		}
-
-		// Get correct mesh aux info
-		const int32_t primitiveTexId = GetPrimitiveTextureId(primitive);
-		if (primitiveTexId < 0)
-			continue;
-
-		MeshAuxInfo& info = meshInfo_[primitiveTexId];
 
 		const uint32_t verticesInPrimitive = static_cast<uint32_t>(vertexAccessor.count);
 		if (verticesInPrimitive + info.VCounter > info.TotalVertexCount)
@@ -286,13 +283,17 @@ Err VertexIndexExtractor::CopyVerticesIndicesBuffer(const tinygltf::Mesh& mesh, 
 		if (err.Code())
 			return err;
 
+		err = TextureExtractor::ProcessPrimitiveTexCoords(model_, primitive, info, verticesInPrimitive);
+		if (err.Code())
+			return err;
+
 		info.VCounter += verticesInPrimitive;
 	}
 
 	return error_const::SUCCESS;
 }
 
-Err VertexIndexExtractor::ExtractIndices(const tinygltf::Primitive& primitive, MeshAuxInfo& info)
+Err VertexIndexExtractor::ExtractIndices(const tinygltf::Primitive& primitive, MeshAuxInfo& info) const
 {
 	const tinygltf::Accessor indexAccessor = model_.accessors[primitive.indices];
 
@@ -344,7 +345,7 @@ Err VertexIndexExtractor::ExtractIndices(const tinygltf::Primitive& primitive, M
 Err VertexIndexExtractor::InitMeshes()
 {
 	// Go through each texture ID, get the respective mesh index, init the mesh pointers and store a reference in the aux struct
-	for (std::pair<const uint32_t, MeshAuxInfo>& pair : meshInfo_)
+	for (std::pair<const int32_t, MeshAuxInfo>& pair : meshInfo_)
 	{
 		MeshAuxInfo& info = pair.second;
 
@@ -356,20 +357,67 @@ Err VertexIndexExtractor::InitMeshes()
 
 		info.VertexList = mesh->VertexList.get();
 		info.IndexList = mesh->IndexList.get();
+
+		Err err = GetMaterialMapsInfo(pair.first, info.MapsInfo);
+		if (err.Code())
+			ConsoleManager::PrintWarning("Error while trying to obtain maps info from material: " + err.Message());
 	}
 
 	return error_const::SUCCESS;
 }
 
-int32_t VertexIndexExtractor::GetPrimitiveTextureId(const tinygltf::Primitive& primitive) const
+int32_t VertexIndexExtractor::GetPrimitiveMaterialId(const tinygltf::Primitive& primitive) const
 {
 	if (primitive.material < 0 || primitive.material >= static_cast<int32_t>(model_.materials.size()))
 		return -1;
 
-	const tinygltf::Material& material = model_.materials[primitive.material];
+	return primitive.material;
+}
 
-	if (material.pbrMetallicRoughness.baseColorTexture.index < 0)
-		return -1;
-		
-	return material.pbrMetallicRoughness.baseColorTexture.index;
+Err VertexIndexExtractor::GetMaterialMapsInfo(const int32_t materialId, MaterialMapsInfo& mapsInfo) const
+{
+	if (materialId < 0)
+		return error_const::SUCCESS;
+
+	const tinygltf::Material& mat = model_.materials[materialId];
+
+	mapsInfo = {
+		mat.pbrMetallicRoughness.baseColorTexture.index,
+		mat.pbrMetallicRoughness.baseColorTexture.texCoord,
+		mat.normalTexture.index,
+		mat.normalTexture.texCoord,
+		mat.pbrMetallicRoughness.metallicRoughnessTexture.index,
+		mat.pbrMetallicRoughness.metallicRoughnessTexture.texCoord,
+		mat.occlusionTexture.index,
+		mat.occlusionTexture.texCoord,
+		mat.emissiveTexture.index,
+		mat.emissiveTexture.texCoord,
+		static_cast<float>(mat.pbrMetallicRoughness.metallicFactor),
+		static_cast<float>(mat.pbrMetallicRoughness.roughnessFactor),
+		mat.doubleSided
+	};
+
+	struct MaterialMapsInfo
+	{
+		int32_t DiffuseTexId = 0;
+		int32_t DiffuseTexCoordIndex = 0;
+
+		int32_t NormalTexId = 0;
+		int32_t NormalTexCoordIndex = 0;
+
+		int32_t MetallicRoughnessTexId = 0;
+		int32_t MetallicRoughnessCoordIndex = 0;
+
+		int32_t OcclusionTexId = 0;
+		int32_t OcclusionTexCoordIndex = 0;
+
+		int32_t EmissiveTexId = 0;
+		int32_t EmissiveTexCoordIndex = 0;
+
+		float MetallicFactor = 0;
+		float RoughnessFactor = 0;
+		bool DoubleSided = true;
+	};
+
+	return error_const::SUCCESS;
 }

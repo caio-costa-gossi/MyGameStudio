@@ -22,11 +22,16 @@ Model ModelFactory::CreateModel(const tinygltf::Model& model, const Asset& model
 	std::unique_ptr<Mesh[]> meshData;
 	uint32_t meshCount;
 
+	// Extract all model information from .glb, import all texture images
 	Err err = extractor.ExtractVerticesIndices(meshData, meshCount);
 	if (err.Code())
 		ConsoleManager::PrintError(err);
 
-	newModel.ModelId = modelMetadata.Id;
+	// Get future model ID to save it before committing the data to the asset pipeline
+	err = AssetDatabase::FindAssetId(modelMetadata.SourceLocation.c_str(), newModel.ModelId);
+	if (err.Code())
+		ConsoleManager::PrintError("Error getting future model ID: " + err.Message());
+
 	newModel.MeshCount = meshCount;
 	newModel.Meshes = std::move(meshData);
 

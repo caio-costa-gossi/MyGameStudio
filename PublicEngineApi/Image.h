@@ -10,7 +10,7 @@ struct Image
 
 	Image() = default;
 	explicit Image(const char* filepath);
-	explicit Image(const uint8_t* imageBuffer, int32_t bufferLen);
+	explicit Image(const uint8_t* imageBuffer, int32_t bufferLen, int32_t desiredChannels = 4);
 	~Image();
 	Image(const Image& other) = delete;
 	Image(Image&& other) noexcept;

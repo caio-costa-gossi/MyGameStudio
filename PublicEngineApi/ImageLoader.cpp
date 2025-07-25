@@ -10,10 +10,10 @@ uint8_t* ImageLoader::Load(const char* filepath, int32_t& width, int32_t& height
 	return stbi_load(filepath, &width, &height, &channels, DESIRED_CHANNELS);
 }
 
-uint8_t* ImageLoader::LoadFromMemory(const uint8_t* memoryBytes, const int32_t len, int32_t& width, int32_t& height, int32_t& channels)
+uint8_t* ImageLoader::LoadFromMemory(const uint8_t* memoryBytes, const int32_t len, int32_t& width, int32_t& height, int32_t& channels, const int32_t desiredChannels)
 {
 	//stbi_set_flip_vertically_on_load(true);
-	return stbi_load_from_memory(memoryBytes, len, &width, &height, &channels, DESIRED_CHANNELS);
+	return stbi_load_from_memory(memoryBytes, len, &width, &height, &channels, desiredChannels);
 }
 
 void ImageLoader::Free(uint8_t* data)

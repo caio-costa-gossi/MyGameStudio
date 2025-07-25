@@ -161,8 +161,8 @@ Err TextureExtractor::SaveTextureAsset(uint32_t& textureAssetId, const uint8_t* 
 	// Convert JPEG to PNG
 	if (format == enums::jpeg)
 	{
-		const Image jpgRawImage(imageData, static_cast<int32_t>(imageSize));
-		pngData = stbi_write_png_to_mem(jpgRawImage.Data, jpgRawImage.Channels, jpgRawImage.Width, jpgRawImage.Height, jpgRawImage.Channels, &pngSize);
+		const Image jpgRawImage(imageData, static_cast<int32_t>(imageSize), 0);
+		pngData = stbi_write_png_to_mem(jpgRawImage.Data, jpgRawImage.Channels * jpgRawImage.Width, jpgRawImage.Width, jpgRawImage.Height, jpgRawImage.Channels, &pngSize);
 	}
 
 	// Save PNG

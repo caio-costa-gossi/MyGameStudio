@@ -7,9 +7,9 @@ Image::Image(const char* filepath)
 	Data = ImageLoader::Load(filepath, Width, Height, Channels);
 }
 
-Image::Image(const uint8_t* imageBuffer, const int32_t bufferLen)
+Image::Image(const uint8_t* imageBuffer, const int32_t bufferLen, const int32_t desiredChannels)
 {
-	Data = ImageLoader::LoadFromMemory(imageBuffer, bufferLen, Width, Height, Channels);
+	Data = ImageLoader::LoadFromMemory(imageBuffer, bufferLen, Width, Height, Channels, desiredChannels);
 }
 
 Image::~Image()

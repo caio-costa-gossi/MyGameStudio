@@ -82,12 +82,6 @@ Err AssetDatabase::RegisterAsset(Asset& asset)
 	Err err = GetAssetBySrcLocation(asset.SourceLocation, existingAsset);
 	if (err.Code() == 0)
 	{
-		if (asset.Id != existingAsset.Id)
-		{
-			GameConsoleManager::PrintCritical("Asset ID conflicts with existing ID of same asset. This can potentially cause rendering errors. Cancelling registration...");
-			return error_const::GENERIC_EXCEPTION;
-		}
-
 		GameConsoleManager::PrintWarning("Asset '" + asset.Name + "' was already imported before from source '" + existingAsset.SourceLocation + "'. Overwritting...", enums::ConsoleMessageSender::asset);
 
 		asset.Id = existingAsset.Id;

@@ -1,6 +1,28 @@
 #include "Camera.h"
 
+#include "InputManager.h"
 #include "NumericUtils.h"
+#include "WindowManager.h"
+
+#undef min
+
+Err Camera::Update()
+{
+	if (controlScheme_ == enums::free_cam)
+	{
+		Err err = UpdateFreeCam();
+		if (err.Code())
+			return err;
+	}
+	else
+	{
+		Err err = UpdateBoundCam();
+		if (err.Code())
+			return err;
+	}
+
+	return error_const::SUCCESS;
+}
 
 Err Camera::Move(const Vec3F& newPos)
 {
@@ -77,6 +99,11 @@ Transform Camera::GetProjection() const
 	return projection_;
 }
 
+enums::CameraControlScheme Camera::GetControlScheme() const
+{
+	return controlScheme_;
+}
+
 Err Camera::CalculateCameraAxes()
 {
 	// Direction
@@ -100,5 +127,47 @@ Err Camera::UpdateView()
 		return err;
 
 	view_ = glm::lookAt(static_cast<glm::vec3>(Camera::cameraPos_), static_cast<glm::vec3>(Camera::cameraPos_ + direction_), static_cast<glm::vec3>(Camera::cameraUp_));
+	return error_const::SUCCESS;
+}
+
+Err Camera::UpdateFreeCam()
+{
+	if (!WindowManager::IsMouseRelative())
+		return error_const::SUCCESS;
+
+	const InputState state = InputManager::GetInputState();
+
+	// Pos
+	if (state.KeyboardState.PhysicalKeyState[keyboard_key_w])
+		Move(GetPos() + GetDirection() * 0.01f);
+
+	if (state.KeyboardState.PhysicalKeyState[keyboard_key_s])
+		Move(GetPos() + GetDirection() * -0.01f);
+
+	if (state.KeyboardState.PhysicalKeyState[keyboard_key_a])
+		Move(GetPos() + GetRight() * -0.01f);
+
+	if (state.KeyboardState.PhysicalKeyState[keyboard_key_d])
+		Move(GetPos() + GetRight() * 0.01f);
+
+	if (state.KeyboardState.PhysicalKeyState[keyboard_key_space])
+		Move(GetPos() + Vec3F(0, 0.01f, 0));
+
+	if (state.KeyboardState.PhysicalKeyState[keyboard_key_lshift])
+		Move(GetPos() + Vec3F(0, -0.01f, 0));
+
+	// Direction
+	ChangeYaw(GetYaw() + state.MouseState.XVel / 5.0f);
+
+	float newPitch = GetPitch() - state.MouseState.YVel / 5.0f;
+	newPitch = std::min(newPitch, 89.0f);
+	newPitch = std::max(newPitch, -89.0f);
+	ChangePitch(newPitch);
+
+	return error_const::SUCCESS;
+}
+
+Err Camera::UpdateBoundCam() const
+{
 	return error_const::SUCCESS;
 }

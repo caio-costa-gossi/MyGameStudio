@@ -7,6 +7,7 @@ class Camera
 {
 protected:
 	enums::CameraType type_ = enums::perspective;
+	enums::CameraControlScheme controlScheme_ = enums::free_cam;
 
 	float nearPlane_ = 0.0f;
 	float farPlane_ = 0.0f;
@@ -26,8 +27,13 @@ protected:
 	Err CalculateCameraAxes();
 	Err UpdateView();
 
+	Err UpdateFreeCam();
+	Err UpdateBoundCam() const;
+
 public:
 	Camera() = default;
+
+	Err Update();
 
 	Err Move(const Vec3F& newPos);
 	Err ChangePitch(float newPitchDegrees);
@@ -59,4 +65,7 @@ public:
 
 	[[nodiscard]]
 	Transform GetProjection() const;
+
+	[[nodiscard]]
+	enums::CameraControlScheme GetControlScheme() const;
 };

@@ -9,7 +9,7 @@ private:
 	uint16_t globalCameraId_ = 0;
 
 public:
-	CameraInstance(enums::CameraType cameraType = enums::perspective, float nearPlane = 0.1f, float farPlane = 100.0f, float perspectiveWidth = 800.0f, float perspectiveHeight = 600.0f, float perspectiveFovDegrees = 45.0f, float orthoLeftPlane = 0.0f, float orthoRightPlane = 800.0f, float orthoTopPlane = 0.0f, float orthoBottomPlane = 600.0f);
+	CameraInstance(enums::CameraType cameraType = enums::perspective, enums::CameraControlScheme controlScheme = enums::free_cam, float nearPlane = 0.1f, float farPlane = 100.0f, float perspectiveWidth = 800.0f, float perspectiveHeight = 600.0f, float perspectiveFovDegrees = 45.0f, float orthoLeftPlane = 0.0f, float orthoRightPlane = 800.0f, float orthoTopPlane = 0.0f, float orthoBottomPlane = 600.0f);
 
 	Err Use() const ;
 

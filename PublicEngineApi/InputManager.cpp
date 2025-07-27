@@ -31,6 +31,8 @@ Err InputManager::Startup(const HWND hWindow, const char* deadzoneArg, const cha
 	if (err.Code())
 		return err;
 
+	isInit_ = true;
+
 	return error_const::SUCCESS;
 }
 
@@ -55,7 +57,29 @@ Err InputManager::Shutdown()
 	if (err.Code())
 		return err;
 
+	isInit_ = false;
+
 	return error_const::SUCCESS;
+}
+
+bool InputManager::IsInit()
+{
+	return isInit_;
+}
+
+bool InputManager::IsGamepadEnabled()
+{
+	return inputLayer_->IsGamepadEnabled();
+}
+
+bool InputManager::IsMouseEnabled()
+{
+	return inputLayer_->IsMouseEnabled();
+}
+
+bool InputManager::IsKeyboardEnabled()
+{
+	return inputLayer_->IsKeyboardEnabled();
 }
 
 Err InputManager::SubForInputEvent(const Subscription& sub)
@@ -89,3 +113,4 @@ Err InputManager::ParseInputArgs(const char* useSdlArg, const char* deadzoneArg,
 
 InputLayer* InputManager::inputLayer_ = nullptr;
 bool InputManager::usingSdl_ = false;
+bool InputManager::isInit_ = false;

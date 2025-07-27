@@ -96,7 +96,8 @@ namespace enums
 		physics = 12,
 		animation = 13,
 		aux = 14,
-		asset = 15
+		asset = 15,
+		camera = 16
 	};
 
 	enum GameDebugType : uint8_t
@@ -131,6 +132,12 @@ namespace enums
 	{
 		orthogonal = 0,
 		perspective = 1
+	};
+
+	enum CameraControlScheme : uint8_t
+	{
+		free_cam = 0,
+		bound = 1
 	};
 
 	enum ImageFormat : uint8_t
@@ -217,6 +224,8 @@ namespace enums
 			return "AUXILIARY";
 		case enums::ConsoleMessageSender::asset:
 			return "ASSET";
+		case enums::ConsoleMessageSender::camera:
+			return "CAMERA";
 		default:
 			return "NAME NOT FOUND";
 		}

@@ -14,7 +14,7 @@ Err SDLInputLayer::Startup(HWND hWindow, const int32_t deadzone)
 	if (err.Code())
 		return err;
 
-	currentState_.GamepadCount = gamepadCount_;
+	currentState_.GamepadCount = InputLayer::gamepadCount_;
 
 	return error_const::SUCCESS;
 }
@@ -48,21 +48,21 @@ Err SDLInputLayer::Update(const SDL_Event* eventList, const uint32_t numEvent)
 	{
 		SDL_Event event = eventList[i];
 
-		if (isGamepadActive_)
+		if (InputLayer::isGamepadActive_)
 		{
 			err = UpdateGamepads(event);
 			if (err.Code())
 				GameConsoleManager::PrintError(err.Message(), enums::ConsoleMessageSender::input);
 		}
 
-		if (isKeyboardActive_)
+		if (InputLayer::isKeyboardActive_)
 		{
 			err = UpdateKeyboard(event);
 			if (err.Code())
 				GameConsoleManager::PrintError(err.Message(), enums::ConsoleMessageSender::input);
 		}
 
-		if (isMouseActive_)
+		if (InputLayer::isMouseActive_)
 		{
 			err = UpdateMouse(event);
 			if (err.Code())
@@ -88,12 +88,12 @@ Err SDLInputLayer::StartupGamepads()
 
 	int gamepadCount;
 	SDL_JoystickID* gamepadList = SDL_GetGamepads(&gamepadCount);
-	gamepadCount_ = static_cast<uint8_t>(gamepadCount);
+	InputLayer::gamepadCount_ = static_cast<uint8_t>(gamepadCount);
 
 	// Check gamepads
 	if (gamepadCount <= 0)
 	{
-		isGamepadActive_ = false;
+		InputLayer::isGamepadActive_ = false;
 		GameConsoleManager::PrintInfo("No gamepads detected. Disabling gamepad input...", enums::ConsoleMessageSender::input);
 		return error_const::SUCCESS;
 	}

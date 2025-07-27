@@ -22,7 +22,7 @@ Err DILayer::Startup(const HWND hWindow, const int32_t deadzone)
 	if (FAILED(dInput_->EnumDevices(DI8DEVCLASS_GAMECTRL, EnumDevicesCallback, nullptr, DIEDFL_ALLDEVICES)))
 		return error_const::INPUT_ENUM_FAIL;
 
-	joystickCount_ = static_cast<uint8_t>(joysticks_.size());
+	InputLayer::gamepadCount_ = static_cast<uint8_t>(joysticks_.size());
 
 	// Create mouse & keyboard
 	if (FAILED(dInput_->CreateDevice(GUID_SysKeyboard, &keyboard_.Data, nullptr)))
@@ -76,7 +76,7 @@ Err DILayer::Startup(const HWND hWindow, const int32_t deadzone)
 		if (FAILED(result))
 		{
 			GameConsoleManager::PrintError(error_const::INPUT_JOYSTICK_ACQUIRE_FAIL.Message(), enums::ConsoleMessageSender::input);
-			isJoystickActive_ = false;
+			InputLayer::isGamepadActive_ = false;
 			break;
 		}
 	}
@@ -84,13 +84,13 @@ Err DILayer::Startup(const HWND hWindow, const int32_t deadzone)
 	if (FAILED(mouse_.Data->Acquire()))
 	{
 		GameConsoleManager::PrintError(error_const::INPUT_MOUSE_ACQUIRE_FAIL.Message(), enums::ConsoleMessageSender::input);
-		isMouseActive_ = false;
+		InputLayer::isMouseActive_ = false;
 	}
 
 	if (FAILED(keyboard_.Data->Acquire()))
 	{
 		GameConsoleManager::PrintError(error_const::INPUT_KEYBOARD_ACQUIRE_FAIL.Message(), enums::ConsoleMessageSender::input);
-		isKeyboardActive_ = false;
+		InputLayer::isKeyboardActive_ = false;
 	}
 
 	return error_const::SUCCESS;
@@ -106,23 +106,23 @@ Err DILayer::Update(const SDL_Event* eventList, uint32_t numEvent)
 	Err err;
 	nextState_ = currentState_;
 
-	if (isKeyboardActive_)
+	if (InputLayer::isKeyboardActive_)
 	{
 		err = UpdateKeyboard();
 		if (err.Code())
 			GameConsoleManager::PrintError(err.Message(), enums::ConsoleMessageSender::input);
 	}
 
-	if (isMouseActive_)
+	if (InputLayer::isMouseActive_)
 	{
 		err = UpdateMouse();
 		if (err.Code())
 			GameConsoleManager::PrintError(err.Message(), enums::ConsoleMessageSender::input);
 	}
 
-	if (isJoystickActive_)
+	if (InputLayer::isGamepadActive_)
 	{
-		for (uint8_t i = 0; i < joystickCount_; ++i)
+		for (uint8_t i = 0; i < InputLayer::gamepadCount_; ++i)
 		{
 			err = UpdateJoystick(i);
 			if (err.Code())

@@ -25,3 +25,18 @@ Err InputLayer::FireEvents()
 
 	return error_const::SUCCESS;
 }
+
+bool InputLayer::IsGamepadEnabled() const
+{
+	return isGamepadActive_;
+}
+
+bool InputLayer::IsMouseEnabled() const
+{
+	return isMouseActive_;
+}
+
+bool InputLayer::IsKeyboardEnabled() const
+{
+	return isKeyboardActive_;
+}

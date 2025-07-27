@@ -34,12 +34,6 @@ private:
 	DIMOUSESTATE mouseState_ = DIMOUSESTATE();
 	BYTE keyboardState_[keyboard_di_count] = {0};
 
-	// Input type control
-	uint8_t joystickCount_ = 0;
-	bool isKeyboardActive_ = true;
-	bool isMouseActive_ = true;
-	bool isJoystickActive_ = true;
-
 	// Aux structure for event handling
 	InputState nextState_ = InputState();
 

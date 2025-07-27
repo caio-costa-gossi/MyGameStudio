@@ -57,9 +57,6 @@ Err TestDrawer::Run()
 
 	const Vec3F worldPos[1] = { {0.0f, 0.0f, 0.0f} };
 
-	CameraInstance camera(enums::perspective, 0.1f, 10000.0f, 800.0f, 400.0f);
-	camera.Use();
-
 	running_ = true;
 
 	while (running_)
@@ -74,17 +71,10 @@ Err TestDrawer::Run()
 		if (err.Code())
 			GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::input);
 
-		err = MoveCameraPos(camera);
+		err = CameraManager::Update();
 		if (err.Code())
-			return err;
+			GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::camera);
 
-		err = MoveCameraDirection(camera);
-		if (err.Code())
-			return err;
-
-		err = LockUnlock();
-		if (err.Code())
-			return err;
 
 		//Transform transform(worldPos[i], static_cast<float>(time_.GetElapsed()) / 50, {0.5f,1,0}, {1,1,1});
 		Transform transform({ 0,0,0 }, 0, { 0,0,1 }, { 0.1f,0.1f,0.1f });
@@ -124,75 +114,6 @@ Err TestDrawer::Shutdown()
 	return error_const::SUCCESS;
 }
 
-Err TestDrawer::MoveCameraPos(CameraInstance& camera)
-{
-	if (!focus_)
-		return error_const::SUCCESS;
-
-	const InputState state = InputManager::GetInputState();
-
-	if (state.KeyboardState.PhysicalKeyState[keyboard_key_w])
-		camera.Move(camera.GetPos() + camera.GetDirection() * 0.01f);
-
-	if (state.KeyboardState.PhysicalKeyState[keyboard_key_s])
-		camera.Move(camera.GetPos() + camera.GetDirection() * -0.01f);
-
-	if (state.KeyboardState.PhysicalKeyState[keyboard_key_a])
-		camera.Move(camera.GetPos() + camera.GetRight() * -0.01f);
-
-	if (state.KeyboardState.PhysicalKeyState[keyboard_key_d])
-		camera.Move(camera.GetPos() + camera.GetRight() * 0.01f);
-
-	if (state.KeyboardState.PhysicalKeyState[keyboard_key_space])
-		camera.Move(camera.GetPos() + Vec3F(0, 0.01f, 0));
-
-	if (state.KeyboardState.PhysicalKeyState[keyboard_key_lshift])
-		camera.Move(camera.GetPos() + Vec3F(0, -0.01f, 0));
-
-	return error_const::SUCCESS;
-}
-
-Err TestDrawer::MoveCameraDirection(CameraInstance& camera)
-{
-	if (!focus_)
-		return error_const::SUCCESS;
-
-	const InputState state = InputManager::GetInputState();
-
-	camera.ChangeYaw(camera.GetYaw() + state.MouseState.XVel / 5.0f);
-
-	float newPitch = camera.GetPitch() - state.MouseState.YVel / 5.0f;
-	newPitch = std::min(newPitch, 89.0f);
-	newPitch = std::max(newPitch, -89.0f);
-	camera.ChangePitch(newPitch);
-
-	return error_const::SUCCESS;
-}
-
-Err TestDrawer::LockUnlock()
-{
-	const InputState state = InputManager::GetInputState();
-
-	if ((state.MouseState.BtnState & 1 << mouse_button_left) != 0)
-	{
-		Err err = WindowManager::SetRelativeMouseMode();
-		if (err.Code())
-			return err;
-
-		focus_ = true;
-	}
-	else if (state.KeyboardState.PhysicalKeyState[keyboard_key_escape])
-	{
-		Err err = WindowManager::UnsetRelativeMouseMode();
-		if (err.Code())
-			return err;
-
-		focus_ = false;
-	}
-
-	return error_const::SUCCESS;
-}
-
 
 bool TestDrawer::running_ = false;
 
@@ -201,4 +122,3 @@ Vec3F TestDrawer::position_ = {0,0,0};
 Vec3F TestDrawer::scale_ = {1,1,1};
 
 Timeline TestDrawer::time_(timeline::MILLISECOND);
-bool TestDrawer::focus_ = false;

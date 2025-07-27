@@ -1,5 +1,7 @@
 #include "WindowManager.h"
 
+#include "GameConsoleManager.h"
+#include "InputManager.h"
 #include "RenderManager.h"
 #include "TestDrawer.h"
 
@@ -28,6 +30,42 @@ Err WindowManager::Startup()
 }
 
 Err WindowManager::Update()
+{
+	Err err = HandleWindowEvents();
+	if (err.Code())
+		return err;
+
+	err = UpdateWindowFocus();
+	if (err.Code())
+		return err;
+
+	return error_const::SUCCESS;
+}
+
+Err WindowManager::Shutdown()
+{
+	SDL_DestroyWindow(window_);
+
+	return error_const::SUCCESS;
+}
+
+Err WindowManager::SetRelativeMouseMode()
+{
+	SDL_SetWindowRelativeMouseMode(window_, true);
+	isMouseRelative_ = true;
+
+	return error_const::SUCCESS;
+}
+
+Err WindowManager::UnsetRelativeMouseMode()
+{
+	SDL_SetWindowRelativeMouseMode(window_, false);
+	isMouseRelative_ = false;
+
+	return error_const::SUCCESS;
+}
+
+Err WindowManager::HandleWindowEvents()
 {
 	inputEventList_.clear();
 
@@ -63,33 +101,39 @@ Err WindowManager::Update()
 	return error_const::SUCCESS;
 }
 
-Err WindowManager::Shutdown()
-{
-	SDL_DestroyWindow(window_);
-
-	return error_const::SUCCESS;
-}
-
-Err WindowManager::SetRelativeMouseMode()
-{
-	SDL_SetWindowRelativeMouseMode(window_, true);
-	isMouseRelative_ = true;
-
-	return error_const::SUCCESS;
-}
-
-Err WindowManager::UnsetRelativeMouseMode()
-{
-	SDL_SetWindowRelativeMouseMode(window_, false);
-	isMouseRelative_ = false;
-
-	return error_const::SUCCESS;
-}
-
 Err WindowManager::UpdateWindowInfo()
 {
 	SDL_GetWindowSize(window_, &winWidth_, &winHeight_);
 	SDL_GetWindowPosition(window_, &winPosX_, &winPosY_);
+
+	return error_const::SUCCESS;
+}
+
+Err WindowManager::UpdateWindowFocus()
+{
+	if (!InputManager::IsInit())
+	{
+		GameConsoleManager::PrintWarning("Input manager was not initialized. This can cause problems.", enums::ConsoleMessageSender::window);
+		return error_const::SUCCESS;
+	}
+
+	if (!InputManager::IsMouseEnabled() || !InputManager::IsKeyboardEnabled())
+		return error_const::SUCCESS;
+
+	const InputState state = InputManager::GetInputState();
+
+	if ((state.MouseState.BtnState & 1 << mouse_button_left) != 0)
+	{
+		Err err = SetRelativeMouseMode();
+		if (err.Code())
+			return err;
+	}
+	else if (state.KeyboardState.PhysicalKeyState[keyboard_key_escape])
+	{
+		Err err = UnsetRelativeMouseMode();
+		if (err.Code())
+			return err;
+	}
 
 	return error_const::SUCCESS;
 }

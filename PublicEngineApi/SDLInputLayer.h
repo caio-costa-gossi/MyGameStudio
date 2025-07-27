@@ -23,12 +23,6 @@ private:
 	// Devices
 	std::vector<GamepadInfo> gamepads_ = std::vector<GamepadInfo>();
 
-	// Input type control
-	uint8_t gamepadCount_ = 0;
-	bool isKeyboardActive_ = true;
-	bool isMouseActive_ = true;
-	bool isGamepadActive_ = true;
-
 	// Methods
 	Err StartupGamepads();
 

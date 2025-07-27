@@ -2,8 +2,10 @@
 
 #include "NumericUtils.h"
 
-Err PerspectiveCamera::Init(const float width, const float height, const float fovDegrees, const float nearPlane, const float farPlane)
+Err PerspectiveCamera::Init(const enums::CameraControlScheme controlScheme, const float width, const float height, const float fovDegrees, const float nearPlane, const float farPlane)
 {
+	Camera::controlScheme_ = controlScheme;
+
 	width_ = width;
 	height_ = height;
 	fovRadians_ = NumericUtils::Radians(fovDegrees);

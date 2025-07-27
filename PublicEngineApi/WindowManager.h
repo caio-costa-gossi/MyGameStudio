@@ -20,7 +20,9 @@ private:
 	static bool isInit_;
 	static bool isMouseRelative_;
 
+	static Err HandleWindowEvents();
 	static Err UpdateWindowInfo();
+	static Err UpdateWindowFocus();
 
 public:
 	static Err Startup();

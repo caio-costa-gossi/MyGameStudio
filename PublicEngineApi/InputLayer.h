@@ -4,7 +4,6 @@
 #include "Err.h"
 #include "EventDispatcher.h"
 #include "InputState.h"
-#include "Timeline.h"
 
 class InputLayer
 {
@@ -15,6 +14,11 @@ protected:
 
 	int32_t deadzone_ = 500;
 
+	uint8_t gamepadCount_ = 0;
+	bool isKeyboardActive_ = true;
+	bool isMouseActive_ = true;
+	bool isGamepadActive_ = true;
+
 	Err FireEvents();
 
 public:
@@ -24,6 +28,15 @@ public:
 
 	const InputState& GetInputState();
 	Err Subscribe(const Subscription& subscription);
+
+	[[nodiscard]]
+	bool IsGamepadEnabled() const;
+
+	[[nodiscard]]
+	bool IsMouseEnabled() const;
+
+	[[nodiscard]]
+	bool IsKeyboardEnabled() const;
 
 	virtual ~InputLayer() = default;
 };

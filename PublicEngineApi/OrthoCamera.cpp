@@ -1,7 +1,9 @@
 #include "OrthoCamera.h"
 
-Err OrthoCamera::Init(const float leftPlane, const float rightPlane, const float topPlane, const float bottomPlane, const float nearPlane, const float farPlane)
+Err OrthoCamera::Init(const enums::CameraControlScheme controlScheme, const float leftPlane, const float rightPlane, const float topPlane, const float bottomPlane, const float nearPlane, const float farPlane)
 {
+	Camera::controlScheme_ = controlScheme;
+
 	leftPlane_ = leftPlane;
 	rightPlane_ = rightPlane;
 	topPlane_ = topPlane;

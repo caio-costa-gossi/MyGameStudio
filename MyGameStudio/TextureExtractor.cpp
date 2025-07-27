@@ -96,6 +96,7 @@ Err TextureExtractor::ProcessTextureImages(const tinygltf::Model& gltfModel, Mes
 		// Diffuse
 		if (!texturesImported.test(imageId))
 		{
+			texturesImported.set(imageId);
 			Err err = ImportTextureAsset(gltfModel, imageId, modelMetadata, mesh.TextureAssetId);
 			if (err.Code())
 				ConsoleManager::PrintError("Error trying to import diffuse texture asset: " + err.Message());

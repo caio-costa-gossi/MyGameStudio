@@ -184,9 +184,6 @@ Err VertexIndexExtractor::ExtractVerticesIndicesNode(const tinygltf::Node& node)
 
 Err VertexIndexExtractor::StackNodeTransform(const tinygltf::Node& node)
 {
-	if (node.translation.empty() && node.rotation.empty() && node.scale.empty())
-		return error_const::SUCCESS;
-
 	Transform newTransform;
 
 	if (node.translation.size() == 3)

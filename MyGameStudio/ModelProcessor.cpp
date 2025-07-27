@@ -18,7 +18,11 @@ uint8_t* ModelProcessor::ProcessModel(const Asset& metadata, uint64_t& resultSiz
 
 	// Mesh pre-processing
 	ConsoleManager::Print(std::string(LocalizationManager::GetLocalizedString(string_const::G_ASSET_IMPORT)) + "0%", enums::ConsoleMessageType::info);
-	loader.LoadBinaryFromFile(&gltfModel, &errMsg, nullptr, metadata.SourceLocation);
+
+	if (metadata.Type == enums::AssetType::mesh3d_glb)
+		loader.LoadBinaryFromFile(&gltfModel, &errMsg, nullptr, metadata.SourceLocation);
+	else
+		loader.LoadASCIIFromFile(&gltfModel, &errMsg, nullptr, metadata.SourceLocation);
 
 	ConsoleManager::Print(std::string(LocalizationManager::GetLocalizedString(string_const::G_ASSET_IMPORT)) + "20%", enums::ConsoleMessageType::info);
 	/*Err error = VerifyModel(model);

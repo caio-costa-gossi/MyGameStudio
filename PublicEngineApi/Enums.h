@@ -7,7 +7,8 @@
 #define ASSET_TYPES \
 X(image) \
 X(material) \
-X(mesh3d) \
+X(mesh3d_glb) \
+X(mesh3d_gltf) \
 X(skeleton) \
 X(light_map) \
 X(animation) \

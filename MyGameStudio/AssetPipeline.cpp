@@ -152,7 +152,8 @@ uint8_t* AssetPipeline::ProcessAsset(Asset& assetMetadata, std::string& errMsg, 
 	case enums::AssetType::image:
 		returnBuffer = ImageProcessor::MinimalProcessing(assetMetadata, resultSize);
 		break;
-	case enums::AssetType::mesh3d:
+	case enums::AssetType::mesh3d_glb:
+	case enums::AssetType::mesh3d_gltf:
 		returnBuffer = ModelProcessor::ProcessModel(assetMetadata, resultSize, errMsg);
 		break;
 	case enums::AssetType::script:
@@ -197,11 +198,11 @@ enums::AssetType AssetPipeline::GetAssetType(const uint8_t* fileBuffer, uint64_t
 		fileBuffer[7] == 0x0A)
 		return enums::AssetType::image;
 
-	if (fileBuffer[0] == 0x67 &&
-		fileBuffer[1] == 0x6C &&
-		fileBuffer[2] == 0x54 &&
-		fileBuffer[3] == 0x46)
-		return enums::AssetType::mesh3d;
+	if (extension == "glb")
+		return enums::AssetType::mesh3d_glb;
+		
+	if (extension == "gltf")
+		return enums::AssetType::mesh3d_gltf;
 
 	if (extension == "cpp" || extension == "c")
 		return enums::AssetType::script;
@@ -222,7 +223,8 @@ std::string AssetPipeline::GetTargetExtension(const enums::AssetType type)
 		return ".mp3";
 	case enums::AssetType::video:
 		return ".mp4";
-	case enums::AssetType::mesh3d:
+	case enums::AssetType::mesh3d_glb:
+	case enums::AssetType::mesh3d_gltf:
 		return ".mesh";
 	case enums::AssetType::script:
 		return ".cpp";

@@ -25,7 +25,7 @@ uint8_t* ModelProcessor::ProcessModel(const Asset& metadata, uint64_t& resultSiz
 		loader.LoadASCIIFromFile(&gltfModel, &errMsg, nullptr, metadata.SourceLocation);
 
 	ConsoleManager::Print(std::string(LocalizationManager::GetLocalizedString(string_const::G_ASSET_IMPORT)) + "20%", enums::ConsoleMessageType::info);
-	/*Err error = VerifyModel(model);
+	Err error = VerifyModel(gltfModel);
 	if (error.Code())
 	{
 		errMsg = LocalizationManager::GetLocalizedString(string_const::G_NOT_TRIANGULATED);
@@ -33,10 +33,10 @@ uint8_t* ModelProcessor::ProcessModel(const Asset& metadata, uint64_t& resultSiz
 	}
 
 	ConsoleManager::Print(std::string(LocalizationManager::GetLocalizedString(string_const::G_ASSET_IMPORT)) + "40%", enums::ConsoleMessageType::info);
-	CompressIndices(model);
+	CompressIndices(gltfModel);
 
 	ConsoleManager::Print(std::string(LocalizationManager::GetLocalizedString(string_const::G_ASSET_IMPORT)) + "60%", enums::ConsoleMessageType::info);
-	Triangulate(model);*/
+	Triangulate(gltfModel);
 
 	// Model importation
 	ConsoleManager::Print(std::string(LocalizationManager::GetLocalizedString(string_const::G_ASSET_IMPORT)) + "80%", enums::ConsoleMessageType::info);

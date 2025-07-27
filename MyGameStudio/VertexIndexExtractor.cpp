@@ -64,27 +64,27 @@ Err VertexIndexExtractor::CountVerticesIndicesNode(const tinygltf::Node& node)
 {
 	// Calculate node vertex count
 	if (node.mesh < 0)
-	{
-		ConsoleManager::PrintWarning("Node mesh index < 0");
-		return error_const::SUCCESS;
-	}
+		ConsoleManager::PrintWarning("Node mesh index < 0. Skipping node...");
 
-	const tinygltf::Mesh& mesh = model_.meshes[node.mesh];
-
-	for (const tinygltf::Primitive& primitive : mesh.primitives)
+	else
 	{
-		if (primitive.attributes.find("POSITION") == primitive.attributes.end())
+		const tinygltf::Mesh& mesh = model_.meshes[node.mesh];
+
+		for (const tinygltf::Primitive& primitive : mesh.primitives)
 		{
-			ConsoleManager::PrintWarning("Primitive does not contain POSITION data. Skipping...");
-			continue;
+			if (primitive.attributes.find("POSITION") == primitive.attributes.end())
+			{
+				ConsoleManager::PrintWarning("Primitive does not contain POSITION data. Skipping...");
+				continue;
+			}
+
+			const tinygltf::Accessor& vertexAccessor = model_.accessors[primitive.attributes.at("POSITION")];
+			const tinygltf::Accessor& indexAccessor = model_.accessors[primitive.indices];
+			const int32_t primitiveTexId = GetPrimitiveMaterialId(primitive);
+
+			meshInfo_[primitiveTexId].TotalVertexCount += static_cast<uint32_t>(vertexAccessor.count);
+			meshInfo_[primitiveTexId].TotalIndexCount += static_cast<uint32_t>(indexAccessor.count);
 		}
-
-		const tinygltf::Accessor& vertexAccessor = model_.accessors[primitive.attributes.at("POSITION")];
-		const tinygltf::Accessor& indexAccessor = model_.accessors[primitive.indices];
-		const int32_t primitiveTexId = GetPrimitiveMaterialId(primitive);
-
-		meshInfo_[primitiveTexId].TotalVertexCount += static_cast<uint32_t>(vertexAccessor.count);
-		meshInfo_[primitiveTexId].TotalIndexCount += static_cast<uint32_t>(indexAccessor.count);
 	}
 
 	// Go through children
@@ -145,12 +145,6 @@ Err VertexIndexExtractor::ExtractAllVerticesIndices()
 
 Err VertexIndexExtractor::ExtractVerticesIndicesNode(const tinygltf::Node& node)
 {
-	if (node.mesh < 0)
-	{
-		ConsoleManager::PrintWarning("Node mesh index < 0");
-		return error_const::SUCCESS;
-	}
-
 	// Stack transform matrix
 	Err err = StackNodeTransform(node);
 	if (err.Code())
@@ -165,14 +159,20 @@ Err VertexIndexExtractor::ExtractVerticesIndicesNode(const tinygltf::Node& node)
 		temp.pop();
 	}
 
-	err = CopyVerticesIndicesBuffer(model_.meshes[node.mesh], transform);
-	if (err.Code())
-		return err;
+	if (node.mesh < 0)
+		ConsoleManager::PrintWarning("Node mesh index < 0. Skipping processing its vertices...");
+
+	else
+	{
+		err = CopyVerticesIndicesBuffer(model_.meshes[node.mesh], transform);
+		if (err.Code())
+			return err;
+	}
 
 	// Go through children
 	for (const uint32_t childId : node.children)
 	{
-		err = ExtractVerticesIndicesNode(model_.nodes[childId]);
+		Err err = ExtractVerticesIndicesNode(model_.nodes[childId]);
 		if (err.Code())
 			ConsoleManager::PrintWarning("Error processing node vertex count: " + err.Message());
 	}

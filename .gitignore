@@ -9,6 +9,7 @@
 *.png
 *.jp[e]g
 *.zip
+*.db
 
 # User-specific files
 *.rsuser

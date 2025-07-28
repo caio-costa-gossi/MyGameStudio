@@ -53,6 +53,7 @@ Err RenderManager::InitRenderer()
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
+	// Init OpenGL Context
 	GameConsoleManager::PrintInfo("Initializing OpenGL context...", enums::ConsoleMessageSender::render);
 	glContext_ = SDL_GL_CreateContext(gameWindow_);
 	if (!glContext_)
@@ -67,10 +68,15 @@ Err RenderManager::InitRenderer()
 	}
 
 	// Set viewport
-	glViewport(0, 0, WindowManager::GetWindowWidth(), WindowManager::GetWindowHeight());
+	viewport_ = { 0, 0, WindowManager::GetWindowWidth(), WindowManager::GetWindowHeight() };
 
 	// Enable Z-Testing
 	glEnable(GL_DEPTH_TEST);
+
+	// Prepare Drawer
+	Err err = Drawer::Init();
+	if (err.Code())
+		return err;
 
 	return error_const::SUCCESS;
 }
@@ -138,6 +144,7 @@ Err RenderManager::RequestRender(const RenderRequest& request)
 
 Err RenderManager::Draw()
 {
+	glViewport(viewport_.X, viewport_.Y, viewport_.Width, viewport_.Height);
 	Drawer::Draw(shader_, renderQueue_, textures_);
 	SDL_GL_SwapWindow(gameWindow_);
 
@@ -187,7 +194,7 @@ Err RenderManager::NewAttribObject(const Mesh& mesh, uint32_t& newVaoId)
 
 void RenderManager::ResizeViewport(const int32_t w, const int32_t h)
 {
-	glViewport(0, 0, w, h);
+	viewport_ = { 0, 0, w, h };
 }
 
 Err RenderManager::AddTexture(const uint32_t assetId)
@@ -206,6 +213,7 @@ Err RenderManager::AddTexture(const uint32_t assetId)
 
 SDL_Window* RenderManager::gameWindow_ = nullptr;
 SDL_GLContext RenderManager::glContext_;
+Viewport RenderManager::viewport_;
 Shader RenderManager::shader_;
 
 std::queue<RenderQuery> RenderManager::renderQueue_ = std::queue<RenderQuery>();

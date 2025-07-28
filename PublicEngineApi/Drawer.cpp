@@ -5,6 +5,12 @@
 #include "CameraManager.h"
 #include "Transform.h"
 
+Err Drawer::Init()
+{
+	coordGizmo_.InitGizmo();
+	return error_const::SUCCESS;
+}
+
 void Drawer::Draw(const Shader& shader, std::queue<RenderQuery>& queries, const TextureList& textures)
 {
 	glClearColor(1.0f, 1.0f, 0, 0.0f);
@@ -26,6 +32,8 @@ void Drawer::Draw(const Shader& shader, std::queue<RenderQuery>& queries, const 
 
 		queries.pop();
 	}
+
+	coordGizmo_.Draw(shader);
 }
 
 void Drawer::SetTextureWrapping(const MeshInstance& mesh)
@@ -83,4 +91,8 @@ void Drawer::SetShaderUniforms(const Shader& shader, const RenderQuery& query)
 	shader.SetUniform("model", enums::MatrixDim::m4x4, query.Model.GetData(), false);
 	shader.SetUniform("view", enums::MatrixDim::m4x4, CameraManager::GetMainCamera()->GetView().GetData(), false);
 	shader.SetUniform("projection", enums::MatrixDim::m4x4, CameraManager::GetMainCamera()->GetProjection().GetData(), false);
+	shader.SetUniform("light", 1.0f, 1.0f, 1.0f);
 }
+
+
+CoordinateGizmo Drawer::coordGizmo_;

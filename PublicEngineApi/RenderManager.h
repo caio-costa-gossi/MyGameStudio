@@ -12,6 +12,7 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "Timeline.h"
+#include "Viewport.h"
 
 using AttributeMap = std::unordered_map<uint32_t, std::vector<uint32_t>>;
 using TextureList = std::unordered_map<uint32_t, Texture>;
@@ -21,6 +22,7 @@ class RenderManager
 private:
 	static SDL_GLContext glContext_;
 	static SDL_Window* gameWindow_;
+	static Viewport viewport_;
 	static Shader shader_;
 
 	static std::queue<RenderQuery> renderQueue_;

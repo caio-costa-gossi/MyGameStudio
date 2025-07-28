@@ -61,6 +61,9 @@
     <Filter Include="Runtime Managers\Render\Camera">
       <UniqueIdentifier>{751d931e-d3d9-4035-9781-71e5f575ad31}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Runtime Managers\Render\CoordGizmo">
+      <UniqueIdentifier>{08239bd6-6182-44d9-acb1-a73e66bb02d2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetRuntimeManager.h">
@@ -285,6 +288,12 @@
     <ClInclude Include="Model.h">
       <Filter>Runtime Managers\Render\Data Structures</Filter>
     </ClInclude>
+    <ClInclude Include="Viewport.h">
+      <Filter>Runtime Managers\Render\Data Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="CoordinateGizmo.h">
+      <Filter>Runtime Managers\Render\CoordGizmo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssetRuntimeManager.cpp">
@@ -451,6 +460,9 @@
     </ClCompile>
     <ClCompile Include="stb_image_implementation.cpp">
       <Filter>Wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="CoordinateGizmo.cpp">
+      <Filter>Runtime Managers\Render\CoordGizmo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

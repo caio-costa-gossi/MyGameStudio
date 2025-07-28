@@ -27,6 +27,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraFactory.h" />
     <ClInclude Include="CameraInstance.h" />
+    <ClInclude Include="CoordinateGizmo.h" />
     <ClInclude Include="DataReader.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="OrthoCamera.h" />
@@ -90,6 +91,7 @@
     <ClInclude Include="Timeline.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Vertex.h" />
+    <ClInclude Include="Viewport.h" />
     <ClInclude Include="Win32PipeManager.h" />
     <ClInclude Include="WindowManager.h" />
     <ClInclude Include="ZipFile.h" />
@@ -102,6 +104,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraFactory.cpp" />
     <ClCompile Include="CameraInstance.cpp" />
+    <ClCompile Include="CoordinateGizmo.cpp" />
     <ClCompile Include="OrthoCamera.cpp" />
     <ClCompile Include="PerspectiveCamera.cpp" />
     <ClCompile Include="CameraManager.cpp" />

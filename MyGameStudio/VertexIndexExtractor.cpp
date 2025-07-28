@@ -356,6 +356,7 @@ Err VertexIndexExtractor::InitMeshes()
 		mesh->IndexList = std::make_unique<uint32_t[]>(info.TotalIndexCount);
 		mesh->VertexCount = info.TotalVertexCount;
 		mesh->IndexCount = info.TotalIndexCount;
+		mesh->UseVertexColor = false;
 
 		info.VertexList = mesh->VertexList.get();
 		info.IndexList = mesh->IndexList.get();
@@ -397,28 +398,6 @@ Err VertexIndexExtractor::GetMaterialMapsInfo(const int32_t materialId, Material
 		static_cast<float>(mat.pbrMetallicRoughness.metallicFactor),
 		static_cast<float>(mat.pbrMetallicRoughness.roughnessFactor),
 		mat.doubleSided
-	};
-
-	struct MaterialMapsInfo
-	{
-		int32_t DiffuseTexId = 0;
-		int32_t DiffuseTexCoordIndex = 0;
-
-		int32_t NormalTexId = 0;
-		int32_t NormalTexCoordIndex = 0;
-
-		int32_t MetallicRoughnessTexId = 0;
-		int32_t MetallicRoughnessCoordIndex = 0;
-
-		int32_t OcclusionTexId = 0;
-		int32_t OcclusionTexCoordIndex = 0;
-
-		int32_t EmissiveTexId = 0;
-		int32_t EmissiveTexCoordIndex = 0;
-
-		float MetallicFactor = 0;
-		float RoughnessFactor = 0;
-		bool DoubleSided = true;
 	};
 
 	return error_const::SUCCESS;

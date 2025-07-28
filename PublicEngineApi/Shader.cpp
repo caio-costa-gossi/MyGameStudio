@@ -179,3 +179,9 @@ void Shader::SetUniform(const char* uniformName, const enums::MatrixDim matrixDi
 		glUniformMatrix3fv(uniformId, 1, transpose, matrix);
 	}
 }
+
+void Shader::SetUniform(const char* uniformName, const bool val) const
+{
+	const int32_t uniformId = glGetUniformLocation(glProgramId_, uniformName);
+	glUniform1i(uniformId, val);
+}

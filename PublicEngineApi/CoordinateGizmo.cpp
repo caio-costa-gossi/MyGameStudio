@@ -68,10 +68,14 @@ void CoordinateGizmo::Draw(const Shader& shader)
 	gizmoCam->ChangePitch(CameraManager::GetMainCamera()->GetPitch());
 	gizmoCam->ChangeYaw(CameraManager::GetMainCamera()->GetYaw());
 
+	// Aux uniforms
+	shader.SetUniform("light", 1.0f, 1.0f, 1.0f);
+	shader.SetUniform("useVertexColor", true);
+
+	// Transforms
 	shader.SetUniform("model", enums::MatrixDim::m4x4, transform.GetData(), false);
 	shader.SetUniform("projection", enums::MatrixDim::m4x4, transform.GetData(), false);
 	shader.SetUniform("view", enums::MatrixDim::m4x4, gizmoCam->GetView().GetData(), false);
-	shader.SetUniform("light", 1.0f, 1.0f, 1.0f);
 
 	glViewport(0, 0, WindowManager::GetWindowWidth(), WindowManager::GetWindowHeight());
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

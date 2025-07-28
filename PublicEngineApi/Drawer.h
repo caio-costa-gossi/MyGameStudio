@@ -15,7 +15,12 @@ using TextureList = std::unordered_map<uint32_t, Texture>;
 class Drawer
 {
 private:
+	static Shader regularShader_;
+	static Shader billboardShader_;
+
 	static CoordinateGizmo coordGizmo_;
+
+	static Err InitShaders();
 
 	static void SetTextureWrapping(const MeshInstance& mesh);
 	static void SetShaderConfig();
@@ -23,5 +28,5 @@ private:
 
 public:
 	static Err Init();
-	static void Draw(const Shader& shader, std::queue<RenderQuery>& queries, const TextureList& textures);
+	static void Draw(std::queue<RenderQuery>& queries, const TextureList& textures);
 };

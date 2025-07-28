@@ -6,4 +6,6 @@ struct RenderQuery
 {
 	MeshInstance MeshInstance;
 	Transform Model;
+
+	bool IsBillboard = false;
 };

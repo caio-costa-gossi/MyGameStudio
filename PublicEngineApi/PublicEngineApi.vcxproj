@@ -155,8 +155,10 @@
     <ClCompile Include="ZipFile.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\MyGameStudio\shaders\MyShader.frag" />
-    <None Include="..\MyGameStudio\shaders\MyShader.vert" />
+    <None Include="..\MyGameStudio\shaders\BillboardShader.frag" />
+    <None Include="..\MyGameStudio\shaders\BillboardShader.vert" />
+    <None Include="..\MyGameStudio\shaders\RegularShader.frag" />
+    <None Include="..\MyGameStudio\shaders\RegularShader.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

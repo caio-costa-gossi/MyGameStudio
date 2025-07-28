@@ -19,11 +19,13 @@ Err RenderManager::Startup()
 
 	gameWindow_ = WindowManager::GetSdlWindow();
 
+	// Init Renderer
 	Err err = InitRenderer();
 	if (err.Code())
 		return err;
 
-	err = SetupShader();
+	// Init Drawer
+	err = Drawer::Init();
 	if (err.Code())
 		return err;
 
@@ -72,24 +74,6 @@ Err RenderManager::InitRenderer()
 
 	// Enable Z-Testing
 	glEnable(GL_DEPTH_TEST);
-
-	// Prepare Drawer
-	Err err = Drawer::Init();
-	if (err.Code())
-		return err;
-
-	return error_const::SUCCESS;
-}
-
-Err RenderManager::SetupShader()
-{
-	Err err = shader_.Init("shaders/MyShader.vert", "shaders/MyShader.frag");
-	if (err.Code())
-		return err;
-
-	err = shader_.Build();
-	if (err.Code())
-		return err;
 
 	return error_const::SUCCESS;
 }
@@ -145,7 +129,7 @@ Err RenderManager::RequestRender(const RenderRequest& request)
 Err RenderManager::Draw()
 {
 	glViewport(viewport_.X, viewport_.Y, viewport_.Width, viewport_.Height);
-	Drawer::Draw(shader_, renderQueue_, textures_);
+	Drawer::Draw(renderQueue_, textures_);
 	SDL_GL_SwapWindow(gameWindow_);
 
 	return error_const::SUCCESS;

@@ -466,7 +466,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\MyGameStudio\shaders\MyShader.vert" />
-    <None Include="..\MyGameStudio\shaders\MyShader.frag" />
+    <None Include="..\MyGameStudio\shaders\RegularShader.vert" />
+    <None Include="..\MyGameStudio\shaders\RegularShader.frag" />
+    <None Include="..\MyGameStudio\shaders\BillboardShader.frag" />
+    <None Include="..\MyGameStudio\shaders\BillboardShader.vert" />
   </ItemGroup>
 </Project>

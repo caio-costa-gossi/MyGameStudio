@@ -3,37 +3,72 @@
 #include <glad/glad.h>
 
 #include "CameraManager.h"
+#include "GameConsoleManager.h"
 #include "Transform.h"
 
 Err Drawer::Init()
 {
+	Err err = InitShaders();
+	if (err.Code())
+		return err;
+
 	coordGizmo_.InitGizmo();
+
 	return error_const::SUCCESS;
 }
 
-void Drawer::Draw(const Shader& shader, std::queue<RenderQuery>& queries, const TextureList& textures)
+Err Drawer::InitShaders()
 {
+	GameConsoleManager::PrintInfo("Initializing shaders...", enums::ConsoleMessageSender::render);
+
+	// Standard shader
+	Err err = regularShader_.Init("shaders/RegularShader.vert", "shaders/RegularShader.frag");
+	if (err.Code())
+		return err;
+
+	err = regularShader_.Build();
+	if (err.Code())
+		return err;
+
+	// Billboard shader
+	err = billboardShader_.Init("shaders/BillboardShader.vert", "shaders/BillboardShader.frag");
+	if (err.Code())
+		return err;
+
+	err = billboardShader_.Build();
+	if (err.Code())
+		return err;
+
+	return error_const::SUCCESS;
+}
+
+void Drawer::Draw(std::queue<RenderQuery>& queries, const TextureList& textures)
+{
+	// Reset color
 	glClearColor(1.0f, 1.0f, 0, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	shader.Use();
-	SetShaderConfig();
-
 	while (!queries.empty())
 	{
+		// Decide shader & configure
 		const RenderQuery& query = queries.front();
+		const Shader& shader = query.IsBillboard ? billboardShader_ : regularShader_;
+
+		shader.Use();
+		SetShaderConfig();
 
 		SetShaderUniforms(shader, query);
 		SetTextureWrapping(query.MeshInstance);
 		textures.at(query.MeshInstance.Data->TextureAssetId).Use();
 
+		// Draw
 		glBindVertexArray(query.MeshInstance.ArrayObjectId);
 		glDrawElements(GL_TRIANGLES, static_cast<int32_t>(query.MeshInstance.Data->IndexCount), GL_UNSIGNED_INT, nullptr);
 
 		queries.pop();
 	}
 
-	coordGizmo_.Draw(shader);
+	coordGizmo_.Draw(regularShader_);
 }
 
 void Drawer::SetTextureWrapping(const MeshInstance& mesh)
@@ -97,5 +132,7 @@ void Drawer::SetShaderUniforms(const Shader& shader, const RenderQuery& query)
 	shader.SetUniform("projection", enums::MatrixDim::m4x4, CameraManager::GetMainCamera()->GetProjection().GetData(), false);
 }
 
+Shader Drawer::regularShader_;
+Shader Drawer::billboardShader_;
 
 CoordinateGizmo Drawer::coordGizmo_;

@@ -32,7 +32,6 @@ private:
 	static Timeline renderTime_;
 
 	static Err InitRenderer();
-	static Err SetupShader();
 
 	static Err Draw();
 

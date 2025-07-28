@@ -24,7 +24,6 @@ private:
 	static SDL_GLContext glContext_;
 	static SDL_Window* gameWindow_;
 	static Viewport viewport_;
-	static Shader shader_;
 
 	static std::queue<RenderQuery> renderQueue_;
 	static AttributeMap attributeMap_;
@@ -35,9 +34,6 @@ private:
 	static Err InitRenderer();
 
 	static Err Draw();
-
-	static Err NewAttribObject(const Mesh& mesh, uint32_t& newVaoId);
-	static Err NewBillboardAttribObject(const BillboardData& data, uint32_t& newVaoId);
 	static Err AddTexture(uint32_t assetId);
 
 public:

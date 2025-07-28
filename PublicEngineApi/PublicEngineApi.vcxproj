@@ -92,6 +92,7 @@
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Timeline.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="VaoFactory.h" />
     <ClInclude Include="Vertex.h" />
     <ClInclude Include="Viewport.h" />
     <ClInclude Include="Win32PipeManager.h" />
@@ -151,6 +152,7 @@
     <ClCompile Include="Timeline.cpp" />
     <ClCompile Include="tinygltf_implementation.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="VaoFactory.cpp" />
     <ClCompile Include="Vertex.cpp" />
     <ClCompile Include="Win32PipeManager.cpp" />
     <ClCompile Include="WindowManager.cpp" />

@@ -1,5 +1,5 @@
 #version 330 core
-layout (location = 0) in vec2 quadPos;       // e.g., {-0.5, -0.5} to {0.5, 0.5}
+layout (location = 0) in vec2 quadPos;
 
 uniform vec3 centerWorld;
 uniform mat4 view;
@@ -15,5 +15,5 @@ void main() {
     vec3 worldPos = centerWorld + quadPos.x * right + quadPos.y * up;
 
     gl_Position = projection * view * vec4(worldPos, 1.0);
-    texCoord = quadPos + vec2(0.5); // if your texture goes from (0,0) to (1,1)
+    texCoord = quadPos + vec2(0.5);
 }

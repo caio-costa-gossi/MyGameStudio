@@ -303,6 +303,9 @@
     <ClInclude Include="BillboardData.h">
       <Filter>Runtime Managers\Render\Billboard</Filter>
     </ClInclude>
+    <ClInclude Include="VaoFactory.h">
+      <Filter>Runtime Managers\Render\OpenGL Wrappers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssetRuntimeManager.cpp">
@@ -471,6 +474,9 @@
       <Filter>Runtime Managers\Render\CoordGizmo</Filter>
     </ClCompile>
     <ClCompile Include="Transform.cpp">
+      <Filter>Runtime Managers\Render\OpenGL Wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="VaoFactory.cpp">
       <Filter>Runtime Managers\Render\OpenGL Wrappers</Filter>
     </ClCompile>
   </ItemGroup>

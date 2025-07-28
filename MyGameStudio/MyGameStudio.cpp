@@ -20,7 +20,7 @@ int main()
 
 	ConsoleManager::RunConsole();
 
-	err = TestDrawer::Startup();
+	/*err = TestDrawer::Startup();
 	if (err.Code() != 0)
 	{
 		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
@@ -36,7 +36,7 @@ int main()
 	if (err.Code() != 0)
 	{
 		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
-	}
+	}*/
 
 	err = EngineCoreManager::Shutdown();
 	if (err.Code() != 0)

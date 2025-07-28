@@ -9,6 +9,12 @@ private:
 	static bool debug_;
 	static Timeline mainGameTimeline_;
 
+	static int64_t frameStart_;
+	static int64_t frameEnd_;
+	static uint64_t desiredFps_;
+	static uint64_t desiredFramePeriod_;
+	static uint64_t fps_;
+
 	static Err UpdateGame();
 
 public:

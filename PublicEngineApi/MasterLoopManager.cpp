@@ -15,16 +15,28 @@ Err MasterLoopManager::Run()
 
 	while (loopRunning_)
 	{
+		// Update time
+		mainGameTimeline_.UpdateLastTime();
+		fps_ = mainGameTimeline_.GetUnitMultiplier() / mainGameTimeline_.GetDelta();
+		frameStart_ = mainGameTimeline_.GetElapsed();
+
+		// Handle debug info
 		if (debug_)
 		{
 			Err err = GameDebuggerChild::SendInfo();
 			if (err.Code())
 				GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::debugger);
 		}
-		
+
+		// Update game
 		UpdateGame();
 
-		Sleep(50);
+		// Get time elapsed, control FPS
+		frameEnd_ = mainGameTimeline_.GetElapsed();
+		const int64_t remainingTime = static_cast<int64_t>(desiredFramePeriod_) - (frameEnd_ - frameStart_);
+
+		if (remainingTime > 0)
+			Sleep(static_cast<uint32_t>(remainingTime * 1000) / mainGameTimeline_.GetUnitMultiplier());
 	}
 
 	return error_const::SUCCESS;
@@ -32,8 +44,9 @@ Err MasterLoopManager::Run()
 
 Err MasterLoopManager::Startup(const int argc, char** argv)
 {
-	// Main game timeline
+	// Main game timeline and frame period in timeline units
 	mainGameTimeline_ = Timeline(timeline::MICROSECOND);
+	desiredFramePeriod_ = mainGameTimeline_.GetUnitMultiplier() / desiredFps_;
 
 	if (argc < 5)
 		return error_const::GAME_INIT_INVALID_PARAMS;
@@ -146,9 +159,6 @@ Err MasterLoopManager::Shutdown()
 
 Err MasterLoopManager::UpdateGame()
 {
-	// Update time
-	mainGameTimeline_.UpdateLastTime();
-
 	// Update subsystems
 	Err err = WindowManager::Update();
 	if (err.Code() == error_const::EXIT_REQUEST_CODE)
@@ -162,7 +172,6 @@ Err MasterLoopManager::UpdateGame()
 	// Not implemented yet
 	PhysicsManager::Update();
 	AnimationManager::Update();
-	
 
 	return error_const::SUCCESS;
 }
@@ -175,4 +184,11 @@ Err MasterLoopManager::Stop()
 
 bool MasterLoopManager::loopRunning_;
 bool MasterLoopManager::debug_ = false;
+
 Timeline MasterLoopManager::mainGameTimeline_;
+
+int64_t MasterLoopManager::frameStart_ = 0;
+int64_t MasterLoopManager::frameEnd_ = 0;
+uint64_t MasterLoopManager::desiredFps_ = 120;
+uint64_t MasterLoopManager::desiredFramePeriod_;
+uint64_t MasterLoopManager::fps_ = 0;

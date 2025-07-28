@@ -172,6 +172,23 @@ uint64_t Timeline::GetDelta() const
 	return timeDelta_ / unitMeasurement_;
 }
 
+uint64_t Timeline::GetUnitMultiplier() const
+{
+	switch (unitMeasurement_)
+	{
+	case timeline::SECOND:
+		return 1;
+	case timeline::MILLISECOND:
+		return 1000;
+	case timeline::MICROSECOND:
+		return 1000000;
+	case timeline::NANOSECOND:
+		return 1000000000;
+	default:
+		return 1;
+	}
+}
+
 Err Timeline::Seek() const
 {
 	return error_const::SUCCESS;

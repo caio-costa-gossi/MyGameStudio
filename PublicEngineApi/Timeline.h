@@ -41,6 +41,8 @@ public:
 
 	int64_t GetElapsed() const;
 	uint64_t GetDelta() const;
+	uint64_t GetUnitMultiplier() const;
+
 	Err Seek() const;
 
 	bool IsStarted() const;

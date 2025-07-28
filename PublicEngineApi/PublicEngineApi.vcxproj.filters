@@ -49,9 +49,6 @@
     <Filter Include="Helpers\Image">
       <UniqueIdentifier>{8f647469-6a29-4694-a8c3-c3086ccf71a9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Runtime Managers\Render\Data Structures">
-      <UniqueIdentifier>{7c793df5-ebfa-4be7-a43d-52cb975c3471}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Runtime Managers\Render\OpenGL Wrappers">
       <UniqueIdentifier>{53e2346f-7535-4627-ba51-628e97b8eca7}</UniqueIdentifier>
     </Filter>
@@ -63,6 +60,12 @@
     </Filter>
     <Filter Include="Runtime Managers\Render\CoordGizmo">
       <UniqueIdentifier>{08239bd6-6182-44d9-acb1-a73e66bb02d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Runtime Managers\Render\Data Structures">
+      <UniqueIdentifier>{7c793df5-ebfa-4be7-a43d-52cb975c3471}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Runtime Managers\Render\Billboard">
+      <UniqueIdentifier>{5a0c2b2b-bf97-44dc-9615-72a0cacc0cc7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -252,9 +255,6 @@
     <ClInclude Include="Shader.h">
       <Filter>Runtime Managers\Render\OpenGL Wrappers</Filter>
     </ClInclude>
-    <ClInclude Include="Transform.h">
-      <Filter>Runtime Managers\Render</Filter>
-    </ClInclude>
     <ClInclude Include="RenderQuery.h">
       <Filter>Runtime Managers\Render\Data Structures</Filter>
     </ClInclude>
@@ -293,6 +293,15 @@
     </ClInclude>
     <ClInclude Include="CoordinateGizmo.h">
       <Filter>Runtime Managers\Render\CoordGizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Runtime Managers\Render\OpenGL Wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="BillboardRenderRequest.h">
+      <Filter>Runtime Managers\Render\Billboard</Filter>
+    </ClInclude>
+    <ClInclude Include="BillboardData.h">
+      <Filter>Runtime Managers\Render\Billboard</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -431,9 +440,6 @@
     <ClCompile Include="Shader.cpp">
       <Filter>Runtime Managers\Render\OpenGL Wrappers</Filter>
     </ClCompile>
-    <ClCompile Include="Transform.cpp">
-      <Filter>Runtime Managers\Render</Filter>
-    </ClCompile>
     <ClCompile Include="PerspectiveCamera.cpp">
       <Filter>Runtime Managers\Render\Camera</Filter>
     </ClCompile>
@@ -463,6 +469,9 @@
     </ClCompile>
     <ClCompile Include="CoordinateGizmo.cpp">
       <Filter>Runtime Managers\Render\CoordGizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>Runtime Managers\Render\OpenGL Wrappers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

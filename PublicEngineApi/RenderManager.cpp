@@ -126,6 +126,43 @@ Err RenderManager::RequestRender(const RenderRequest& request)
 	return error_const::SUCCESS;
 }
 
+Err RenderManager::RequestBillboardRender(const BillboardRenderRequest& request)
+{
+	// Create OpenGL Vertex Attribute Object and upload vertex data saving it in a list / use VAO list previously created
+	if (attributeMap_.find(request.Data.BillboardImageId) == attributeMap_.end())
+	{
+		uint32_t vao;
+
+		Err err = NewBillboardAttribObject(request.Data, vao);
+		if (err.Code())
+			return err;
+
+		const std::vector<uint32_t> vaoList = { vao };
+
+		RenderQuery newQuery = { {}, {}, request.Data, vao, true};
+		renderQueue_.emplace(newQuery);
+
+		attributeMap_[request.Data.BillboardImageId] = vaoList;
+	}
+	else
+	{
+		const uint32_t vao = attributeMap_[request.Data.BillboardImageId][0];
+
+		RenderQuery newQuery = { {}, {}, request.Data, vao, true };
+		renderQueue_.emplace(newQuery);
+	}
+
+	// Preload billboard texture
+	if (textures_.find(request.Data.BillboardImageId) == textures_.end())
+	{
+		Err err = AddTexture(request.Data.BillboardImageId);
+		if (err.Code())
+			GameConsoleManager::PrintError(err);
+	}
+
+	return error_const::SUCCESS;
+}
+
 Err RenderManager::Draw()
 {
 	glViewport(viewport_.X, viewport_.Y, viewport_.Width, viewport_.Height);
@@ -164,9 +201,55 @@ Err RenderManager::NewAttribObject(const Mesh& mesh, uint32_t& newVaoId)
 	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
-	// TextCoord
+	// TexCoord
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(7 * sizeof(float)));
 	glEnableVertexAttribArray(2);
+
+	// Unbind VAO & VBO
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	return error_const::SUCCESS;
+}
+
+Err RenderManager::NewBillboardAttribObject(const BillboardData& data, uint32_t& newVaoId)
+{
+	// Setup Vertex Array Object
+	uint32_t newVao;
+	glGenVertexArrays(1, &newVao);
+	glBindVertexArray(newVao);
+	newVaoId = newVao;
+
+	// Prepare billboard vertex data
+	float quadVertices[] = {
+		-0.5f, -0.5f,  // bottom-left
+		 0.5f, -0.5f,  // bottom-right
+		 0.5f,  0.5f,  // top-right
+		-0.5f,  0.5f   // top-left
+	};
+
+	uint32_t quadIndices[] = {
+		0, 1, 2,  // first triangle
+		2, 3, 0   // second triangle
+	};
+
+	// Setup Vertex Buffer Object
+	uint32_t vbo;
+	glGenBuffers(1, &vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, static_cast<int32_t>(4 * 2 * sizeof(float)), quadVertices, GL_STATIC_DRAW);
+
+	// Setup Element Buffer Object
+	uint32_t ebo;
+	glGenBuffers(1, &ebo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<int32_t>(6 * sizeof(uint32_t)), quadIndices, GL_STATIC_DRAW);
+
+	// Define vertex attribute layout
+	// QuadPos
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), nullptr);
+	glEnableVertexAttribArray(0);
 
 	// Unbind VAO & VBO
 	glBindVertexArray(0);

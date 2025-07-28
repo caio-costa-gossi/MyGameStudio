@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <SDL3/SDL.h>
 
+#include "BillboardRenderRequest.h"
 #include "Err.h"
 #include "Mesh.h"
 #include "RenderQuery.h"
@@ -36,6 +37,7 @@ private:
 	static Err Draw();
 
 	static Err NewAttribObject(const Mesh& mesh, uint32_t& newVaoId);
+	static Err NewBillboardAttribObject(const BillboardData& data, uint32_t& newVaoId);
 	static Err AddTexture(uint32_t assetId);
 
 public:
@@ -44,5 +46,6 @@ public:
 	static Err Shutdown();
 
 	static Err RequestRender(const RenderRequest& request);
+	static Err RequestBillboardRender(const BillboardRenderRequest& request);
 	static void ResizeViewport(int32_t w, int32_t h);
 };

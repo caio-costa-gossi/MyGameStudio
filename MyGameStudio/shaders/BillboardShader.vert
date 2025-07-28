@@ -1,19 +1,19 @@
 #version 330 core
-layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec4 aColor;
-layout (location = 2) in vec2 aTexCoord;
+layout (location = 0) in vec2 quadPos;       // e.g., {-0.5, -0.5} to {0.5, 0.5}
 
-out vec4 vertexColor;
-out vec2 texCoord;
-
-uniform mat4 model;
+uniform vec3 centerWorld;
 uniform mat4 view;
 uniform mat4 projection;
-uniform vec3 light;
 
-void main()
-{
-	gl_Position = projection * view * model * vec4(aPos, 1.0f);	
-	vertexColor = aColor;
-	texCoord = aTexCoord;	
+out vec2 texCoord;
+
+void main() {
+    // Extract right and up vectors from view matrix
+    vec3 right = vec3(view[0][0], view[1][0], view[2][0]);
+    vec3 up    = vec3(view[0][1], view[1][1], view[2][1]);
+
+    vec3 worldPos = centerWorld + quadPos.x * right + quadPos.y * up;
+
+    gl_Position = projection * view * vec4(worldPos, 1.0);
+    texCoord = quadPos + vec2(0.5); // if your texture goes from (0,0) to (1,1)
 }

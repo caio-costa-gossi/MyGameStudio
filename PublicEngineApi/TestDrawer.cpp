@@ -97,6 +97,11 @@ Err TestDrawer::Run()
 		if (err.Code())
 			return err;
 
+		BillboardRenderRequest billboardRequest = { {{-2,0,0}, {1.0f,1.0f}, 69} };
+		err = RenderManager::RequestBillboardRender(billboardRequest);
+		if (err.Code())
+			return err;
+
 		err = RenderManager::Update();
 		if (err.Code())
 			GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::render);

@@ -52,23 +52,70 @@ void Drawer::Draw(std::queue<RenderQuery>& queries, const TextureList& textures)
 	{
 		// Decide shader & configure
 		const RenderQuery& query = queries.front();
+
 		const Shader& shader = query.IsBillboard ? billboardShader_ : regularShader_;
-
 		shader.Use();
-		SetShaderConfig();
 
-		SetShaderUniforms(shader, query);
-		SetTextureWrapping(query.MeshInstance);
-		textures.at(query.MeshInstance.Data->TextureAssetId).Use();
-
-		// Draw
-		glBindVertexArray(query.MeshInstance.ArrayObjectId);
-		glDrawElements(GL_TRIANGLES, static_cast<int32_t>(query.MeshInstance.Data->IndexCount), GL_UNSIGNED_INT, nullptr);
+		if (!query.IsBillboard)
+			DrawRegular(shader, query, textures);
+		else
+			DrawBillboard(shader, query, textures);
 
 		queries.pop();
 	}
 
 	coordGizmo_.Draw(regularShader_);
+}
+
+void Drawer::DrawRegular(const Shader& shader, const RenderQuery& query, const TextureList& textures)
+{
+	// Prepare to draw
+	SetShaderConfig();
+	SetShaderUniformsRegular(shader, query);
+	SetTextureWrapping(query.MeshInstance);
+	textures.at(query.MeshInstance.Data->TextureAssetId).Use();
+
+	// Draw
+	glBindVertexArray(query.MeshInstance.ArrayObjectId);
+	glDrawElements(GL_TRIANGLES, static_cast<int32_t>(query.MeshInstance.Data->IndexCount), GL_UNSIGNED_INT, nullptr);
+}
+
+void Drawer::DrawBillboard(const Shader& shader, const RenderQuery& query, const TextureList& textures)
+{
+	// Prepare to draw
+	SetShaderConfig();
+	SetShaderUniformsBillboard(shader, query);
+	textures.at(query.BillboardData.BillboardImageId).Use();
+
+	// Draw
+	glBindVertexArray(query.BillboardVao);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+}
+
+void Drawer::SetShaderConfig()
+{
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+}
+
+void Drawer::SetShaderUniformsRegular(const Shader& shader, const RenderQuery& query)
+{
+	shader.SetUniform("useVertexColor", query.MeshInstance.Data->UseVertexColor);
+	shader.SetUniform("light", 1.0f, 1.0f, 1.0f);
+
+	// Transforms
+	shader.SetUniform("model", enums::MatrixDim::m4x4, query.Model.GetData(), false);
+	shader.SetUniform("view", enums::MatrixDim::m4x4, CameraManager::GetMainCamera()->GetView().GetData(), false);
+	shader.SetUniform("projection", enums::MatrixDim::m4x4, CameraManager::GetMainCamera()->GetProjection().GetData(), false);
+}
+
+void Drawer::SetShaderUniformsBillboard(const Shader& shader, const RenderQuery& query)
+{
+	// Transforms
+	shader.SetUniform("centerWorld", query.BillboardData.WorldPos.X, query.BillboardData.WorldPos.Y, query.BillboardData.WorldPos.Z);
+	shader.SetUniform("view", enums::MatrixDim::m4x4, CameraManager::GetMainCamera()->GetView().GetData(), false);
+	shader.SetUniform("projection", enums::MatrixDim::m4x4, CameraManager::GetMainCamera()->GetProjection().GetData(), false);
 }
 
 void Drawer::SetTextureWrapping(const MeshInstance& mesh)
@@ -114,23 +161,6 @@ void Drawer::SetTextureWrapping(const MeshInstance& mesh)
 	}
 }
 
-void Drawer::SetShaderConfig()
-{
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-}
-
-void Drawer::SetShaderUniforms(const Shader& shader, const RenderQuery& query)
-{
-	shader.SetUniform("useVertexColor", query.MeshInstance.Data->UseVertexColor);
-	shader.SetUniform("light", 1.0f, 1.0f, 1.0f);
-
-	// Transforms
-	shader.SetUniform("model", enums::MatrixDim::m4x4, query.Model.GetData(), false);
-	shader.SetUniform("view", enums::MatrixDim::m4x4, CameraManager::GetMainCamera()->GetView().GetData(), false);
-	shader.SetUniform("projection", enums::MatrixDim::m4x4, CameraManager::GetMainCamera()->GetProjection().GetData(), false);
-}
 
 Shader Drawer::regularShader_;
 Shader Drawer::billboardShader_;

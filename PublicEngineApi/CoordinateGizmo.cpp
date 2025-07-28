@@ -61,6 +61,8 @@ void CoordinateGizmo::BuildCamera()
 
 void CoordinateGizmo::Draw(const Shader& shader)
 {
+	shader.Use();
+
 	Transform transform;
 	transform.Translate({ 0.0f, -0.1f, 0.0f });
 

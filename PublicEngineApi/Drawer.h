@@ -21,10 +21,14 @@ private:
 	static CoordinateGizmo coordGizmo_;
 
 	static Err InitShaders();
+	static void DrawRegular(const Shader& shader, const RenderQuery& query, const TextureList& textures);
+	static void DrawBillboard(const Shader& shader, const RenderQuery& query, const TextureList& textures);
 
-	static void SetTextureWrapping(const MeshInstance& mesh);
 	static void SetShaderConfig();
-	static void SetShaderUniforms(const Shader& shader, const RenderQuery& query);
+	static void SetTextureWrapping(const MeshInstance& mesh);
+	
+	static void SetShaderUniformsRegular(const Shader& shader, const RenderQuery& query);
+	static void SetShaderUniformsBillboard(const Shader& shader, const RenderQuery& query);
 
 public:
 	static Err Init();

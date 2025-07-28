@@ -69,7 +69,7 @@ void Drawer::Draw(std::queue<RenderQuery>& queries, std::priority_queue<Billboar
 		billboardQueries.pop();
 	}
 
-	coordGizmo_.Draw(regularShader_);
+	coordGizmo_.Draw(regularShader_, billboardShader_);
 }
 
 void Drawer::DrawRegular(const RenderQuery& query, const TextureList& textures)

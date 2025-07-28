@@ -3,11 +3,6 @@
 
 #include "AssetRuntimeManager.h"
 
-Texture::Texture()
-{
-	
-}
-
 Err Texture::Init(const uint32_t assetId)
 {
 	textureImage_ = AssetRuntimeManager::LoadImg(assetId);
@@ -38,4 +33,3 @@ Err Texture::InitGlTex()
 
 	return error_const::SUCCESS;
 }
-

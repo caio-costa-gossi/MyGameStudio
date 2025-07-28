@@ -134,7 +134,7 @@ Err RenderManager::RequestBillboardRender(const BillboardRenderRequest& request)
 	{
 		uint32_t vao;
 
-		Err err = VaoFactory::NewBillboardAttribObject(request.Data, vao);
+		Err err = VaoFactory::NewBillboardAttribObject(vao);
 		if (err.Code())
 			return err;
 

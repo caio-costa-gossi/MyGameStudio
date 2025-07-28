@@ -13,7 +13,9 @@ private:
 	Err InitGlTex();
 
 public:
-	Texture();
+	Texture() = default;
+
+	// Grab image from AssetRuntimeManager
 	Err Init(uint32_t assetId);
 
 	void Use() const;

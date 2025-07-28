@@ -9,7 +9,6 @@
 #include "RenderQuery.h"
 #include "Shader.h"
 #include "Texture.h"
-#include "Viewport.h"
 
 using TextureList = std::unordered_map<uint32_t, Texture>;
 

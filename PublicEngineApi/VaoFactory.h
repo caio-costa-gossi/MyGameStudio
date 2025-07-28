@@ -1,5 +1,4 @@
 #pragma once
-#include "BillboardData.h"
 #include "Err.h"
 #include "Mesh.h"
 
@@ -10,5 +9,5 @@ private:
 
 public:
 	static Err NewAttribObject(const Mesh& mesh, uint32_t& newVaoId);
-	static Err NewBillboardAttribObject(const BillboardData& data, uint32_t& newVaoId);
+	static Err NewBillboardAttribObject(uint32_t& newVaoId);
 };

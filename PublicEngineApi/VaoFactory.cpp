@@ -43,7 +43,7 @@ Err VaoFactory::NewAttribObject(const Mesh& mesh, uint32_t& newVaoId)
 	return error_const::SUCCESS;
 }
 
-Err VaoFactory::NewBillboardAttribObject(const BillboardData& data, uint32_t& newVaoId)
+Err VaoFactory::NewBillboardAttribObject(uint32_t& newVaoId)
 {
 	// Setup Vertex Array Object
 	uint32_t newVao;

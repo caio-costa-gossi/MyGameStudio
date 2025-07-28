@@ -114,6 +114,7 @@ void Drawer::SetShaderUniformsBillboard(const Shader& shader, const RenderQuery&
 {
 	// Transforms
 	shader.SetUniform("centerWorld", query.BillboardData.WorldPos.X, query.BillboardData.WorldPos.Y, query.BillboardData.WorldPos.Z);
+	shader.SetUniform("scale", query.BillboardData.Scale.X, query.BillboardData.Scale.Y);
 	shader.SetUniform("view", enums::MatrixDim::m4x4, CameraManager::GetMainCamera()->GetView().GetData(), false);
 	shader.SetUniform("projection", enums::MatrixDim::m4x4, CameraManager::GetMainCamera()->GetProjection().GetData(), false);
 }

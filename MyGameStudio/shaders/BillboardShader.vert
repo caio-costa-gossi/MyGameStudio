@@ -1,6 +1,7 @@
 #version 330 core
 layout (location = 0) in vec2 quadPos;
 
+uniform vec2 scale;
 uniform vec3 centerWorld;
 uniform mat4 view;
 uniform mat4 projection;
@@ -12,7 +13,9 @@ void main() {
     vec3 right = vec3(view[0][0], view[1][0], view[2][0]);
     vec3 up    = vec3(view[0][1], view[1][1], view[2][1]);
 
-    vec3 worldPos = centerWorld + quadPos.x * right + quadPos.y * up;
+    // Apply scale
+    vec2 scaledQuadPos = quadPos * scale;    
+    vec3 worldPos = centerWorld + scaledQuadPos.x * right + scaledQuadPos.y * up;
 
     gl_Position = projection * view * vec4(worldPos, 1.0);
     texCoord = quadPos + vec2(0.5);

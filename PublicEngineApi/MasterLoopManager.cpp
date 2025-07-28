@@ -1,5 +1,6 @@
 #include "MasterLoopManager.h"
 #include "AnimationManager.h"
+#include "CameraManager.h"
 #include "GameConsoleManager.h"
 #include "GameDebuggerChild.h"
 #include "GameObjectManager.h"
@@ -36,7 +37,6 @@ Err MasterLoopManager::Startup(const int argc, char** argv)
 
 	if (argc < 5)
 		return error_const::GAME_INIT_INVALID_PARAMS;
-
 	if (argc > 5)
 		debug_ = true;
 
@@ -67,11 +67,26 @@ Err MasterLoopManager::Startup(const int argc, char** argv)
 	if (err.Code())
 		GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::input);
 
+	// Game Object Manager
 	GameConsoleManager::PrintInfo("Starting GameObjectManager...", enums::ConsoleMessageSender::loop);
 	err = GameObjectManager::Get().Startup();
 	if (err.Code())
 		GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::object);
 
+	// Camera Manager
+	GameConsoleManager::PrintInfo("Starting CameraManager...", enums::ConsoleMessageSender::loop);
+	err = CameraManager::Startup();
+	if (err.Code())
+		GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::camera);
+	
+	// Render Manager
+	GameConsoleManager::PrintInfo("Starting RenderManager...", enums::ConsoleMessageSender::loop);
+	err = RenderManager::Startup();
+	if (err.Code())
+		GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::render);
+
+
+	// Systems not implemented yet
 	GameConsoleManager::PrintInfo("Starting PhysicsManager...", enums::ConsoleMessageSender::loop);
 	err = PhysicsManager::Startup();
 	if (err.Code())
@@ -81,11 +96,6 @@ Err MasterLoopManager::Startup(const int argc, char** argv)
 	err = AnimationManager::Startup();
 	if (err.Code())
 		GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::animation);
-
-	GameConsoleManager::PrintInfo("Starting RenderingManager...", enums::ConsoleMessageSender::loop);
-	err = RenderManager::Startup();
-	if (err.Code())
-		GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::render);
 
 	// Start time
 	mainGameTimeline_.Start();
@@ -146,9 +156,13 @@ Err MasterLoopManager::UpdateGame()
 
 	InputManager::Update();
 	GameObjectManager::Get().Update(mainGameTimeline_.GetDelta());
+	CameraManager::Update();
+	RenderManager::Update();
+
+	// Not implemented yet
 	PhysicsManager::Update();
 	AnimationManager::Update();
-	RenderManager::Update();
+	
 
 	return error_const::SUCCESS;
 }

@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <SDL3/SDL.h>
 
+#include "BillboardRenderQuery.h"
 #include "BillboardRenderRequest.h"
 #include "Err.h"
 #include "Mesh.h"
@@ -26,6 +27,7 @@ private:
 	static Viewport viewport_;
 
 	static std::queue<RenderQuery> renderQueue_;
+	static std::priority_queue<BillboardRenderQuery> billboardRenderQueue_;
 	static AttributeMap attributeMap_;
 	static TextureList textures_;
 

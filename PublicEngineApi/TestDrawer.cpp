@@ -97,8 +97,18 @@ Err TestDrawer::Run()
 		if (err.Code())
 			return err;
 
-		BillboardRenderRequest billboardRequest = { {{-2,0,0}, {1.0f,1.0f}, 69} };
+		BillboardRenderRequest billboardRequest = { {{-2,0,0}, {1.0f,1.0f}, 145} };
 		err = RenderManager::RequestBillboardRender(billboardRequest);
+		if (err.Code())
+			return err;
+
+		BillboardRenderRequest billboardRequest2 = { {{-3,0,0}, {1.0f,1.0f}, 146} };
+		err = RenderManager::RequestBillboardRender(billboardRequest2);
+		if (err.Code())
+			return err;
+
+		BillboardRenderRequest billboardRequest3 = { {{-4,0,0}, {1.0f,1.0f}, 147} };
+		err = RenderManager::RequestBillboardRender(billboardRequest3);
 		if (err.Code())
 			return err;
 

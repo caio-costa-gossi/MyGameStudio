@@ -24,6 +24,7 @@
     <ClInclude Include="AssetDatabase.h" />
     <ClInclude Include="AssetRuntimeManager.h" />
     <ClInclude Include="BillboardData.h" />
+    <ClInclude Include="BillboardRenderQuery.h" />
     <ClInclude Include="BillboardRenderRequest.h" />
     <ClInclude Include="CallbackData.h" />
     <ClInclude Include="Camera.h" />

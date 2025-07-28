@@ -140,8 +140,8 @@ Err RenderManager::RequestBillboardRender(const BillboardRenderRequest& request)
 
 		const std::vector<uint32_t> vaoList = { vao };
 
-		RenderQuery newQuery = { {}, {}, request.Data, vao, true};
-		renderQueue_.emplace(newQuery);
+		BillboardRenderQuery newQuery = { request.Data, vao };
+		billboardRenderQueue_.emplace(newQuery);
 
 		attributeMap_[request.Data.BillboardImageId] = vaoList;
 	}
@@ -149,8 +149,8 @@ Err RenderManager::RequestBillboardRender(const BillboardRenderRequest& request)
 	{
 		const uint32_t vao = attributeMap_[request.Data.BillboardImageId][0];
 
-		RenderQuery newQuery = { {}, {}, request.Data, vao, true };
-		renderQueue_.emplace(newQuery);
+		BillboardRenderQuery newQuery = { request.Data, vao };
+		billboardRenderQueue_.emplace(newQuery);
 	}
 
 	// Preload billboard texture
@@ -167,7 +167,7 @@ Err RenderManager::RequestBillboardRender(const BillboardRenderRequest& request)
 Err RenderManager::Draw()
 {
 	glViewport(viewport_.X, viewport_.Y, viewport_.Width, viewport_.Height);
-	Drawer::Draw(renderQueue_, textures_);
+	Drawer::Draw(renderQueue_, billboardRenderQueue_, textures_);
 	SDL_GL_SwapWindow(gameWindow_);
 
 	return error_const::SUCCESS;
@@ -197,6 +197,7 @@ SDL_GLContext RenderManager::glContext_;
 Viewport RenderManager::viewport_;
 
 std::queue<RenderQuery> RenderManager::renderQueue_ = std::queue<RenderQuery>();
+std::priority_queue<BillboardRenderQuery> RenderManager::billboardRenderQueue_ = std::priority_queue<BillboardRenderQuery>();
 AttributeMap RenderManager::attributeMap_ = AttributeMap();
 TextureList RenderManager::textures_ = TextureList();
 

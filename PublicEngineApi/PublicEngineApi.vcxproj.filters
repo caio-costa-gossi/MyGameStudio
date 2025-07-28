@@ -306,6 +306,9 @@
     <ClInclude Include="VaoFactory.h">
       <Filter>Runtime Managers\Render\OpenGL Wrappers</Filter>
     </ClInclude>
+    <ClInclude Include="BillboardRenderQuery.h">
+      <Filter>Runtime Managers\Render\Billboard</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssetRuntimeManager.cpp">

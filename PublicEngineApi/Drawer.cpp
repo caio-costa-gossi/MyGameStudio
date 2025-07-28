@@ -42,36 +42,41 @@ Err Drawer::InitShaders()
 	return error_const::SUCCESS;
 }
 
-void Drawer::Draw(std::queue<RenderQuery>& queries, const TextureList& textures)
+void Drawer::Draw(std::queue<RenderQuery>& queries, std::priority_queue<BillboardRenderQuery>& billboardQueries, const TextureList& textures)
 {
 	// Reset color
 	glClearColor(1.0f, 1.0f, 0, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	// Draw 3d meshes
 	while (!queries.empty())
 	{
-		// Decide shader & configure
+		// Use standard shader
 		const RenderQuery& query = queries.front();
-
-		const Shader& shader = query.IsBillboard ? billboardShader_ : regularShader_;
-		shader.Use();
-
-		if (!query.IsBillboard)
-			DrawRegular(shader, query, textures);
-		else
-			DrawBillboard(shader, query, textures);
+		regularShader_.Use();
+		DrawRegular(query, textures);
 
 		queries.pop();
+	}
+
+	// Draw billboards
+	while (!billboardQueries.empty())
+	{
+		const BillboardRenderQuery& query = billboardQueries.top();
+		billboardShader_.Use();
+		DrawBillboard(query, textures);
+
+		billboardQueries.pop();
 	}
 
 	coordGizmo_.Draw(regularShader_);
 }
 
-void Drawer::DrawRegular(const Shader& shader, const RenderQuery& query, const TextureList& textures)
+void Drawer::DrawRegular(const RenderQuery& query, const TextureList& textures)
 {
 	// Prepare to draw
 	SetShaderConfig();
-	SetShaderUniformsRegular(shader, query);
+	SetShaderUniformsRegular(regularShader_, query);
 	SetTextureWrapping(query.MeshInstance);
 	textures.at(query.MeshInstance.Data->TextureAssetId).Use();
 
@@ -80,11 +85,11 @@ void Drawer::DrawRegular(const Shader& shader, const RenderQuery& query, const T
 	glDrawElements(GL_TRIANGLES, static_cast<int32_t>(query.MeshInstance.Data->IndexCount), GL_UNSIGNED_INT, nullptr);
 }
 
-void Drawer::DrawBillboard(const Shader& shader, const RenderQuery& query, const TextureList& textures)
+void Drawer::DrawBillboard(const BillboardRenderQuery& query, const TextureList& textures)
 {
 	// Prepare to draw
 	SetShaderConfig();
-	SetShaderUniformsBillboard(shader, query);
+	SetShaderUniformsBillboard(billboardShader_, query);
 	textures.at(query.BillboardData.BillboardImageId).Use();
 
 	// Draw
@@ -110,7 +115,7 @@ void Drawer::SetShaderUniformsRegular(const Shader& shader, const RenderQuery& q
 	shader.SetUniform("projection", enums::MatrixDim::m4x4, CameraManager::GetMainCamera()->GetProjection().GetData(), false);
 }
 
-void Drawer::SetShaderUniformsBillboard(const Shader& shader, const RenderQuery& query)
+void Drawer::SetShaderUniformsBillboard(const Shader& shader, const BillboardRenderQuery& query)
 {
 	// Transforms
 	shader.SetUniform("centerWorld", query.BillboardData.WorldPos.X, query.BillboardData.WorldPos.Y, query.BillboardData.WorldPos.Z);

@@ -35,9 +35,13 @@ Err LightingManager::SetLightUniforms(const Shader& shader)
 
 	shader.SetUniform("ambientColor", ambientLightClr_.R, ambientLightClr_.G, ambientLightClr_.B);
 	shader.SetUniform("ambientFactor", ambientLightStr_);
+
 	shader.SetUniform("lightPos", localLights_[0].Pos.X, localLights_[0].Pos.Y, localLights_[0].Pos.Z);
 	shader.SetUniform("lightColor", localLights_[0].Color.R, localLights_[0].Color.G, localLights_[0].Color.B);
 	shader.SetUniform("lightStrength", localLights_[0].Intensity);
+
+	const Vec3F& viewPos = CameraManager::GetMainCamera()->GetPos();
+	shader.SetUniform("viewPos", viewPos.X, viewPos.Y, viewPos.Z);
 
 	return error_const::SUCCESS;
 }

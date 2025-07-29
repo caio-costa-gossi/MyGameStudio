@@ -3,8 +3,14 @@
 #include <queue>
 
 #include "BillboardRenderQuery.h"
-#include "Image.h"
 #include "Shader.h"
+#include "Texture.h"
+
+struct RenderNode
+{
+	BillboardRenderQuery RenderQuery;
+	Texture NodeTexture;
+};
 
 class CoordinateGizmo
 {
@@ -12,19 +18,15 @@ private:
 	uint32_t vaoId_ = 0;
 	uint16_t camId_ = 0;
 
-	BillboardRenderQuery xNodeQuery_;
-	BillboardRenderQuery yNodeQuery_;
-	BillboardRenderQuery zNodeQuery_;
+	RenderNode xNode_;
+	RenderNode yNode_;
+	RenderNode zNode_;
 
-	Image xNodeImage_ = Image("internal_engine_assets/X.png");
-	Image yNodeImage_ = Image("internal_engine_assets/Y.png");
-	Image zNodeImage_ = Image("internal_engine_assets/Z.png");
-
-	std::queue<BillboardRenderQuery> nodeRenderQuery_;
+	std::queue<RenderNode> nodeRenderQuery_;
 
 	void BuildVao();
 	void BuildCamera();
-	void BuildBillboardVaos();
+	void BuildNodeObjects();
 	void BuildTextures();
 
 	void UpdateGizmoCam() const;

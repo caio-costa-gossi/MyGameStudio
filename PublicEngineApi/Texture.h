@@ -17,6 +17,7 @@ public:
 
 	// Grab image from AssetRuntimeManager
 	Err Init(uint32_t assetId);
+	Err Init(const char* filepath, uint32_t& assetId);
 
 	void Use() const;
 };

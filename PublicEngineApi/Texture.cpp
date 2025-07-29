@@ -16,6 +16,19 @@ Err Texture::Init(const uint32_t assetId)
 	return error_const::SUCCESS;
 }
 
+Err Texture::Init(const char* filepath, uint32_t& assetId)
+{
+	textureImage_ = AssetRuntimeManager::LoadImg(filepath, assetId);
+	if (textureImage_ == nullptr)
+		return error_const::RENDER_TEXTURE_INIT_FAIL;
+
+	Err err = InitGlTex();
+	if (err.Code())
+		return err;
+
+	return error_const::SUCCESS;
+}
+
 void Texture::Use() const
 {
 	glEnable(GL_BLEND);

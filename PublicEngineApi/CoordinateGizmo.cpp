@@ -5,6 +5,7 @@
 #include "BillboardRenderRequest.h"
 #include "Camera.h"
 #include "CameraManager.h"
+#include "GameConsoleManager.h"
 #include "Shader.h"
 #include "Transform.h"
 #include "VaoFactory.h"
@@ -14,7 +15,7 @@
 void CoordinateGizmo::InitGizmo()
 {
 	BuildVao();
-	BuildBillboardVaos();
+	BuildNodeObjects();
 	BuildCamera();
 	BuildTextures();
 }
@@ -58,15 +59,15 @@ void CoordinateGizmo::BuildVao()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void CoordinateGizmo::BuildBillboardVaos()
+void CoordinateGizmo::BuildNodeObjects()
 {
-	xNodeQuery_ = { { { 0.9f, -0.2f, 0.0f }, { 0.3f, 0.3f }, 0 }, 0 };
-	yNodeQuery_ = { { { 0.0f, 0.8f, 0.0f }, { 0.3f, 0.3f }, 0 }, 0 };
-	zNodeQuery_ = { { { 0.0f, -0.2f, 0.9f }, { 0.3f, 0.3f }, 0 }, 0 };
+	xNode_.RenderQuery = { { { 0.9f, -0.2f, 0.0f }, { 0.3f, 0.3f }, 0 }, 0 };
+	yNode_.RenderQuery = { { { 0.0f, 0.8f, 0.0f }, { 0.3f, 0.3f }, 0 }, 0 };
+	zNode_.RenderQuery = { { { 0.0f, -0.2f, 0.9f }, { 0.3f, 0.3f }, 0 }, 0 };
 
-	VaoFactory::NewBillboardAttribObject(xNodeQuery_.BillboardVao);
-	VaoFactory::NewBillboardAttribObject(yNodeQuery_.BillboardVao);
-	VaoFactory::NewBillboardAttribObject(zNodeQuery_.BillboardVao);
+	VaoFactory::NewBillboardAttribObject(xNode_.RenderQuery.BillboardVao);
+	VaoFactory::NewBillboardAttribObject(yNode_.RenderQuery.BillboardVao);
+	VaoFactory::NewBillboardAttribObject(zNode_.RenderQuery.BillboardVao);
 }
 
 void CoordinateGizmo::BuildCamera()
@@ -76,23 +77,17 @@ void CoordinateGizmo::BuildCamera()
 
 void CoordinateGizmo::BuildTextures()
 {
-	// xNode
-	glGenTextures(1, &xNodeQuery_.BillboardData.BillboardImageId);
-	glBindTexture(GL_TEXTURE_2D, xNodeQuery_.BillboardData.BillboardImageId);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, xNodeImage_.Width, xNodeImage_.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, xNodeImage_.Data);
-	glGenerateMipmap(GL_TEXTURE_2D);
+	Err err = xNode_.NodeTexture.Init("internal_engine_assets/X.png", xNode_.RenderQuery.BillboardData.BillboardImageId);
+	if (err.Code())
+		GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::render);
 
-	// yNode
-	glGenTextures(1, &yNodeQuery_.BillboardData.BillboardImageId);
-	glBindTexture(GL_TEXTURE_2D, yNodeQuery_.BillboardData.BillboardImageId);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, yNodeImage_.Width, yNodeImage_.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, yNodeImage_.Data);
-	glGenerateMipmap(GL_TEXTURE_2D);
+	yNode_.NodeTexture.Init("internal_engine_assets/Y.png", yNode_.RenderQuery.BillboardData.BillboardImageId);
+	if (err.Code())
+		GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::render);
 
-	// zNode
-	glGenTextures(1, &zNodeQuery_.BillboardData.BillboardImageId);
-	glBindTexture(GL_TEXTURE_2D, zNodeQuery_.BillboardData.BillboardImageId);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, zNodeImage_.Width, zNodeImage_.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, zNodeImage_.Data);
-	glGenerateMipmap(GL_TEXTURE_2D);
+	zNode_.NodeTexture.Init("internal_engine_assets/Z.png", zNode_.RenderQuery.BillboardData.BillboardImageId);
+	if (err.Code())
+		GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::render);
 }
 
 void CoordinateGizmo::UpdateGizmoCam() const
@@ -153,21 +148,17 @@ void CoordinateGizmo::DrawNodes(const Shader& billboardShader)
 
 	while (!nodeRenderQuery_.empty())
 	{
-		const BillboardRenderQuery& query = nodeRenderQuery_.front();
+		const RenderNode& node = nodeRenderQuery_.front();
 
 		// Prepare node billboard uniforms
-		billboardShader.SetUniform("centerWorld", query.BillboardData.WorldPos.X, query.BillboardData.WorldPos.Y, query.BillboardData.WorldPos.Z);
-		billboardShader.SetUniform("scale", query.BillboardData.Scale.X, query.BillboardData.Scale.Y);
+		billboardShader.SetUniform("centerWorld", node.RenderQuery.BillboardData.WorldPos.X, node.RenderQuery.BillboardData.WorldPos.Y, node.RenderQuery.BillboardData.WorldPos.Z);
+		billboardShader.SetUniform("scale", node.RenderQuery.BillboardData.Scale.X, node.RenderQuery.BillboardData.Scale.Y);
 		billboardShader.SetUniform("view", enums::MatrixDim::m4x4, gizmoCam->GetView().GetData(), false);
 		billboardShader.SetUniform("projection", enums::MatrixDim::m4x4, Transform().GetData(), false);
 
-		// Prepare node texture
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glBindTexture(GL_TEXTURE_2D, query.BillboardData.BillboardImageId);
-
 		// Draw
-		glBindVertexArray(query.BillboardVao);
+		node.NodeTexture.Use();
+		glBindVertexArray(node.RenderQuery.BillboardVao);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
 		nodeRenderQuery_.pop();
@@ -178,14 +169,14 @@ void CoordinateGizmo::EmplaceNodes(const Camera* camera)
 {
 	if (camera->GetYaw() > 90)
 	{
-		nodeRenderQuery_.emplace(xNodeQuery_);
-		nodeRenderQuery_.emplace(yNodeQuery_);
-		nodeRenderQuery_.emplace(zNodeQuery_);
+		nodeRenderQuery_.emplace(xNode_);
+		nodeRenderQuery_.emplace(yNode_);
+		nodeRenderQuery_.emplace(zNode_);
 	}
 	else
 	{
-		nodeRenderQuery_.emplace(zNodeQuery_);
-		nodeRenderQuery_.emplace(yNodeQuery_);
-		nodeRenderQuery_.emplace(xNodeQuery_);
+		nodeRenderQuery_.emplace(zNode_);
+		nodeRenderQuery_.emplace(yNode_);
+		nodeRenderQuery_.emplace(xNode_);
 	}
 }

@@ -4,6 +4,7 @@
 #include "ImageLoader.h"
 #include "ZipFile.h"
 
+#undef max
 
 Err AssetRuntimeManager::Startup()
 {
@@ -66,6 +67,33 @@ Image* AssetRuntimeManager::LoadImg(const uint32_t assetId)
 	delete[] compressedBuffer;
 
 	return &imageData_[assetId];
+}
+
+Image* AssetRuntimeManager::LoadImg(const char* filepath, uint32_t& assetId)
+{
+	Image newImage = Image(filepath);
+	if (newImage.Data == nullptr)
+	{
+		GameConsoleManager::PrintError("Error loading image at '" + std::string(filepath) + "': Image not found.");
+		return nullptr;
+	}
+
+	uint32_t newAssetId = 0xffff0000;
+	while (imageData_.find(newAssetId) != imageData_.end())
+	{
+		newAssetId++;
+
+		if (newAssetId == std::numeric_limits<uint32_t>::max())
+		{
+			GameConsoleManager::PrintError("Error loading image: Maximum limit reached for the image map.");
+			return nullptr;
+		}
+	}
+
+	assetId = newAssetId;
+	imageData_[newAssetId] = std::move(newImage);
+
+	return &imageData_[newAssetId];
 }
 
 

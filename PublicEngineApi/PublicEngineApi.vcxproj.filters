@@ -67,6 +67,9 @@
     <Filter Include="Runtime Managers\Render\Billboard">
       <UniqueIdentifier>{5a0c2b2b-bf97-44dc-9615-72a0cacc0cc7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Runtime Managers\Render\Lighting">
+      <UniqueIdentifier>{3bbdf51a-19fc-4f9c-8bcc-6c8c7c2a673f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetRuntimeManager.h">
@@ -309,6 +312,12 @@
     <ClInclude Include="BillboardRenderQuery.h">
       <Filter>Runtime Managers\Render\Billboard</Filter>
     </ClInclude>
+    <ClInclude Include="LightSource.h">
+      <Filter>Runtime Managers\Render\Lighting</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform3.h">
+      <Filter>Runtime Managers\Render\OpenGL Wrappers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssetRuntimeManager.cpp">
@@ -437,9 +446,6 @@
     <ClCompile Include="Color.cpp">
       <Filter>Runtime Managers\Render\Data Structures</Filter>
     </ClCompile>
-    <ClCompile Include="Vertex.cpp">
-      <Filter>Runtime Managers\Render\Data Structures</Filter>
-    </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>Runtime Managers\Render\OpenGL Wrappers</Filter>
     </ClCompile>
@@ -480,6 +486,12 @@
       <Filter>Runtime Managers\Render\OpenGL Wrappers</Filter>
     </ClCompile>
     <ClCompile Include="VaoFactory.cpp">
+      <Filter>Runtime Managers\Render\OpenGL Wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="LightSource.cpp">
+      <Filter>Runtime Managers\Render\Lighting</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform3.cpp">
       <Filter>Runtime Managers\Render\OpenGL Wrappers</Filter>
     </ClCompile>
   </ItemGroup>

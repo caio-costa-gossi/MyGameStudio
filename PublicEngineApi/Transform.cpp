@@ -19,6 +19,11 @@ Transform::Transform(const float* matrixVal)
 	transform_ = glm::make_mat4(matrixVal);
 }
 
+Transform::Transform(const Transform3& transform)
+{
+	transform_ = glm::mat4(transform.GetGlmMatrix());
+}
+
 void Transform::Translate(const Vec3F& translation)
 {
 	transform_ = glm::translate(transform_, static_cast<glm::vec3>(translation));
@@ -37,6 +42,11 @@ void Transform::Scale(const Vec3F& scale)
 const float* Transform::GetData() const
 {
 	return glm::value_ptr(transform_);
+}
+
+const glm::mat4& Transform::GetGlmMatrix() const
+{
+	return transform_;
 }
 
 Transform Transform::operator*(const Transform& other) const

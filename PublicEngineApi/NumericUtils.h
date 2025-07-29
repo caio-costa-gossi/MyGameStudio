@@ -3,6 +3,8 @@
 
 #include "Err.h"
 #include "MVector.h"
+#include "Transform.h"
+#include "Transform3.h"
 
 #undef max
 
@@ -32,6 +34,9 @@ namespace NumericUtils
 	// Vector Operations
 	Vec3F Normalize(const Vec3F& vector);
 	Vec3F CrossProduct(const Vec3F& a, const Vec3F& b);
+
+	// Matrix Operations
+	Transform3 CalculateNormalMatrix(const Transform& modelMatrix);
 
 	// Trigonometric Functions
 	float Radians(float degrees);

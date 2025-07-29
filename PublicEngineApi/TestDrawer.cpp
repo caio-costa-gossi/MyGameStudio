@@ -40,6 +40,8 @@ Err TestDrawer::Startup()
 
 	time_.Start();
 
+	AssetRuntimeManager::LoadImg("internal_engine_assets/bulb.png", bulbAssetId_);
+
 	return error_const::SUCCESS;
 }
 
@@ -112,6 +114,12 @@ Err TestDrawer::Run()
 		if (err.Code())
 			return err;
 
+		
+		BillboardRenderRequest bulbRenderRequest = { {{-6,0,0}, {1.0f,1.0f}, bulbAssetId_} };
+		err = RenderManager::RequestBillboardRender(bulbRenderRequest);
+		if (err.Code())
+			return err;
+
 		err = RenderManager::Update();
 		if (err.Code())
 			GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::render);
@@ -145,3 +153,5 @@ Vec3F TestDrawer::position_ = {0,0,0};
 Vec3F TestDrawer::scale_ = {1,1,1};
 
 Timeline TestDrawer::time_(timeline::MILLISECOND);
+
+uint32_t TestDrawer::bulbAssetId_ = 0;

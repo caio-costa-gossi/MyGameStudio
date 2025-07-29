@@ -4,6 +4,7 @@
 
 #include "CameraManager.h"
 #include "GameConsoleManager.h"
+#include "NumericUtils.h"
 #include "Transform.h"
 
 Err Drawer::Init()
@@ -107,7 +108,12 @@ void Drawer::SetShaderConfig()
 void Drawer::SetShaderUniformsRegular(const Shader& shader, const RenderQuery& query)
 {
 	shader.SetUniform("useVertexColor", query.MeshInstance.Data->UseVertexColor);
-	shader.SetUniform("light", 1.0f, 1.0f, 1.0f);
+
+	// Lighting
+	shader.SetUniform("ambientColor", 1.0f, 0.0f, 1.0f);
+	shader.SetUniform("ambientFactor", 1.0f);
+	shader.SetUniform("lightPos", 1.0f, 0.0f, 0.0f);
+	shader.SetUniform("normalMatrix", enums::MatrixDim::m3x3, NumericUtils::CalculateNormalMatrix(query.Model).GetData(), false);
 
 	// Transforms
 	shader.SetUniform("model", enums::MatrixDim::m4x4, query.Model.GetData(), false);

@@ -147,6 +147,11 @@ Vec3F NumericUtils::CrossProduct(const Vec3F& a, const Vec3F& b)
 	};
 }
 
+Transform3 NumericUtils::CalculateNormalMatrix(const Transform& modelMatrix)
+{
+	return glm::transpose(glm::inverse(glm::mat3(modelMatrix.GetGlmMatrix())));
+}
+
 float NumericUtils::Radians(const float degrees)
 {
 	return degrees * PI / 180.0f;

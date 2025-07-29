@@ -49,7 +49,7 @@ Err TestDrawer::Startup()
 	if (err.Code())
 		return err;
 
-	LightingManager::SetAmbientLight(0.4f, { 1.0f, 1.0f, 1.0f });
+	//LightingManager::SetAmbientLight(0.4f, { 1.0f, 1.0f, 1.0f });
 
 	return error_const::SUCCESS;
 }
@@ -88,6 +88,8 @@ Err TestDrawer::Run()
 		err = CameraManager::Update();
 		if (err.Code())
 			GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::camera);
+
+		UpdateLightSource();
 
 		err = LightingManager::DrawLightSources();
 		if (err.Code())
@@ -150,6 +152,63 @@ Err TestDrawer::Shutdown()
 
 	return error_const::SUCCESS;
 }
+
+void TestDrawer::UpdateLightSource()
+{
+	const InputState& state = InputManager::GetInputState();
+	LightSource* source = LightingManager::GetLightSource(lightSrcId_);
+	if (source == nullptr)
+	{
+		GameConsoleManager::PrintError("Light source not found!");
+		return;
+	}
+
+	if (state.KeyboardState.PhysicalKeyState[keyboard_key_z])
+		source->Pos.Y += 0.01f;
+
+	if (state.KeyboardState.PhysicalKeyState[keyboard_key_x])
+		source->Pos.Y -= 0.01f;
+
+	if (state.KeyboardState.PhysicalKeyState[keyboard_key_left])
+		source->Pos.Z += 0.01f;
+
+	if (state.KeyboardState.PhysicalKeyState[keyboard_key_right])
+		source->Pos.Z -= 0.01f;
+
+	if (state.KeyboardState.PhysicalKeyState[keyboard_key_up])
+		source->Pos.X += 0.01f;
+
+	if (state.KeyboardState.PhysicalKeyState[keyboard_key_down])
+		source->Pos.X -= 0.01f;
+
+	if (state.KeyboardState.PhysicalKeyState[keyboard_key_kp_plus])
+		source->Intensity += 0.005f;
+
+	if (state.KeyboardState.PhysicalKeyState[keyboard_key_kp_minus])
+		if (source->Intensity >= 0.005f) source->Intensity -= 0.005f;
+
+	// Red
+	if (state.KeyboardState.PhysicalKeyState[keyboard_key_u])
+		if (source->Color.R <= 0.95f) source->Color.R += 0.005f;
+
+	if (state.KeyboardState.PhysicalKeyState[keyboard_key_i])
+		if (source->Color.R >= 0.05f) source->Color.R -= 0.005f;
+
+	// Green
+	if (state.KeyboardState.PhysicalKeyState[keyboard_key_j])
+		if (source->Color.G <= 0.95f) source->Color.G += 0.005f;
+
+	if (state.KeyboardState.PhysicalKeyState[keyboard_key_k])
+		if (source->Color.G >= 0.05f) source->Color.G -= 0.005f;
+
+	// Blue
+	if (state.KeyboardState.PhysicalKeyState[keyboard_key_n])
+		if (source->Color.B <= 0.95f) source->Color.B += 0.005f;
+
+	if (state.KeyboardState.PhysicalKeyState[keyboard_key_m])
+		if (source->Color.B >= 0.05f) source->Color.B -= 0.005f;
+}
+
 
 
 bool TestDrawer::running_ = false;

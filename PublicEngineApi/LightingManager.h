@@ -32,4 +32,5 @@ public:
 
 	// Local lights
 	static Err AddLightSource(const Vec3F& pos, const ColorRgb& color, float intensity, uint32_t& lightSrcId);
+	static LightSource* GetLightSource(uint32_t lightSourceId);
 };

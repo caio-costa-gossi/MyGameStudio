@@ -15,7 +15,7 @@ Err LightingManager::DrawLightSources()
 {
 	for (const std::pair<const uint32_t, LightSource>& source : localLights_)
 	{
-		BillboardRenderRequest bulbRenderRequest = { {source.second.GetPos(), {1.0f,1.0f}, bulbAsset_} };
+		BillboardRenderRequest bulbRenderRequest = { {source.second.Pos, {1.0f,1.0f}, bulbAsset_} };
 		Err err = RenderManager::RequestBillboardRender(bulbRenderRequest);
 		if (err.Code())
 			return err;
@@ -35,9 +35,9 @@ Err LightingManager::SetLightUniforms(const Shader& shader)
 
 	shader.SetUniform("ambientColor", ambientLightClr_.R, ambientLightClr_.G, ambientLightClr_.B);
 	shader.SetUniform("ambientFactor", ambientLightStr_);
-	shader.SetUniform("lightPos", localLights_[0].GetPos().X, localLights_[0].GetPos().Y, localLights_[0].GetPos().Z);
-	shader.SetUniform("lightColor", localLights_[0].GetColor().R, localLights_[0].GetColor().G, localLights_[0].GetColor().B);
-	shader.SetUniform("lightStrength", localLights_[0].GetIntensity());
+	shader.SetUniform("lightPos", localLights_[0].Pos.X, localLights_[0].Pos.Y, localLights_[0].Pos.Z);
+	shader.SetUniform("lightColor", localLights_[0].Color.R, localLights_[0].Color.G, localLights_[0].Color.B);
+	shader.SetUniform("lightStrength", localLights_[0].Intensity);
 
 	return error_const::SUCCESS;
 }
@@ -66,9 +66,17 @@ Err LightingManager::AddLightSource(const Vec3F& pos, const ColorRgb& color, con
 	return error_const::SUCCESS;
 }
 
+LightSource* LightingManager::GetLightSource(const uint32_t lightSourceId)
+{
+	if (localLights_.find(lightSourceId) == localLights_.end())
+		return nullptr;
 
-float LightingManager::ambientLightStr_ = 0;
-ColorRgb LightingManager::ambientLightClr_ = { 0,0,0 };
+	return &localLights_[lightSourceId];
+}
+
+
+float LightingManager::ambientLightStr_ = 0.4f;
+ColorRgb LightingManager::ambientLightClr_ = { 1.0f,1.0f,1.0f };
 
 std::unordered_map<uint32_t, LightSource> LightingManager::localLights_;
 uint32_t LightingManager::lightSrcCounter_ = 0;

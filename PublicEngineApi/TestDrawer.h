@@ -16,6 +16,8 @@ private:
 
 	static uint32_t lightSrcId_;
 
+	static void UpdateLightSource();
+
 public:
 	static Err Startup();
 	static Err Run();

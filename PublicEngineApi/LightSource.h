@@ -2,18 +2,13 @@
 #include "MVector.h"
 #include "Color.h"
 
-class LightSource
+struct LightSource
 {
-private:
-	Vec3F pos_;
-	ColorRgb color_;
-	float intensity_;
+	Vec3F Pos = { };
+	ColorRgb Color = { };
+	float Intensity = 0;
 
-public:
 	LightSource() = default;
-	LightSource(Vec3F pos, const ColorRgb& color, float intensity);
-
-	const Vec3F& GetPos() const;
-	ColorRgb GetColor() const;
-	float GetIntensity() const;
+	LightSource(Vec3F pos, const ColorRgb& color, const float intensity) :
+		Pos(std::move(pos)), Color(color), Intensity(intensity) { }
 };

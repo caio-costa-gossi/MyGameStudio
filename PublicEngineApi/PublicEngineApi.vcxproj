@@ -113,7 +113,6 @@
     <ClCompile Include="CameraInstance.cpp" />
     <ClCompile Include="CoordinateGizmo.cpp" />
     <ClCompile Include="LightingManager.cpp" />
-    <ClCompile Include="LightSource.cpp" />
     <ClCompile Include="OrthoCamera.cpp" />
     <ClCompile Include="PerspectiveCamera.cpp" />
     <ClCompile Include="CameraManager.cpp" />

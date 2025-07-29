@@ -4,6 +4,7 @@
 #include <glm/gtc/quaternion.hpp>
 
 #include "ConsoleManager.h"
+#include "NumericUtils.h"
 #include "TextureExtractor.h"
 
 VertexIndexExtractor::VertexIndexExtractor(tinygltf::Model model) :
@@ -150,7 +151,7 @@ Err VertexIndexExtractor::ExtractVerticesIndicesNode(const tinygltf::Node& node)
 	if (err.Code())
 		return err;
 
-	// Construct final transform for node
+	// Construct final transform/normalTransform for node
 	Transform transform;
 	std::stack<Transform> temp = transforms_;
 	while (!temp.empty())
@@ -285,6 +286,12 @@ Err VertexIndexExtractor::CopyVerticesIndicesBuffer(const tinygltf::Mesh& mesh, 
 		if (err.Code())
 			return err;
 
+		// Add normals to vertices
+		err = ExtractNormals(primitive, info, verticesInPrimitive, NumericUtils::CalculateNormalMatrix(transform));
+		if (err.Code())
+			return err;
+
+		// Add UV mapping to vertices
 		err = TextureExtractor::ProcessPrimitiveTexCoords(model_, primitive, info, verticesInPrimitive);
 		if (err.Code())
 			return err;
@@ -340,6 +347,56 @@ Err VertexIndexExtractor::ExtractIndices(const tinygltf::Primitive& primitive, M
 	}
 
 	info.ICounter += static_cast<uint32_t>(count);
+
+	return error_const::SUCCESS;
+}
+
+Err VertexIndexExtractor::ExtractNormals(const tinygltf::Primitive& primitive, const MeshAuxInfo& info, const uint32_t primitiveVertexCount, const Transform& normalTransform) const
+{
+	if (primitive.attributes.find("NORMAL") == primitive.attributes.end())
+	{
+		ConsoleManager::PrintWarning("Normal information not found for primitive.");
+		return error_const::SUCCESS;
+	}
+
+	const tinygltf::Accessor& accessor = model_.accessors[primitive.attributes.at("NORMAL")];
+
+	if (accessor.count != primitiveVertexCount)
+	{
+		ConsoleManager::PrintError("Primitive normal count is different than primitive vertex count. Skipping...");
+		return error_const::SUCCESS;
+	}
+
+	if (accessor.componentType != TINYGLTF_COMPONENT_TYPE_FLOAT)
+	{
+		ConsoleManager::PrintWarning("Invalid normal component data type (" + std::to_string(accessor.componentType) + "). Skipping primitive normal importation...");
+		return error_const::SUCCESS;
+	}
+
+	if (accessor.type != TINYGLTF_TYPE_VEC3)
+	{
+		ConsoleManager::PrintWarning("Invalid normal data type (" + std::to_string(accessor.type) + "). Skipping primitive normal importation...");
+		return error_const::SUCCESS;
+	}
+
+	const tinygltf::BufferView& bufferView = model_.bufferViews[accessor.bufferView];
+	const tinygltf::Buffer& buffer = model_.buffers[bufferView.buffer];
+
+	const size_t normalCount = accessor.count;
+	const size_t offset = accessor.byteOffset + bufferView.byteOffset;
+	const size_t stride = bufferView.byteStride ? bufferView.byteStride : 3 * sizeof(float);
+
+	const uint8_t* data = (buffer.data.data() + offset);
+
+	for (size_t vertex = 0; vertex < normalCount; ++vertex)
+	{
+		const float* coordinates = reinterpret_cast<const float*>(&data[vertex * stride]);
+
+		Vec3F vertexNormal = { coordinates[0], coordinates[1], coordinates[2] };
+		vertexNormal = NumericUtils::Normalize(normalTransform * vertexNormal);
+
+		info.VertexList[info.VCounter + vertex].Normal = vertexNormal;
+	}
 
 	return error_const::SUCCESS;
 }

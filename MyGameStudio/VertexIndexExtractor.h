@@ -67,6 +67,7 @@ private:
 
 	Err CopyVerticesIndicesBuffer(const tinygltf::Mesh& mesh, const Transform& transform);
 	Err ExtractIndices(const tinygltf::Primitive& primitive, MeshAuxInfo& info) const;
+	Err ExtractNormals(const tinygltf::Primitive& primitive, const MeshAuxInfo& info, uint32_t primitiveVertexCount, const Transform& normalTransform) const;
 
 	Err StackNodeTransform(const tinygltf::Node& node);
 	Err InitMeshes();

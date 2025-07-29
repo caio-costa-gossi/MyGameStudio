@@ -110,9 +110,10 @@ void Drawer::SetShaderUniformsRegular(const Shader& shader, const RenderQuery& q
 	shader.SetUniform("useVertexColor", query.MeshInstance.Data->UseVertexColor);
 
 	// Lighting
-	shader.SetUniform("ambientColor", 1.0f, 0.0f, 1.0f);
-	shader.SetUniform("ambientFactor", 1.0f);
+	shader.SetUniform("ambientColor", 1.0f, 1.0f, 1.0f);
+	shader.SetUniform("ambientFactor", 0.2f);
 	shader.SetUniform("lightPos", 1.0f, 0.0f, 0.0f);
+	shader.SetUniform("lightColor", 1.0f, 1.0f, 1.0f);
 	shader.SetUniform("normalMatrix", enums::MatrixDim::m3x3, NumericUtils::CalculateNormalMatrix(query.Model).GetData(), false);
 
 	// Transforms

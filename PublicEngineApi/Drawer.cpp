@@ -4,6 +4,7 @@
 
 #include "CameraManager.h"
 #include "GameConsoleManager.h"
+#include "LightingManager.h"
 #include "NumericUtils.h"
 #include "Transform.h"
 
@@ -46,8 +47,13 @@ Err Drawer::InitShaders()
 void Drawer::Draw(std::queue<RenderQuery>& queries, std::priority_queue<BillboardRenderQuery>& billboardQueries, const TextureList& textures)
 {
 	// Reset color
-	glClearColor(1.0f, 1.0f, 0, 0.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	// Set lighting sources
+	Err err = LightingManager::SetLightUniforms(regularShader_);
+	if (err.Code())
+		GameConsoleManager::PrintError("Error setting lighting uniforms: " + err.Message(), enums::ConsoleMessageSender::render);
 
 	// Draw 3d meshes
 	while (!queries.empty())
@@ -109,11 +115,7 @@ void Drawer::SetShaderUniformsRegular(const Shader& shader, const RenderQuery& q
 {
 	shader.SetUniform("useVertexColor", query.MeshInstance.Data->UseVertexColor);
 
-	// Lighting
-	shader.SetUniform("ambientColor", 1.0f, 1.0f, 1.0f);
-	shader.SetUniform("ambientFactor", 0.2f);
-	shader.SetUniform("lightPos", 1.0f, 0.0f, 0.0f);
-	shader.SetUniform("lightColor", 1.0f, 1.0f, 1.0f);
+	// Pre-calculate normal matrix for model
 	shader.SetUniform("normalMatrix", enums::MatrixDim::m3x3, NumericUtils::CalculateNormalMatrix(query.Model).GetData(), false);
 
 	// Transforms

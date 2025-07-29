@@ -12,8 +12,10 @@ uniform sampler2D ourTexture;
 
 uniform vec3 ambientColor;
 uniform float ambientFactor;
+
 uniform vec3 lightPos;
 uniform vec3 lightColor;
+uniform float lightStrength;
 
 void main()
 {
@@ -30,7 +32,7 @@ void main()
 	vec3 norm = normalize(normal);
 	vec3 lightDir = normalize(lightPos - fragPos);
 	
-	vec3 diffuseLight = max(dot(norm, lightDir), 0.0) * lightColor;	
+	vec3 diffuseLight = max(dot(norm, lightDir), 0.0) * lightColor * lightStrength;	
 	vec3 ambientLight = ambientFactor * ambientColor;	
 
 	

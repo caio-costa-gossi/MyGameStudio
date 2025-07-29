@@ -240,9 +240,6 @@
     <ClInclude Include="Drawer.h">
       <Filter>Runtime Managers\Render</Filter>
     </ClInclude>
-    <ClInclude Include="Color.h">
-      <Filter>Runtime Managers\Render\Data Structures</Filter>
-    </ClInclude>
     <ClInclude Include="Mesh.h">
       <Filter>Runtime Managers\Render\Data Structures</Filter>
     </ClInclude>
@@ -317,6 +314,12 @@
     </ClInclude>
     <ClInclude Include="Transform3.h">
       <Filter>Runtime Managers\Render\OpenGL Wrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="LightingManager.h">
+      <Filter>Runtime Managers\Render\Lighting</Filter>
+    </ClInclude>
+    <ClInclude Include="Color.h">
+      <Filter>Runtime Managers\Render\Lighting</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -443,9 +446,6 @@
     <ClCompile Include="Drawer.cpp">
       <Filter>Runtime Managers\Render</Filter>
     </ClCompile>
-    <ClCompile Include="Color.cpp">
-      <Filter>Runtime Managers\Render\Data Structures</Filter>
-    </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>Runtime Managers\Render\OpenGL Wrappers</Filter>
     </ClCompile>
@@ -493,6 +493,12 @@
     </ClCompile>
     <ClCompile Include="Transform3.cpp">
       <Filter>Runtime Managers\Render\OpenGL Wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="LightingManager.cpp">
+      <Filter>Runtime Managers\Render\Lighting</Filter>
+    </ClCompile>
+    <ClCompile Include="Color.cpp">
+      <Filter>Runtime Managers\Render\Lighting</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

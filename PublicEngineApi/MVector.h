@@ -7,6 +7,7 @@
 struct Vec3F;
 struct Vec3I64;
 struct Vec3U64;
+struct ColorRgb;
 
 struct Vec2U64
 {
@@ -210,6 +211,7 @@ struct Vec3F
 	operator Vec2F() const { return { X,Y }; }
 	operator glm::vec3() const { return { X, Y, Z }; }
 	Vec3F(const glm::vec3& vector) { X = vector.x; Y = vector.y; Z = vector.z; }
+	Vec3F(const ColorRgb& color);
 };
 
 struct Vec4F

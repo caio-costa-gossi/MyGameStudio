@@ -14,6 +14,8 @@
 
 #include <fstream>
 
+#include "LightingManager.h"
+
 #undef min
 
 Err TestDrawer::Startup()
@@ -34,13 +36,20 @@ Err TestDrawer::Startup()
 	if (err.Code())
 		return err;
 
+	err = LightingManager::Startup();
+	if (err.Code())
+		return err;
+
 	err = RenderManager::Startup();
 	if (err.Code())
 		return err;
 
 	time_.Start();
+	err = LightingManager::AddLightSource({ 1.0f,0.0f,0.0f }, { 1.0f,1.0f,1.0f }, 1.0f, lightSrcId_);
+	if (err.Code())
+		return err;
 
-	AssetRuntimeManager::LoadImg("internal_engine_assets/bulb.png", bulbAssetId_);
+	LightingManager::SetAmbientLight(0.4f, { 1.0f, 1.0f, 1.0f });
 
 	return error_const::SUCCESS;
 }
@@ -80,6 +89,9 @@ Err TestDrawer::Run()
 		if (err.Code())
 			GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::camera);
 
+		err = LightingManager::DrawLightSources();
+		if (err.Code())
+			GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::render);
 
 		//Transform transform(worldPos[i], static_cast<float>(time_.GetElapsed()) / 50, {0.5f,1,0}, {1,1,1});
 		//Transform transform({ 0,0,0 }, 0, { 0,0,1 }, { 0.1f,0.1f,0.1f });
@@ -111,12 +123,6 @@ Err TestDrawer::Run()
 
 		BillboardRenderRequest billboardRequest3 = { {{-4,0,0}, {1.0f,1.0f}, 147} };
 		err = RenderManager::RequestBillboardRender(billboardRequest3);
-		if (err.Code())
-			return err;
-
-		
-		BillboardRenderRequest bulbRenderRequest = { {{-6,0,0}, {1.0f,1.0f}, bulbAssetId_} };
-		err = RenderManager::RequestBillboardRender(bulbRenderRequest);
 		if (err.Code())
 			return err;
 
@@ -154,4 +160,4 @@ Vec3F TestDrawer::scale_ = {1,1,1};
 
 Timeline TestDrawer::time_(timeline::MILLISECOND);
 
-uint32_t TestDrawer::bulbAssetId_ = 0;
+uint32_t TestDrawer::lightSrcId_ = 0;

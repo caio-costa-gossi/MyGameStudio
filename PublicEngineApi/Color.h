@@ -1,6 +1,8 @@
 #pragma once
 #include <cstdint>
 
+#include "MVector.h"
+
 struct ColorRgbaInt;
 
 struct ColorRgba
@@ -29,4 +31,18 @@ struct ColorRgbaInt
 	ColorRgbaInt() = default;
 
 	operator ColorRgba() const;
+};
+
+struct ColorRgb
+{
+	float R;
+	float G;
+	float B;
+
+	ColorRgb() = default;
+	ColorRgb(const float r, const float g, const float b) :
+		R(r), G(g), B(b) { }
+
+	ColorRgb(const Vec3F& vec) :
+		R(vec.X), G(vec.Y), B(vec.Z) { }
 };

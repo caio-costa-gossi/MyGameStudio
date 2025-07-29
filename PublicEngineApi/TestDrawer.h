@@ -14,7 +14,7 @@ private:
 
 	static Timeline time_;
 
-	static uint32_t bulbAssetId_;
+	static uint32_t lightSrcId_;
 
 public:
 	static Err Startup();

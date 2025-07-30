@@ -19,5 +19,5 @@ public:
 	Err Init(uint32_t assetId);
 	Err Init(const char* filepath, uint32_t& assetId);
 
-	void Use() const;
+	void Use(uint8_t textureChannel) const;
 };

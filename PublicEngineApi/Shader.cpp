@@ -180,7 +180,7 @@ void Shader::SetUniform(const char* uniformName, const enums::MatrixDim matrixDi
 	}
 }
 
-void Shader::SetUniform(const char* uniformName, const bool val) const
+void Shader::SetUniform(const char* uniformName, const int32_t val) const
 {
 	const int32_t uniformId = glGetUniformLocation(glProgramId_, uniformName);
 	glUniform1i(uniformId, val);

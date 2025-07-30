@@ -116,11 +116,11 @@ namespace enums
 
 	enum TextureMap : uint8_t
 	{
-		base_color,
-		normal,
-		metallic_roughness,
-		occlusion,
-		emissive
+		base_color = 0,
+		normal = 1,
+		metallic_roughness = 2,
+		occlusion = 3,
+		emissive = 4
 	};
 
 	enum MatrixDim : uint8_t

@@ -29,11 +29,12 @@ Err Texture::Init(const char* filepath, uint32_t& assetId)
 	return error_const::SUCCESS;
 }
 
-void Texture::Use() const
+void Texture::Use(const uint8_t textureChannel) const
 {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	glActiveTexture(GL_TEXTURE0 + textureChannel);
 	glBindTexture(GL_TEXTURE_2D, textureId_);
 }
 

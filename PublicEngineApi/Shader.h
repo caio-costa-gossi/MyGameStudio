@@ -30,7 +30,7 @@ public:
 	void SetUniform(const char* uniformName, float val1, float val2, float val3) const;
 	void SetUniform(const char* uniformName, float val1, float val2, float val3, float val4) const;
 	void SetUniform(const char* uniformName, enums::MatrixDim matrixDimension, const float* matrix, bool transpose) const;
-	void SetUniform(const char* uniformName, bool val) const;
+	void SetUniform(const char* uniformName, int32_t val) const;
 
 	int32_t GetId() const;
 	bool IsInit() const;

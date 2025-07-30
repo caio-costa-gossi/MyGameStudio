@@ -1,15 +1,45 @@
 #version 330 core
-in vec4 vertexColor;
-in vec2 texCoord;
 
+// Structs
+struct TexCoords
+{
+	vec2 baseColor;
+	vec2 normal;
+	vec2 metallicRoughness;
+	vec2 occlusion;
+	vec2 emissive;
+};
+
+struct Material
+{
+	sampler2D baseColorTex;
+	sampler2D normalTex;
+	sampler2D metallicRoughnessTex;
+	sampler2D occlusionTex;
+	sampler2D emissiveTex;
+
+	float metallicFactor;
+	float roughnessFactor;
+	float occlusionFactor;
+	vec3 emissiveFactor; 
+};
+
+// In data
 in vec3 normal;
 in vec3 fragPos;
+in vec4 vertexSolidColor;
 
+in TexCoords texCoords;
+
+// Out data
 out vec4 FragColor;
 
+// Uniforms
+// Material rendering properties
 uniform bool useVertexColor;
-uniform sampler2D ourTexture;
+uniform Material materialProps;
 
+// Light
 uniform vec3 ambientColor;
 uniform float ambientFactor;
 
@@ -24,14 +54,12 @@ void main()
 	vec4 objectColor;	
 
 	if (useVertexColor)	
-		objectColor = vertexColor;
+		objectColor = vertexSolidColor;
 	else
-		objectColor = texture(ourTexture, texCoord);	
+		objectColor = texture(materialProps.baseColorTex, texCoords.baseColor);	
 
 
 	// Lighting calculations
-	float specularFactor = 0.7;   
-
 	vec3 norm = normalize(normal);
 	vec3 lightDir = normalize(lightPos - fragPos);
 	vec3 viewDir = normalize(viewPos - fragPos);
@@ -39,7 +67,7 @@ void main()
 	
 	vec3 ambientLight = ambientFactor * ambientColor;	
 	vec3 diffuseLight = max(dot(norm, lightDir), 0.0) * lightColor * lightStrength;	
-	vec3 specularLight = pow(max(dot(viewDir, reflectDir), 0.0), 32) * specularFactor * lightStrength * lightColor;	
+	vec3 specularLight = pow(max(dot(viewDir, reflectDir), 0.0), 32) * materialProps.occlusionFactor * lightStrength * lightColor;	
 
 	
 	// Apply lighting

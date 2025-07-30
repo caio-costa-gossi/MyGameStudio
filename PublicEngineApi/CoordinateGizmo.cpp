@@ -93,6 +93,9 @@ void CoordinateGizmo::BuildTextures()
 void CoordinateGizmo::UpdateGizmoCam() const
 {
 	Camera* gizmoCam = CameraManager::GetCamera(camId_);
+	if (gizmoCam == nullptr)
+		return;
+
 	gizmoCam->ChangePitch(-CameraManager::GetMainCamera()->GetPitch());
 	gizmoCam->ChangeYaw(-CameraManager::GetMainCamera()->GetYaw());
 }
@@ -114,6 +117,8 @@ void CoordinateGizmo::DrawAxes(const Shader& regularShader) const
 	transform.Translate({ 0.0f, -0.1f, 0.0f });
 
 	const Camera* gizmoCam = CameraManager::GetCamera(camId_);
+	if (gizmoCam == nullptr)
+		return;
 
 	// Lighting
 	regularShader.SetUniform("ambientColor", 1.0f, 1.0f, 1.0f);
@@ -150,6 +155,9 @@ void CoordinateGizmo::DrawNodes(const Shader& billboardShader)
 
 	// Emplace to sort the nodes by distance
 	const Camera* gizmoCam = CameraManager::GetCamera(camId_);
+	if (gizmoCam == nullptr)
+		return;
+
 	EmplaceNodes(gizmoCam);
 
 	while (!nodeRenderQuery_.empty())
@@ -163,7 +171,7 @@ void CoordinateGizmo::DrawNodes(const Shader& billboardShader)
 		billboardShader.SetUniform("projection", enums::MatrixDim::m4x4, Transform().GetData(), false);
 
 		// Draw
-		node.NodeTexture.Use();
+		node.NodeTexture.Use(0);
 		glBindVertexArray(node.RenderQuery.BillboardVao);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 

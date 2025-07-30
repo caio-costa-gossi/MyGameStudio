@@ -86,8 +86,21 @@ void Drawer::DrawRegular(const RenderQuery& query, const TextureList& textures)
 	SetShaderUniformsRegular(regularShader_, query);
 	SetTextureWrapping(query.MeshInstance);
 
+	// Load textures into their OpenGL units
 	if (query.MeshInstance.Data->Material.BaseColorTexture >= 0)
-		textures.at(query.MeshInstance.Data->Material.BaseColorTexture).Use();
+		textures.at(query.MeshInstance.Data->Material.BaseColorTexture).Use(enums::TextureMap::base_color);
+
+	if (query.MeshInstance.Data->Material.NormalTexture >= 0)
+		textures.at(query.MeshInstance.Data->Material.NormalTexture).Use(enums::TextureMap::normal);
+
+	if (query.MeshInstance.Data->Material.MetallicRoughnessTexture >= 0)
+		textures.at(query.MeshInstance.Data->Material.MetallicRoughnessTexture).Use(enums::TextureMap::metallic_roughness);
+
+	if (query.MeshInstance.Data->Material.OcclusionTexture >= 0)
+		textures.at(query.MeshInstance.Data->Material.OcclusionTexture).Use(enums::TextureMap::occlusion);
+
+	if (query.MeshInstance.Data->Material.EmissiveTexture >= 0)
+		textures.at(query.MeshInstance.Data->Material.EmissiveTexture).Use(enums::TextureMap::emissive);
 
 	// Draw
 	glBindVertexArray(query.MeshInstance.ArrayObjectId);
@@ -99,7 +112,7 @@ void Drawer::DrawBillboard(const BillboardRenderQuery& query, const TextureList&
 	// Prepare to draw
 	SetShaderConfig();
 	SetShaderUniformsBillboard(billboardShader_, query);
-	textures.at(query.BillboardData.BillboardImageId).Use();
+	textures.at(query.BillboardData.BillboardImageId).Use(0);
 
 	// Draw
 	glBindVertexArray(query.BillboardVao);
@@ -124,6 +137,13 @@ void Drawer::SetShaderUniformsRegular(const Shader& shader, const RenderQuery& q
 	shader.SetUniform("model", enums::MatrixDim::m4x4, query.Model.GetData(), false);
 	shader.SetUniform("view", enums::MatrixDim::m4x4, CameraManager::GetMainCamera()->GetView().GetData(), false);
 	shader.SetUniform("projection", enums::MatrixDim::m4x4, CameraManager::GetMainCamera()->GetProjection().GetData(), false);
+
+	// Material textures
+	shader.SetUniform("materialProps.baseColorTex", enums::TextureMap::base_color);
+	shader.SetUniform("materialProps.normalTex", enums::TextureMap::normal);
+	shader.SetUniform("materialProps.metallicRoughnessTex", enums::TextureMap::metallic_roughness);
+	shader.SetUniform("materialProps.occlusionTex", enums::TextureMap::occlusion);
+	shader.SetUniform("materialProps.emissiveTex", enums::TextureMap::emissive);
 }
 
 void Drawer::SetShaderUniformsBillboard(const Shader& shader, const BillboardRenderQuery& query)

@@ -68,11 +68,12 @@ private:
 	Err CopyVerticesIndicesBuffer(const tinygltf::Mesh& mesh, const Transform& transform);
 	Err ExtractIndices(const tinygltf::Primitive& primitive, MeshAuxInfo& info) const;
 	Err ExtractNormals(const tinygltf::Primitive& primitive, const MeshAuxInfo& info, uint32_t primitiveVertexCount, const Transform& normalTransform) const;
+	static Err CalculateNormals(const tinygltf::Primitive& primitive, const MeshAuxInfo& info, uint32_t primitiveIndexCount, uint32_t primitiveVertexCount);
 
 	Err StackNodeTransform(const tinygltf::Node& node);
 	Err InitMeshes();
-	int32_t GetPrimitiveMaterialId(const tinygltf::Primitive& primitive) const;
 	Err GetMaterialMapsInfo(int32_t materialId, MaterialMapsInfo& mapsInfo) const;
+	int32_t GetPrimitiveMaterialId(const tinygltf::Primitive& primitive) const;
 
 public:
 	explicit VertexIndexExtractor(tinygltf::Model model);

@@ -286,9 +286,17 @@ Err VertexIndexExtractor::CopyVerticesIndicesBuffer(const tinygltf::Mesh& mesh, 
 		if (err.Code())
 			return err;
 
-		// Add normals to vertices
+		const uint32_t indicesInPrimitive = static_cast<uint32_t>(model_.accessors[primitive.indices].count);
+
+		// Add normals to vertices & calculate if not present
 		err = ExtractNormals(primitive, info, verticesInPrimitive, NumericUtils::CalculateNormalMatrix(transform));
-		if (err.Code())
+		if (err.Code() == error_const::IMPORT_NO_NORMAL.Code())
+		{
+			err = CalculateNormals(primitive, info, indicesInPrimitive, verticesInPrimitive);
+			if (err.Code())
+				return err;
+		}
+		else if (err.Code())
 			return err;
 
 		// Add UV mapping to vertices
@@ -297,6 +305,7 @@ Err VertexIndexExtractor::CopyVerticesIndicesBuffer(const tinygltf::Mesh& mesh, 
 			return err;
 
 		info.VCounter += verticesInPrimitive;
+		info.ICounter += indicesInPrimitive;
 	}
 
 	return error_const::SUCCESS;
@@ -346,8 +355,6 @@ Err VertexIndexExtractor::ExtractIndices(const tinygltf::Primitive& primitive, M
 		}
 	}
 
-	info.ICounter += static_cast<uint32_t>(count);
-
 	return error_const::SUCCESS;
 }
 
@@ -356,7 +363,7 @@ Err VertexIndexExtractor::ExtractNormals(const tinygltf::Primitive& primitive, c
 	if (primitive.attributes.find("NORMAL") == primitive.attributes.end())
 	{
 		ConsoleManager::PrintWarning("Normal information not found for primitive.");
-		return error_const::SUCCESS;
+		return error_const::IMPORT_NO_NORMAL;
 	}
 
 	const tinygltf::Accessor& accessor = model_.accessors[primitive.attributes.at("NORMAL")];
@@ -396,6 +403,36 @@ Err VertexIndexExtractor::ExtractNormals(const tinygltf::Primitive& primitive, c
 		vertexNormal = NumericUtils::Normalize(normalTransform * vertexNormal);
 
 		info.VertexList[info.VCounter + vertex].Normal = vertexNormal;
+	}
+
+	return error_const::SUCCESS;
+}
+
+Err VertexIndexExtractor::CalculateNormals(const tinygltf::Primitive& primitive, const MeshAuxInfo& info, const uint32_t primitiveIndexCount, const uint32_t primitiveVertexCount)
+{
+	ConsoleManager::PrintInfo("Calculating normals for primitive...");
+
+	// Calculate all face normals and add up to each vertex
+	for (uint32_t i = 0; i < primitiveIndexCount; i += 3)
+	{
+		Vertex& vertex1 = info.VertexList[info.IndexList[info.ICounter + i]];
+		Vertex& vertex2 = info.VertexList[info.IndexList[info.ICounter + i + 1]];
+		Vertex& vertex3 = info.VertexList[info.IndexList[info.ICounter + i + 2]];
+
+		const Vec3F edge1 = vertex2.Pos - vertex1.Pos;
+		const Vec3F edge2 = vertex3.Pos - vertex1.Pos;
+		const Vec3F normal = NumericUtils::Normalize(NumericUtils::CrossProduct(edge1, edge2));
+
+		vertex1.Normal += normal;
+		vertex2.Normal += normal;
+		vertex3.Normal += normal;
+	}
+
+	// Normalize all normals
+	for (uint32_t i = 0; i < primitiveVertexCount; ++i)
+	{
+		Vertex& vertex = info.VertexList[info.VCounter + i];
+		vertex.Normal = NumericUtils::Normalize(vertex.Normal);
 	}
 
 	return error_const::SUCCESS;

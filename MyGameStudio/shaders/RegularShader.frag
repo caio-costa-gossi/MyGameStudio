@@ -30,7 +30,7 @@ void main()
 
 
 	// Lighting calculations
-	float specularFactor = 0.7;
+	float specularFactor = 0.7;   
 
 	vec3 norm = normalize(normal);
 	vec3 lightDir = normalize(lightPos - fragPos);

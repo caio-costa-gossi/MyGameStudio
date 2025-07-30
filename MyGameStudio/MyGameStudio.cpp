@@ -18,7 +18,7 @@ int main()
 		ConsoleManager::Print(err.Message(), enums::ConsoleMessageType::error);
 	}
 
-	//ConsoleManager::RunConsole();
+	ConsoleManager::RunConsole();
 
 	err = TestDrawer::Startup();
 	if (err.Code() != 0)

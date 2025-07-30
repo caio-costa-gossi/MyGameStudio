@@ -6,10 +6,10 @@
 class TextureExtractor
 {
 private:
-	static Err ProcessDiffuseCoords(const tinygltf::Model& gltfModel, const tinygltf::Primitive& primitive, const MeshAuxInfo& info, uint32_t primitiveVertexCount);
+	static Err ProcessTexCoords(const tinygltf::Model& gltfModel, const tinygltf::Primitive& primitive, const MeshAuxInfo& info, uint32_t primitiveVertexCount, enums::TextureMap textureMap);
 
-	static Err ImportTextureAsset(const tinygltf::Model& gltfModel, int32_t imageId, const Asset& modelMetadata, uint32_t& newAssetId);
-	static Err SaveTextureAsset(uint32_t& textureAssetId, const uint8_t* imageData, uint64_t imageSize, enums::ImageFormat format, const Asset& modelMetadata, uint32_t imageId);
+	static Err ImportTextureAsset(const tinygltf::Model& gltfModel, int32_t imageId, const Asset& modelMetadata, int32_t& newAssetId);
+	static Err SaveTextureAsset(int32_t& textureAssetId, const uint8_t* imageData, uint64_t imageSize, enums::ImageFormat format, const Asset& modelMetadata, uint32_t imageId);
 
 public:
 	static Err ProcessPrimitiveTexCoords(const tinygltf::Model& gltfModel, const tinygltf::Primitive& primitive, const MeshAuxInfo& info, uint32_t primitiveVertexCount);

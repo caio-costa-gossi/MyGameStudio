@@ -114,6 +114,15 @@ namespace enums
 		clamp_border = 3
 	};
 
+	enum TextureMap : uint8_t
+	{
+		base_color,
+		normal,
+		metallic_roughness,
+		occlusion,
+		emissive
+	};
+
 	enum MatrixDim : uint8_t
 	{
 		m1x1 = 1,

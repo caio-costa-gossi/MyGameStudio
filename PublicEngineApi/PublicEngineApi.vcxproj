@@ -34,6 +34,7 @@
     <ClInclude Include="DataReader.h" />
     <ClInclude Include="LightingManager.h" />
     <ClInclude Include="LightSource.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="OrthoCamera.h" />
     <ClInclude Include="PerspectiveCamera.h" />

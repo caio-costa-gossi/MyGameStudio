@@ -28,12 +28,12 @@ void CoordinateGizmo::BuildVao()
 
 	// Setup Vertex Buffer Object
 	Vertex gizmoVertices[6] = {
-		{ {0.0f, 0.0f, 0.0f}, {1.0f, 0.0f, 0.0f, 1.0f} },
-		{ {0.9f, 0.0f, 0.0f}, {1.0f, 0.0f, 0.0f, 1.0f}},
-		{ {0.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f}},
-		{ {0.0f, 0.9f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f}},
-		{ {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 1.0f, 1.0f}},
-		{ {0.0f, 0.0f, 0.9f}, {0.0f, 0.0f, 1.0f, 1.0f}}
+		{ {0.0f, 0.0f, 0.0f}, { }, {1.0f, 0.0f, 0.0f, 1.0f}},
+		{ {0.9f, 0.0f, 0.0f}, { }, {1.0f, 0.0f, 0.0f, 1.0f}},
+		{ {0.0f, 0.0f, 0.0f}, { }, {0.0f, 1.0f, 0.0f, 1.0f}},
+		{ {0.0f, 0.9f, 0.0f}, { }, {0.0f, 1.0f, 0.0f, 1.0f}},
+		{ {0.0f, 0.0f, 0.0f}, { }, {0.0f, 0.0f, 1.0f, 1.0f}},
+		{ {0.0f, 0.0f, 0.9f}, { }, {0.0f, 0.0f, 1.0f, 1.0f}}
 	};
 
 	uint32_t vbo;
@@ -46,12 +46,12 @@ void CoordinateGizmo::BuildVao()
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
 	glEnableVertexAttribArray(0);
 
-	// Color
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(3 * sizeof(float)));
+	// Normal
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
-	// TextCoord
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(7 * sizeof(float)));
+	// Color
+	glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(6 * sizeof(float)));
 	glEnableVertexAttribArray(2);
 
 	// Unbind VAO & VBO
@@ -115,8 +115,14 @@ void CoordinateGizmo::DrawAxes(const Shader& regularShader) const
 
 	const Camera* gizmoCam = CameraManager::GetCamera(camId_);
 
-	// Aux uniforms
-	regularShader.SetUniform("light", 1.0f, 1.0f, 1.0f);
+	// Lighting
+	regularShader.SetUniform("ambientColor", 1.0f, 1.0f, 1.0f);
+	regularShader.SetUniform("ambientFactor", 1.0f);
+
+	regularShader.SetUniform("lightPos", 0.0f, 0.0f, 0.0f);
+	regularShader.SetUniform("lightColor", 1.0f, 1.0f, 1.0f);
+	regularShader.SetUniform("lightStrength", 0.0f);
+
 	regularShader.SetUniform("useVertexColor", true);
 
 	// Transforms

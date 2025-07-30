@@ -11,8 +11,8 @@
 
 struct MaterialMapsInfo
 {
-	int32_t DiffuseTexId = -1;
-	int32_t DiffuseTexCoordIndex = -1;
+	int32_t BaseColorTexId = -1;
+	int32_t BaseColorTexCoordIndex = -1;
 
 	int32_t NormalTexId = -1;
 	int32_t NormalTexCoordIndex = -1;
@@ -26,8 +26,11 @@ struct MaterialMapsInfo
 	int32_t EmissiveTexId = -1;
 	int32_t EmissiveTexCoordIndex = -1;
 
-	float MetallicFactor = 0.0f;
-	float RoughnessFactor = 0.0f;
+	float MetallicFactor = 1.0f;
+	float RoughnessFactor = 1.0f;
+	float OcclusionFactor = 1.0f;
+	Vec3F EmissiveFactor = { 1.0f, 1.0f, 1.0f };
+
 	bool DoubleSided = true;
 };
 

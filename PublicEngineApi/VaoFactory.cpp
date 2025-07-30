@@ -27,17 +27,34 @@ Err VaoFactory::NewAttribObject(const Mesh& mesh, uint32_t& newVaoId)
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
 	glEnableVertexAttribArray(0);
 
-	// Color
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(3 * sizeof(float)));
+	// Normal
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
-	// TexCoord
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(7 * sizeof(float)));
+	// Color
+	glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(6 * sizeof(float)));
 	glEnableVertexAttribArray(2);
 
-	// Normal
-	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(9 * sizeof(float)));
+	// BaseColorTexCoord
+	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(10 * sizeof(float)));
 	glEnableVertexAttribArray(3);
+
+	// NormalTexCoord
+	glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(12 * sizeof(float)));
+	glEnableVertexAttribArray(4);
+
+	// MetallicRoughnessTexCoord
+	glVertexAttribPointer(5, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(14 * sizeof(float)));
+	glEnableVertexAttribArray(5);
+
+	// OcclusionTexCoord
+	glVertexAttribPointer(6, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(16 * sizeof(float)));
+	glEnableVertexAttribArray(6);
+
+	// EmissiveTexCoord
+	glVertexAttribPointer(7, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(18 * sizeof(float)));
+	glEnableVertexAttribArray(7);
+
 
 	// Unbind VAO & VBO
 	glBindVertexArray(0);

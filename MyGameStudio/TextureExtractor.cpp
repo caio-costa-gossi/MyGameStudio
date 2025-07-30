@@ -17,25 +17,81 @@
 
 Err TextureExtractor::ProcessPrimitiveTexCoords(const tinygltf::Model& gltfModel, const tinygltf::Primitive& primitive, const MeshAuxInfo& info, const uint32_t primitiveVertexCount)
 {
-	Err err = ProcessDiffuseCoords(gltfModel, primitive, info, primitiveVertexCount);
-	if (err.Code())
-		return err;
+	// BaseColor
+	if (info.MapsInfo.BaseColorTexId >= 0)
+	{
+		Err err = ProcessTexCoords(gltfModel, primitive, info, primitiveVertexCount, enums::base_color);
+		if (err.Code())
+			return err;
+	}
+
+	// Normal
+	if (info.MapsInfo.NormalTexId >= 0)
+	{
+		Err err = ProcessTexCoords(gltfModel, primitive, info, primitiveVertexCount, enums::normal);
+		if (err.Code())
+			return err;
+	}
+
+	// MetallicRoughness
+	if (info.MapsInfo.MetallicRoughnessTexId >= 0)
+	{
+		Err err = ProcessTexCoords(gltfModel, primitive, info, primitiveVertexCount, enums::metallic_roughness);
+		if (err.Code())
+			return err;
+	}
+
+	// Occlusion
+	if (info.MapsInfo.OcclusionTexId >= 0)
+	{
+		Err err = ProcessTexCoords(gltfModel, primitive, info, primitiveVertexCount, enums::occlusion);
+		if (err.Code())
+			return err;
+	}
+
+	// Emissive
+	if (info.MapsInfo.EmissiveTexId >= 0)
+	{
+		Err err = ProcessTexCoords(gltfModel, primitive, info, primitiveVertexCount, enums::emissive);
+		if (err.Code())
+			return err;
+	}
 
 	return error_const::SUCCESS;
 }
 
-Err TextureExtractor::ProcessDiffuseCoords(const tinygltf::Model& gltfModel, const tinygltf::Primitive& primitive, const MeshAuxInfo& info, const uint32_t primitiveVertexCount)
+Err TextureExtractor::ProcessTexCoords(const tinygltf::Model& gltfModel, const tinygltf::Primitive& primitive, const MeshAuxInfo& info, const uint32_t primitiveVertexCount, const enums::TextureMap textureMap)
 {
-	if (info.MapsInfo.DiffuseTexId < 0)
-		return error_const::SUCCESS;
+	uint32_t texCoordId;
 
-	if (primitive.attributes.find("TEXCOORD_" + std::to_string(info.MapsInfo.DiffuseTexCoordIndex)) == primitive.attributes.end())
+	switch (textureMap)
 	{
-		ConsoleManager::PrintWarning("Tex coord attribute not found, but apparently mesh should have diffuse.");
+	case enums::base_color:
+		texCoordId = info.MapsInfo.BaseColorTexCoordIndex;
+		break;
+	case enums::normal:
+		texCoordId = info.MapsInfo.NormalTexCoordIndex;
+		break;
+	case enums::metallic_roughness:
+		texCoordId = info.MapsInfo.MetallicRoughnessCoordIndex;
+		break;
+	case enums::occlusion:
+		texCoordId = info.MapsInfo.OcclusionTexCoordIndex;
+		break;
+	case enums::emissive:
+		texCoordId = info.MapsInfo.EmissiveTexCoordIndex;
+		break;
+	default:
+		texCoordId = info.MapsInfo.BaseColorTexCoordIndex;
+	}
+
+	if (primitive.attributes.find("TEXCOORD_" + std::to_string(texCoordId)) == primitive.attributes.end())
+	{
+		ConsoleManager::PrintWarning("Tex coord attribute not found, but apparently mesh should have the texture.");
 		return error_const::SUCCESS;
 	}
 
-	const tinygltf::Accessor& accessor = gltfModel.accessors[primitive.attributes.at("TEXCOORD_" + std::to_string(info.MapsInfo.DiffuseTexCoordIndex))];
+	const tinygltf::Accessor& accessor = gltfModel.accessors[primitive.attributes.at("TEXCOORD_" + std::to_string(texCoordId))];
 
 	if (accessor.count != primitiveVertexCount)
 	{
@@ -68,8 +124,26 @@ Err TextureExtractor::ProcessDiffuseCoords(const tinygltf::Model& gltfModel, con
 	{
 		const float* coordinates = reinterpret_cast<const float*>(&data[vertex * stride]);
 
-		info.VertexList[info.VCounter + vertex].TexCoord.X = coordinates[0];
-		info.VertexList[info.VCounter + vertex].TexCoord.Y = coordinates[1];
+		switch (textureMap)
+		{
+		case enums::base_color:
+			info.VertexList[info.VCounter + vertex].BaseColorTexCoord = { coordinates[0], coordinates[1] };
+			break;
+		case enums::normal:
+			info.VertexList[info.VCounter + vertex].NormalTexCoord = { coordinates[0], coordinates[1] };
+			break;
+		case enums::metallic_roughness:
+			info.VertexList[info.VCounter + vertex].MetallicRoughnessTexCoord = { coordinates[0], coordinates[1] };
+			break;
+		case enums::occlusion:
+			info.VertexList[info.VCounter + vertex].OcclusionTexCoord = { coordinates[0], coordinates[1] };
+			break;
+		case enums::emissive:
+			info.VertexList[info.VCounter + vertex].EmissiveTexCoord = { coordinates[0], coordinates[1] };
+			break;
+		default:
+			break;
+		}
 	}
 
 	return error_const::SUCCESS;
@@ -85,28 +159,38 @@ Err TextureExtractor::ProcessTextureImages(const tinygltf::Model& gltfModel, Mes
 		if (info.first < 0)
 			continue;
 
-		if (info.second.MapsInfo.DiffuseTexId < 0)
-			continue;
-
 		Mesh& mesh = meshData[info.second.MeshIndex];
-		const int32_t imageId = gltfModel.textures[info.second.MapsInfo.DiffuseTexId].source;
 
-		// Check if texture was already imported and then import
+		// Lambda to handle texture import
+		auto tryImportTexture = [&](const int32_t texId, int32_t& texAssetId, const std::string& textureName)
+			{
+				if (texId < 0)
+					return;
 
-		// Diffuse
-		if (!texturesImported.test(imageId))
-		{
-			texturesImported.set(imageId);
-			Err err = ImportTextureAsset(gltfModel, imageId, modelMetadata, mesh.TextureAssetId);
-			if (err.Code())
-				ConsoleManager::PrintError("Error trying to import diffuse texture asset: " + err.Message());
-		}
+				const int32_t imageId = gltfModel.textures[texId].source;
+				if (texturesImported.test(imageId))
+					return;
+
+				texturesImported.set(imageId);
+
+				ConsoleManager::PrintInfo("Importing " + textureName + " texture...");
+				Err err = ImportTextureAsset(gltfModel, imageId, modelMetadata, texAssetId);
+				if (err.Code())
+					ConsoleManager::PrintError("Error importing " + textureName + " texture: " + err.Message());
+			};
+
+		// Importation of images
+		tryImportTexture(info.second.MapsInfo.BaseColorTexId, mesh.Material.BaseColorTexture, "Base Color");
+		tryImportTexture(info.second.MapsInfo.NormalTexId, mesh.Material.NormalTexture, "Normal");
+		tryImportTexture(info.second.MapsInfo.MetallicRoughnessTexId, mesh.Material.MetallicRoughnessTexture, "Metallic-Roughness");
+		tryImportTexture(info.second.MapsInfo.OcclusionTexId, mesh.Material.OcclusionTexture, "Occlusion");
+		tryImportTexture(info.second.MapsInfo.EmissiveTexId, mesh.Material.EmissiveTexture, "Emissive");
 	}
 
 	return error_const::SUCCESS;
 }
 
-Err TextureExtractor::ImportTextureAsset(const tinygltf::Model& gltfModel, const int32_t imageId, const Asset& modelMetadata, uint32_t& newAssetId)
+Err TextureExtractor::ImportTextureAsset(const tinygltf::Model& gltfModel, const int32_t imageId, const Asset& modelMetadata, int32_t& newAssetId)
 {
 	if (imageId < 0)
 		return error_const::SUCCESS;
@@ -137,9 +221,8 @@ Err TextureExtractor::ImportTextureAsset(const tinygltf::Model& gltfModel, const
 		return error_const::IMPORT_INVALID_TEXTURE;
 	}
 
-	const size_t pixelSize = textureImage.component;
 	const size_t offset = textureBufferView.byteOffset;
-	const size_t stride = textureBufferView.byteStride ? textureBufferView.byteStride : sizeof(uint8_t);;
+	const size_t stride = textureBufferView.byteStride ? textureBufferView.byteStride : sizeof(uint8_t);
 
 	const uint8_t* imageData = (textureBuffer.data.data() + offset);
 
@@ -154,7 +237,7 @@ Err TextureExtractor::ImportTextureAsset(const tinygltf::Model& gltfModel, const
 	return error_const::SUCCESS;
 }
 
-Err TextureExtractor::SaveTextureAsset(uint32_t& textureAssetId, const uint8_t* imageData, const uint64_t imageSize, const enums::ImageFormat format, const Asset& modelMetadata, const uint32_t imageId)
+Err TextureExtractor::SaveTextureAsset(int32_t& textureAssetId, const uint8_t* imageData, const uint64_t imageSize, const enums::ImageFormat format, const Asset& modelMetadata, const uint32_t imageId)
 {
 	const uint8_t* pngData = imageData;
 	int32_t pngSize = static_cast<int32_t>(imageSize);
@@ -193,7 +276,7 @@ Err TextureExtractor::SaveTextureAsset(uint32_t& textureAssetId, const uint8_t* 
 	if (err.Code())
 		return err;
 
-	textureAssetId = imageAsset.Id;
+	textureAssetId = static_cast<int32_t>(imageAsset.Id);
 
 	return error_const::SUCCESS;
 }

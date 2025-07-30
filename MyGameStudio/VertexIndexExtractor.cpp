@@ -445,19 +445,25 @@ Err VertexIndexExtractor::InitMeshes()
 	{
 		MeshAuxInfo& info = pair.second;
 
+		// Collect all information regarding the material
+		Err err = GetMaterialMapsInfo(pair.first, info.MapsInfo);
+		if (err.Code())
+			ConsoleManager::PrintWarning("Error while trying to obtain maps info from material: " + err.Message());
+
+		// Init the mesh
 		Mesh* mesh = &meshList_[info.MeshIndex];
 		mesh->VertexList = std::make_unique<Vertex[]>(info.TotalVertexCount);
 		mesh->IndexList = std::make_unique<uint32_t[]>(info.TotalIndexCount);
 		mesh->VertexCount = info.TotalVertexCount;
 		mesh->IndexCount = info.TotalIndexCount;
-		mesh->UseVertexColor = false;
+
+		mesh->Material.EmissiveFactor = info.MapsInfo.EmissiveFactor;
+		mesh->Material.MetallicFactor = info.MapsInfo.MetallicFactor;
+		mesh->Material.OcclusionFactor = info.MapsInfo.OcclusionFactor;
+		mesh->Material.RoughnessFactor = info.MapsInfo.RoughnessFactor;
 
 		info.VertexList = mesh->VertexList.get();
 		info.IndexList = mesh->IndexList.get();
-
-		Err err = GetMaterialMapsInfo(pair.first, info.MapsInfo);
-		if (err.Code())
-			ConsoleManager::PrintWarning("Error while trying to obtain maps info from material: " + err.Message());
 	}
 
 	return error_const::SUCCESS;
@@ -491,6 +497,8 @@ Err VertexIndexExtractor::GetMaterialMapsInfo(const int32_t materialId, Material
 		mat.emissiveTexture.texCoord,
 		static_cast<float>(mat.pbrMetallicRoughness.metallicFactor),
 		static_cast<float>(mat.pbrMetallicRoughness.roughnessFactor),
+		static_cast<float>(mat.occlusionTexture.strength),
+		{ static_cast<float>(mat.emissiveFactor[0]), static_cast<float>(mat.emissiveFactor[1]), static_cast<float>(mat.emissiveFactor[2]) },
 		mat.doubleSided
 	};
 

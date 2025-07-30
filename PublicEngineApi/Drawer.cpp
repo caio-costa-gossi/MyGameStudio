@@ -85,7 +85,9 @@ void Drawer::DrawRegular(const RenderQuery& query, const TextureList& textures)
 	SetShaderConfig();
 	SetShaderUniformsRegular(regularShader_, query);
 	SetTextureWrapping(query.MeshInstance);
-	textures.at(query.MeshInstance.Data->TextureAssetId).Use();
+
+	if (query.MeshInstance.Data->Material.BaseColorTexture >= 0)
+		textures.at(query.MeshInstance.Data->Material.BaseColorTexture).Use();
 
 	// Draw
 	glBindVertexArray(query.MeshInstance.ArrayObjectId);
@@ -113,7 +115,7 @@ void Drawer::SetShaderConfig()
 
 void Drawer::SetShaderUniformsRegular(const Shader& shader, const RenderQuery& query)
 {
-	shader.SetUniform("useVertexColor", query.MeshInstance.Data->UseVertexColor);
+	shader.SetUniform("useVertexColor", query.MeshInstance.Data->Material.BaseColorTexture < 0);
 
 	// Pre-calculate normal matrix for model
 	shader.SetUniform("normalMatrix", enums::MatrixDim::m3x3, NumericUtils::CalculateNormalMatrix(query.Model).GetData(), false);

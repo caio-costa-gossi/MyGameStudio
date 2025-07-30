@@ -34,6 +34,7 @@ private:
 	static Err InitRenderer();
 
 	static Err Draw();
+	static Err AddMeshTextures(const Mesh& mesh);
 	static Err AddTexture(uint32_t assetId);
 
 public:

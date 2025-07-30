@@ -216,7 +216,7 @@ void ModelProcessor::ChangeBuffer(std::vector<uint8_t>& oldData, const uint64_t 
 	const size_t biggerCount = std::max(oldDataSize, newDataSize);
 
 	const int sizeDiff = static_cast<int>(newDataSize) - static_cast<int>(oldDataSize);
-	const int commonSize = std::min(oldDataSize, newDataSize);
+	const int commonSize = static_cast<int>(std::min(oldDataSize, newDataSize));
 
 	// Memory management
 	std::copy_n(newData.begin(), commonSize, oldData.begin());

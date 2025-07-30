@@ -60,7 +60,7 @@ Err TestDrawer::Run()
 	const uint8_t* mesh1BinData = AssetRuntimeManager::LoadAsset(60, modelSize);
 	Model model = Serialization::DesserializeModel(mesh1BinData, modelSize);
 
-	const uint8_t* mesh2BinData = AssetRuntimeManager::LoadAsset(62, modelSize);
+	const uint8_t* mesh2BinData = AssetRuntimeManager::LoadAsset(66, modelSize);
 	Model model2 = Serialization::DesserializeModel(mesh2BinData, modelSize);
 
 	const uint8_t* mesh3BinData = AssetRuntimeManager::LoadAsset(108, modelSize);
@@ -113,7 +113,7 @@ Err TestDrawer::Run()
 		if (err.Code())
 			return err;
 
-		BillboardRenderRequest billboardRequest = { {{-2,0,0}, {1.0f,1.0f}, 145} };
+		/*BillboardRenderRequest billboardRequest = { {{-2,0,0}, {1.0f,1.0f}, 145} };
 		err = RenderManager::RequestBillboardRender(billboardRequest);
 		if (err.Code())
 			return err;
@@ -126,7 +126,7 @@ Err TestDrawer::Run()
 		BillboardRenderRequest billboardRequest3 = { {{-4,0,0}, {1.0f,1.0f}, 147} };
 		err = RenderManager::RequestBillboardRender(billboardRequest3);
 		if (err.Code())
-			return err;
+			return err;*/
 
 		err = RenderManager::Update();
 		if (err.Code())

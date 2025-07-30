@@ -5,7 +5,7 @@
 
 DataStream Serialization::SerializeMesh(const Mesh& mesh, uint64_t& resultSize)
 {
-	uint64_t objectSize = sizeof(mesh.TextureAssetId) + sizeof(mesh.IndexCount) + sizeof(mesh.MeshId) + sizeof(mesh.VertexCount) + sizeof(mesh.UseVertexColor);
+	uint64_t objectSize = sizeof(mesh.IndexCount) + sizeof(mesh.MeshId) + sizeof(mesh.VertexCount) + sizeof(mesh.Material);
 	objectSize += sizeof(mesh.HorizontalWrap) + sizeof(mesh.VerticalWrap);
 	objectSize += mesh.IndexCount * sizeof(mesh.IndexList.get()[0]);
 	objectSize += mesh.VertexCount * sizeof(mesh.VertexList.get()[0]);
@@ -13,13 +13,12 @@ DataStream Serialization::SerializeMesh(const Mesh& mesh, uint64_t& resultSize)
 	resultSize = objectSize;
 	DataStream stream(objectSize);
 
-	stream.Write(reinterpret_cast<const uint8_t*>(&mesh.TextureAssetId), sizeof(mesh.TextureAssetId));
 	stream.Write(reinterpret_cast<const uint8_t*>(&mesh.IndexCount), sizeof(mesh.IndexCount));
 	stream.Write(reinterpret_cast<const uint8_t*>(&mesh.MeshId), sizeof(mesh.MeshId));
 	stream.Write(reinterpret_cast<const uint8_t*>(&mesh.VertexCount), sizeof(mesh.VertexCount));
 	stream.Write(reinterpret_cast<const uint8_t*>(&mesh.HorizontalWrap), sizeof(mesh.HorizontalWrap));
 	stream.Write(reinterpret_cast<const uint8_t*>(&mesh.VerticalWrap), sizeof(mesh.VerticalWrap));
-	stream.Write(reinterpret_cast<const uint8_t*>(&mesh.UseVertexColor), sizeof(mesh.UseVertexColor));
+	stream.Write(reinterpret_cast<const uint8_t*>(&mesh.Material), sizeof(mesh.Material));
 
 	stream.Write(reinterpret_cast<const uint8_t*>(mesh.IndexList.get()), mesh.IndexCount * sizeof(mesh.IndexList.get()[0]));
 	stream.Write(reinterpret_cast<const uint8_t*>(mesh.VertexList.get()), mesh.VertexCount * sizeof(mesh.VertexList.get()[0]));
@@ -32,13 +31,12 @@ Mesh Serialization::DesserializeMesh(const uint8_t* data, const uint64_t dataSiz
 	DataReader reader(data, dataSize);
 	Mesh mesh = { };
 
-	reader.Read(reinterpret_cast<uint8_t*>(&mesh.TextureAssetId), sizeof(mesh.TextureAssetId));
 	reader.Read(reinterpret_cast<uint8_t*>(&mesh.IndexCount), sizeof(mesh.IndexCount));
 	reader.Read(reinterpret_cast<uint8_t*>(&mesh.MeshId), sizeof(mesh.MeshId));
 	reader.Read(reinterpret_cast<uint8_t*>(&mesh.VertexCount), sizeof(mesh.VertexCount));
 	reader.Read(reinterpret_cast<uint8_t*>(&mesh.HorizontalWrap), sizeof(mesh.HorizontalWrap));
 	reader.Read(reinterpret_cast<uint8_t*>(&mesh.VerticalWrap), sizeof(mesh.VerticalWrap));
-	reader.Read(reinterpret_cast<uint8_t*>(&mesh.UseVertexColor), sizeof(mesh.UseVertexColor));
+	reader.Read(reinterpret_cast<uint8_t*>(&mesh.Material), sizeof(mesh.Material));
 
 	mesh.IndexList = std::make_unique<uint32_t[]>(mesh.IndexCount);
 	mesh.VertexList = std::make_unique<Vertex[]>(mesh.VertexCount);
@@ -114,7 +112,7 @@ Model Serialization::DesserializeModel(const uint8_t* data, const uint64_t dataS
 
 uint64_t Serialization::CalculateMeshSize(const Mesh& mesh)
 {
-	uint64_t objectSize = sizeof(mesh.TextureAssetId) + sizeof(mesh.IndexCount) + sizeof(mesh.MeshId) + sizeof(mesh.VertexCount);
+	uint64_t objectSize = sizeof(mesh.IndexCount) + sizeof(mesh.MeshId) + sizeof(mesh.VertexCount) + sizeof(mesh.Material);
 	objectSize += sizeof(mesh.HorizontalWrap) + sizeof(mesh.VerticalWrap);
 	objectSize += mesh.IndexCount * sizeof(mesh.IndexList.get()[0]);
 	objectSize += mesh.VertexCount * sizeof(mesh.VertexList.get()[0]);

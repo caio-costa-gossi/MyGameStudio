@@ -113,15 +113,12 @@ Err RenderManager::RequestRender(const RenderRequest& request)
 		}
 	}
 
-	// Preload texture from meshes
+	// Preload textures from meshes
 	for (uint32_t i = 0; i < request.Model->MeshCount; ++i)
 	{
-		if (textures_.find(request.Model->Meshes[i].TextureAssetId) == textures_.end())
-		{
-			Err err = AddTexture(request.Model->Meshes[i].TextureAssetId);
-			if (err.Code())
-				GameConsoleManager::PrintError(err);
-		}
+		Err err = AddMeshTextures(request.Model->Meshes[i]);
+		if (err.Code())
+			return err;
 	}
 
 	return error_const::SUCCESS;
@@ -176,6 +173,46 @@ Err RenderManager::Draw()
 void RenderManager::ResizeViewport(const int32_t w, const int32_t h)
 {
 	viewport_ = { 0, 0, w, h };
+}
+
+Err RenderManager::AddMeshTextures(const Mesh& mesh)
+{
+	if (mesh.Material.BaseColorTexture >= 0 && textures_.find(mesh.Material.BaseColorTexture) == textures_.end())
+	{
+		Err err = AddTexture(mesh.Material.BaseColorTexture);
+		if (err.Code())
+			GameConsoleManager::PrintError(err);
+	}
+
+	if (mesh.Material.NormalTexture >= 0 && textures_.find(mesh.Material.NormalTexture) == textures_.end())
+	{
+		Err err = AddTexture(mesh.Material.NormalTexture);
+		if (err.Code())
+			GameConsoleManager::PrintError(err);
+	}
+
+	if (mesh.Material.MetallicRoughnessTexture >= 0 && textures_.find(mesh.Material.MetallicRoughnessTexture) == textures_.end())
+	{
+		Err err = AddTexture(mesh.Material.MetallicRoughnessTexture);
+		if (err.Code())
+			GameConsoleManager::PrintError(err);
+	}
+
+	if (mesh.Material.OcclusionTexture >= 0 && textures_.find(mesh.Material.OcclusionTexture) == textures_.end())
+	{
+		Err err = AddTexture(mesh.Material.OcclusionTexture);
+		if (err.Code())
+			GameConsoleManager::PrintError(err);
+	}
+
+	if (mesh.Material.EmissiveTexture >= 0 && textures_.find(mesh.Material.EmissiveTexture) == textures_.end())
+	{
+		Err err = AddTexture(mesh.Material.EmissiveTexture);
+		if (err.Code())
+			GameConsoleManager::PrintError(err);
+	}
+
+	return error_const::SUCCESS;
 }
 
 Err RenderManager::AddTexture(const uint32_t assetId)

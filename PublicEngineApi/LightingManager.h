@@ -10,13 +10,17 @@
 class LightingManager
 {
 private:
-	static float ambientLightStr_;
-	static ColorRgb ambientLightClr_;
+	static float ambientLightIntensity_;
+	static ColorRgb ambientLightColor_;
 
-	static std::unordered_map<uint32_t, LightSource> localLights_;
+	static std::unordered_map<uint32_t, std::unique_ptr<LightSource>> lights_;
 	static uint32_t lightSrcCounter_;
 
-	static uint32_t bulbAsset_;
+	static uint32_t directionalAsset_;
+	static uint32_t pointAsset_;
+	static uint32_t spotlightAsset_;
+
+	static Err GetSourceAttributes(enums::LightType type, uint32_t& iconId);
 
 public:
 	static Err Startup();
@@ -31,6 +35,8 @@ public:
 	static ColorRgb GetAmbientLightColor();
 
 	// Local lights
-	static Err AddLightSource(const Vec3F& pos, const ColorRgb& color, float intensity, uint32_t& lightSrcId);
+	static Err AddDirectionalLight(const Vec3F& pos, const ColorRgb& color, const Vec3F& direction, float intensity, uint32_t& lightSourceId);
+	static Err AddPointLight(const Vec3F& pos, const ColorRgb& color, float distance, uint32_t& lightSourceId);
+	static Err AddSpotlight(const Vec3F& pos, const ColorRgb& color, const Vec3F& direction, float innerCutoffDegrees, float outerCutoffDegrees, float intensity, uint32_t& lightSourceId);
 	static LightSource* GetLightSource(uint32_t lightSourceId);
 };

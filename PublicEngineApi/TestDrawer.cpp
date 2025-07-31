@@ -45,7 +45,7 @@ Err TestDrawer::Startup()
 		return err;
 
 	time_.Start();
-	err = LightingManager::AddLightSource({ 1.0f,0.0f,0.0f }, { 1.0f,1.0f,1.0f }, 1.0f, lightSrcId_);
+	err = LightingManager::AddPointLight({ 1.0f,0.0f,0.0f }, { 1.0f,1.0f,1.0f }, 1.0f, lightSrcId_);
 	if (err.Code())
 		return err;
 
@@ -164,49 +164,49 @@ void TestDrawer::UpdateLightSource()
 	}
 
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_z])
-		source->Pos.Y += 0.01f;
+		source->GetPos().Y += 0.01f;
 
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_x])
-		source->Pos.Y -= 0.01f;
+		source->GetPos().Y -= 0.01f;
 
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_left])
-		source->Pos.Z += 0.01f;
+		source->GetPos().Z += 0.01f;
 
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_right])
-		source->Pos.Z -= 0.01f;
+		source->GetPos().Z -= 0.01f;
 
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_up])
-		source->Pos.X += 0.01f;
+		source->GetPos().X += 0.01f;
 
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_down])
-		source->Pos.X -= 0.01f;
+		source->GetPos().X -= 0.01f;
 
-	if (state.KeyboardState.PhysicalKeyState[keyboard_key_kp_plus])
+	/*if (state.KeyboardState.PhysicalKeyState[keyboard_key_kp_plus])
 		source->Intensity += 0.005f;
 
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_kp_minus])
-		if (source->Intensity >= 0.005f) source->Intensity -= 0.005f;
+		if (source->Intensity >= 0.005f) source->Intensity -= 0.005f;*/
 
 	// Red
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_u])
-		if (source->Color.R <= 0.95f) source->Color.R += 0.005f;
+		if (source->GetColor().R <= 0.95f) source->GetColor().R += 0.005f;
 
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_i])
-		if (source->Color.R >= 0.05f) source->Color.R -= 0.005f;
+		if (source->GetColor().R >= 0.05f) source->GetColor().R -= 0.005f;
 
 	// Green
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_j])
-		if (source->Color.G <= 0.95f) source->Color.G += 0.005f;
+		if (source->GetColor().G <= 0.95f) source->GetColor().G += 0.005f;
 
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_k])
-		if (source->Color.G >= 0.05f) source->Color.G -= 0.005f;
+		if (source->GetColor().G >= 0.05f) source->GetColor().G -= 0.005f;
 
 	// Blue
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_n])
-		if (source->Color.B <= 0.95f) source->Color.B += 0.005f;
+		if (source->GetColor().B <= 0.95f) source->GetColor().B += 0.005f;
 
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_m])
-		if (source->Color.B >= 0.05f) source->Color.B -= 0.005f;
+		if (source->GetColor().B >= 0.05f) source->GetColor().B -= 0.005f;
 }
 
 

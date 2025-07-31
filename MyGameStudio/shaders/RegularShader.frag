@@ -28,14 +28,13 @@ struct DirectionalLight
 {
 	vec3 color;	
 	vec3 direction;
-	vec3 intensity;
+	float intensity;
 };
 
 struct PointLight
 {
 	vec3 pos;
 	vec3 color;
-	vec3 intensity;
 	float constant;	
 	float linear;
 	float quadratic;
@@ -45,10 +44,9 @@ struct Spotlight
 {
 	vec3 pos;
 	vec3 color;
-	vec3 intensity;
 	vec3 direction;
-	vec3 innerCutoffAngle;
-	vec3 outerCutoffAngle;
+	float innerCutoffAngle;
+	float outerCutoffAngle;
 };
 
 // In data
@@ -133,8 +131,8 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 	vec3 lightDir = normalize(light.pos - fragPos);
 	vec3 reflectDir = reflect(-lightDir, normal);
 	
-	vec3 diffuseLight = max(dot(normal, lightDir), 0.0) * light.color * light.intensity;	
-	vec3 specularLight = pow(max(dot(viewDir, reflectDir), 0.0), 32) * 0.6 * light.intensity * light.color;	
+	vec3 diffuseLight = max(dot(normal, lightDir), 0.0) * light.color;	
+	vec3 specularLight = pow(max(dot(viewDir, reflectDir), 0.0), 32) * 0.6 * light.color;	
 	
 	return vec3(0,0,0);
 }

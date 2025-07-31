@@ -32,6 +32,7 @@
     <ClInclude Include="CameraInstance.h" />
     <ClInclude Include="CoordinateGizmo.h" />
     <ClInclude Include="DataReader.h" />
+    <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="LightingManager.h" />
     <ClInclude Include="LightSource.h" />
     <ClInclude Include="Material.h" />
@@ -55,6 +56,7 @@
     <ClInclude Include="GameDebuggerChild.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObjectFactory.h" />
+    <ClInclude Include="PointLight.h" />
     <ClInclude Include="RenderQuery.h" />
     <ClInclude Include="GameObjectMacro.h" />
     <ClInclude Include="GameObjectManager.h" />
@@ -84,6 +86,7 @@
     <ClInclude Include="SDLInputLayer.h" />
     <ClInclude Include="Serialization.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="Spotlight.h" />
     <ClInclude Include="SystemFileHelper.h" />
     <ClInclude Include="SystemPathHelper.h" />
     <ClInclude Include="SystemsInfoHelper.h" />
@@ -113,7 +116,9 @@
     <ClCompile Include="CameraFactory.cpp" />
     <ClCompile Include="CameraInstance.cpp" />
     <ClCompile Include="CoordinateGizmo.cpp" />
+    <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="LightingManager.cpp" />
+    <ClCompile Include="LightSource.cpp" />
     <ClCompile Include="OrthoCamera.cpp" />
     <ClCompile Include="PerspectiveCamera.cpp" />
     <ClCompile Include="CameraManager.cpp" />
@@ -140,10 +145,12 @@
     <ClCompile Include="MVector.cpp" />
     <ClCompile Include="NumericUtils.cpp" />
     <ClCompile Include="PhysicsManager.cpp" />
+    <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="ProcessResourceViewer.cpp" />
     <ClCompile Include="SDLInputLayer.cpp" />
     <ClCompile Include="Serialization.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Spotlight.cpp" />
     <ClCompile Include="stb_image_implementation.cpp" />
     <ClCompile Include="SystemFileHelper.cpp" />
     <ClCompile Include="SystemPathHelper.cpp" />

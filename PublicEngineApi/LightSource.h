@@ -1,14 +1,27 @@
 #pragma once
-#include "MVector.h"
 #include "Color.h"
+#include "Err.h"
+#include "Shader.h"
 
-struct LightSource
+class LightSource
 {
-	Vec3F Pos = { };
-	ColorRgb Color = { };
-	float Intensity = 0;
+protected:
+	Vec3F pos_ = { };
+	ColorRgb color_ = { };
 
+	enums::LightType type_ = enums::point;
+
+public:
 	LightSource() = default;
-	LightSource(Vec3F pos, const ColorRgb& color, const float intensity) :
-		Pos(std::move(pos)), Color(color), Intensity(intensity) { }
+	LightSource(Vec3F pos, const ColorRgb& color);
+
+	virtual Err SetLightUniforms(const Shader& shader) = 0;
+	virtual ~LightSource() = default;
+
+	Vec3F& GetPos();
+	ColorRgb& GetColor();
+	enums::LightType GetType() const;
+
+	Err SetPos(const Vec3F& pos);
+	Err SetColor(const ColorRgb& color);
 };

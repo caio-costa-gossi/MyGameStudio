@@ -149,6 +149,13 @@ namespace enums
 		bound = 1
 	};
 
+	enum LightType : uint8_t
+	{
+		directional = 0,
+		point = 1,
+		spot = 2
+	};
+
 	enum ImageFormat : uint8_t
 	{
 		png = 0,

@@ -6,8 +6,8 @@ class Spotlight : public LightSource
 private:
 	Vec3F direction_ = { };
 	float intensity_ = 1.0f;
-	float innerCutoffCos_ = 0.0f;
-	float outerCutoffCos_ = 0.0f;
+	float innerCutoffCos_ = 30.0f;
+	float outerCutoffCos_ = 35.0f;
 
 public:
 	Spotlight();
@@ -15,7 +15,7 @@ public:
 
 	Err SetLightUniforms(const Shader& shader, uint32_t directionalCount, uint32_t pointCount, uint32_t spotCount) override;
 
-	const Vec3F& GetDirection() const;
+	Vec3F& GetDirection();
 	float GetIntensity() const;
 	float GetInnerCutoffDegrees() const;
 	float GetOuterCutoffDegrees() const;

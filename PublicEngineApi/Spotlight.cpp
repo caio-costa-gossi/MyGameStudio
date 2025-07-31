@@ -18,7 +18,7 @@ Spotlight::Spotlight(Vec3F pos, const ColorRgb& color, Vec3F direction, const fl
 
 Err Spotlight::SetLightUniforms(const Shader& shader, uint32_t directionalCount, uint32_t pointCount, uint32_t spotCount)
 {
-	const std::string uniform = "dirLights[" + std::to_string(spotCount) + "]";
+	const std::string uniform = "spotlights[" + std::to_string(spotCount) + "]";
 
 	shader.SetUniform((uniform + ".pos").c_str(), pos_.X, pos_.Y, pos_.Z);
 	shader.SetUniform((uniform + ".color").c_str(), color_.R, color_.G, color_.B);
@@ -30,7 +30,7 @@ Err Spotlight::SetLightUniforms(const Shader& shader, uint32_t directionalCount,
 	return error_const::SUCCESS;
 }
 
-const Vec3F& Spotlight::GetDirection() const
+Vec3F& Spotlight::GetDirection()
 {
 	return direction_;
 }

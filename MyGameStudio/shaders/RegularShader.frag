@@ -44,6 +44,7 @@ struct Spotlight
 {
 	vec3 pos;
 	vec3 color;
+	float intensity;
 	vec3 direction;
 	float innerCutoffAngle;
 	float outerCutoffAngle;
@@ -152,8 +153,18 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 
 vec3 CalcSpotlight(Spotlight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 {
-	//vec3 diffuseLight = max(dot(normal, lightDir), 0.0) * light.color;	
-	//vec3 specularLight = pow(max(dot(viewDir, reflectDir), 0.0), 32) * 0.6 * light.color;	
+	// Calculate frag angle cosine in relation to spotlight direction
+	vec3 lightDir = normalize(light.pos - fragPos);
+	float fragAngle = dot(lightDir, normalize(-light.direction));
+
+	// Calculate how much inside of the spotlight the fragment is	
+	float weight = clamp((fragAngle - light.outerCutoffAngle) / (light.innerCutoffAngle - light.outerCutoffAngle), 0.0f, 1.0f);
+	
+	// Normal point light calculations & apply the weight
+	vec3 diffuseLight = max(dot(normal, lightDir), 0.0) * light.color;		
+
+	vec3 reflectDir = reflect(-lightDir, normal);
+	vec3 specularLight = pow(max(dot(viewDir, reflectDir), 0.0), 32) * 0.6 * light.color;	
 		
-	return vec3(0,0,0);
+	return (diffuseLight + specularLight) * weight * light.intensity;
 }

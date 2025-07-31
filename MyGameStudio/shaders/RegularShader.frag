@@ -130,18 +130,24 @@ vec3 CalcDirLight(DirectionalLight light, vec3 normal, vec3 viewDir)
 	vec3 reflectDir = reflect(-lightDir, normal);
 	vec3 specularLight = pow(max(dot(viewDir, reflectDir), 0.0), 32) * 0.6 * light.color;		
 
-	return diffuseLight + specularLight;
+	return (diffuseLight + specularLight) * light.intensity;
 }
 
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 {
+	// Point light diffuse & specular
 	vec3 lightDir = normalize(light.pos - fragPos);
-	vec3 reflectDir = reflect(-lightDir, normal);
 	
-	vec3 diffuseLight = max(dot(normal, lightDir), 0.0) * light.color;	
+	vec3 diffuseLight = max(dot(normal, lightDir), 0.0) * light.color;		
+
+	vec3 reflectDir = reflect(-lightDir, normal);
 	vec3 specularLight = pow(max(dot(viewDir, reflectDir), 0.0), 32) * 0.6 * light.color;	
 	
-	return vec3(0,0,0);
+	// Attenuation
+	float dist = length(light.pos - fragPos);
+	float attenuation = 1.0 / (light.constant + light.linear * dist + light.quadratic * dist * dist);
+
+	return (diffuseLight + specularLight) * attenuation;
 }
 
 vec3 CalcSpotlight(Spotlight light, vec3 normal, vec3 fragPos, vec3 viewDir)

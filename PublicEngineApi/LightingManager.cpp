@@ -165,7 +165,7 @@ void LightingManager::CountLightTypes(const enums::LightType type, int32_t& dire
 }
 
 
-float LightingManager::ambientLightIntensity_ = 0.4f;
+float LightingManager::ambientLightIntensity_ = 0.2f;
 ColorRgb LightingManager::ambientLightColor_ = { 1.0f,1.0f,1.0f };
 
 std::unordered_map<uint32_t, std::unique_ptr<LightSource>> LightingManager::lights_;

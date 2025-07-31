@@ -16,6 +16,7 @@
 
 #include "DirectionalLight.h"
 #include "LightingManager.h"
+#include "PointLight.h"
 
 #undef min
 
@@ -46,11 +47,6 @@ Err TestDrawer::Startup()
 		return err;
 
 	time_.Start();
-	err = LightingManager::AddDirectionalLight({ 1.0f,0.0f,0.0f }, { 1.0f,1.0f,1.0f }, {0.0f, -1.0f, 0.0f}, 1.0f, lightSrcId_);
-	if (err.Code())
-		return err;
-
-	//LightingManager::SetAmbientLight(0.4f, { 1.0f, 1.0f, 1.0f });
 
 	return error_const::SUCCESS;
 }
@@ -72,11 +68,15 @@ Err TestDrawer::Run()
 
 	const Vec3F worldPos[3] = { {0.0f, 0.0f, 5.0f}, {2.0f, 0.0f, 0.0f}, {6.0f, 0.0f, 0.0f} };
 
+	Err err = LightingManager::AddPointLight({ 1.0f,0.0f,0.0f }, { 1.0f,1.0f,1.0f }, 5.0f, lightSrcId_);
+	if (err.Code())
+		return err;
+
 	running_ = true;
 
 	while (running_)
 	{
-		Err err = WindowManager::Update();
+		err = WindowManager::Update();
 		if (err.Code() == error_const::EXIT_REQUEST_CODE)
 			running_ = false;
 		else if (err.Code())
@@ -157,14 +157,14 @@ Err TestDrawer::Shutdown()
 void TestDrawer::UpdateLightSource()
 {
 	const InputState& state = InputManager::GetInputState();
-	DirectionalLight* source = dynamic_cast<DirectionalLight*>(LightingManager::GetLightSource(lightSrcId_));
+	PointLight* source = dynamic_cast<PointLight*>(LightingManager::GetLightSource(lightSrcId_));
 	if (source == nullptr)
 	{
 		GameConsoleManager::PrintError("Light source not found!");
 		return;
 	}
 
-	if (state.KeyboardState.PhysicalKeyState[keyboard_key_z])
+	/*if (state.KeyboardState.PhysicalKeyState[keyboard_key_z])
 		source->GetDirection().Y += 0.01f;
 
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_x])
@@ -180,9 +180,9 @@ void TestDrawer::UpdateLightSource()
 		source->GetDirection().X += 0.01f;
 
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_down])
-		source->GetDirection().X -= 0.01f;
+		source->GetDirection().X -= 0.01f;*/
 
-	/*if (state.KeyboardState.PhysicalKeyState[keyboard_key_z])
+	if (state.KeyboardState.PhysicalKeyState[keyboard_key_z])
 		source->GetPos().Y += 0.01f;
 
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_x])
@@ -198,19 +198,15 @@ void TestDrawer::UpdateLightSource()
 		source->GetPos().X += 0.01f;
 
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_down])
-		source->GetPos().X -= 0.01f;*/
-
-	/*if (state.KeyboardState.PhysicalKeyState[keyboard_key_kp_plus])
-		source->Intensity += 0.005f;
-
-	if (state.KeyboardState.PhysicalKeyState[keyboard_key_kp_minus])
-		if (source->Intensity >= 0.005f) source->Intensity -= 0.005f;*/
+		source->GetPos().X -= 0.01f;
 
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_kp_plus])
-		source->SetIntensity(source->GetIntensity() + 0.005f);
+		source->SetDistance(source->GetDistance() + 0.005f);
 
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_kp_minus])
-		if (source->GetIntensity() >= 0.005f) source->SetIntensity(source->GetIntensity() - 0.005f);
+		if (source->GetDistance() >= 0.005f) source->SetDistance(source->GetDistance() - 0.005f);
+
+	GameConsoleManager::PrintInfo(std::to_string(source->GetDistance()));
 
 	// Red
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_u])

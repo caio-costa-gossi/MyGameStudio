@@ -6,10 +6,12 @@ PointLight::PointLight()
 }
 
 PointLight::PointLight(Vec3F pos, const ColorRgb& color, const float distance) :
-	LightSource(std::move(pos), color), distance_(distance)
+	LightSource(std::move(pos), color)
 {
-	quadraticFactor_ = distance_ / 5;
-	linearFactor_ = (distanceApproxA_ / distance_) - (distanceApproxB_ * quadraticFactor_);
+	distance_ = std::min(distance, 30.0f);
+
+	linearFactor_ = 1.0f / pow(1.7f, distance_);
+	quadraticFactor_ = 1.0f / (distance_ * distance_ * distance_) * (linearFactor_ * distance_);
 
 	LightSource::type_ = enums::point;
 }
@@ -68,8 +70,13 @@ Err PointLight::SetQuadratic(const float quadraticFactor)
 
 Err PointLight::SetDistance(const float distance)
 {
-	distance_ = distance;
-	linearFactor_ = (distanceApproxA_ / distance_) - (distanceApproxB_ * quadraticFactor_);
+	distance_ = std::min(distance, 30.0f);
+
+	linearFactor_ = 1.0f / pow(1.7f,distance_);
+	quadraticFactor_ = 1.0f / (distance_ * distance_ * distance_) * (linearFactor_ * distance_);
+
+	//quadraticFactor_ = std::max(distance_ / pow(1.4f,distance_), 0.002f);
+	//linearFactor_ = (distanceApproxA_ / distance_) - (distanceApproxB_ * quadraticFactor_);
 
 	return error_const::SUCCESS;
 }

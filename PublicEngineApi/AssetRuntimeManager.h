@@ -21,4 +21,5 @@ public:
 
 	static Image* LoadImg(uint32_t assetId);
 	static Image* LoadImg(const char* filepath, uint32_t& assetId);
+	static Err FreeImg(uint32_t assetId);
 };

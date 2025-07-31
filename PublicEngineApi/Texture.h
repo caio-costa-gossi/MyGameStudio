@@ -8,6 +8,8 @@ class Texture
 {
 private:
 	uint32_t textureId_ = 0;
+	bool isInit_ = false;
+
 	Image* textureImage_ = nullptr;
 
 	Err InitGlTex();

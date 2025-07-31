@@ -96,6 +96,16 @@ Image* AssetRuntimeManager::LoadImg(const char* filepath, uint32_t& assetId)
 	return &imageData_[newAssetId];
 }
 
+Err AssetRuntimeManager::FreeImg(const uint32_t assetId)
+{
+	if (imageData_.find(assetId) == imageData_.end())
+		return error_const::SUCCESS;
+
+	imageData_.erase(assetId);
+
+	return error_const::SUCCESS;
+}
+
 
 auto AssetRuntimeManager::assetData_ = AssetMap();
 auto AssetRuntimeManager::imageData_ = ImageMap();

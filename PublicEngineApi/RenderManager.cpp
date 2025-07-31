@@ -221,7 +221,7 @@ Err RenderManager::AddTexture(const uint32_t assetId)
 
 	Err err = newTexture.Init(assetId);
 	if (err.Code())
-		GameConsoleManager::PrintError(err.Message(), enums::ConsoleMessageSender::render);
+		return err;
 
 	textures_[assetId] = newTexture;
 

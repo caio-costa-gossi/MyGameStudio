@@ -22,13 +22,15 @@ PointLight::PointLight(Vec3F pos, const ColorRgb& color, const float linear, con
 	LightSource::type_ = enums::directional;
 }
 
-Err PointLight::SetLightUniforms(const Shader& shader)
+Err PointLight::SetLightUniforms(const Shader& shader, const uint32_t directionalCount, const uint32_t pointCount, const uint32_t spotCount)
 {
-	shader.SetUniform("pos", pos_.X, pos_.Y, pos_.Z);
-	shader.SetUniform("color", color_.R, color_.G, color_.B);
-	shader.SetUniform("constant", 1.0f);
-	shader.SetUniform("linear", linearFactor_);
-	shader.SetUniform("quadratic", quadraticFactor_);
+	const std::string uniform = "pointLights[" + std::to_string(pointCount) + "]";
+
+	shader.SetUniform((uniform + ".pos").c_str(), pos_.X, pos_.Y, pos_.Z);
+	shader.SetUniform((uniform + ".color").c_str(), color_.R, color_.G, color_.B);
+	shader.SetUniform((uniform + ".constant").c_str(), 1.0f);
+	shader.SetUniform((uniform + ".linear").c_str(), linearFactor_);
+	shader.SetUniform((uniform + ".quadratic").c_str(), quadraticFactor_);
 
 	return error_const::SUCCESS;
 }

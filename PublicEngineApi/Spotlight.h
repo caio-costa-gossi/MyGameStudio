@@ -13,7 +13,7 @@ public:
 	Spotlight();
 	Spotlight(Vec3F pos, const ColorRgb& color, Vec3F direction, float innerCutoffDegrees, float outerCutoffDegrees, float intensity = 1.0f);
 
-	Err SetLightUniforms(const Shader& shader) override;
+	Err SetLightUniforms(const Shader& shader, uint32_t directionalCount, uint32_t pointCount, uint32_t spotCount) override;
 
 	const Vec3F& GetDirection() const;
 	float GetIntensity() const;

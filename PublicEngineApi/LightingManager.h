@@ -21,6 +21,7 @@ private:
 	static uint32_t spotlightAsset_;
 
 	static Err GetSourceAttributes(enums::LightType type, uint32_t& iconId);
+	static void CountLightTypes(enums::LightType type, int32_t& directionalCount, int32_t& pointCount, int32_t& spotCount);
 
 public:
 	static Err Startup();

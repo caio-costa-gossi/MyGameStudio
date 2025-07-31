@@ -78,9 +78,9 @@ uniform DirectionalLight dirLights[MAX_DIR_LIGHTS];
 uniform PointLight pointLights[MAX_POINT_LIGHTS];
 uniform Spotlight spotlights[MAX_SPOTLIGHTS];
 
-uniform float dirLightsCount;
-uniform float pointLightsCount;
-uniform float spotlightsCount;
+uniform int dirLightsCount;
+uniform int pointLightsCount;
+uniform int spotlightsCount;
 
 // Function signatures
 vec3 CalcDirLight(DirectionalLight light, vec3 normal, vec3 viewDir);
@@ -123,7 +123,14 @@ void main()
 // Function definitions
 vec3 CalcDirLight(DirectionalLight light, vec3 normal, vec3 viewDir)
 {
-	return vec3(0,0,0);
+	vec3 lightDir = normalize(-light.direction);	
+
+	vec3 diffuseLight = max(dot(normal, lightDir), 0.0) * light.color;	
+
+	vec3 reflectDir = reflect(-lightDir, normal);
+	vec3 specularLight = pow(max(dot(viewDir, reflectDir), 0.0), 32) * 0.6 * light.color;		
+
+	return diffuseLight + specularLight;
 }
 
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
@@ -139,5 +146,8 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 
 vec3 CalcSpotlight(Spotlight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 {
+	//vec3 diffuseLight = max(dot(normal, lightDir), 0.0) * light.color;	
+	//vec3 specularLight = pow(max(dot(viewDir, reflectDir), 0.0), 32) * 0.6 * light.color;	
+		
 	return vec3(0,0,0);
 }

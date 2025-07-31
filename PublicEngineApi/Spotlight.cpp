@@ -16,14 +16,16 @@ Spotlight::Spotlight(Vec3F pos, const ColorRgb& color, Vec3F direction, const fl
 	LightSource::type_ = enums::spot;
 }
 
-Err Spotlight::SetLightUniforms(const Shader& shader)
+Err Spotlight::SetLightUniforms(const Shader& shader, uint32_t directionalCount, uint32_t pointCount, uint32_t spotCount)
 {
-	shader.SetUniform("pos", pos_.X, pos_.Y, pos_.Z);
-	shader.SetUniform("color", color_.R, color_.G, color_.B);
-	shader.SetUniform("intensity", intensity_);
-	shader.SetUniform("direction", direction_.X, direction_.Y, direction_.Z);
-	shader.SetUniform("innerCutoffAngle", innerCutoffCos_);
-	shader.SetUniform("outerCutoffAngle", outerCutoffCos_);
+	const std::string uniform = "dirLights[" + std::to_string(spotCount) + "]";
+
+	shader.SetUniform((uniform + ".pos").c_str(), pos_.X, pos_.Y, pos_.Z);
+	shader.SetUniform((uniform + ".color").c_str(), color_.R, color_.G, color_.B);
+	shader.SetUniform((uniform + ".intensity").c_str(), intensity_);
+	shader.SetUniform((uniform + ".direction").c_str(), direction_.X, direction_.Y, direction_.Z);
+	shader.SetUniform((uniform + ".innerCutoffAngle").c_str(), innerCutoffCos_);
+	shader.SetUniform((uniform + ".outerCutoffAngle").c_str(), outerCutoffCos_);
 
 	return error_const::SUCCESS;
 }

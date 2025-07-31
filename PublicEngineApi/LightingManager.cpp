@@ -52,18 +52,28 @@ Err LightingManager::SetLightUniforms(const Shader& shader)
 {
 	shader.Use();
 
-	shader.SetUniform("ambientColor", ambientLightColor_.R, ambientLightColor_.G, ambientLightColor_.B);
-	shader.SetUniform("ambientFactor", ambientLightIntensity_);
-
 	const Vec3F& viewPos = CameraManager::GetMainCamera()->GetPos();
 	shader.SetUniform("viewPos", viewPos.X, viewPos.Y, viewPos.Z);
+	shader.SetUniform("ambientColor", ambientLightColor_.R, ambientLightColor_.G, ambientLightColor_.B);
+	shader.SetUniform("ambientIntensity", ambientLightIntensity_);
 
+	int32_t directionalCount = 0;
+	int32_t pointCount = 0;
+	int32_t spotCount = 0;
+
+	// Go through all light sources
 	for (const std::pair<const uint32_t, std::unique_ptr<LightSource>>& source : lights_)
 	{
-		Err err = source.second->SetLightUniforms(shader);
+		Err err = source.second->SetLightUniforms(shader, directionalCount, pointCount, spotCount);
 		if (err.Code())
 			GameConsoleManager::PrintError(err, enums::ConsoleMessageSender::render);
+
+		CountLightTypes(source.second->GetType(), directionalCount, pointCount, spotCount);
 	}
+
+	shader.SetUniform("dirLightsCount", directionalCount);
+	shader.SetUniform("pointLightsCount", pointCount);
+	shader.SetUniform("spotlightsCount", spotCount);
 
 	return error_const::SUCCESS;
 }
@@ -136,6 +146,22 @@ Err LightingManager::GetSourceAttributes(const enums::LightType type, uint32_t& 
 	}
 
 	return error_const::SUCCESS;
+}
+
+void LightingManager::CountLightTypes(const enums::LightType type, int32_t& directionalCount, int32_t& pointCount, int32_t& spotCount)
+{
+	switch (type)
+	{
+	case enums::directional:
+		directionalCount++;
+		break;
+	case enums::point:
+		pointCount++;
+		break;
+	case enums::spot:
+		spotCount++;
+		break;
+	}
 }
 
 

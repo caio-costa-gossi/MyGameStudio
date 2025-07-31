@@ -27,6 +27,9 @@ Err LightingManager::Startup()
 
 Err LightingManager::DrawLightSources()
 {
+	if (!renderLightIcons_)
+		return error_const::SUCCESS;
+
 	for (const std::pair<const uint32_t, std::unique_ptr<LightSource>>& source : lights_)
 	{
 		uint32_t iconId;
@@ -94,6 +97,17 @@ float LightingManager::GetAmbientLightIntensity()
 ColorRgb LightingManager::GetAmbientLightColor()
 {
 	return ambientLightColor_;
+}
+
+Err LightingManager::SetDrawLightIcons(const bool draw)
+{
+	renderLightIcons_ = draw;
+	return error_const::SUCCESS;
+}
+
+bool LightingManager::GetDrawLightIcons()
+{
+	return renderLightIcons_;
 }
 
 Err LightingManager::AddDirectionalLight(const Vec3F& pos, const ColorRgb& color, const Vec3F& direction, const float intensity, uint32_t& lightSourceId)
@@ -174,3 +188,5 @@ uint32_t LightingManager::lightSrcCounter_ = 0;
 uint32_t LightingManager::directionalAsset_ = 0;
 uint32_t LightingManager::pointAsset_ = 0;
 uint32_t LightingManager::spotlightAsset_ = 0;
+
+bool LightingManager::renderLightIcons_ = true;

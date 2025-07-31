@@ -1,6 +1,5 @@
 #pragma once
 #include <unordered_map>
-#include <vector>
 
 #include "Err.h"
 #include "LightSource.h"
@@ -20,6 +19,8 @@ private:
 	static uint32_t pointAsset_;
 	static uint32_t spotlightAsset_;
 
+	static bool renderLightIcons_;
+
 	static Err GetSourceAttributes(enums::LightType type, uint32_t& iconId);
 	static void CountLightTypes(enums::LightType type, int32_t& directionalCount, int32_t& pointCount, int32_t& spotCount);
 
@@ -34,6 +35,9 @@ public:
 	static Err SetAmbientLight(float intensity, const ColorRgb& color);
 	static float GetAmbientLightIntensity();
 	static ColorRgb GetAmbientLightColor();
+
+	static Err SetDrawLightIcons(bool draw = true);
+	static bool GetDrawLightIcons();
 
 	// Local lights
 	static Err AddDirectionalLight(const Vec3F& pos, const ColorRgb& color, const Vec3F& direction, float intensity, uint32_t& lightSourceId);

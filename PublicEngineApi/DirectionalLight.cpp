@@ -11,7 +11,7 @@ DirectionalLight::DirectionalLight(Vec3F pos, const ColorRgb& color, Vec3F direc
 	LightSource::type_ = enums::directional;
 }
 
-Err DirectionalLight::SetLightUniforms(const Shader& shader, const uint32_t directionalCount, const uint32_t pointCount, const uint32_t spotCount)
+Err DirectionalLight::SetLightUniforms(Shader& shader, const uint32_t directionalCount, const uint32_t pointCount, const uint32_t spotCount)
 {
 	const std::string uniform = "dirLights[" + std::to_string(directionalCount) + "]";
 

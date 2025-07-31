@@ -27,8 +27,8 @@ private:
 	static void SetShaderConfig();
 	static void SetTextureWrapping(const MeshInstance& mesh);
 	
-	static void SetShaderUniformsRegular(const Shader& shader, const RenderQuery& query);
-	static void SetShaderUniformsBillboard(const Shader& shader, const BillboardRenderQuery& query);
+	static void SetShaderUniformsRegular(Shader& shader, const RenderQuery& query);
+	static void SetShaderUniformsBillboard(Shader& shader, const BillboardRenderQuery& query);
 
 public:
 	static Err Init();

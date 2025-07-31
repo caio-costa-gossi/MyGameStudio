@@ -24,7 +24,7 @@ PointLight::PointLight(Vec3F pos, const ColorRgb& color, const float linear, con
 	LightSource::type_ = enums::directional;
 }
 
-Err PointLight::SetLightUniforms(const Shader& shader, const uint32_t directionalCount, const uint32_t pointCount, const uint32_t spotCount)
+Err PointLight::SetLightUniforms(Shader& shader, const uint32_t directionalCount, const uint32_t pointCount, const uint32_t spotCount)
 {
 	const std::string uniform = "pointLights[" + std::to_string(pointCount) + "]";
 

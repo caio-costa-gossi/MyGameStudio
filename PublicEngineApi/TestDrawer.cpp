@@ -222,9 +222,6 @@ void TestDrawer::UpdateLightSource()
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_kp_minus])
 		if (source->GetDistance() >= 0.005f) source->SetDistance(source->GetDistance() - 0.005f);
 
-	GameConsoleManager::PrintInfo(std::to_string(source->GetDistance()));
-	GameConsoleManager::PrintInfo(std::to_string(source->GetPos().X) + "," + std::to_string(source->GetPos().Y) + "," + std::to_string(source->GetPos().Z));
-
 	// Red
 	if (state.KeyboardState.PhysicalKeyState[keyboard_key_u])
 		if (source->GetColor().R <= 0.95f) source->GetColor().R += 0.005f;

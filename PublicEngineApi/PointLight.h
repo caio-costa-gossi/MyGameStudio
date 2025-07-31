@@ -16,7 +16,7 @@ public:
 	PointLight(Vec3F pos, const ColorRgb& color, float linear, float quadratic);
 	PointLight(Vec3F pos, const ColorRgb& color, float distance);
 
-	Err SetLightUniforms(const Shader& shader, uint32_t directionalCount, uint32_t pointCount, uint32_t spotCount) override;
+	Err SetLightUniforms(Shader& shader, uint32_t directionalCount, uint32_t pointCount, uint32_t spotCount) override;
 
 	float GetLinear() const;
 	float GetQuadratic() const;

@@ -100,7 +100,7 @@ void CoordinateGizmo::UpdateGizmoCam() const
 	gizmoCam->ChangeYaw(-CameraManager::GetMainCamera()->GetYaw());
 }
 
-void CoordinateGizmo::Draw(const Shader& regularShader, const Shader& billboardShader)
+void CoordinateGizmo::Draw(Shader& regularShader, Shader& billboardShader)
 {
 	glViewport(0, 2 * WindowManager::GetWindowHeight() / 3, WindowManager::GetWindowWidth() / 3, WindowManager::GetWindowHeight() / 3);
 
@@ -109,7 +109,7 @@ void CoordinateGizmo::Draw(const Shader& regularShader, const Shader& billboardS
 	DrawNodes(billboardShader);
 }
 
-void CoordinateGizmo::DrawAxes(const Shader& regularShader) const
+void CoordinateGizmo::DrawAxes(Shader& regularShader) const
 {
 	regularShader.Use();
 
@@ -145,7 +145,7 @@ void CoordinateGizmo::DrawAxes(const Shader& regularShader) const
 	glLineWidth(1.0f);
 }
 
-void CoordinateGizmo::DrawNodes(const Shader& billboardShader)
+void CoordinateGizmo::DrawNodes(Shader& billboardShader)
 {
 	billboardShader.Use();
 

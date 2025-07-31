@@ -16,7 +16,7 @@ Spotlight::Spotlight(Vec3F pos, const ColorRgb& color, Vec3F direction, const fl
 	LightSource::type_ = enums::spot;
 }
 
-Err Spotlight::SetLightUniforms(const Shader& shader, uint32_t directionalCount, uint32_t pointCount, uint32_t spotCount)
+Err Spotlight::SetLightUniforms(Shader& shader, const uint32_t directionalCount, const uint32_t pointCount, const uint32_t spotCount)
 {
 	const std::string uniform = "spotlights[" + std::to_string(spotCount) + "]";
 

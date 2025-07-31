@@ -51,7 +51,7 @@ Err LightingManager::Shutdown()
 	return error_const::SUCCESS;
 }
 
-Err LightingManager::SetLightUniforms(const Shader& shader)
+Err LightingManager::SetLightUniforms(Shader& shader)
 {
 	shader.Use();
 

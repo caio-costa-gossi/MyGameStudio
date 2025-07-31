@@ -15,7 +15,7 @@ public:
 	LightSource() = default;
 	LightSource(Vec3F pos, const ColorRgb& color);
 
-	virtual Err SetLightUniforms(const Shader& shader, uint32_t directionalCount, uint32_t pointCount, uint32_t spotCount) = 0;
+	virtual Err SetLightUniforms(Shader& shader, uint32_t directionalCount, uint32_t pointCount, uint32_t spotCount) = 0;
 	virtual ~LightSource() = default;
 
 	Vec3F& GetPos();

@@ -126,7 +126,7 @@ void Drawer::SetShaderConfig()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 }
 
-void Drawer::SetShaderUniformsRegular(const Shader& shader, const RenderQuery& query)
+void Drawer::SetShaderUniformsRegular(Shader& shader, const RenderQuery& query)
 {
 	shader.SetUniform("useVertexColor", query.MeshInstance.Data->Material.BaseColorTexture < 0);
 
@@ -141,12 +141,12 @@ void Drawer::SetShaderUniformsRegular(const Shader& shader, const RenderQuery& q
 	// Material textures
 	shader.SetUniform("materialProps.baseColorTex", enums::TextureMap::base_color);
 	shader.SetUniform("materialProps.normalTex", enums::TextureMap::normal);
-	shader.SetUniform("materialProps.metallicRoughnessTex", enums::TextureMap::metallic_roughness);
-	shader.SetUniform("materialProps.occlusionTex", enums::TextureMap::occlusion);
-	shader.SetUniform("materialProps.emissiveTex", enums::TextureMap::emissive);
+	//shader.SetUniform("materialProps.metallicRoughnessTex", enums::TextureMap::metallic_roughness);
+	//shader.SetUniform("materialProps.occlusionTex", enums::TextureMap::occlusion);
+	//shader.SetUniform("materialProps.emissiveTex", enums::TextureMap::emissive);
 }
 
-void Drawer::SetShaderUniformsBillboard(const Shader& shader, const BillboardRenderQuery& query)
+void Drawer::SetShaderUniformsBillboard(Shader& shader, const BillboardRenderQuery& query)
 {
 	// Transforms
 	shader.SetUniform("centerWorld", query.BillboardData.WorldPos.X, query.BillboardData.WorldPos.Y, query.BillboardData.WorldPos.Z);

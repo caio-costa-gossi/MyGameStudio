@@ -11,7 +11,7 @@ public:
 	DirectionalLight();
 	DirectionalLight(Vec3F pos, const ColorRgb& color, Vec3F direction, float intensity = 1.0f);
 
-	Err SetLightUniforms(const Shader& shader, uint32_t directionalCount, uint32_t pointCount, uint32_t spotCount) override;
+	Err SetLightUniforms(Shader& shader, uint32_t directionalCount, uint32_t pointCount, uint32_t spotCount) override;
 
 	Vec3F& GetDirection();
 	float GetIntensity() const;

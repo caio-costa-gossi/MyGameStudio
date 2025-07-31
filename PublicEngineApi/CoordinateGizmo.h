@@ -30,13 +30,13 @@ private:
 	void BuildTextures();
 
 	void UpdateGizmoCam() const;
-	void DrawAxes(const Shader& regularShader) const;
-	void DrawNodes(const Shader& billboardShader);
+	void DrawAxes(Shader& regularShader) const;
+	void DrawNodes(Shader& billboardShader);
 
 	void EmplaceNodes(const Camera* camera);
 
 public:
 	CoordinateGizmo() = default;
 	void InitGizmo();
-	void Draw(const Shader& regularShader, const Shader& billboardShader);
+	void Draw(Shader& regularShader, Shader& billboardShader);
 };

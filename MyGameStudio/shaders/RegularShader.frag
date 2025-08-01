@@ -72,8 +72,8 @@ uniform vec3 ambientColor;
 uniform float ambientIntensity;
 
 #define MAX_DIR_LIGHTS 16
-#define MAX_POINT_LIGHTS 128
-#define MAX_SPOTLIGHTS 128
+#define MAX_POINT_LIGHTS 64
+#define MAX_SPOTLIGHTS 64
 
 uniform DirectionalLight dirLights[MAX_DIR_LIGHTS];
 uniform PointLight pointLights[MAX_POINT_LIGHTS];

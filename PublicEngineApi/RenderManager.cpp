@@ -76,6 +76,10 @@ Err RenderManager::InitRenderer()
 	// Enable Z-Testing
 	glEnable(GL_DEPTH_TEST);
 
+	GameConsoleManager::PrintInfo("Renderer: " + std::string(reinterpret_cast<const char*>(glGetString(GL_RENDERER))));
+	GameConsoleManager::PrintInfo("Vendor: " + std::string(reinterpret_cast<const char*>(glGetString(GL_VENDOR))));
+	GameConsoleManager::PrintInfo("Version: " + std::string(reinterpret_cast<const char*>(glGetString(GL_VERSION))));
+
 	return error_const::SUCCESS;
 }
 

@@ -98,24 +98,24 @@ void Drawer::Draw(std::queue<RenderQuery>& queries, std::priority_queue<Billboar
 	if (err.Code())
 		GameConsoleManager::PrintError("Error setting lighting uniforms: " + err.Message(), enums::ConsoleMessageSender::render);
 
-	// Draw 3d meshes
+	// Draw 3d meshes with standard shader
+	regularShader_.Use();
+	SetShaderConfig();
+	SetStaticUniformsRegular();
+
 	while (!queries.empty())
 	{
-		// Use standard shader
 		const RenderQuery& query = queries.front();
-		regularShader_.Use();
 		DrawRegular(query, textures);
-
 		queries.pop();
 	}
 
-	// Draw billboards
+	// Draw billboards with billboard shader
+	billboardShader_.Use();
 	while (!billboardQueries.empty())
 	{
 		const BillboardRenderQuery& query = billboardQueries.top();
-		billboardShader_.Use();
 		DrawBillboard(query, textures);
-
 		billboardQueries.pop();
 	}
 
@@ -125,7 +125,6 @@ void Drawer::Draw(std::queue<RenderQuery>& queries, std::priority_queue<Billboar
 void Drawer::DrawRegular(const RenderQuery& query, const TextureList& textures)
 {
 	// Prepare to draw
-	SetShaderConfig();
 	SetShaderUniformsRegular(query);
 	SetTextureWrapping(query.MeshInstance);
 
@@ -169,6 +168,16 @@ void Drawer::SetShaderConfig()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 }
 
+void Drawer::SetStaticUniformsRegular()
+{
+	// Material textures
+	Shader::SetUniform(uBaseColorTex_, enums::TextureMap::base_color);
+	Shader::SetUniform(uNormalTex_, enums::TextureMap::normal);
+	Shader::SetUniform(uMetallicRoughtnessTex_, enums::TextureMap::metallic_roughness);
+	Shader::SetUniform(uOcclusionTex_, enums::TextureMap::occlusion);
+	Shader::SetUniform(uEmissiveTex_, enums::TextureMap::emissive);
+}
+
 void Drawer::SetShaderUniformsRegular(const RenderQuery& query)
 {
 	Shader::SetUniform(uUseVertexColor_, query.MeshInstance.Data->Material.BaseColorTexture < 0);
@@ -180,13 +189,6 @@ void Drawer::SetShaderUniformsRegular(const RenderQuery& query)
 	Shader::SetUniform(uModel_, enums::MatrixDim::m4x4, query.Model.GetData(), false);
 	Shader::SetUniform(uView_, enums::MatrixDim::m4x4, CameraManager::GetMainCamera()->GetView().GetData(), false);
 	Shader::SetUniform(uProjection_, enums::MatrixDim::m4x4, CameraManager::GetMainCamera()->GetProjection().GetData(), false);
-
-	// Material textures
-	Shader::SetUniform(uBaseColorTex_, enums::TextureMap::base_color);
-	Shader::SetUniform(uNormalTex_, enums::TextureMap::normal);
-	Shader::SetUniform(uMetallicRoughtnessTex_, enums::TextureMap::metallic_roughness);
-	Shader::SetUniform(uOcclusionTex_, enums::TextureMap::occlusion);
-	Shader::SetUniform(uEmissiveTex_, enums::TextureMap::emissive);
 }
 
 void Drawer::SetShaderUniformsBillboard(Shader& shader, const BillboardRenderQuery& query)

@@ -33,6 +33,7 @@
     <ClInclude Include="CoordinateGizmo.h" />
     <ClInclude Include="DataReader.h" />
     <ClInclude Include="DirectionalLight.h" />
+    <ClInclude Include="GpuLoader.h" />
     <ClInclude Include="LightingManager.h" />
     <ClInclude Include="LightSource.h" />
     <ClInclude Include="Material.h" />

@@ -333,6 +333,9 @@
     <ClInclude Include="Spotlight.h">
       <Filter>Runtime Managers\Render\Lighting</Filter>
     </ClInclude>
+    <ClInclude Include="GpuLoader.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssetRuntimeManager.cpp">

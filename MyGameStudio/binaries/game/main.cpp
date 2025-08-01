@@ -2,6 +2,7 @@
 #include "Err.h"
 #include "MasterLoopManager.h"
 #include "GameConsoleManager.h"
+#include "GpuLoader.h"
 
 int main(int argc, char** argv)
 {

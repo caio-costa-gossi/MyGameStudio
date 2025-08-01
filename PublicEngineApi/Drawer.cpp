@@ -14,7 +14,7 @@ Err Drawer::Init()
 	if (err.Code())
 		return err;
 
-	coordGizmo_.InitGizmo();
+	coordGizmo_.InitGizmo(regularShader_, billboardShader_);
 
 	return error_const::SUCCESS;
 }
@@ -32,6 +32,10 @@ Err Drawer::InitShaders()
 	if (err.Code())
 		return err;
 
+	err = InitUniformIdsRegular();
+	if (err.Code())
+		return err;
+
 	// Billboard shader
 	err = billboardShader_.Init("shaders/BillboardShader.vert", "shaders/BillboardShader.frag");
 	if (err.Code())
@@ -40,6 +44,45 @@ Err Drawer::InitShaders()
 	err = billboardShader_.Build();
 	if (err.Code())
 		return err;
+
+	err = InitUniformIdsBillboard();
+	if (err.Code())
+		return err;
+
+	return error_const::SUCCESS;
+}
+
+Err Drawer::InitUniformIdsRegular()
+{
+	regularShader_.Use();
+
+	// Aux
+	uUseVertexColor_ = regularShader_.GetUniformId("useVertexColor");
+	uNormalMatrix_ = regularShader_.GetUniformId("normalMatrix");
+
+	// Transforms
+	uModel_ = regularShader_.GetUniformId("model");
+	uView_ = regularShader_.GetUniformId("view");
+	uProjection_ = regularShader_.GetUniformId("projection");
+
+	// Material textures
+	uBaseColorTex_ = regularShader_.GetUniformId("materialProps.baseColorTex");
+	uNormalTex_ = regularShader_.GetUniformId("materialProps.normalTex");
+	uMetallicRoughtnessTex_ = regularShader_.GetUniformId("materialProps.metallicRoughnessTex");
+	uOcclusionTex_ = regularShader_.GetUniformId("materialProps.occlusionTex");
+	uEmissiveTex_ = regularShader_.GetUniformId("materialProps.emissiveTex");
+
+	return error_const::SUCCESS;
+}
+
+Err Drawer::InitUniformIdsBillboard()
+{
+	billboardShader_.Use();
+
+	uBboardCenterWorld_ = billboardShader_.GetUniformId("centerWorld");
+	uBboardScale_ = billboardShader_.GetUniformId("scale");
+	uBboardView_ = billboardShader_.GetUniformId("view");
+	uBboardProjection_ = billboardShader_.GetUniformId("projection");
 
 	return error_const::SUCCESS;
 }
@@ -83,7 +126,7 @@ void Drawer::DrawRegular(const RenderQuery& query, const TextureList& textures)
 {
 	// Prepare to draw
 	SetShaderConfig();
-	SetShaderUniformsRegular(regularShader_, query);
+	SetShaderUniformsRegular(query);
 	SetTextureWrapping(query.MeshInstance);
 
 	// Load textures into their OpenGL units
@@ -126,33 +169,33 @@ void Drawer::SetShaderConfig()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 }
 
-void Drawer::SetShaderUniformsRegular(Shader& shader, const RenderQuery& query)
+void Drawer::SetShaderUniformsRegular(const RenderQuery& query)
 {
-	shader.SetUniform("useVertexColor", query.MeshInstance.Data->Material.BaseColorTexture < 0);
+	Shader::SetUniform(uUseVertexColor_, query.MeshInstance.Data->Material.BaseColorTexture < 0);
 
 	// Pre-calculate normal matrix for model
-	shader.SetUniform("normalMatrix", enums::MatrixDim::m3x3, NumericUtils::CalculateNormalMatrix(query.Model).GetData(), false);
+	Shader::SetUniform(uNormalMatrix_, enums::MatrixDim::m3x3, NumericUtils::CalculateNormalMatrix(query.Model).GetData(), false);
 
 	// Transforms
-	shader.SetUniform("model", enums::MatrixDim::m4x4, query.Model.GetData(), false);
-	shader.SetUniform("view", enums::MatrixDim::m4x4, CameraManager::GetMainCamera()->GetView().GetData(), false);
-	shader.SetUniform("projection", enums::MatrixDim::m4x4, CameraManager::GetMainCamera()->GetProjection().GetData(), false);
+	Shader::SetUniform(uModel_, enums::MatrixDim::m4x4, query.Model.GetData(), false);
+	Shader::SetUniform(uView_, enums::MatrixDim::m4x4, CameraManager::GetMainCamera()->GetView().GetData(), false);
+	Shader::SetUniform(uProjection_, enums::MatrixDim::m4x4, CameraManager::GetMainCamera()->GetProjection().GetData(), false);
 
 	// Material textures
-	shader.SetUniform("materialProps.baseColorTex", enums::TextureMap::base_color);
-	shader.SetUniform("materialProps.normalTex", enums::TextureMap::normal);
-	//shader.SetUniform("materialProps.metallicRoughnessTex", enums::TextureMap::metallic_roughness);
-	//shader.SetUniform("materialProps.occlusionTex", enums::TextureMap::occlusion);
-	//shader.SetUniform("materialProps.emissiveTex", enums::TextureMap::emissive);
+	Shader::SetUniform(uBaseColorTex_, enums::TextureMap::base_color);
+	Shader::SetUniform(uNormalTex_, enums::TextureMap::normal);
+	Shader::SetUniform(uMetallicRoughtnessTex_, enums::TextureMap::metallic_roughness);
+	Shader::SetUniform(uOcclusionTex_, enums::TextureMap::occlusion);
+	Shader::SetUniform(uEmissiveTex_, enums::TextureMap::emissive);
 }
 
 void Drawer::SetShaderUniformsBillboard(Shader& shader, const BillboardRenderQuery& query)
 {
 	// Transforms
-	shader.SetUniform("centerWorld", query.BillboardData.WorldPos.X, query.BillboardData.WorldPos.Y, query.BillboardData.WorldPos.Z);
-	shader.SetUniform("scale", query.BillboardData.Scale.X, query.BillboardData.Scale.Y);
-	shader.SetUniform("view", enums::MatrixDim::m4x4, CameraManager::GetMainCamera()->GetView().GetData(), false);
-	shader.SetUniform("projection", enums::MatrixDim::m4x4, CameraManager::GetMainCamera()->GetProjection().GetData(), false);
+	Shader::SetUniform(uBboardCenterWorld_, query.BillboardData.WorldPos.X, query.BillboardData.WorldPos.Y, query.BillboardData.WorldPos.Z);
+	Shader::SetUniform(uBboardScale_, query.BillboardData.Scale.X, query.BillboardData.Scale.Y);
+	Shader::SetUniform(uBboardView_, enums::MatrixDim::m4x4, CameraManager::GetMainCamera()->GetView().GetData(), false);
+	Shader::SetUniform(uBboardProjection_, enums::MatrixDim::m4x4, CameraManager::GetMainCamera()->GetProjection().GetData(), false);
 }
 
 void Drawer::SetTextureWrapping(const MeshInstance& mesh)
@@ -203,3 +246,19 @@ Shader Drawer::regularShader_;
 Shader Drawer::billboardShader_;
 
 CoordinateGizmo Drawer::coordGizmo_;
+
+int32_t Drawer::uUseVertexColor_ = -1;
+int32_t Drawer::uNormalMatrix_ = -1;
+int32_t Drawer::uModel_ = -1;
+int32_t Drawer::uView_ = -1;
+int32_t Drawer::uProjection_ = -1;
+int32_t Drawer::uBaseColorTex_ = -1;
+int32_t Drawer::uNormalTex_ = -1;
+int32_t Drawer::uMetallicRoughtnessTex_ = -1;
+int32_t Drawer::uOcclusionTex_ = -1;
+int32_t Drawer::uEmissiveTex_ = -1;
+
+int32_t Drawer::uBboardCenterWorld_ = -1;
+int32_t Drawer::uBboardScale_ = -1;
+int32_t Drawer::uBboardView_ = -1;
+int32_t Drawer::uBboardProjection_ = -1;

@@ -43,8 +43,6 @@ private:
 	static Err LoadCompileSource(const char* sourcePath, const int32_t& shaderSourceId);
 	Err AttachLinkShaders() const;
 
-	int32_t LookupUniformId(const char* uniformName);
-
 public:
 	Shader() = default;
 	Err Init(const char* vShaderPath, const char* fShaderPath, const char* gShaderPath = nullptr);
@@ -59,6 +57,14 @@ public:
 	void SetUniform(const char* uniformName, enums::MatrixDim matrixDimension,const float* matrix, bool transpose);
 	void SetUniform(const char* uniformName, int32_t val);
 
+	static void SetUniform(int32_t uniformId, float val);
+	static void SetUniform(int32_t uniformId, float val1, float val2);
+	static void SetUniform(int32_t uniformId, float val1, float val2, float val3);
+	static void SetUniform(int32_t uniformId, float val1, float val2, float val3, float val4);
+	static void SetUniform(int32_t uniformId, enums::MatrixDim matrixDimension, const float* matrix, bool transpose);
+	static void SetUniform(int32_t uniformId, int32_t val);
+
 	int32_t GetId() const;
+	int32_t GetUniformId(const char* uniformName);
 	bool IsInit() const;
 };

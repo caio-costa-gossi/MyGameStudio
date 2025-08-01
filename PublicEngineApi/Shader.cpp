@@ -126,27 +126,27 @@ Err Shader::AttachLinkShaders() const
 
 void Shader::SetUniform(const char* uniformName, const float val)
 {
-	glUniform1f(LookupUniformId(uniformName), val);
+	glUniform1f(GetUniformId(uniformName), val);
 }
 
 void Shader::SetUniform(const char* uniformName, const float val1, const float val2)
 {
-	glUniform2f(LookupUniformId(uniformName), val1, val2);
+	glUniform2f(GetUniformId(uniformName), val1, val2);
 }
 
 void Shader::SetUniform(const char* uniformName, const float val1, const float val2, const float val3)
 {
-	glUniform3f(LookupUniformId(uniformName), val1, val2, val3);
+	glUniform3f(GetUniformId(uniformName), val1, val2, val3);
 }
 
 void Shader::SetUniform(const char* uniformName, const float val1, const float val2, const float val3, const float val4)
 {
-	glUniform4f(LookupUniformId(uniformName), val1, val2, val3, val4);
+	glUniform4f(GetUniformId(uniformName), val1, val2, val3, val4);
 }
 
 void Shader::SetUniform(const char* uniformName, const enums::MatrixDim matrixDimension, const float* matrix, const bool transpose)
 {
-	const int32_t uniformId = LookupUniformId(uniformName);
+	const int32_t uniformId = GetUniformId(uniformName);
 
 	switch (matrixDimension)
 	{
@@ -178,10 +178,65 @@ void Shader::SetUniform(const char* uniformName, const enums::MatrixDim matrixDi
 
 void Shader::SetUniform(const char* uniformName, const int32_t val)
 {
-	glUniform1i(LookupUniformId(uniformName), val);
+	glUniform1i(GetUniformId(uniformName), val);
 }
 
-int32_t Shader::LookupUniformId(const char* uniformName)
+void Shader::SetUniform(const int32_t uniformId, const float val)
+{
+	glUniform1f(uniformId, val);
+}
+
+void Shader::SetUniform(const int32_t uniformId, const float val1, const float val2)
+{
+	glUniform2f(uniformId, val1, val2);
+}
+
+void Shader::SetUniform(const int32_t uniformId, const float val1, const float val2, const float val3)
+{
+	glUniform3f(uniformId, val1, val2, val3);
+}
+
+void Shader::SetUniform(const int32_t uniformId, const float val1, const float val2, const float val3, const float val4)
+{
+	glUniform4f(uniformId, val1, val2, val3, val4);
+}
+
+void Shader::SetUniform(const int32_t uniformId, const enums::MatrixDim matrixDimension, const float* matrix, const bool transpose)
+{
+	switch (matrixDimension)
+	{
+	case enums::m2x2:
+		glUniformMatrix2fv(uniformId, 1, transpose, matrix);
+		break;
+	case enums::m3x3:
+		glUniformMatrix3fv(uniformId, 1, transpose, matrix);
+		break;
+	case enums::m4x4:
+		glUniformMatrix4fv(uniformId, 1, transpose, matrix);
+		break;
+	case enums::m2x3:
+		glUniformMatrix2x3fv(uniformId, 1, transpose, matrix);
+		break;
+	case enums::m3x2:
+		glUniformMatrix3x2fv(uniformId, 1, transpose, matrix);
+		break;
+	case enums::m4x3:
+		glUniformMatrix4x3fv(uniformId, 1, transpose, matrix);
+		break;
+	case enums::m3x4:
+		glUniformMatrix3x4fv(uniformId, 1, transpose, matrix);
+		break;
+	default:
+		glUniformMatrix3fv(uniformId, 1, transpose, matrix);
+	}
+}
+
+void Shader::SetUniform(const int32_t uniformId, const int32_t val)
+{
+	glUniform1i(uniformId, val);
+}
+
+int32_t Shader::GetUniformId(const char* uniformName)
 {
 	const auto it = cache_.find(uniformName);
 	if (it != cache_.end())

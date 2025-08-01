@@ -24,19 +24,36 @@ private:
 
 	std::queue<RenderNode> nodeRenderQuery_;
 
+	// Uniform IDs
+	int32_t uAmbientColor_ = -1;
+	int32_t uAmbientIntensity_ = -1;
+	int32_t uDirLightCount_ = -1;
+	int32_t uPointLightCount_ = -1;
+	int32_t uSpotlightCount_ = -1;
+	int32_t uUseVertexColor_ = -1;
+	int32_t uModel_ = -1;
+	int32_t uProjection_ = -1;
+	int32_t uView_ = -1;
+	int32_t uBboardCenterWorld_ = -1;
+	int32_t uBboardScale_ = -1;
+	int32_t uBboardView_ = -1;
+	int32_t uBboardProjection_ = -1;
+
+
+	void InitUniformIds(Shader& regularShader, Shader& billboardShader);
 	void BuildVao();
 	void BuildCamera();
 	void BuildNodeObjects();
 	void BuildTextures();
 
 	void UpdateGizmoCam() const;
-	void DrawAxes(Shader& regularShader) const;
-	void DrawNodes(Shader& billboardShader);
+	void DrawAxes(const Shader& regularShader) const;
+	void DrawNodes(const Shader& billboardShader);
 
 	void EmplaceNodes(const Camera* camera);
 
 public:
 	CoordinateGizmo() = default;
-	void InitGizmo();
-	void Draw(Shader& regularShader, Shader& billboardShader);
+	void InitGizmo(Shader& regularShader, Shader& billboardShader);
+	void Draw(const Shader& regularShader, const Shader& billboardShader);
 };

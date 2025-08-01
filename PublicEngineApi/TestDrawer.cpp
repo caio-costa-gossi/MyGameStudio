@@ -55,10 +55,10 @@ Err TestDrawer::Startup()
 Err TestDrawer::Run()
 {
 	uint64_t modelSize;
-	/*const uint8_t* mesh1BinData = AssetRuntimeManager::LoadAsset(60, modelSize);
+	const uint8_t* mesh1BinData = AssetRuntimeManager::LoadAsset(60, modelSize);
 	Model model = Serialization::DesserializeModel(mesh1BinData, modelSize);
 
-	const uint8_t* mesh2BinData = AssetRuntimeManager::LoadAsset(62, modelSize);
+	/*const uint8_t* mesh2BinData = AssetRuntimeManager::LoadAsset(62, modelSize);
 	Model model2 = Serialization::DesserializeModel(mesh2BinData, modelSize);
 
 	const uint8_t* mesh3BinData = AssetRuntimeManager::LoadAsset(108, modelSize);
@@ -119,12 +119,12 @@ Err TestDrawer::Run()
 		//Transform transform(worldPos[i], static_cast<float>(time_.GetElapsed()) / 50, {0.5f,1,0}, {1,1,1});
 		//Transform transform({ 0,0,0 }, 0, { 0,0,1 }, { 0.1f,0.1f,0.1f });
 
-		/*RenderRequest request = { &model,Transform(worldPos[0], 0, {0,0,1}, {1.0f,1.0f,1.0f})};
+		RenderRequest request = { &model,Transform(worldPos[0], 0, {0,0,1}, {1.0f,1.0f,1.0f})};
 		err = RenderManager::RequestRender(request);
 		if (err.Code())
 			return err;
 
-		RenderRequest request2 = { &model2, Transform(worldPos[1], 0, {0,0,1}, {1.0f,1.0f,1.0f}) };
+		/*RenderRequest request2 = { &model2, Transform(worldPos[1], 0, {0,0,1}, {1.0f,1.0f,1.0f}) };
 		err = RenderManager::RequestRender(request2);
 		if (err.Code())
 			return err;

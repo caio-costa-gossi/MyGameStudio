@@ -20,14 +20,35 @@ private:
 
 	static CoordinateGizmo coordGizmo_;
 
+	// Uniform IDs
+	static int32_t uUseVertexColor_;
+	static int32_t uNormalMatrix_;
+	static int32_t uModel_;
+	static int32_t uView_;
+	static int32_t uProjection_;
+	static int32_t uBaseColorTex_;
+	static int32_t uNormalTex_;
+	static int32_t uMetallicRoughtnessTex_;
+	static int32_t uOcclusionTex_;
+	static int32_t uEmissiveTex_;
+
+	static int32_t uBboardCenterWorld_;
+	static int32_t uBboardScale_;
+	static int32_t uBboardView_;
+	static int32_t uBboardProjection_;
+	
+
 	static Err InitShaders();
+	static Err InitUniformIdsRegular();
+	static Err InitUniformIdsBillboard();
+
 	static void DrawRegular(const RenderQuery& query, const TextureList& textures);
 	static void DrawBillboard(const BillboardRenderQuery& query, const TextureList& textures);
 
 	static void SetShaderConfig();
 	static void SetTextureWrapping(const MeshInstance& mesh);
 	
-	static void SetShaderUniformsRegular(Shader& shader, const RenderQuery& query);
+	static void SetShaderUniformsRegular(const RenderQuery& query);
 	static void SetShaderUniformsBillboard(Shader& shader, const BillboardRenderQuery& query);
 
 public:

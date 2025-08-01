@@ -12,12 +12,41 @@
 #include "Vertex.h"
 #include "WindowManager.h"
 
-void CoordinateGizmo::InitGizmo()
+void CoordinateGizmo::InitGizmo(Shader& regularShader, Shader& billboardShader)
 {
+	InitUniformIds(regularShader, billboardShader);
 	BuildVao();
 	BuildNodeObjects();
 	BuildCamera();
 	BuildTextures();
+}
+
+void CoordinateGizmo::InitUniformIds(Shader& regularShader, Shader& billboardShader)
+{
+	regularShader.Use();
+
+	// Light
+	uAmbientColor_ = regularShader.GetUniformId("ambientColor");
+	uAmbientIntensity_ = regularShader.GetUniformId("ambientIntensity");
+
+	uDirLightCount_ = regularShader.GetUniformId("dirLightsCount");
+	uPointLightCount_ = regularShader.GetUniformId("pointLightsCount");
+	uSpotlightCount_ = regularShader.GetUniformId("spotlightsCount");
+
+	uUseVertexColor_ = regularShader.GetUniformId("useVertexColor");
+
+	// Transforms
+	uModel_ = regularShader.GetUniformId("model");
+	uProjection_ = regularShader.GetUniformId("projection");
+	uView_ = regularShader.GetUniformId("view");
+
+	// Billboard
+	billboardShader.Use();
+
+	uBboardCenterWorld_ = billboardShader.GetUniformId("centerWorld");
+	uBboardScale_ = billboardShader.GetUniformId("scale");
+	uBboardView_ = billboardShader.GetUniformId("view");
+	uBboardProjection_ = billboardShader.GetUniformId("projection");
 }
 
 void CoordinateGizmo::BuildVao()
@@ -100,7 +129,7 @@ void CoordinateGizmo::UpdateGizmoCam() const
 	gizmoCam->ChangeYaw(-CameraManager::GetMainCamera()->GetYaw());
 }
 
-void CoordinateGizmo::Draw(Shader& regularShader, Shader& billboardShader)
+void CoordinateGizmo::Draw(const Shader& regularShader, const Shader& billboardShader)
 {
 	glViewport(0, 2 * WindowManager::GetWindowHeight() / 3, WindowManager::GetWindowWidth() / 3, WindowManager::GetWindowHeight() / 3);
 
@@ -109,7 +138,7 @@ void CoordinateGizmo::Draw(Shader& regularShader, Shader& billboardShader)
 	DrawNodes(billboardShader);
 }
 
-void CoordinateGizmo::DrawAxes(Shader& regularShader) const
+void CoordinateGizmo::DrawAxes(const Shader& regularShader) const
 {
 	regularShader.Use();
 
@@ -121,19 +150,19 @@ void CoordinateGizmo::DrawAxes(Shader& regularShader) const
 		return;
 
 	// Lighting
-	regularShader.SetUniform("ambientColor", 1.0f, 1.0f, 1.0f);
-	regularShader.SetUniform("ambientFactor", 1.0f);
+	Shader::SetUniform(uAmbientColor_, 1.0f, 1.0f, 1.0f);
+	Shader::SetUniform(uAmbientIntensity_, 1.0f);
 
-	regularShader.SetUniform("lightPos", 0.0f, 0.0f, 0.0f);
-	regularShader.SetUniform("lightColor", 1.0f, 1.0f, 1.0f);
-	regularShader.SetUniform("lightStrength", 0.0f);
+	Shader::SetUniform(uDirLightCount_, 0);
+	Shader::SetUniform(uPointLightCount_, 0);
+	Shader::SetUniform(uSpotlightCount_, 0);
 
-	regularShader.SetUniform("useVertexColor", true);
+	Shader::SetUniform(uUseVertexColor_, true);
 
 	// Transforms
-	regularShader.SetUniform("model", enums::MatrixDim::m4x4, transform.GetData(), false);
-	regularShader.SetUniform("projection", enums::MatrixDim::m4x4, transform.GetData(), false);
-	regularShader.SetUniform("view", enums::MatrixDim::m4x4, gizmoCam->GetView().GetData(), false);
+	Shader::SetUniform(uModel_, enums::MatrixDim::m4x4, transform.GetData(), false);
+	Shader::SetUniform(uProjection_, enums::MatrixDim::m4x4, transform.GetData(), false);
+	Shader::SetUniform(uView_, enums::MatrixDim::m4x4, gizmoCam->GetView().GetData(), false);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glBindVertexArray(vaoId_);
@@ -145,7 +174,7 @@ void CoordinateGizmo::DrawAxes(Shader& regularShader) const
 	glLineWidth(1.0f);
 }
 
-void CoordinateGizmo::DrawNodes(Shader& billboardShader)
+void CoordinateGizmo::DrawNodes(const Shader& billboardShader)
 {
 	billboardShader.Use();
 
@@ -165,10 +194,10 @@ void CoordinateGizmo::DrawNodes(Shader& billboardShader)
 		const RenderNode& node = nodeRenderQuery_.front();
 
 		// Prepare node billboard uniforms
-		billboardShader.SetUniform("centerWorld", node.RenderQuery.BillboardData.WorldPos.X, node.RenderQuery.BillboardData.WorldPos.Y, node.RenderQuery.BillboardData.WorldPos.Z);
-		billboardShader.SetUniform("scale", node.RenderQuery.BillboardData.Scale.X, node.RenderQuery.BillboardData.Scale.Y);
-		billboardShader.SetUniform("view", enums::MatrixDim::m4x4, gizmoCam->GetView().GetData(), false);
-		billboardShader.SetUniform("projection", enums::MatrixDim::m4x4, Transform().GetData(), false);
+		Shader::SetUniform(uBboardCenterWorld_, node.RenderQuery.BillboardData.WorldPos.X, node.RenderQuery.BillboardData.WorldPos.Y, node.RenderQuery.BillboardData.WorldPos.Z);
+		Shader::SetUniform(uBboardScale_, node.RenderQuery.BillboardData.Scale.X, node.RenderQuery.BillboardData.Scale.Y);
+		Shader::SetUniform(uBboardView_, enums::MatrixDim::m4x4, gizmoCam->GetView().GetData(), false);
+		Shader::SetUniform(uBboardProjection_, enums::MatrixDim::m4x4, Transform().GetData(), false);
 
 		// Draw
 		node.NodeTexture.Use(0);

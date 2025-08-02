@@ -24,6 +24,7 @@
     <ClInclude Include="AssetDatabase.h" />
     <ClInclude Include="AssetRuntimeManager.h" />
     <ClInclude Include="BillboardData.h" />
+    <ClInclude Include="BillboardDrawer.h" />
     <ClInclude Include="BillboardRenderQuery.h" />
     <ClInclude Include="BillboardRenderRequest.h" />
     <ClInclude Include="CallbackData.h" />
@@ -36,8 +37,10 @@
     <ClInclude Include="GpuLoader.h" />
     <ClInclude Include="LightingManager.h" />
     <ClInclude Include="LightSource.h" />
+    <ClInclude Include="Line.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="ModelDrawer.h" />
     <ClInclude Include="OrthoCamera.h" />
     <ClInclude Include="PerspectiveCamera.h" />
     <ClInclude Include="CameraManager.h" />
@@ -58,6 +61,8 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObjectFactory.h" />
     <ClInclude Include="PointLight.h" />
+    <ClInclude Include="Primitive.h" />
+    <ClInclude Include="PrimitiveDrawer.h" />
     <ClInclude Include="RenderQuery.h" />
     <ClInclude Include="GameObjectMacro.h" />
     <ClInclude Include="GameObjectManager.h" />
@@ -74,7 +79,6 @@
     <ClInclude Include="LocalizationManager.h" />
     <ClInclude Include="MasterLoopManager.h" />
     <ClInclude Include="Mesh.h" />
-    <ClInclude Include="MeshInstance.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="MouseButtonEvent.h" />
     <ClInclude Include="MouseMoveEvent.h" />
@@ -98,6 +102,7 @@
     <ClInclude Include="Subscription.h" />
     <ClInclude Include="TestDrawer.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="DrawingCache.h" />
     <ClInclude Include="Timeline.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Transform3.h" />
@@ -113,6 +118,7 @@
     <ClCompile Include="Asset.cpp" />
     <ClCompile Include="AssetDatabase.cpp" />
     <ClCompile Include="AssetRuntimeManager.cpp" />
+    <ClCompile Include="BillboardDrawer.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraFactory.cpp" />
     <ClCompile Include="CameraInstance.cpp" />
@@ -120,6 +126,7 @@
     <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="LightingManager.cpp" />
     <ClCompile Include="LightSource.cpp" />
+    <ClCompile Include="ModelDrawer.cpp" />
     <ClCompile Include="OrthoCamera.cpp" />
     <ClCompile Include="PerspectiveCamera.cpp" />
     <ClCompile Include="CameraManager.cpp" />
@@ -147,6 +154,7 @@
     <ClCompile Include="NumericUtils.cpp" />
     <ClCompile Include="PhysicsManager.cpp" />
     <ClCompile Include="PointLight.cpp" />
+    <ClCompile Include="PrimitiveDrawer.cpp" />
     <ClCompile Include="ProcessResourceViewer.cpp" />
     <ClCompile Include="SDLInputLayer.cpp" />
     <ClCompile Include="Serialization.cpp" />
@@ -163,6 +171,7 @@
     <ClCompile Include="Subscription.cpp" />
     <ClCompile Include="TestDrawer.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="DrawingCache.cpp" />
     <ClCompile Include="Timeline.cpp" />
     <ClCompile Include="tinygltf_implementation.cpp" />
     <ClCompile Include="Transform.cpp" />

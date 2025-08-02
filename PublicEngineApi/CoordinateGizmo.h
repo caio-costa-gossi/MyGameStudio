@@ -40,20 +40,20 @@ private:
 	int32_t uBboardProjection_ = -1;
 
 
-	void InitUniformIds(Shader& regularShader, Shader& billboardShader);
+	void InitUniformIds();
 	void BuildVao();
 	void BuildCamera();
 	void BuildNodeObjects();
 	void BuildTextures();
 
 	void UpdateGizmoCam() const;
-	void DrawAxes(const Shader& regularShader) const;
-	void DrawNodes(const Shader& billboardShader);
+	void DrawAxes() const;
+	void DrawNodes();
 
 	void EmplaceNodes(const Camera* camera);
 
 public:
 	CoordinateGizmo() = default;
-	void InitGizmo(Shader& regularShader, Shader& billboardShader);
-	void Draw(const Shader& regularShader, const Shader& billboardShader);
+	void InitGizmo();
+	void Draw();
 };

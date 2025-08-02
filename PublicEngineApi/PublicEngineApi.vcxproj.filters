@@ -64,11 +64,14 @@
     <Filter Include="Runtime Managers\Render\Data Structures">
       <UniqueIdentifier>{7c793df5-ebfa-4be7-a43d-52cb975c3471}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Runtime Managers\Render\Billboard">
-      <UniqueIdentifier>{5a0c2b2b-bf97-44dc-9615-72a0cacc0cc7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Runtime Managers\Render\Lighting">
       <UniqueIdentifier>{3bbdf51a-19fc-4f9c-8bcc-6c8c7c2a673f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Runtime Managers\Render\Primitives">
+      <UniqueIdentifier>{7f1bc813-7e90-4aed-96b1-0bd55341b1bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Runtime Managers\Render\Drawers">
+      <UniqueIdentifier>{06707813-6124-413c-8174-24885059ff2a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -237,13 +240,7 @@
     <ClInclude Include="Image.h">
       <Filter>Helpers\Image</Filter>
     </ClInclude>
-    <ClInclude Include="Drawer.h">
-      <Filter>Runtime Managers\Render</Filter>
-    </ClInclude>
     <ClInclude Include="Mesh.h">
-      <Filter>Runtime Managers\Render\Data Structures</Filter>
-    </ClInclude>
-    <ClInclude Include="MeshInstance.h">
       <Filter>Runtime Managers\Render\Data Structures</Filter>
     </ClInclude>
     <ClInclude Include="Vertex.h">
@@ -297,17 +294,8 @@
     <ClInclude Include="Transform.h">
       <Filter>Runtime Managers\Render\OpenGL Wrappers</Filter>
     </ClInclude>
-    <ClInclude Include="BillboardRenderRequest.h">
-      <Filter>Runtime Managers\Render\Billboard</Filter>
-    </ClInclude>
-    <ClInclude Include="BillboardData.h">
-      <Filter>Runtime Managers\Render\Billboard</Filter>
-    </ClInclude>
     <ClInclude Include="VaoFactory.h">
       <Filter>Runtime Managers\Render\OpenGL Wrappers</Filter>
-    </ClInclude>
-    <ClInclude Include="BillboardRenderQuery.h">
-      <Filter>Runtime Managers\Render\Billboard</Filter>
     </ClInclude>
     <ClInclude Include="LightSource.h">
       <Filter>Runtime Managers\Render\Lighting</Filter>
@@ -335,6 +323,36 @@
     </ClInclude>
     <ClInclude Include="GpuLoader.h">
       <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="PrimitiveDrawer.h">
+      <Filter>Runtime Managers\Render\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Primitive.h">
+      <Filter>Runtime Managers\Render\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Line.h">
+      <Filter>Runtime Managers\Render\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelDrawer.h">
+      <Filter>Runtime Managers\Render\Drawers</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawingCache.h">
+      <Filter>Runtime Managers\Render\Drawers</Filter>
+    </ClInclude>
+    <ClInclude Include="BillboardDrawer.h">
+      <Filter>Runtime Managers\Render\Drawers</Filter>
+    </ClInclude>
+    <ClInclude Include="Drawer.h">
+      <Filter>Runtime Managers\Render\Drawers</Filter>
+    </ClInclude>
+    <ClInclude Include="BillboardRenderRequest.h">
+      <Filter>Runtime Managers\Render\Data Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="BillboardRenderQuery.h">
+      <Filter>Runtime Managers\Render\Data Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="BillboardData.h">
+      <Filter>Runtime Managers\Render\Data Structures</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -458,9 +476,6 @@
     <ClCompile Include="Image.cpp">
       <Filter>Helpers\Image</Filter>
     </ClCompile>
-    <ClCompile Include="Drawer.cpp">
-      <Filter>Runtime Managers\Render</Filter>
-    </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>Runtime Managers\Render\OpenGL Wrappers</Filter>
     </ClCompile>
@@ -523,6 +538,21 @@
     </ClCompile>
     <ClCompile Include="Spotlight.cpp">
       <Filter>Runtime Managers\Render\Lighting</Filter>
+    </ClCompile>
+    <ClCompile Include="PrimitiveDrawer.cpp">
+      <Filter>Runtime Managers\Render\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelDrawer.cpp">
+      <Filter>Runtime Managers\Render\Drawers</Filter>
+    </ClCompile>
+    <ClCompile Include="DrawingCache.cpp">
+      <Filter>Runtime Managers\Render\Drawers</Filter>
+    </ClCompile>
+    <ClCompile Include="BillboardDrawer.cpp">
+      <Filter>Runtime Managers\Render\Drawers</Filter>
+    </ClCompile>
+    <ClCompile Include="Drawer.cpp">
+      <Filter>Runtime Managers\Render\Drawers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

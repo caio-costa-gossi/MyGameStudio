@@ -1,10 +1,11 @@
 #pragma once
-#include "MeshInstance.h"
+#include "Mesh.h"
 #include "Transform.h"
 
 struct RenderQuery
 {
 	// Regular tridimensional rendering
-	MeshInstance MeshInstance;
+	const Mesh* Data = nullptr;
+	uint32_t ArrayObjectId = 0;
 	Transform Model;
 };

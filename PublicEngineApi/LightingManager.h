@@ -29,7 +29,7 @@ public:
 	static Err DrawLightSources();
 	static Err Shutdown();
 
-	static Err SetLightUniforms(Shader& shader);
+	static Err SetLightUniforms();
 
 	// Ambient light
 	static Err SetAmbientLight(float intensity, const ColorRgb& color);

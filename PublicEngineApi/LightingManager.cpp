@@ -1,8 +1,10 @@
 #include "LightingManager.h"
 
 #include "AssetRuntimeManager.h"
+#include "CameraManager.h"
 #include "DirectionalLight.h"
 #include "GameConsoleManager.h"
+#include "ModelDrawer.h"
 #include "PointLight.h"
 #include "RenderManager.h"
 #include "Spotlight.h"
@@ -51,8 +53,9 @@ Err LightingManager::Shutdown()
 	return error_const::SUCCESS;
 }
 
-Err LightingManager::SetLightUniforms(Shader& shader)
+Err LightingManager::SetLightUniforms()
 {
+	Shader& shader = ModelDrawer::GetShader();
 	shader.Use();
 
 	const Vec3F& viewPos = CameraManager::GetMainCamera()->GetPos();

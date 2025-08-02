@@ -2,43 +2,48 @@
 
 #include <glad/glad.h>
 
+#include "BillboardDrawer.h"
 #include "BillboardRenderRequest.h"
 #include "Camera.h"
 #include "CameraManager.h"
 #include "GameConsoleManager.h"
+#include "ModelDrawer.h"
 #include "Shader.h"
 #include "Transform.h"
 #include "VaoFactory.h"
 #include "Vertex.h"
 #include "WindowManager.h"
 
-void CoordinateGizmo::InitGizmo(Shader& regularShader, Shader& billboardShader)
+void CoordinateGizmo::InitGizmo()
 {
-	InitUniformIds(regularShader, billboardShader);
+	InitUniformIds();
 	BuildVao();
 	BuildNodeObjects();
 	BuildCamera();
 	BuildTextures();
 }
 
-void CoordinateGizmo::InitUniformIds(Shader& regularShader, Shader& billboardShader)
+void CoordinateGizmo::InitUniformIds()
 {
-	regularShader.Use();
+	Shader& modelShader = ModelDrawer::GetShader();
+	Shader& billboardShader = BillboardDrawer::GetShader();
+
+	modelShader.Use();
 
 	// Light
-	uAmbientColor_ = regularShader.GetUniformId("ambientColor");
-	uAmbientIntensity_ = regularShader.GetUniformId("ambientIntensity");
+	uAmbientColor_ = modelShader.GetUniformId("ambientColor");
+	uAmbientIntensity_ = modelShader.GetUniformId("ambientIntensity");
 
-	uDirLightCount_ = regularShader.GetUniformId("dirLightsCount");
-	uPointLightCount_ = regularShader.GetUniformId("pointLightsCount");
-	uSpotlightCount_ = regularShader.GetUniformId("spotlightsCount");
+	uDirLightCount_ = modelShader.GetUniformId("dirLightsCount");
+	uPointLightCount_ = modelShader.GetUniformId("pointLightsCount");
+	uSpotlightCount_ = modelShader.GetUniformId("spotlightsCount");
 
-	uUseVertexColor_ = regularShader.GetUniformId("useVertexColor");
+	uUseVertexColor_ = modelShader.GetUniformId("useVertexColor");
 
 	// Transforms
-	uModel_ = regularShader.GetUniformId("model");
-	uProjection_ = regularShader.GetUniformId("projection");
-	uView_ = regularShader.GetUniformId("view");
+	uModel_ = modelShader.GetUniformId("model");
+	uProjection_ = modelShader.GetUniformId("projection");
+	uView_ = modelShader.GetUniformId("view");
 
 	// Billboard
 	billboardShader.Use();
@@ -129,18 +134,20 @@ void CoordinateGizmo::UpdateGizmoCam() const
 	gizmoCam->ChangeYaw(-CameraManager::GetMainCamera()->GetYaw());
 }
 
-void CoordinateGizmo::Draw(const Shader& regularShader, const Shader& billboardShader)
+void CoordinateGizmo::Draw()
 {
 	glViewport(0, 2 * WindowManager::GetWindowHeight() / 3, WindowManager::GetWindowWidth() / 3, WindowManager::GetWindowHeight() / 3);
 
 	UpdateGizmoCam();
-	DrawAxes(regularShader);
-	DrawNodes(billboardShader);
+	DrawAxes();
+	DrawNodes();
 }
 
-void CoordinateGizmo::DrawAxes(const Shader& regularShader) const
+void CoordinateGizmo::DrawAxes() const
 {
-	regularShader.Use();
+	Shader& modelShader = ModelDrawer::GetShader();
+
+	modelShader.Use();
 
 	Transform transform;
 	transform.Translate({ 0.0f, -0.1f, 0.0f });
@@ -174,8 +181,9 @@ void CoordinateGizmo::DrawAxes(const Shader& regularShader) const
 	glLineWidth(1.0f);
 }
 
-void CoordinateGizmo::DrawNodes(const Shader& billboardShader)
+void CoordinateGizmo::DrawNodes()
 {
+	Shader& billboardShader = BillboardDrawer::GetShader();
 	billboardShader.Use();
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
